@@ -146,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
                             String jsonString = gson.toJson(user);
                             OkHttpClient client = new OkHttpClient();//创建Http客户端
                             Request request = new Request.Builder()
-                                    .url(url)//***.***.**.***为本机IP，xxxx为端口，/  /  为访问的接口后缀
+                                    .url(url)
                                     .post(RequestBody.create(MediaType.parse("application/json;charset=utf-8"),jsonString))
                                     .build();//创建Http请求
                             try {

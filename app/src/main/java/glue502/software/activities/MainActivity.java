@@ -25,6 +25,7 @@ import glue502.software.fragments.RecommendFragment;
 
 
 public class MainActivity extends AppCompatActivity {
+    //换成自己电脑的ip地址，连接后端需要
     public static final String ip = "10.7.89.89:1234";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //每次启动软件，先清空glide中缓存的数据
         new ClearGlideCacheTask().execute();
         tabLayout = findViewById(R.id.tbl);
         viewPager2 = findViewById(R.id.vp2);

@@ -39,6 +39,7 @@ public class PostDisplayActivity extends AppCompatActivity {
         displayPost();
     }
     public void displayPost(){
+        //Carousel为自定义轮播图工具类
         Carousel carousel = new Carousel(this.getApplicationContext(), dotLinerLayout, postImage);
         carousel.initViews(postWithUserInfo.getPost().getPicturePath());
 
