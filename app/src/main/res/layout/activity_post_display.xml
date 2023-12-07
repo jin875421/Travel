@@ -10,6 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <Button
+                android:id="@+id/btn_back"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="返回"/>
+            <Button
+                android:id="@+id/btn_star"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="收藏"/>
+        </RelativeLayout>
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/post_image"
             android:layout_width="match_parent"
@@ -24,6 +40,7 @@
             app:layout_constraintEnd_toEndOf="@+id/viewPager2"
             app:layout_constraintStart_toStartOf="parent"/>
         <LinearLayout
+            android:paddingLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
@@ -36,11 +53,15 @@
                 android:layout_height="20dp"/>
         </LinearLayout>
         <TextView
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:id="@+id/post_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="30dp"/>
         <TextView
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:id="@+id/post_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
