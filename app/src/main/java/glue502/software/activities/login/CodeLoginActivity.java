@@ -1,8 +1,9 @@
-package glue502.software.activities;
+package glue502.software.activities.login;
 
 import static glue502.software.activities.MainActivity.ip;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -18,32 +19,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import glue502.software.R;
-import glue502.software.models.LoginResult;
+import glue502.software.activities.MainActivity;
 import glue502.software.models.UserInfo;
+import glue502.software.models.LoginResult;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class ForgotPasswordActivity extends AppCompatActivity {
+public class CodeLoginActivity extends AppCompatActivity {
     private EditText edtEmailOrPhone;
     private EditText edtCode;
     private Button btnGainCode;
-    private TextView txtTime;
-    private EditText edtPassword;
-    private EditText edtAgainPassword;
-    private Button btnChange;
-    private String password;
-    private String againpassword;
-    private String url="http://"+ip+"/test/user/forgotPassword";
-    private String urlEmail="http://"+ip+"/test/user/sendEmail";
-    private String urlPhone="http://"+ip+"/test/user/sendSms";
+    private Button btnLogin;
+    private TextView txtAccount;
+    private TextView txtRegister;
+    private String url="http://"+ip+"/boot/user/emailOrPhoneLogin";
+    private String urlEmail="http://"+ip+"/boot/user/sendEmail";
+    private String urlPhone="http://"+ip+"/boot/user/sendSms";
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -58,12 +54,22 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     // 根据 resultCode 判断登录是否成功
                     if (resultCode == 1) {
                         // 登录成功，跳转到 LoginActivity页面
-                        Toast.makeText(ForgotPasswordActivity.this, message, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
+                        String userId = loginResult.getUserId();
+                        String userName = loginResult.getUserName();
+                        SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("userName", userName);
+                        editor.putString("userId", userId);
+                        editor.putString("status","1");
+                        editor.apply();
+
+                        Intent intent = new Intent(CodeLoginActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        finish();
                     } else {
                         // 登录失败，显示提示消息
-                        Toast.makeText(ForgotPasswordActivity.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CodeLoginActivity.this, message, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case 2:
@@ -75,11 +81,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
                     // 根据 resultCode 判断登录是否成功
                     if (resultCode1 == 1) {
-                        // 登录成功，跳转到 LoginActivity页面
-                        Toast.makeText(ForgotPasswordActivity.this, message1, Toast.LENGTH_SHORT).show();
+                        // 验证码获取成功
+                        Toast.makeText(CodeLoginActivity.this, message1, Toast.LENGTH_SHORT).show();
                     } else {
-                        // 登录失败，显示提示消息
-                        Toast.makeText(ForgotPasswordActivity.this, message1, Toast.LENGTH_SHORT).show();
+                        // 验证码获取失败
+                        Toast.makeText(CodeLoginActivity.this, message1, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 default:
@@ -90,21 +96,39 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgotpassword);
+        setContentView(R.layout.activity_code_login);
         edtEmailOrPhone=findViewById(R.id.edt_email_or_phone);
         edtCode=findViewById(R.id.edt_code);
-        txtTime=findViewById(R.id.txt_time);
-        edtPassword=findViewById(R.id.edt_password);
-        edtAgainPassword=findViewById(R.id.edt_again_password);
         edtEmailOrPhone=findViewById(R.id.edt_email_or_phone);
-        btnChange=findViewById(R.id.btn_change);
         btnGainCode=findViewById(R.id.btn_gaincode);
+        btnLogin=findViewById(R.id.btn_login);
+        txtAccount=findViewById(R.id.txt_account);
+        txtRegister=findViewById(R.id.txt_register);
+        txtAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CodeLoginActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        });
+        txtRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CodeLoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        });
+        //获得验证码
         btnGainCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String emailOrPhone=edtEmailOrPhone.getText().toString();
                 if (emailOrPhone.length() == 0 ) {
-                    Toast.makeText(ForgotPasswordActivity.this, "输入的邮箱或手机号为空", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CodeLoginActivity.this, "输入的邮箱或手机号为空", Toast.LENGTH_LONG).show();
                 }else{
                     new Thread(new Runnable() {
                         @Override
@@ -151,60 +175,30 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             }
         });
 
-        btnChange.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String code = edtCode.getText().toString();
                 String emailOrPhone=edtEmailOrPhone.getText().toString();
-                try {
-                    //MD5加密密码
-                    String password1 = edtPassword.getText().toString();
-                    MessageDigest messageDigest=MessageDigest.getInstance("MD5");
-                    byte[] plainTextBytes=password1.getBytes();
-                    messageDigest.update(plainTextBytes);
-                    byte[] encryptedBytes=messageDigest.digest();
-                    BigInteger bigInteger=new BigInteger(1,encryptedBytes);
-                    password=String.format("%032x",bigInteger);
-
-                    String againpassword1=edtAgainPassword.getText().toString();
-                    MessageDigest messageDigest1=MessageDigest.getInstance("MD5");
-                    byte[] plainTextBytes1=againpassword1.getBytes();
-                    messageDigest.update(plainTextBytes1);
-                    byte[] encryptedBytes1=messageDigest.digest();
-                    BigInteger bigInteger1=new BigInteger(1,encryptedBytes1);
-                    againpassword=String.format("%032x",bigInteger1);
-
-                } catch (NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
-                }
-
-
                 if (emailOrPhone.length() == 0 ) {
-                    Toast.makeText(ForgotPasswordActivity.this, "输入的邮箱或手机号为空", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CodeLoginActivity.this, "输入的邮箱或手机号为空", Toast.LENGTH_LONG).show();
                 } else if (code.length() == 0) {
-                    Toast.makeText(ForgotPasswordActivity.this, "输入的验证码为空", Toast.LENGTH_LONG).show();
-                } else if (password.length() == 0) {
-                    Toast.makeText(ForgotPasswordActivity.this, "输入的密码为空", Toast.LENGTH_LONG).show();
-                } else if (password.length() < 6 && password.length() > 1) {
-                    Toast.makeText(ForgotPasswordActivity.this, "输入的密码小于六位数", Toast.LENGTH_LONG).show();
-                } else if(againpassword.length()==0){
-                    Toast.makeText(ForgotPasswordActivity.this, "二次输入的密码为空", Toast.LENGTH_LONG).show();
-                } else if(againpassword.equals(password)==false){
-                    Toast.makeText(ForgotPasswordActivity.this, "两次输入的密码不相同", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CodeLoginActivity.this, "输入的验证码为空", Toast.LENGTH_LONG).show();
                 } else{
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            UserInfo user ;
+                            UserInfo user;
                             if(isValidPhoneNumber(emailOrPhone)) {
-                                user = new UserInfo(password,emailOrPhone,code,1);
+                                user = new UserInfo(emailOrPhone,code,0.1);
                             }else{
-                                user = new UserInfo(password,emailOrPhone,code);
+                                user = new UserInfo(emailOrPhone,code,1);
                             }
                             // 使用 Gson 将 User 对象转换为 JSON 数据
                             Gson gson = new Gson();
                             String jsonString = gson.toJson(user);
                             OkHttpClient client = new OkHttpClient();//创建Http客户端
+
                             Request request = new Request.Builder()
                                     .url(url)//***.***.**.***为本机IP，xxxx为端口，/  /  为访问的接口后缀
                                     .post(RequestBody.create(MediaType.parse("application/json;charset=utf-8"),jsonString))
@@ -227,8 +221,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 }
             }
         });
-    }
 
+    }
     private void disableButtonForSomeTime() {
         btnGainCode.setEnabled(false);
 
@@ -239,7 +233,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             public void run() {
                 // 在延迟后启用按钮
                 btnGainCode.setEnabled(true);
-                txtTime.setText(""); // 倒计时结束后清空文本
+                btnGainCode.setText(""); // 倒计时结束后清空文本
             }
         }, delayMillis);
 
@@ -251,13 +245,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 // 更新倒计时文本
-                txtTime.setText("重新获取(" + millisUntilFinished / 1000 + "s)");
+                btnGainCode.setText("重新获取(" + millisUntilFinished / 1000 + "s)");
             }
 
             @Override
             public void onFinish() {
                 // 倒计时结束后清空文本
-                txtTime.setText("");
+                btnGainCode.setText("获取验证码");
             }
         };
 

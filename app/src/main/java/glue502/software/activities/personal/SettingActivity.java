@@ -1,5 +1,6 @@
-package glue502.software.activities;
+package glue502.software.activities.personal;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +35,7 @@ public class SettingActivity extends AppCompatActivity {
         btnDestroy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    showLogoutConfirmationDialog();
+                showLogoutConfirmationDialog();
 
             }
         });
@@ -74,5 +75,8 @@ public class SettingActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
     }
 }

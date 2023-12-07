@@ -2,15 +2,16 @@ package glue502.software.fragments;
 
 import static glue502.software.activities.MainActivity.ip;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -22,15 +23,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 
 import glue502.software.R;
-import glue502.software.activities.CodeLoginActivity;
-import glue502.software.activities.SettingActivity;
-import glue502.software.activities.UpdatePersonalInformationActivity;
+import glue502.software.activities.login.CodeLoginActivity;
+import glue502.software.activities.personal.SettingActivity;
+import glue502.software.activities.personal.UpdatePersonalInformationActivity;
 import glue502.software.models.LoginResult;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -40,16 +45,20 @@ import okhttp3.Response;
 
 
 public class PersonalInformationFragment extends Fragment {
-    private TextView txtUserNickname;
+    private TextView txtName;
     private TextView txtUserId;
-    private ImageView imgSetting;
+    private TextView txtCollect;
+    private TextView txtNews;
+    private TextView txtPublish;
+    private TextView txtHistory;
+    private TextView txtPersonal;
+    private LinearLayout linearSetting;
     private LinearLayout linearTitle;
-    private LinearLayoutManager layoutManager;
+    private LinearLayout linearCustomerService;
     private ImageView imgAvatar;
-    private RecyclerView recyclerView;
-    private String url="http://"+ip+"/test/user/updateNickname";
-    private String urlAvatar="http://"+ip+"/test/user/getAvatar?userId=";
-    private String urlLoadImage="http://"+ip+"/test/";
+    private String urlName="http://"+ip+"/boot/user/findName?userId=";
+    private String urlAvatar="http://"+ip+"/boot/user/getAvatar?userId=";
+    private String urlLoadImage="http://"+ip+"/boot/";
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -79,20 +88,67 @@ public class PersonalInformationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_personal_information, container, false);
-        txtUserNickname=view.findViewById(R.id.txt_userNickname);
+        txtName=view.findViewById(R.id.txt_name);
         txtUserId=view.findViewById(R.id.txt_userId);
-        imgSetting=view.findViewById(R.id.img_setting);
+        linearSetting=view.findViewById(R.id.linear_setting);
         linearTitle=view.findViewById(R.id.linear_title);
-        recyclerView = view.findViewById(R.id.recyclerView);
+        linearCustomerService=view.findViewById(R.id.linear_customer_service);
         imgAvatar=view.findViewById(R.id.img_avatar);
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+        txtCollect=view.findViewById(R.id.txt_collect);
+        txtNews=view.findViewById(R.id.txt_news);
+        txtPublish=view.findViewById(R.id.txt_publish);
+        txtHistory=view.findViewById(R.id.txt_history);
+        txtPersonal=view.findViewById(R.id.txt_personal);
+        SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+        String status=sharedPreferences.getString("status","");
+        if("".equals(status)){
+            txtName.setText("请登录");
+            txtUserId.setText("");
+            RequestOptions requestOptions = new RequestOptions()
+                    .transform(new CircleCrop());
+            Glide.with(requireContext())
+                    .load(R.drawable.ic_launcher_background )
+                    .apply(requestOptions)// 设置签名
+                    .into(imgAvatar);
+        }else{
+            String userName=sharedPreferences.getString("userName","");
+            String userId=sharedPreferences.getString("userId","");
+            txtName.setText(userName);
+            txtUserId.setText("账号: "+userId);
+            loadUserAvatar(false);
 
+        }
+        txtCollect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-//        RecyclerbviewAdapter adapter = new RecyclerbviewAdapter(requireContext(),data);
-//        recyclerView.setAdapter(adapter);
+            }
+        });
+        txtNews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+            }
+        });
+        txtPublish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+            }
+        });
+        txtHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        txtPersonal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), UpdatePersonalInformationActivity.class);
+                startActivity(intent);
+            }
+        });
         linearTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,14 +157,38 @@ public class PersonalInformationFragment extends Fragment {
         });
 
 
-        imgSetting.setOnClickListener(new View.OnClickListener() {
+        linearSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SettingActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 2);
             }
         });
-//        fetchDataFromBackend();
+        linearCustomerService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("联系客服");
+                builder.setMessage("请拨打1008611或发送邮件到2391835196@qq.com");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 在这里执行确定按钮被点击后的操作
+                        dialogInterface.dismiss(); // 关闭对话框
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 在这里执行取消按钮被点击后的操作
+                        dialogInterface.dismiss(); // 关闭对话框
+                    }
+                });
+                // 创建并显示AlertDialog
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
         return view;
 
     }
@@ -123,7 +203,7 @@ public class PersonalInformationFragment extends Fragment {
             showLoginAlertDialog();
         }else{
             Intent intent = new Intent(getActivity(), UpdatePersonalInformationActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         }
     }
 
@@ -151,26 +231,7 @@ public class PersonalInformationFragment extends Fragment {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        //加载数据
-        SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
-        String status=sharedPreferences.getString("status","");
-        if("".equals(status)){
-            txtUserNickname.setText("请登录");
-            txtUserId.setText("");
-        }else{
-            String userNickname=sharedPreferences.getString("userName","");
-            String userId=sharedPreferences.getString("userId","");
-            txtUserNickname.setText(userNickname);
-            txtUserId.setText(userId);
-
-        }
-        loadUserAvatar();
-
-    }
-    private void loadUserAvatar() {
+    private void loadUserAvatar(boolean a) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
         // 创建 OkHttp 客户端
@@ -191,21 +252,34 @@ public class PersonalInformationFragment extends Fragment {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                final String avatarUrl = response.body().string();
+                final String responseData = response.body().string();
 
+                String[] parts = responseData.split(":");
+
+                // 获取 avatarUrl 和 userNickname
+                final String avatarUrl = parts[0];
+                final String userName = parts[1];
+                System.out.println("name"+userName);
                 // 在 UI 线程中更新 ImageView
                 requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         // 使用 Glide 加载用户头像
-                        if (avatarUrl != null && !avatarUrl.isEmpty()) {
-                            loadImageWithGlide(avatarUrl);
+                        if (avatarUrl .contains("/") && !avatarUrl.isEmpty()) {
+                            loadImageWithGlide(avatarUrl,a);
                         } else {
                             // 处理返回的不是有效地址的情况
                             // 可以设置默认头像或给用户提示
+                            RequestOptions requestOptions = new RequestOptions()
+                                    .transform(new CircleCrop());
                             Glide.with(requireContext())
                                     .load(R.drawable.ic_launcher_background)
+                                    .apply(requestOptions)
                                     .into(imgAvatar);
+                        }
+                        if(!userName.isEmpty()){
+                            txtName.setText(userName);
+                            txtUserId.setText("账号: "+userId);
                         }
                     }
                 });
@@ -213,12 +287,125 @@ public class PersonalInformationFragment extends Fragment {
         });
     }
 
+    private void loadUserNickname() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", "");
+        // 创建 OkHttp 客户端
+        OkHttpClient client = new OkHttpClient();
 
-    private void loadImageWithGlide(String avatarUrl) {
-        // 使用 Glide 加载用户头像
-        Glide.with(requireContext())
-                .load(urlLoadImage + avatarUrl)
-                .placeholder(R.drawable.ic_launcher_background)  // 设置占位图
-                .into(imgAvatar);
+        // 构建请求
+        Request request = new Request.Builder()
+                .url(urlName+userId)  // 替换为你的后端 API 地址
+                .build();
+
+        // 发送请求
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                // 处理请求失败的情况
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                final String userName = response.body().string();
+                System.out.println("name"+userName);
+                // 在 UI 线程中更新 ImageView
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(!userName.isEmpty()){
+                            txtName.setText(userName);
+                            txtUserId.setText("账号: "+userId);
+                        }
+                    }
+                });
+            }
+        });
     }
+
+    private void loadImageWithGlide(String avatarUrl, boolean forceRefresh) {
+        // 使用 Glide 加载用户头像，并进行圆形裁剪
+        RequestOptions requestOptions = new RequestOptions()
+                .transform(new CircleCrop());
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", "");
+        if(forceRefresh==false){
+            // 如果需要强制刷新缓存，生成一个动态签名
+            Glide.get(requireContext()).clearMemory();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Glide.get(requireContext()).clearDiskCache();
+                }
+            }).start();
+            Glide.with(requireContext())
+                    .load(urlLoadImage + avatarUrl)
+                    .skipMemoryCache(false)  //允许内存缓存
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)  // 使用磁盘缓存
+                    .placeholder(R.drawable.ic_launcher_background)  // 设置占位图
+                    .apply(requestOptions)
+                    .signature(new ObjectKey(userId))  // 设置签名
+                    .into(imgAvatar);
+        }else{
+            Glide.get(requireContext()).clearMemory();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Glide.get(requireContext()).clearDiskCache();
+                }
+            }).start();
+            Glide.with(requireContext())
+                    .load(urlLoadImage + avatarUrl)
+                    .skipMemoryCache(true)  //允许内存缓存
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)  // 不使用磁盘缓存
+                    .placeholder(R.drawable.ic_launcher_background)  // 设置占位图
+                    .apply(requestOptions)
+                    .signature(new ObjectKey(userId))  // 设置签名
+                    .into(imgAvatar);
+
+
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) { // 检查请求码是否与上传页面的请求码一致
+            if (resultCode == Activity.RESULT_OK) { // 检查是否上传完成
+                // 进行刷新操作，重新加载数据
+                String status=data.getStringExtra("status");
+                if(status.equals("1")){
+                    loadUserNickname();
+                }else {
+                    loadUserAvatar(true);
+                }
+            }
+        }
+        if(requestCode==2){
+            if (resultCode == Activity.RESULT_OK){
+                SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+                String status=sharedPreferences.getString("status","");
+                if("".equals(status)){
+                    txtName.setText("请登录");
+                    txtUserId.setText("");
+                    RequestOptions requestOptions = new RequestOptions()
+                            .transform(new CircleCrop());
+                    Glide.with(requireContext())
+                            .load(R.drawable.ic_launcher_background )
+                            .apply(requestOptions)// 设置签名
+                            .into(imgAvatar);
+                }else{
+                    String userName=sharedPreferences.getString("userName","");
+                    String userId=sharedPreferences.getString("userId","");
+                    txtName.setText(userName);
+                    txtUserId.setText("账号: "+userId);
+                    loadUserAvatar(false);
+
+                }
+            }
+        }
+    }
+
 }

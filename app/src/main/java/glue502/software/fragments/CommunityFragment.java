@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -22,7 +21,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -31,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
-import glue502.software.activities.LoginActivity;
+import glue502.software.activities.login.LoginActivity;
 import glue502.software.activities.PostDisplayActivity;
 import glue502.software.activities.UploadPostActivity;
 import glue502.software.adapters.PostListAdapter;

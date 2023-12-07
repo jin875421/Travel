@@ -1,43 +1,42 @@
-package glue502.software.activities;
-import static glue502.software.activities.MainActivity.ip;
+package glue502.software.activities.login;
 
+import static glue502.software.activities.MainActivity.ip;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.gson.Gson;
-
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
 import glue502.software.R;
-import glue502.software.models.LoginResult;
 import glue502.software.models.UserInfo;
+import glue502.software.models.LoginResult;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-public class LoginActivity extends AppCompatActivity {
-    private Button btnLogin;
-    private TextView txtCode;
-    private TextView txtRegister;
-    private TextView txtForget;
-    private EditText edtUserId;
+
+public class RegisterActivity extends AppCompatActivity {
+    private EditText edtAccount;
     private EditText edtPassword;
+    private EditText edtAgainPassword;
+    private EditText edtEmail;
+    private EditText edtName;
+    private EditText edtPhoneNumber;
+    private Button btnregister;
     private String password;
-    private String url="http://"+ip+"/test/user/login";
+    private String againpassword;
+
+
+    private String url="http://"+ip+"/boot/user/register";
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -51,23 +50,13 @@ public class LoginActivity extends AppCompatActivity {
 
                     // 根据 resultCode 判断登录是否成功
                     if (resultCode == 1) {
-                        // 登录成功，跳转到 MainActivity 页面
-
-                        //存id
-                        String userId = loginResult.getUserId();
-                        String userName = loginResult.getUserName();
-                        SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("userName", userName);
-                        editor.putString("userId", userId);
-                        editor.putString("status","1");
-                        editor.apply();
-
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        // 登录成功，跳转到 LoginActivity页面
+                        Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(RegisterActivity.this, CodeLoginActivity.class);
                         startActivity(intent);
                     } else {
                         // 登录失败，显示提示消息
-                        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 default:
@@ -75,44 +64,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        edtUserId =findViewById(R.id.edt_account);
-        edtPassword =findViewById(R.id.edt_password);
-        btnLogin =findViewById(R.id.btn_login);
-        txtCode =findViewById(R.id.txt_code);
-        txtRegister=findViewById(R.id.txt_register);
-        txtForget=findViewById(R.id.txt_forget);
+        setContentView(R.layout.activity_register);
+        edtAccount=findViewById(R.id.edt_account);
+        edtPassword=findViewById(R.id.edt_password);
+        edtAgainPassword=findViewById(R.id.edt_again_password);
+        edtEmail=findViewById(R.id.edt_email);
+        edtName=findViewById(R.id.edt_name);
+        btnregister=findViewById(R.id.btn_register);
+        edtPhoneNumber=findViewById(R.id.edt_phone_number);
 
-        txtCode.setOnClickListener(new View.OnClickListener() {
+        btnregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, CodeLoginActivity.class);
-                startActivity(intent);
-            }
-        });
-        txtRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-            }
-        });
-        txtForget.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-                startActivity(intent);
-            }
-        });
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //获取用户名和密码
-                String userId = edtUserId.getText().toString();
+                String userId = edtAccount.getText().toString();
+                String email=edtEmail.getText().toString();
+                String userName=edtName.getText().toString();
+                String userPhoneNumber=edtPhoneNumber.getText().toString();
                 try {
                     //MD5加密密码
                     String password1 = edtPassword.getText().toString();
@@ -123,30 +93,44 @@ public class LoginActivity extends AppCompatActivity {
                     BigInteger bigInteger=new BigInteger(1,encryptedBytes);
                     password=String.format("%032x",bigInteger);
 
+                    String againpassword1=edtAgainPassword.getText().toString();
+                    MessageDigest messageDigest1=MessageDigest.getInstance("MD5");
+                    byte[] plainTextBytes1=againpassword1.getBytes();
+                    messageDigest.update(plainTextBytes1);
+                    byte[] encryptedBytes1=messageDigest.digest();
+                    BigInteger bigInteger1=new BigInteger(1,encryptedBytes1);
+                    againpassword=String.format("%032x",bigInteger1);
+
                 } catch (NoSuchAlgorithmException e) {
                     throw new RuntimeException(e);
                 }
 
                 if (userId.length() == 0 && password.length() == 0) {
-                    Toast.makeText(LoginActivity.this, "输入的用户名和密码都为空", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, "输入的用户名和密码都为空", Toast.LENGTH_LONG).show();
                 } else if (userId.length() == 0) {
-                    Toast.makeText(LoginActivity.this, "输入的用户名为空", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, "输入的用户名为空", Toast.LENGTH_LONG).show();
                 } else if (password.length() == 0) {
-                    Toast.makeText(LoginActivity.this, "输入的密码为空", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, "输入的密码为空", Toast.LENGTH_LONG).show();
                 } else if (password.length() < 6 && password.length() > 1) {
-                    Toast.makeText(LoginActivity.this, "输入的密码小于六位数", Toast.LENGTH_LONG).show();
-                } else {
+                    Toast.makeText(RegisterActivity.this, "输入的密码小于六位数", Toast.LENGTH_LONG).show();
+                } else if(againpassword.length()==0){
+                    Toast.makeText(RegisterActivity.this, "二次输入的密码为空", Toast.LENGTH_LONG).show();
+                } else if(againpassword.equals(password)==false){
+                    Toast.makeText(RegisterActivity.this, "两次输入的密码不相同", Toast.LENGTH_LONG).show();
+                } else if(!isValidPhoneNumber(userPhoneNumber)){
+                    Toast.makeText(RegisterActivity.this, "手机号格式不正确", Toast.LENGTH_LONG).show();
+                }else{
 
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            UserInfo user = new UserInfo(userId,password);
+                            UserInfo user = new UserInfo(userId,password,email,userName,userPhoneNumber);
                             // 使用 Gson 将 User 对象转换为 JSON 数据
                             Gson gson = new Gson();
                             String jsonString = gson.toJson(user);
                             OkHttpClient client = new OkHttpClient();//创建Http客户端
                             Request request = new Request.Builder()
-                                    .url(url)
+                                    .url(url)//***.***.**.***为本机IP，xxxx为端口，/  /  为访问的接口后缀
                                     .post(RequestBody.create(MediaType.parse("application/json;charset=utf-8"),jsonString))
                                     .build();//创建Http请求
                             try {
@@ -164,9 +148,15 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     }).start();
+
+//                    register(username,password);
                 }
             }
         });
     }
-
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        // 进行手机号合法性判断的逻辑，可以使用正则表达式等方式
+        // 此处简单示例，你可以根据实际需要扩展
+        return phoneNumber.matches("^1[3-9]\\d{9}$");
+    }
 }

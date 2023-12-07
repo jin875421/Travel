@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_margin="10dp"
-    tools:context=".activities.LoginActivity">
+    tools:context=".activities.login.LoginActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="114dp"
@@ -16,7 +16,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/earth" />
     </LinearLayout>
     <!--用户，密码-->
     <LinearLayout

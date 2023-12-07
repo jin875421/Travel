@@ -32,22 +32,22 @@
             android:name=".activities.CreateRecordActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.RegisterActivity"
+            android:name=".activities.login.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ForgotPasswordActivity"
+            android:name=".activities.login.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.CodeLoginActivity"
+            android:name=".activities.login.CodeLoginActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".activities.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.SettingActivity"
+            android:name=".activities.personal.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.UpdatePersonalInformationActivity"
+            android:name=".activities.personal.UpdatePersonalInformationActivity"
             android:exported="false" />
         <activity
             android:name=".activities.PostDisplayActivity"

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_margin="10dp"
-    tools:context=".activities.RegisterActivity">
+    tools:context=".activities.login.RegisterActivity">
     <EditText
         android:id="@+id/edt_account"
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
         android:hint="请输入手机号"
         />
     <EditText
-        android:id="@+id/edt_nickname"
+        android:id="@+id/edt_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="请输入昵称"/>

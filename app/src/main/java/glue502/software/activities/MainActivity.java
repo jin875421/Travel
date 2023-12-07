@@ -7,6 +7,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
@@ -26,11 +28,11 @@ import glue502.software.fragments.RecommendFragment;
 
 public class MainActivity extends AppCompatActivity {
     //换成自己电脑的ip地址，连接后端需要
-    public static final String ip = "10.7.89.89:1234";
+    public static final String ip = "192.168.88.91:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
-
+    private boolean backPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,5 +91,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (backPressedOnce) {
+            // 用户第二次点击返回按钮，执行返回桌面操作
+            super.onBackPressed();
+        } else {
+            // 用户第一次点击返回按钮，显示提醒
+            Toast.makeText(this, "再次点击返回将返回桌面", Toast.LENGTH_SHORT).show();
+            backPressedOnce = true;
 
+            // 使用 Handler 在一定时间后重置 backPressedOnce 标志位
+            new Handler().postDelayed(() -> backPressedOnce = false, 2000); // 2秒内再次点击返回按钮生效
+
+        }
+    }
 }

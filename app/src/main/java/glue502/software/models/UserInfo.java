@@ -28,6 +28,10 @@ public class UserInfo implements Serializable {
         this.userId = userId;
         this.password = password;
     }
+    public UserInfo(String userId, String userName,boolean abc) {
+        this.userId = userId;
+        this.userName = userName;
+    }
     public UserInfo(String email, String code,int a) {
         this.email = email;
         this.code = code;
@@ -46,11 +50,11 @@ public class UserInfo implements Serializable {
         this.userPhoneNumber = userPhoneNumber;
         this.code = code;
     }
-    public UserInfo(String userId, String password, String email,String userName,String userPhoneNumber) {
+    public UserInfo(String userId, String password, String email,String userNickname,String userPhoneNumber) {
         this.userId = userId;
         this.password = password;
         this.email = email;
-        this.userName=userName;
+        this.userName=userNickname;
         this.userPhoneNumber=userPhoneNumber;
     }
 
@@ -123,9 +127,5 @@ public class UserInfo implements Serializable {
 
     public void setUserPhoneNumber(String userPhoneNumber) {
         this.userPhoneNumber = userPhoneNumber;
-    }
-    public UserInfo(String userId, String userName,boolean abc) {
-        this.userId = userId;
-        this.userName = userName;
     }
 }
