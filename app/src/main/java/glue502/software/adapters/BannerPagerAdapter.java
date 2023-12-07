@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
-import glue502.software.activities.FullScreenDisplayActivity;
+import glue502.software.activities.posts.FullScreenDisplayActivity;
 
 public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.ImageViewHolder> {
     private Context context;
