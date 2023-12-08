@@ -50,7 +50,6 @@ import okhttp3.Response;
 
 public class UploadPostActivity extends AppCompatActivity {
     private  List<File> fileList = new ArrayList<>();
-    private List<Bitmap> bitmapList = new ArrayList<>();
     private Post post = new Post();
     private EditText title, content;
     private Button back, upload;
