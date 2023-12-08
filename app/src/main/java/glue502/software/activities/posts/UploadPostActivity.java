@@ -1,4 +1,4 @@
-package glue502.software.activities;
+package glue502.software.activities.posts;
 
 import static glue502.software.activities.MainActivity.ip;
 

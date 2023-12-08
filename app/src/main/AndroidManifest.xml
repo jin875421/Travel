@@ -26,7 +26,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31" >
         <activity
-            android:name=".activities.FullScreenDisplayActivity"
+            android:name=".activities.posts.FullScreenDisplayActivity"
             android:exported="false" />
         <activity
             android:name=".activities.CreateRecordActivity"
@@ -50,10 +50,10 @@
             android:name=".activities.personal.UpdatePersonalInformationActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.PostDisplayActivity"
+            android:name=".activities.posts.PostDisplayActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.UploadPostActivity"
+            android:name=".activities.posts.UploadPostActivity"
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"
