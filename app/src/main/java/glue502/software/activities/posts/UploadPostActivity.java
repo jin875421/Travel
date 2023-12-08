@@ -58,7 +58,7 @@ public class UploadPostActivity extends AppCompatActivity {
     private ImageView uploadImage;
     private String mCurrentPhotoPath;
     private final int RESULT_LOAD_IMAGES = 1, RESULT_CAMERA_IMAGE = 2;
-    private String url = "http://"+ip+"/test/posts/upload";
+    private String url = "http://"+ip+"/travel/posts/upload";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -56,9 +56,9 @@ public class PersonalInformationFragment extends Fragment {
     private LinearLayout linearTitle;
     private LinearLayout linearCustomerService;
     private ImageView imgAvatar;
-    private String urlName="http://"+ip+"/boot/user/findName?userId=";
-    private String urlAvatar="http://"+ip+"/boot/user/getAvatar?userId=";
-    private String urlLoadImage="http://"+ip+"/boot/";
+    private String urlName="http://"+ip+"/travel/user/findName?userId=";
+    private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
+    private String urlLoadImage="http://"+ip+"/travel/";
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

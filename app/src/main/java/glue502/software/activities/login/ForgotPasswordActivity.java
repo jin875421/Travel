@@ -40,9 +40,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private Button btnChange;
     private String password;
     private String againpassword;
-    private String url="http://"+ip+"/boot/user/forgotPassword";
-    private String urlEmail="http://"+ip+"/boot/user/sendEmail";
-    private String urlPhone="http://"+ip+"/boot/user/sendSms";
+    private String url="http://"+ip+"/travel/user/forgotPassword";
+    private String urlEmail="http://"+ip+"/travel/user/sendEmail";
+    private String urlPhone="http://"+ip+"/travel/user/sendSms";
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

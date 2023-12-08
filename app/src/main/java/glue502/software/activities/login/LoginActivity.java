@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edtUserId;
     private EditText edtPassword;
     private String password;
-    private String url="http://"+ip+"/boot/user/login";
+    private String url="http://"+ip+"/travel/user/login";
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

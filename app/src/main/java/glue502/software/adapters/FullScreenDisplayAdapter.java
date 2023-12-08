@@ -20,7 +20,7 @@ import glue502.software.R;
 public class FullScreenDisplayAdapter extends RecyclerView.Adapter<FullScreenDisplayAdapter.ImageViewHolder> {
     private Context context;
     private List<String> images;
-    private String url = "http://" +ip +"/test/";
+    private String url = "http://" +ip +"/travel/";
     public FullScreenDisplayAdapter(List<String> images){
         this.images = images;
     }

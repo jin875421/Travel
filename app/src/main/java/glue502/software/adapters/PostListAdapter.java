@@ -27,7 +27,7 @@ public class PostListAdapter extends BaseAdapter {
     private int layoutId;
     private List<Post> posts;
     private List<UserInfo> userInfos;
-    private String url = "http://"+ip+"/test/";
+    private String url = "http://"+ip+"/travel/";
     public PostListAdapter(Context context, int layoutId, List<Post> posts, List<UserInfo> userInfos){
         this.posts = posts;
         this.layoutId = layoutId;

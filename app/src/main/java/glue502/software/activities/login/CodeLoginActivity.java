@@ -37,9 +37,9 @@ public class CodeLoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private TextView txtAccount;
     private TextView txtRegister;
-    private String url="http://"+ip+"/boot/user/emailOrPhoneLogin";
-    private String urlEmail="http://"+ip+"/boot/user/sendEmail";
-    private String urlPhone="http://"+ip+"/boot/user/sendSms";
+    private String url="http://"+ip+"/travel/user/emailOrPhoneLogin";
+    private String urlEmail="http://"+ip+"/travel/user/sendEmail";
+    private String urlPhone="http://"+ip+"/travel/user/sendSms";
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

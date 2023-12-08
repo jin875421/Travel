@@ -34,7 +34,7 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
     private Context context;
     private List<String> images;
     private List<String> imagepath;
-    private String url = "http://" + ip + "/test/";
+    private String url = "http://" + ip + "/travel/";
 
     public BannerPagerAdapter(List<String> images,List<String> imagepath) {
         this.imagepath = imagepath;

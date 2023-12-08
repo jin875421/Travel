@@ -45,7 +45,7 @@ import okhttp3.ResponseBody;
 
 
 public class CommunityFragment extends Fragment {
-    private final static String url="http://"+ip+"/test/posts/getpostlist";
+    private final static String url="http://"+ip+"/travel/posts/getpostlist";
     private ListView listView;
     private Button uploadBtn;
     private String userID;

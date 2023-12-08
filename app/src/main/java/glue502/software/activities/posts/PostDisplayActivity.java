@@ -40,7 +40,7 @@ public class PostDisplayActivity extends AppCompatActivity {
     private TextView title;
     private ImageView avatar;
     private TextView userName;
-    private String url = "http://"+ip+"/test/";
+    private String url = "http://"+ip+"/travel/";
     private String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

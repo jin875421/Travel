@@ -36,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String againpassword;
 
 
-    private String url="http://"+ip+"/boot/user/register";
+    private String url="http://"+ip+"/travel/user/register";
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

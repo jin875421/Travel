@@ -35,8 +35,8 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
     private Button btnChoose;
     private Button btnSubmit;
     private Button btnBcak;
-    private String urlAvatar="http://"+ip+"/boot/user/upload";
-    private String urlName="http://"+ip+"/boot/user/updateData";
+    private String urlAvatar="http://"+ip+"/travel/user/upload";
+    private String urlName="http://"+ip+"/travel/user/updateData";
     private static final int PICK_IMAGE_REQUEST = 1;
     private byte[] yourImageBytes;
     @Override
