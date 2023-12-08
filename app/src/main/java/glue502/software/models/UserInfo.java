@@ -1,7 +1,7 @@
 package glue502.software.models;
 
 import java.io.Serializable;
-//
+
 public class UserInfo implements Serializable {
     private String password;
     private String sex;
