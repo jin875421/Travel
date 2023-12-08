@@ -34,8 +34,11 @@ import java.io.IOException;
 
 import glue502.software.R;
 import glue502.software.activities.login.CodeLoginActivity;
+import glue502.software.activities.login.LoginActivity;
+import glue502.software.activities.personal.MineStarActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
+import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.models.LoginResult;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -121,7 +124,33 @@ public class PersonalInformationFragment extends Fragment {
         txtCollect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if ("".equals(status)){
+                    // 创建AlertDialog构建器
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("账号未登录！")
+                            .setMessage("是否前往登录账号")
+                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“确定”按钮后的操作
+                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“取消”按钮后的操作
+                                    dialog.dismiss(); // 关闭对话框
+                                }
+                            });
 
+                    // 创建并显示对话框
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                }else{
+                    Intent intent = new Intent(getActivity(), MineStarActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         txtNews.setOnClickListener(new View.OnClickListener() {
