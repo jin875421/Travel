@@ -25,7 +25,7 @@ import glue502.software.fragments.FunctionFragment;
 import glue502.software.fragments.PersonalInformationFragment;
 import glue502.software.fragments.RecommendFragment;
 
-
+//
 public class MainActivity extends AppCompatActivity {
     //换成自己电脑的ip地址，连接后端需要
     public static final String ip = "192.168.88.91:8080";

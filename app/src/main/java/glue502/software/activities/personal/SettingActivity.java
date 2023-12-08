@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import glue502.software.R;
-
+//
 public class SettingActivity extends AppCompatActivity {
     private Button btnDestroy;
     private Button btnBcak;

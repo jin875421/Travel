@@ -1,5 +1,5 @@
 package glue502.software.models;
-
+//
 public class LoginResult {
     private int resultCode;
     private String msg;
