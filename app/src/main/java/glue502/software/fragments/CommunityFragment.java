@@ -52,11 +52,9 @@ public class CommunityFragment extends Fragment {
     private List<Post> posts;
     private List<UserInfo> userInfos;
     private String status;
-    private Context context;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        context = this.getContext();
 
         View view = inflater.inflate(R.layout.fragment_community,container,false);
         listView = view.findViewById(R.id.post_display);
