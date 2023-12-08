@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
-import glue502.software.activities.LoginActivity;
-import glue502.software.activities.PostDisplayActivity;
-import glue502.software.activities.UploadPostActivity;
+import glue502.software.activities.login.LoginActivity;
+import glue502.software.activities.posts.PostDisplayActivity;
+import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
