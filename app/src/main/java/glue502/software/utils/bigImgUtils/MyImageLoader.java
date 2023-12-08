@@ -18,8 +18,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
-
-import glue502.software.utils.GlideApp;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class MyImageLoader {

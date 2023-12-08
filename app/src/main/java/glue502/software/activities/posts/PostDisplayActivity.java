@@ -5,6 +5,9 @@ import static glue502.software.activities.MainActivity.ip;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +25,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import glue502.software.R;
+import glue502.software.activities.login.LoginActivity;
 import glue502.software.utils.Carousel;
 import glue502.software.models.PostWithUserInfo;
 import okhttp3.MultipartBody;
@@ -42,12 +46,15 @@ public class PostDisplayActivity extends AppCompatActivity {
     private TextView userName;
     private String url = "http://"+ip+"/travel/";
     private String userId;
+    private String status;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_display);
         postWithUserInfo = (PostWithUserInfo) getIntent().getSerializableExtra("postwithuserinfo");
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+        //获取用户状态和用户名
+        status = sharedPreferences.getString("status","");
         userId = sharedPreferences.getString("userId","");
         initView();
         setlistener();
@@ -84,28 +91,53 @@ public class PostDisplayActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 执行收藏代码
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String postId = postWithUserInfo.getPost().getPostId();
-                        OkHttpClient client = new OkHttpClient();
-                        MultipartBody.Builder builder = new MultipartBody.Builder()
-                                .setType(MultipartBody.FORM)
-                                .addFormDataPart("postId",postId)
-                                .addFormDataPart("userId",userId);
-                        RequestBody requestBody = builder.build();
-                        Request request = new Request.Builder()
-                                .url(url+"posts/star")
-                                .post(requestBody)
-                                .build();
-                        try {
-                            Response response = client.newCall(request).execute();
-                        } catch (IOException e) {
-                            Log.e("NetworkError", "Error: " + e.getMessage());
-                            throw new RuntimeException(e);
+                if (status==""){
+                    // 创建AlertDialog构建器
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
+                    builder.setTitle("账号未登录！")
+                            .setMessage("是否前往登录账号")
+                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“确定”按钮后的操作
+                                    Intent intent = new Intent(PostDisplayActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“取消”按钮后的操作
+                                    dialog.dismiss(); // 关闭对话框
+                                }
+                            });
+
+                    // 创建并显示对话框
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                }else{
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String postId = postWithUserInfo.getPost().getPostId();
+                            OkHttpClient client = new OkHttpClient();
+                            MultipartBody.Builder builder = new MultipartBody.Builder()
+                                    .setType(MultipartBody.FORM)
+                                    .addFormDataPart("postId",postId)
+                                    .addFormDataPart("userId",userId);
+                            RequestBody requestBody = builder.build();
+                            Request request = new Request.Builder()
+                                    .url(url+"posts/star")
+                                    .post(requestBody)
+                                    .build();
+                            try {
+                                Response response = client.newCall(request).execute();
+                            } catch (IOException e) {
+                                Log.e("NetworkError", "Error: " + e.getMessage());
+                                throw new RuntimeException(e);
+                            }
                         }
-                    }
-                }).start();
+                    }).start();
+                }
 
             }
         });
