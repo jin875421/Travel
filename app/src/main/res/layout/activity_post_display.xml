@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/view"
     tools:context=".activities.posts.PostDisplayActivity"
     tools:ignore="HardcodedText">
     <LinearLayout
@@ -66,6 +67,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20dp"/>
+
+        <ListView
+            android:id="@+id/comment_list"
+            android:layout_width="match_parent"
+            android:layout_height="290dp" />
+
+        <LinearLayout
+            android:id="@+id/mChatInputPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/topdivider"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/chatInputEt"
+                android:layout_width="290dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"/>
+            <Button
+                android:id="@+id/submit"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:text="提交"/>
+        </LinearLayout>
     </LinearLayout>
 
 
