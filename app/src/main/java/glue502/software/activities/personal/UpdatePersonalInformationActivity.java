@@ -51,6 +51,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
     private TextView txtSex;
     private RelativeLayout rltlChooseAvatar;
     private EditText edtPhone;
+    private EditText edtEmail;
     private Button btnSubmit;
     private Button btnBcak;
     private String urlAvatar="http://"+ip+"/travel/user/upload";
@@ -70,6 +71,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
         rltlChooseSex=findViewById(R.id.rltl_choose_sex);
         edtPhone=findViewById(R.id.edt_phone);
         txtSex=findViewById(R.id.txt_sex);
+        edtEmail=findViewById(R.id.edt_email);
         rltlChooseAvatar=findViewById(R.id.rltl_choose_avatar);
         //写入用户数据
         writeData();
@@ -98,6 +100,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
                 String userName = edtName.getText().toString();
                 String sex=txtSex.getText().toString();
                 String userPhoneNumber=edtPhone.getText().toString();
+                String email=edtEmail.getText().toString();
                 SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
                 String userId = sharedPreferences.getString("userId", "");
 
@@ -110,7 +113,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
                         public void run() {
                             // 获取用户ID
 
-                            UserInfo user = new UserInfo(userId,userName,sex,userPhoneNumber,true);
+                            UserInfo user = new UserInfo(userId,userName,sex,userPhoneNumber,email,true);
                             // 使用 Gson 将 User 对象转换为 JSON 数据
                             Gson gson = new Gson();
                             String jsonString = gson.toJson(user);
@@ -152,6 +155,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
                             .addFormDataPart("userId", userId)
                             .addFormDataPart("sex",sex)
                             .addFormDataPart("userPhoneNumber",userPhoneNumber)
+                            .addFormDataPart("email",email)
                             .build();
 
                     // 构建POST请求
@@ -180,6 +184,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
                                             editor.putString("userName", userName);
                                             editor.apply();
                                         }
+
                                         Intent resultIntent = new Intent();
                                         setResult(Activity.RESULT_OK, resultIntent);
                                         UpdatePersonalInformationActivity.this.finish();
@@ -230,6 +235,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
                 String userName =userInfo.getUserName();
                 String sex=userInfo.getSex();
                 String userPhoneNumber=userInfo.getUserPhoneNumber();
+                String email=userInfo.getEmail();
                 // 在 UI 线程中更新 ImageView
                 runOnUiThread(new Runnable() {
                     @Override
@@ -248,6 +254,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
                             edtName.setText(userName);
                             txtSex.setText(sex);
                             edtPhone.setText(userPhoneNumber);
+                            edtEmail.setText(email);
                         } else {
                             // 处理返回的不是有效地址的情况
                             // 可以设置默认头像或给用户提示
@@ -260,6 +267,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
                             edtName.setText(userName);
                             txtSex.setText(sex);
                             edtPhone.setText(userPhoneNumber);
+                            edtEmail.setText(email);
                         }
                     }
                 });
