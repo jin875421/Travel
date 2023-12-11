@@ -326,7 +326,7 @@ public class PostDisplayActivity extends AppCompatActivity {
             totalHeight += listItem.getMeasuredHeight();
             last = listItem.getMeasuredHeight();
         }
-        totalHeight += last;
+        totalHeight = totalHeight + last;
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
