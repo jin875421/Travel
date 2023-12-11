@@ -37,6 +37,7 @@ import glue502.software.activities.login.CodeLoginActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
 import glue502.software.models.LoginResult;
+import glue502.software.models.UserInfo;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -56,7 +57,6 @@ public class PersonalInformationFragment extends Fragment {
     private LinearLayout linearTitle;
     private LinearLayout linearCustomerService;
     private ImageView imgAvatar;
-    private String urlName="http://"+ip+"/travel/user/findName?userId=";
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
     private String urlLoadImage="http://"+ip+"/travel/";
     private Handler mHandler = new Handler() {
@@ -254,18 +254,17 @@ public class PersonalInformationFragment extends Fragment {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String responseData = response.body().string();
 
-                String[] parts = responseData.split(":");
-
+                Gson gson=new Gson();
                 // 获取 avatarUrl 和 userNickname
-                final String avatarUrl = parts[0];
-                final String userName = parts[1];
-                System.out.println("name"+userName);
+                UserInfo userInfo = gson.fromJson(responseData,UserInfo.class);
+                String avatarUrl=userInfo.getAvatar();
+                String userName =userInfo.getUserName();
                 // 在 UI 线程中更新 ImageView
                 requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         // 使用 Glide 加载用户头像
-                        if (avatarUrl .contains("/") && !avatarUrl.isEmpty()) {
+                        if (avatarUrl!=null&&!avatarUrl.isEmpty()) {
                             loadImageWithGlide(avatarUrl,a);
                         } else {
                             // 处理返回的不是有效地址的情况
@@ -277,43 +276,6 @@ public class PersonalInformationFragment extends Fragment {
                                     .apply(requestOptions)
                                     .into(imgAvatar);
                         }
-                        if(!userName.isEmpty()){
-                            txtName.setText(userName);
-                            txtUserId.setText("账号: "+userId);
-                        }
-                    }
-                });
-            }
-        });
-    }
-
-    private void loadUserNickname() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId", "");
-        // 创建 OkHttp 客户端
-        OkHttpClient client = new OkHttpClient();
-
-        // 构建请求
-        Request request = new Request.Builder()
-                .url(urlName+userId)  // 替换为你的后端 API 地址
-                .build();
-
-        // 发送请求
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                // 处理请求失败的情况
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                final String userName = response.body().string();
-                System.out.println("name"+userName);
-                // 在 UI 线程中更新 ImageView
-                requireActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
                         if(!userName.isEmpty()){
                             txtName.setText(userName);
                             txtUserId.setText("账号: "+userId);
@@ -375,12 +337,7 @@ public class PersonalInformationFragment extends Fragment {
         if (requestCode == 1) { // 检查请求码是否与上传页面的请求码一致
             if (resultCode == Activity.RESULT_OK) { // 检查是否上传完成
                 // 进行刷新操作，重新加载数据
-                String status=data.getStringExtra("status");
-                if(status.equals("1")){
-                    loadUserNickname();
-                }else {
                     loadUserAvatar(true);
-                }
             }
         }
         if(requestCode==2){

@@ -28,9 +28,11 @@ public class UserInfo implements Serializable {
         this.userId = userId;
         this.password = password;
     }
-    public UserInfo(String userId, String userName,boolean abc) {
+    public UserInfo(String userId, String userName,String sex,String userPhoneNumber, boolean abc) {
         this.userId = userId;
         this.userName = userName;
+        this.sex=sex;
+        this.userPhoneNumber=userPhoneNumber;
     }
     public UserInfo(String email, String code,int a) {
         this.email = email;
