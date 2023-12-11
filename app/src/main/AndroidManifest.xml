@@ -26,6 +26,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.travelRecord.travelRecordActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.personal.MineStarActivity"
             android:exported="false" />
         <activity

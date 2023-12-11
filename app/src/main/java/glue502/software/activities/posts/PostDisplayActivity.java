@@ -8,6 +8,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -160,7 +161,7 @@ public class PostDisplayActivity extends AppCompatActivity {
         userName.setText(postWithUserInfo.getUserInfo().getUserName());
         RequestOptions requestOptions = new RequestOptions()
                 .transform(new CircleCrop());
-        Glide.with(content)
+        Glide.with(PostDisplayActivity.this)
                 .load(url+postWithUserInfo.getUserInfo().getAvatar())
                 .apply(requestOptions)
                 .into(avatar);

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import glue502.software.R;
-import glue502.software.activities.CreateRecordActivity;
+import glue502.software.activities.travelRecord.travelRecordActivity;
 
 public class RecommendFragment extends Fragment {
     private Button createBtn;
@@ -19,7 +19,7 @@ public class RecommendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recommend,container,false);
-        createBtn = view.findViewById(R.id.create_record);
+        createBtn = view.findViewById(R.id.btn_Recording);
         setlistener();
         return view;
     }
@@ -27,7 +27,7 @@ public class RecommendFragment extends Fragment {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CreateRecordActivity.class);
+                Intent intent = new Intent(getActivity(), travelRecordActivity.class);
                 startActivity(intent);
             }
         });
