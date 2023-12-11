@@ -45,18 +45,15 @@ import okhttp3.ResponseBody;
 
 
 public class CommunityFragment extends Fragment {
-    private final static String url="http://"+ip+"/travel/posts/getpostlist";
+    private  String url="http://"+ip+"/travel/posts/getpostlist";
     private ListView listView;
     private Button uploadBtn;
-    private String userID;
     private List<Post> posts;
     private List<UserInfo> userInfos;
     private String status;
-    private Context context;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        context = this.getContext();
 
         View view = inflater.inflate(R.layout.fragment_community,container,false);
         listView = view.findViewById(R.id.post_display);
@@ -65,8 +62,6 @@ public class CommunityFragment extends Fragment {
         status = sharedPreferences.getString("status","");
         setListener();
         initData();
-
-
         return view;
 
     }

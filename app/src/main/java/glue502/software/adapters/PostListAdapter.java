@@ -75,8 +75,6 @@ public class PostListAdapter extends BaseAdapter {
                 .transform(new CircleCrop());
         Glide.with(context)
                 .load(url+ userInfos.get(i).getAvatar())
-                .skipMemoryCache(true)  // 忽略内存缓存
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .apply(requestOptions)
                 .into(useravatar);
         //分离地址并获取
@@ -99,8 +97,6 @@ public class PostListAdapter extends BaseAdapter {
                 Glide.with(context)
                         .load(url + post1.getPicturePath().get(2))
                         .override(convertDpToPixel(125), convertDpToPixel(125))
-                        .skipMemoryCache(true)  // 忽略内存缓存
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(view3);
             }
         return v;
