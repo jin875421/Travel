@@ -49,9 +49,9 @@
                     android:numColumns="3" />
                 <ImageView
                     android:id="@+id/input_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_launcher_round"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:src="@drawable/add_image"
                     />
 
             </LinearLayout>
