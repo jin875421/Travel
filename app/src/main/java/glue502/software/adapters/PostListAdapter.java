@@ -65,9 +65,9 @@ public class PostListAdapter extends BaseAdapter {
         Post post1 = posts.get(i);
         title.setText(post1.getPostTitle());
         if (post1.getPostContent().length()<20){
-            content.setText(post1.getPostContent());
+            content.setText(post1.getPostContent().replace("\n"," "));
         }else {
-            content.setText(post1.getPostContent().substring(0,20)+"...");
+            content.setText((post1.getPostContent().substring(0,20)+"...").replace("\n"," "));
         }
 
         username.setText(userInfos.get(i).getUserName());
@@ -78,7 +78,6 @@ public class PostListAdapter extends BaseAdapter {
                 .apply(requestOptions)
                 .into(useravatar);
         //分离地址并获取
-
         //最多展示三张图片
             if (post1.getPicturePath().size()>0) {
                 //执行展示代码，将图片展示到页面上

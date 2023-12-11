@@ -1,5 +1,7 @@
 package glue502.software.adapters;
 
+import static glue502.software.activities.MainActivity.ip;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +21,7 @@ public class CommentListAdapter extends BaseAdapter {
     private Context context;//上下文环境
     private int comment_layout_id;
     private List<Comment> commentList;
-    private String URL = "192.168.29.92";
+    private String url = "http://"+ip+"/travel/";
 
     public CommentListAdapter(Context context, int comment_layout_id, List<Comment> commentList){
         this.context = context;
@@ -54,9 +56,8 @@ public class CommentListAdapter extends BaseAdapter {
         //获取当前要显示的对象
         Comment comment = commentList.get(position);
         //显示头像
-        System.out.println(comment.getAvatar());
         Glide.with(context)
-                .load("http://"+ URL +":8080/test/" + comment.getAvatar())
+                .load(url + comment.getAvatar())
                 .placeholder(R.mipmap.loading)
                 .error(R.mipmap.error)
                 .fallback(R.mipmap.blank)

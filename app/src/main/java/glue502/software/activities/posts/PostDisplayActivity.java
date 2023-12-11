@@ -130,7 +130,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                         for (JsonElement jsonElement : jsonArray) {
                             JsonObject jsonObject = jsonElement.getAsJsonObject();
                             Comment comment = new Gson().fromJson(jsonObject, Comment.class);
-                            System.out.println("comment为"+comment.toString());
                             commentList.add(comment);
                         }
                         // 更新UI线程中的ListView
@@ -251,6 +250,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         System.out.println("提交评论 ");
                         //生成评论实体comment
                         String text = chatInputEt.getText().toString();
+                        System.out.println(text);
                         String id = UUID.randomUUID().toString();
                         Date date = new Date();
                         SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
@@ -264,6 +264,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         //okHttp
                         Gson gson = new Gson();
                         String json = gson.toJson(uploadComment);
+
                         RequestBody body = RequestBody.create(
                                 MediaType.parse("application/json;charset=utf-8"),
                                 json
@@ -295,6 +296,8 @@ public class PostDisplayActivity extends AppCompatActivity {
                                     });
                                 }
                                 Log.v("MainActivity", "lzx获取服务器返回的数据"+result);
+                                //清空EditText
+                                chatInputEt.setText("");
                             }
                         }));
                     }
@@ -302,8 +305,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                 //点击提交后收回键盘
                 InputMethodManager inputMethodManager = (InputMethodManager) PostDisplayActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                //清空EditText
-                chatInputEt.setText("");
+
             }
         });
     }
