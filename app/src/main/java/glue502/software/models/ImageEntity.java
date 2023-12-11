@@ -11,6 +11,15 @@ public class ImageEntity implements OpenImageUrl {
     public String videoUrl;
     public int resouceType;
 
+    public ImageEntity(String photoUrl, String smallPhotoUrl, String coverUrl, String smallCoverUrl, String videoUrl, int resouceType) {
+        this.photoUrl = photoUrl;
+        this.smallPhotoUrl = smallPhotoUrl;
+        this.coverUrl = coverUrl;
+        this.smallCoverUrl = smallCoverUrl;
+        this.videoUrl = videoUrl;
+        this.resouceType = resouceType;
+    }
+
     @Override
     public String getImageUrl() {
         return resouceType == 1 ? coverUrl : photoUrl;
