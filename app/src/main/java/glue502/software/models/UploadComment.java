@@ -49,7 +49,7 @@ public class UploadComment {
     }
 
     public String getCommentId() {
-        return commentId;
+        return  commentId;
     }
 
     public void setCommentId(String commentId) {

@@ -12,7 +12,7 @@ public class Comment {
 
     public String toString() {
         return "Comment{" +
-                "commentId='" + commentId + '\'' +
+                "commentId= '" + commentId + '\'' +
                 ", username='" + username + '\'' +
                 ", postId='" + postId + '\'' +
                 ", comment='" + comment + '\'' +

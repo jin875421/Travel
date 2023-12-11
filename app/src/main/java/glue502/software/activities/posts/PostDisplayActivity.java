@@ -247,7 +247,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("提交评论");
+                        System.out.println("提交评论 ");
                         //生成评论实体comment
                         String text = chatInputEt.getText().toString();
                         String id = UUID.randomUUID().toString();
