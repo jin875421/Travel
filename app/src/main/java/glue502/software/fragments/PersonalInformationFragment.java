@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,6 +19,8 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +56,7 @@ import glue502.software.activities.personal.UpdatePersonalInformationActivity;
 import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.models.LoginResult;
 import glue502.software.models.UserInfo;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -113,6 +118,8 @@ public class PersonalInformationFragment extends Fragment {
         txtPublish=view.findViewById(R.id.txt_publish);
         txtHistory=view.findViewById(R.id.txt_history);
         txtPersonal=view.findViewById(R.id.txt_personal);
+        //添加沉浸式导航栏
+        MyViewUtils.setImmersiveStatusBar(getActivity(),imgAvatar.getRootView());
         SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String status=sharedPreferences.getString("status","");
         if("".equals(status)){
