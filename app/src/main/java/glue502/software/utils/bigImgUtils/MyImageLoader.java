@@ -19,10 +19,6 @@ import com.bumptech.glide.request.target.Target;
 import com.flyjingfish.openimagelib.utils.ActivityCompatHelper;
 import com.flyjingfish.openimagelib.utils.ScreenUtils;
 
-/*GlideApp 不需要import 再出现报错直接删掉这行import即可
-* 下面代码中GlideApp会报错 直接运行编译一次即可
-*/
-//import glue502.software.utils.GlideApp;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class MyImageLoader {

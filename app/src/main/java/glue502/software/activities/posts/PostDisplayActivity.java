@@ -142,6 +142,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                                         commentList
                                 );
                                 listView.setAdapter(commentListAdapter);
+                                setListViewHeightBasedOnChildren(listView);
                             }
                         });
                     }
@@ -247,10 +248,8 @@ public class PostDisplayActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("提交评论 ");
                         //生成评论实体comment
-                        String text = chatInputEt.getText().toString();
-                        System.out.println(text);
+                        String text = chatInputEt.getText().toString();;
                         String id = UUID.randomUUID().toString();
                         Date date = new Date();
                         SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
@@ -264,7 +263,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                         //okHttp
                         Gson gson = new Gson();
                         String json = gson.toJson(uploadComment);
-
                         RequestBody body = RequestBody.create(
                                 MediaType.parse("application/json;charset=utf-8"),
                                 json
@@ -292,10 +290,10 @@ public class PostDisplayActivity extends AppCompatActivity {
                                         public void run() {
                                             getCommentData();
                                             commentListAdapter.notifyDataSetChanged();
+                                            setListViewHeightBasedOnChildren(listView);
                                         }
                                     });
                                 }
-                                Log.v("MainActivity", "lzx获取服务器返回的数据"+result);
                                 //清空EditText
                                 chatInputEt.setText("");
                             }
@@ -305,8 +303,32 @@ public class PostDisplayActivity extends AppCompatActivity {
                 //点击提交后收回键盘
                 InputMethodManager inputMethodManager = (InputMethodManager) PostDisplayActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
             }
         });
     }
+
+    //动态设定ListView的高度
+    private void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        int last = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+            last = listItem.getMeasuredHeight();
+        }
+        totalHeight = totalHeight + last;
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
 }

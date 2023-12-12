@@ -96,8 +96,8 @@ public class RegisterActivity extends AppCompatActivity {
                     String againpassword1=edtAgainPassword.getText().toString();
                     MessageDigest messageDigest1=MessageDigest.getInstance("MD5");
                     byte[] plainTextBytes1=againpassword1.getBytes();
-                    messageDigest.update(plainTextBytes1);
-                    byte[] encryptedBytes1=messageDigest.digest();
+                    messageDigest1.update(plainTextBytes1);
+                    byte[] encryptedBytes1=messageDigest1.digest();
                     BigInteger bigInteger1=new BigInteger(1,encryptedBytes1);
                     againpassword=String.format("%032x",bigInteger1);
 
@@ -117,9 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "二次输入的密码为空", Toast.LENGTH_LONG).show();
                 } else if(againpassword.equals(password)==false){
                     Toast.makeText(RegisterActivity.this, "两次输入的密码不相同", Toast.LENGTH_LONG).show();
-                } else if(!isValidPhoneNumber(userPhoneNumber)){
-                    Toast.makeText(RegisterActivity.this, "手机号格式不正确", Toast.LENGTH_LONG).show();
-                }else{
+                } else{
 
                     new Thread(new Runnable() {
                         @Override
