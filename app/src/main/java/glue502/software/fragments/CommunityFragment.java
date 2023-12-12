@@ -14,10 +14,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -51,6 +53,7 @@ public class CommunityFragment extends Fragment {
     private List<Post> posts;
     private List<UserInfo> userInfos;
     private String status;
+    private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class CommunityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_community,container,false);
         listView = view.findViewById(R.id.post_display);
         uploadBtn = view.findViewById(R.id.upload_post_btn);
+        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         status = sharedPreferences.getString("status","");
         setListener();
@@ -123,6 +127,20 @@ public class CommunityFragment extends Fragment {
 
     }
     public void setListener(){
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initData();
+                        //关闭刷新
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                },3000);
+            }
+        });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
@@ -183,5 +201,8 @@ public class CommunityFragment extends Fragment {
             }
         }
     }
-
+    //判断页面是否位于最顶部
+    private boolean isTop() {
+        return getActivity().getSupportFragmentManager().getBackStackEntryCount() == 0;
+    }
 }
