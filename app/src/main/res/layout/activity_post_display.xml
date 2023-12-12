@@ -96,6 +96,7 @@
         android:orientation="horizontal">
         <EditText
             android:id="@+id/chatInputEt"
+            android:hint="请友好交流哦"
             android:layout_width="290dp"
             android:layout_height="50dp"
             android:layout_marginLeft="15dp"

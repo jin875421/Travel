@@ -87,7 +87,7 @@ public class PostDisplayActivity extends AppCompatActivity {
 
         initData();
         initView();
-        setlistener();
+        setListener();
         getCommentData();
 
         displayPost();
@@ -107,7 +107,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.v("MainActivity", "lzx向服务器发送请求启动");
                 //OkHttp
                 RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),postId);
                 Request request = new Request.Builder()
@@ -184,7 +183,7 @@ public class PostDisplayActivity extends AppCompatActivity {
         chatInputEt = findViewById(R.id.chatInputEt);
         view = findViewById(R.id.view);
     }
-    public void setlistener(){
+    public void setListener(){
         star_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -248,64 +247,89 @@ public class PostDisplayActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //生成评论实体comment
-                        String text = chatInputEt.getText().toString();;
-                        String id = UUID.randomUUID().toString();
-                        Date date = new Date();
-                        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
-                        System.out.println(dateFormat.format(date));
-                        String time = dateFormat.format(date);
-                        UploadComment uploadComment = new UploadComment(postId,
-                                userId,
-                                text,
-                                id,
-                                time);
-                        //okHttp
-                        Gson gson = new Gson();
-                        String json = gson.toJson(uploadComment);
-                        RequestBody body = RequestBody.create(
-                                MediaType.parse("application/json;charset=utf-8"),
-                                json
-                        );
-                        Request request = new Request.Builder()
-                                .post(body)
-                                .url(url + "comment/addComment")
-                                .build();
-                        //3.Call对象
-                        Call call = client.newCall(request);
-                        call.enqueue((new Callback() {
-                            @Override
-                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-
-                            }
-                            // 这里可以包含获取数据的逻辑，比如使用OkHttp请求数据
-                            // 返回模拟的数据
-                            @Override
-                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                                //获取响应的数据
-                                String result = response.body().string();
-                                if (result!=null){
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            getCommentData();
-                                            commentListAdapter.notifyDataSetChanged();
-                                            setListViewHeightBasedOnChildren(listView);
-                                        }
-                                    });
+                if (status==""){
+                    // 创建AlertDialog构建器
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
+                    builder.setTitle("账号未登录！")
+                            .setMessage("是否前往登录账号")
+                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“确定”按钮后的操作
+                                    Intent intent = new Intent(PostDisplayActivity.this, LoginActivity.class);
+                                    startActivity(intent);
                                 }
-                                //清空EditText
-                                chatInputEt.setText("");
-                            }
-                        }));
-                    }
-                }).start();
-                //点击提交后收回键盘
-                InputMethodManager inputMethodManager = (InputMethodManager) PostDisplayActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                            })
+                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“取消”按钮后的操作
+                                    dialog.dismiss(); // 关闭对话框
+                                }
+                            });
+
+                    // 创建并显示对话框
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                } else {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //生成评论实体comment
+                            String text = chatInputEt.getText().toString();;
+                            String id = UUID.randomUUID().toString();
+                            Date date = new Date();
+                            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
+                            System.out.println(dateFormat.format(date));
+                            String time = dateFormat.format(date);
+                            UploadComment uploadComment = new UploadComment(postId,
+                                    userId,
+                                    text,
+                                    id,
+                                    time);
+                            //okHttp
+                            Gson gson = new Gson();
+                            String json = gson.toJson(uploadComment);
+                            RequestBody body = RequestBody.create(
+                                    MediaType.parse("application/json;charset=utf-8"),
+                                    json
+                            );
+                            Request request = new Request.Builder()
+                                    .post(body)
+                                    .url(url + "comment/addComment")
+                                    .build();
+                            //3.Call对象
+                            Call call = client.newCall(request);
+                            call.enqueue((new Callback() {
+                                @Override
+                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+                                }
+                                // 这里可以包含获取数据的逻辑，比如使用OkHttp请求数据
+                                // 返回模拟的数据
+                                @Override
+                                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                    //获取响应的数据
+                                    String result = response.body().string();
+                                    if (result!=null){
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                getCommentData();
+                                                commentListAdapter.notifyDataSetChanged();
+                                                setListViewHeightBasedOnChildren(listView);
+                                            }
+                                        });
+                                    }
+                                    //清空EditText
+                                    chatInputEt.setText("");
+                                }
+                            }));
+                        }
+                    }).start();
+                    //点击提交后收回键盘
+                    InputMethodManager inputMethodManager = (InputMethodManager) PostDisplayActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
             }
         });
     }
