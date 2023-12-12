@@ -81,7 +81,7 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull BannerPagerAdapter.ImageViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        MyImageLoader.getInstance().load(holder.imageView, datas.get(position % imagepath.size()).getCoverImageUrl(), R.drawable.cat5_3, R.drawable.cat5_2);
+        MyImageLoader.getInstance().load(holder.imageView, datas.get(position % imagepath.size()).getCoverImageUrl(), R.mipmap.loading, R.mipmap.blank);
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

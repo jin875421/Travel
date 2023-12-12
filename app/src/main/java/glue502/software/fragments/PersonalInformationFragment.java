@@ -17,6 +17,7 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,11 +27,21 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
+import com.flyjingfish.openimagelib.BaseInnerFragment;
+import com.flyjingfish.openimagelib.OpenImage;
+import com.flyjingfish.openimagelib.beans.OpenImageUrl;
+import com.flyjingfish.openimagelib.enums.MediaType;
+import com.flyjingfish.openimagelib.enums.MoreViewShowType;
+import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
+import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
+import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import glue502.software.R;
 import glue502.software.activities.login.CodeLoginActivity;
@@ -88,6 +99,8 @@ public class PersonalInformationFragment extends Fragment {
             }
         }
     };
+    private String avatarUrl;
+    private String userName;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_personal_information, container, false);
@@ -152,6 +165,20 @@ public class PersonalInformationFragment extends Fragment {
                     startActivity(intent);
                 }
             }
+        });
+        imgAvatar.setOnClickListener(v->{
+            OpenImage.with(getContext()).setClickImageView(imgAvatar)
+                    .setAutoScrollScanPosition(true)
+                    .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+                    .addPageTransformer(new ScaleInTransformer())
+                    .setImageUrlList(Collections.singletonList(urlAvatar+sharedPreferences.getString("userId", "")), MediaType.IMAGE)
+//                    .setOnItemLongClickListener(new OnItemLongClickListener() {
+//                        @Override
+//                        public void onItemLongClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
+//                            Toast.makeText(getContext(),"长按图片",Toast.LENGTH_LONG).show();
+//                        }
+//                    })
+                    .show();
         });
         txtNews.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,8 +313,8 @@ public class PersonalInformationFragment extends Fragment {
                 String[] parts = responseData.split(":");
 
                 // 获取 avatarUrl 和 userNickname
-                final String avatarUrl = parts[0];
-                final String userName = parts[1];
+                avatarUrl = parts[0];
+                userName = parts[1];
                 System.out.println("name"+userName);
                 // 在 UI 线程中更新 ImageView
                 requireActivity().runOnUiThread(new Runnable() {
