@@ -131,7 +131,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                         for (JsonElement jsonElement : jsonArray) {
                             JsonObject jsonObject = jsonElement.getAsJsonObject();
                             Comment comment = new Gson().fromJson(jsonObject, Comment.class);
-                            System.out.println("comment为"+comment.toString());
                             commentList.add(comment);
                         }
                         // 更新UI线程中的ListView

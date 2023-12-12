@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.CommunityFragment">
+
    <RelativeLayout
        android:id="@+id/community_top"
        android:layout_width="match_parent"
@@ -17,11 +18,16 @@
           />
 
    </RelativeLayout>
-
+   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+       android:id="@+id/swiperefresh"
+       android:layout_below="@+id/community_top"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
       <ListView
-          android:layout_below="@+id/community_top"
           android:id="@+id/post_display"
           android:layout_width="match_parent"
           android:layout_height="match_parent"/>
+   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 </RelativeLayout>

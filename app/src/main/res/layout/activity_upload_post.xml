@@ -49,6 +49,7 @@
                     android:numColumns="3" />
                 <ImageView
                     android:id="@+id/input_image"
+                    android:paddingLeft="10dp"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:src="@drawable/add_image"
