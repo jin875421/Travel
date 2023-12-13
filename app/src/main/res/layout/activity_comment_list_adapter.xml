@@ -24,6 +24,7 @@
         android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-1dp"
         android:layout_marginBottom="13dp"
         android:orientation="vertical">
 
@@ -31,6 +32,8 @@
           android:id="@+id/username"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:textColor="@color/black"
+          android:textStyle="bold"
           android:text="用户名 "
           android:textSize="14sp" />
 
@@ -38,7 +41,8 @@
           android:id="@+id/time"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="5dp"
+          android:textColor="@color/black"
+          android:layout_marginTop="2dp"
           android:text="2003年11月29日"
           android:textSize="10sp" />
 
