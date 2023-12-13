@@ -35,6 +35,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import glue502.software.R;
 import glue502.software.models.UserInfo;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -64,6 +65,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upadte_person_information);
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView());
         edtName=findViewById(R.id.edt_name);
         txtSave=findViewById(R.id.txt_save);
         imgBcak=findViewById(R.id.img_back);

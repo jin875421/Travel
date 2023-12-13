@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import glue502.software.R;
+import glue502.software.utils.MyViewUtils;
 
 public class SettingActivity extends AppCompatActivity {
     private Button btnDestroy;
@@ -25,6 +26,7 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView());
         btnDestroy=findViewById(R.id.btn_destroy);
         imgBcak=findViewById(R.id.img_back);
         rltlAccount=findViewById(R.id.rltl_account);

@@ -32,9 +32,6 @@
             android:name=".activities.personal.MineStarActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.posts.FullScreenDisplayActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.CreateRecordActivity"
             android:exported="false" />
         <activity

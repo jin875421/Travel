@@ -16,12 +16,13 @@
             android:layout_height="wrap_content"
             android:text="返回" />
 
-        <TextView
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="30dp"
-            android:text="图文" />
+            android:textSize="20dp"
+            android:hint="图文"
+            android:background="@null"/>
 
         <Button
             android:id="@+id/btn_submit"

@@ -41,6 +41,7 @@ import java.util.UUID;
 
 import glue502.software.R;
 import glue502.software.models.Post;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -66,6 +67,7 @@ public class UploadPostActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         userId = sharedPreferences.getString("userId","");
         initView();
+        MyViewUtils.setImmersiveStatusBar(this, imgLinerLayout);
         setListener();
     }
 
