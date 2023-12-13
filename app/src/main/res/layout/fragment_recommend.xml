@@ -1,23 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.RecommendFragment">
+    android:background="#FFFFFF">
 
+    <!-- 大按钮 -->
+
+    <!-- 右上角按钮 -->
     <Button
         android:id="@+id/btn_Recording"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="197dp"
+        android:layout_height="184dp"
+        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#A9A9A9"
+        android:elevation="8dp"
+        android:radius="100dp"
         android:text="开始旅程"
-        />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintDimensionRatio="H,1:2"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.3333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/topRightButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Top Right"
+        android:backgroundTint="#A9A9A9"
+        android:radius="40dp"
+    android:textColor="#FFFFFF"
+    android:textSize="16sp"
+    android:textStyle="bold"
+    android:layout_margin="0dp"
+    android:elevation="0dp"
+    app:layout_constraintDimensionRatio="H,1:1"
+    app:layout_constraintHeight_default="percent"
+    app:layout_constraintHeight_percent="0.1666"
+    app:layout_constraintStart_toEndOf="@id/btn_Recording"
+    app:layout_constraintTop_toTopOf="@id/btn_Recording"/>
+
+    <!-- 右下角按钮 -->
+    <Button
+        android:id="@+id/bottomRightButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Bottom Right"
+        android:backgroundTint="#A9A9A9"
+        android:radius="40dp"
+    android:textColor="#FFFFFF"
+    android:textSize="16sp"
+    android:textStyle="bold"
+    android:layout_margin="0dp"
+    android:elevation="8dp"
+    app:layout_constraintDimensionRatio="H,1:1"
+    app:layout_constraintHeight_default="percent"
+    app:layout_constraintHeight_percent="0.1666"
+    app:layout_constraintStart_toEndOf="@id/btn_Recording"
+    app:layout_constraintTop_toBottomOf="@id/topRightButton"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

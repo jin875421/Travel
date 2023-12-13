@@ -34,7 +34,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="30dp"
+        android:paddingTop="55dp"
         android:scrollbars="none" >
 
         <LinearLayout
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:isScrollContainer="true"
             android:orientation="vertical"
-            android:padding="10.0dip" >
+            android:padding="10dip" >
 
             <LinearLayout
                 android:id="@+id/ll_one"
@@ -78,7 +78,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@mipmap/ic_launcher_round" />
-
                     </LinearLayout>
 
                 </HorizontalScrollView>
