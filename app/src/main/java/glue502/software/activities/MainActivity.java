@@ -3,6 +3,7 @@ package glue502.software.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.AsyncTask;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,8 @@ import glue502.software.utils.MyViewUtils;
 
 public class MainActivity extends AppCompatActivity {
     //换成自己电脑的ip地址，连接后端需要
-    public static final String ip = "10.7.89.27:8080";
+    //jwh:10.7.89.89:8080
+    public static final String ip = "192.168.198.91:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         new ClearGlideCacheTask().execute();
         tabLayout = findViewById(R.id.tbl);
         viewPager2 = findViewById(R.id.vp2);
+        setViewPager2ScrollSensitivity(10);
+
         //添加沉浸式导航栏
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.main_root));
         //初始化
@@ -109,4 +114,21 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+    private void setViewPager2ScrollSensitivity(int sensitivity) {
+        try {
+            Field recyclerViewField = ViewPager2.class.getDeclaredField("mRecyclerView");
+            recyclerViewField.setAccessible(true);
+            RecyclerView recyclerView = (RecyclerView) recyclerViewField.get(viewPager2);
+
+            Field touchSlopField = RecyclerView.class.getDeclaredField("mTouchSlop");
+            touchSlopField.setAccessible(true);
+            int touchSlop = (int) touchSlopField.get(recyclerView);
+
+            touchSlopField.set(recyclerView, touchSlop * sensitivity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ... 其他代码
 }
