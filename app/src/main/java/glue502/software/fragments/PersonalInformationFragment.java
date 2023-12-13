@@ -123,8 +123,6 @@ public class PersonalInformationFragment extends Fragment {
         txtPublish=view.findViewById(R.id.txt_publish);
         txtHistory=view.findViewById(R.id.txt_history);
         txtPersonal=view.findViewById(R.id.txt_personal);
-        //添加沉浸式导航栏
-        MyViewUtils.setImmersiveStatusBar(getActivity(),imgAvatar.getRootView());
         SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String status=sharedPreferences.getString("status","");
         if("".equals(status)){
