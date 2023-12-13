@@ -1,16 +1,24 @@
 package glue502.software.activities.travelRecord;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -18,16 +26,31 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.core.content.FileProvider;
+
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
 import glue502.software.R;
 
 public class travelRecordActivity extends Activity {
     // 在 PostActivity 中定义一个 SharedPreferences 的实例变量,持久化保存
     private SharedPreferences sharedPreferences;
+    private List<File> fileList = new ArrayList<>();
+    private int value=0;
     // 外围的LinearLayout容器
     private LinearLayout llContentView;
     //添加点击按钮
@@ -40,10 +63,11 @@ public class travelRecordActivity extends Activity {
     private int btnIDIndex = 1000;
     // “-”按钮控件List
     private LinkedList<ImageButton> listIBTNDel;
-
+    //路径
+    private String mCurrentPhotoPath;
     private int iETContentHeight = 0;   // EditText控件高度
     private float fDimRatio = 1.0f; // 尺寸比例（实际尺寸/xml文件里尺寸）
-
+    private final int RESULT_LOAD_IMAGES = 1, RESULT_CAMERA_IMAGE = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +80,7 @@ public class travelRecordActivity extends Activity {
         // 如果之前有保存的控件数量，则重新创建控件
         if (numberOfControls > 0) {
 
-            for (int i = 1; i < numberOfControls; i++) {
+            for (int i = numberOfControls-1; i > 0; i--) {
                 addContentWithTag(i);
             }
         }
@@ -64,9 +88,22 @@ public class travelRecordActivity extends Activity {
         loadSavedContent();
         setListener();
     }
+    private void setValue(int value) {
+        this.value = value;
+    }
 
+    // 另一个方法用于获取参数值
+    private int getValue() {
+        return this.value;
+    }
     private void setListener() {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("11111111");
+            }
+        });
+        btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("11111111");
@@ -75,17 +112,198 @@ public class travelRecordActivity extends Activity {
         imageInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setValue(0);
                 //用户选择的图片
-                addPicture();
+                showPopupWindow();
             }
         });
 
     }
 
-        private void addPicture(){
+        private void showPopupWindow(){
+            {
+                View popView = View.inflate(this, R.layout.popupwindow_camera_need, null);
+                Button bt_album = popView.findViewById(R.id.btn_pop_album);
+                Button bt_camera = popView.findViewById(R.id.btn_pop_camera);
+                Button bt_cancel = popView.findViewById(R.id.btn_pop_cancel);
+                int width = getResources().getDisplayMetrics().widthPixels;
+                int height = getResources().getDisplayMetrics().heightPixels * 1 / 3;
+                final PopupWindow popupWindow = new PopupWindow(popView, width, height);
+                popupWindow.setFocusable(true);
+                popupWindow.setOutsideTouchable(true);
+                //用户点击从相册选择
+                bt_album.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openFilePicker();
+                        popupWindow.dismiss();
+                    }
+                });
+                //用户选择拍照上传
+                bt_camera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        takeCamera(RESULT_CAMERA_IMAGE);
+                        popupWindow.dismiss();
+                    }
+                });
+                //用户选择取消
+                bt_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupWindow.dismiss();
+                    }
+                });
 
+                popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        WindowManager.LayoutParams lp = getWindow().getAttributes();
+                        lp.alpha = 1.0f;
+                        getWindow().setAttributes(lp);
+                    }
+                });
+
+                WindowManager.LayoutParams lp = getWindow().getAttributes();
+                lp.alpha = 0.5f;
+                getWindow().setAttributes(lp);
+                popupWindow.showAtLocation(popView, Gravity.BOTTOM, 0, 50);
+            }
 
         }
+//启动相机
+    private void takeCamera(int num) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
+            File photoFile = null;
+            photoFile = createImageFile();
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        getApplicationContext().getPackageName() + ".fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, num);
+            }
+        }
+    }
+    //生成文件名
+    private String generateFileName() {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        return "JPEG_" + timeStamp + "_";
+    }
+    //处理拍摄的图片
+    private File createImageFile() {
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        File image = null;
+        try {
+            image = File.createTempFile(generateFileName(), ".jpg", storageDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+    //打开文件选择器
+    private void openFilePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), RESULT_LOAD_IMAGES);
+    }
+
+    //通过uri获取文件
+    private File getFileFromUri(Uri uri) {
+        try {
+            ContentResolver contentResolver = getContentResolver();
+            String displayName = null;
+            String[] projection = {MediaStore.Images.Media.DISPLAY_NAME};
+            Cursor cursor = contentResolver.query(uri, projection, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
+                displayName = cursor.getString(index);
+            }
+            cursor.close();
+
+            if (displayName != null) {
+                InputStream inputStream = contentResolver.openInputStream(uri);
+                if (inputStream != null) {
+                    File file = new File(getCacheDir(), displayName);
+                    FileOutputStream outputStream = new FileOutputStream(file);
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                    outputStream.close();
+                    inputStream.close();
+                    return file;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    private void savefile(Uri uri){
+        fileList.add(getFileFromUri(uri));
+    }
+    private int convertDpToPixel(int dp) {
+        float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == RESULT_LOAD_IMAGES && data != null) {
+                if (data.getClipData() != null) {
+                    ClipData clipData = data.getClipData();
+                    int count = clipData.getItemCount();
+                    for (int i = 0; i < count; i++) {
+                        Uri selectedImage = clipData.getItemAt(i).getUri();
+                        savefile(selectedImage);
+                        LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(getValue()); // 获取第一个LinearLayout
+                        HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
+                        LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
+                        ImageView imageView1 = new ImageView(this);
+                        imageView1.setImageURI(selectedImage);
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                convertDpToPixel(150), // 宽度 150dp 转换为像素
+                                convertDpToPixel(150) // 高度 150dp 转换为像素
+                        );
+                        layoutParams.setMargins(0, 0, 0, 16);
+                        imageView1.setLayoutParams(layoutParams);
+
+// 添加新的imageView1 到 innerLayout
+                        innerLayout.addView(imageView1);
+                    }
+                } else if(data.getData() != null) {
+                    Uri selectedImage = data.getData();
+                    savefile(selectedImage);
+// 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
+                    LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(getValue()); // 获取第一个LinearLayout
+                    HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
+                    LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
+                    ImageView imageView1 = new ImageView(this);
+                    imageView1.setImageURI(selectedImage);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            convertDpToPixel(150), // 宽度 150dp 转换为像素
+                            convertDpToPixel(150) // 高度 150dp 转换为像素
+                    );
+                    layoutParams.setMargins(0, 0, 0, 16);
+                    imageView1.setLayoutParams(layoutParams);
+// 添加新的imageView1 到 innerLayout
+                    innerLayout.addView(imageView1);
+                }
+            } else if (requestCode == RESULT_CAMERA_IMAGE) {
+
+            }
+        }
+    }
+
+    //下面是新建的控件
     private void addContentWithTag(int i) {
         // 1.创建外围LinearLayout控件
         LinearLayout layout = new LinearLayout(travelRecordActivity.this);
@@ -136,13 +354,17 @@ public class travelRecordActivity extends Activity {
         imageView.setLayoutParams(imageParams);
         imageView.setImageResource(R.mipmap.ic_launcher_round);
         imageView.setVisibility(View.VISIBLE); // 设置为可见
+        imageView.setTag(i);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 执行点击操作
-                addPicture();
+                int a = (int)imageView.getTag(); // 索引值从已有子控件的数量开始
+                System.out.println(a+"Asdasdsa");
+                setValue(a);
+                showPopupWindow();
             }
         });
+
 // 将 ImageView 添加到内部 LinearLayout
         innerLayout.addView(imageView);
 
@@ -151,6 +373,7 @@ public class travelRecordActivity extends Activity {
 
 // 添加到您的布局容器中（假设容器是 llContentView）
         layout.addView(scrollView);
+
 //TODO 以上是图片的新加
 
 
@@ -168,6 +391,7 @@ public class travelRecordActivity extends Activity {
         etContent1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         etContent1.setHint("标题");
         etContent1.setTag(i);
+        System.out.println(i);
         layout.addView(etContent1);
 
 // 创建 EditText2
@@ -244,7 +468,7 @@ public class travelRecordActivity extends Activity {
         llContentView.addView(layout, 1);
 
         btnIDIndex++;
-
+        saveContentToSharedPreferences();
 
     }
 
@@ -302,8 +526,6 @@ public class travelRecordActivity extends Activity {
         if (v == null) {
             return;
         }
-
-        // 判断第几个“+”按钮触发了事件
         int iIndex = -1;
         for (int i = 0; i < listIBTNAdd.size(); i++) {
             if (listIBTNAdd.get(i) == v) {
@@ -311,7 +533,6 @@ public class travelRecordActivity extends Activity {
                 break;
             }
         }
-
         if (iIndex >= 0) {
 // 控件实际添加位置为当前触发位置点下一位
             iIndex += 1;
@@ -361,7 +582,19 @@ public class travelRecordActivity extends Activity {
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             imageView.setLayoutParams(imageParams);
             imageView.setImageResource(R.mipmap.ic_launcher_round);
+            int a = llContentView.getChildCount();
+            imageView.setTag(a);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int a = (int)imageView.getTag(); // 索引值从已有子控件的数量开始
+                    System.out.println(a+"Asdasdsa");
+                    setValue(a);
+                    //TODO 执行点击操作
+                    showPopupWindow();
 
+                }
+            });
 // 将 ImageView 添加到内部 LinearLayout
             innerLayout.addView(imageView);
 
@@ -370,6 +603,7 @@ public class travelRecordActivity extends Activity {
 
 // 添加到您的布局容器中（假设容器是 llContentView）
             layout.addView(scrollView);
+
 //TODO 以上是图片的新加
 
 // 创建 EditText1
@@ -401,8 +635,8 @@ public class travelRecordActivity extends Activity {
             etContent2.setPadding(dpToPx(5), 0, 0, 0);
             etContent2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             etContent2.setHint("输入你的内容");
-            int a = llContentView.getChildCount(); // 索引值从已有子控件的数量开始
-            etContent2.setTag(a);
+            etContent2.setTag(newIndex);
+            System.out.println(newIndex);
             layout.addView(etContent2);
 
 // 将动态生成的 LinearLayout 添加到 llContentView 容器中
@@ -416,8 +650,8 @@ public class travelRecordActivity extends Activity {
 //          rlParam.setMargins(0, (int) (fDimRatio * 5), 0, 0);
             rlBtn.setPadding(0, (int) (fDimRatio * 5), 0, 0);
             rlBtn.setLayoutParams(rlParam);
-
             // 4.创建“+”按钮
+
             ImageButton btnAdd = new ImageButton(travelRecordActivity.this);
             RelativeLayout.LayoutParams btnAddParam = new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -450,7 +684,6 @@ public class travelRecordActivity extends Activity {
             // “-”按钮放在“+”按钮左侧
             btnDeleteAddParam.addRule(RelativeLayout.LEFT_OF, btnIDIndex);
             btnDelete.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     deleteContent(v);
@@ -464,7 +697,7 @@ public class travelRecordActivity extends Activity {
             layout.addView(rlBtn);
 
             // 7.将layout同它内部的所有控件加到最外围的llContentView容器里
-//            llContentView.addView(layout, iIndex);
+//            llContentView.addView(layout, 1);
 
             btnIDIndex++;
             saveContentToSharedPreferences();
@@ -498,7 +731,7 @@ public class travelRecordActivity extends Activity {
             llContentView.removeViewAt(iIndex);
         }
     }
-    // 保存内容到 SharedPreferences
+// 保存内容到 SharedPreferences
     private void saveContentToSharedPreferences() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         for (int i = 0; i < llContentView.getChildCount(); i++) {
@@ -523,7 +756,8 @@ public class travelRecordActivity extends Activity {
                         }
                         String title = editText.getText().toString();
                         String content = editText.getText().toString();
-
+                        System.out.println(title+"saveContentToSharedPreferences");
+                        System.out.println(content+"saveContentToSharedPreferences");
                         if (editTextCount == 0) {
                             // First EditText - Assume it as title EditText
                             editor.putString("userTitle" + index, title);
@@ -540,7 +774,7 @@ public class travelRecordActivity extends Activity {
         editor.apply();
         Log.d("PostActivity", "saveContentToSharedPreferences() called");
     }
-
+//打开时执行加载的代码，把上一次保存的东西加载进来
     private void loadSavedContent() {
         for (int i = 0; i < llContentView.getChildCount(); i++) {
             View view = llContentView.getChildAt(i);
@@ -578,7 +812,8 @@ public class travelRecordActivity extends Activity {
 
                     String savedTitle = sharedPreferences.getString("userTitle" + savedIndex, "");
                     String savedContent = sharedPreferences.getString("userContent" + savedIndex, "");
-
+                    System.out.println(savedTitle+"loadSavedContent");
+                    System.out.println(savedContent+"loadSavedContent");
                     etTitle.setText(savedTitle);
                     etContent.setText(savedContent);
                 }
@@ -602,13 +837,6 @@ public class travelRecordActivity extends Activity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 //        editor.putInt("numberOfControls", 0);
         editor.putInt("numberOfControls", llContentView.getChildCount());
-        editor.apply();
-    }
-
-    //下面是按钮删除的操作在储存里也删除了
-    private void removeFromSharedPreferences(int index) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove("userContent" + index);
         editor.apply();
     }
 }

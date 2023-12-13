@@ -61,9 +61,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class PostDisplayActivity extends AppCompatActivity {
-    private Button star_btn;
+    private ImageView star_btn;
     private ImageView back_btn;
-    private Button submit;
+    private ImageView submit;
     private LinearLayout dotLinerLayout;
     private ViewPager2 postImage;
     private PostWithUserInfo postWithUserInfo;
