@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/bg2"
-
     tools:context=".activities.travelRecord.travelRecordActivity" >
     <RelativeLayout
         android:layout_alignParentTop="true"
@@ -16,13 +15,12 @@
             android:layout_height="wrap_content"
             android:text="返回" />
 
-        <EditText
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="20dp"
-            android:hint="图文"
-            android:background="@null"/>
+            android:textSize="30dp"
+            android:text="图文" />
 
         <Button
             android:id="@+id/btn_submit"
@@ -86,7 +84,7 @@
                     android:id="@+id/et_content1"
                     android:layout_width="match_parent"
                     android:layout_height="25dip"
-                    android:background="#FFFFFFFF"
+                    android:background="#FFFFFF"
                     android:gravity="left"
                     android:inputType="textMultiLine"
                     android:paddingLeft="5dip"
@@ -97,7 +95,7 @@
                     android:id="@+id/et_content2"
                     android:layout_width="match_parent"
                     android:layout_height="80dip"
-                    android:background="#FFFFFFFF"
+                    android:background="#FFFFFF"
                     android:gravity="left"
                     android:inputType="textMultiLine"
                     android:paddingLeft="5dip"
