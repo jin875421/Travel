@@ -324,7 +324,7 @@ private void putPicture(Uri selectedImage,int a){
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         layout.setLayoutParams(layoutParams);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setBackgroundColor(Color.parseColor("#A9A9A9"));
+        layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
         layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
         layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
 
@@ -336,7 +336,7 @@ private void putPicture(Uri selectedImage,int a){
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 dpToPx(150)); // 150dp高度
         scrollView.setLayoutParams(scrollParams);
-        scrollView.setBackgroundColor(Color.parseColor("#FFFFFFFF"));
+        scrollView.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
 // 创建内部 LinearLayout
         LinearLayout innerLayout = new LinearLayout(this);
@@ -396,7 +396,7 @@ private void putPicture(Uri selectedImage,int a){
                 dpToPx(25));
         etContent1.setLayoutParams(etParams1);
         etContent1.setId(View.generateViewId());
-        etContent1.setBackgroundColor(Color.parseColor("#FFFFFFFF"));
+        etContent1.setBackgroundColor(Color.parseColor("#FFFFFF"));
         etContent1.setGravity(Gravity.LEFT);
         etContent1.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         etContent1.setPadding(dpToPx(5), 0, 0, 0);
@@ -411,7 +411,7 @@ private void putPicture(Uri selectedImage,int a){
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 dpToPx(80));
         etContent2.setLayoutParams(etParams2);
-        etContent2.setBackgroundColor(Color.parseColor("#FFFFFFFF"));
+        etContent2.setBackgroundColor(Color.parseColor("#FFFFFF"));
         etContent2.setGravity(Gravity.LEFT);
         etContent2.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         etContent2.setPadding(dpToPx(5), 0, 0, 0);
@@ -553,7 +553,7 @@ private void putPicture(Uri selectedImage,int a){
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             layout.setLayoutParams(layoutParams);
             layout.setOrientation(LinearLayout.VERTICAL);
-            layout.setBackgroundColor(Color.parseColor("#A9A9A9"));
+            layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
             layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
             layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
 //TODO 以下是图片的新加
@@ -564,7 +564,7 @@ private void putPicture(Uri selectedImage,int a){
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     dpToPx(150)); // 150dp高度
             scrollView.setLayoutParams(scrollParams);
-            scrollView.setBackgroundColor(Color.parseColor("#FFFFFFFF"));
+            scrollView.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
 // 创建内部 LinearLayout
             LinearLayout innerLayout = new LinearLayout(this);
@@ -622,7 +622,7 @@ private void putPicture(Uri selectedImage,int a){
                     dpToPx(25));
             etContent1.setLayoutParams(etParams1);
             etContent1.setId(View.generateViewId());
-            etContent1.setBackgroundColor(Color.parseColor("#FFFFFFFF"));
+            etContent1.setBackgroundColor(Color.parseColor("#FFFFFF"));
             etContent1.setGravity(Gravity.LEFT);
             etContent1.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
             etContent1.setPadding(dpToPx(5), 0, 0, 0);
@@ -638,7 +638,7 @@ private void putPicture(Uri selectedImage,int a){
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     dpToPx(80));
             etContent2.setLayoutParams(etParams2);
-            etContent2.setBackgroundColor(Color.parseColor("#FFFFFFFF"));
+            etContent2.setBackgroundColor(Color.parseColor("#FFFFFF"));
             etContent2.setGravity(Gravity.LEFT);
             etContent2.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
             etContent2.setPadding(dpToPx(5), 0, 0, 0);

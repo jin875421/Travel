@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
+    android:background="@mipmap/bg2"
 
     tools:context=".activities.travelRecord.travelRecordActivity" >
     <RelativeLayout
@@ -50,14 +50,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
-                android:background="#A9A9A9"
+                android:background="#FFFFFF"
                 android:orientation="vertical"
                 android:padding="5dip" >
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:background="#FFFFFFFF">
+                    android:background="#FFFFFF">
 
                     <LinearLayout
                         android:id="@+id/imageContainer"
@@ -75,8 +75,8 @@
 
                         <ImageView
                             android:id="@+id/input_image"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
                             android:src="@drawable/add_image" />
                     </LinearLayout>
 
