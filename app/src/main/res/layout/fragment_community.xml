@@ -24,7 +24,6 @@
           />
 
 
-
    </LinearLayout>
    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
        android:id="@+id/swiperefresh"
@@ -34,7 +33,10 @@
       <ListView
           android:id="@+id/post_display"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"/>
+          android:layout_height="match_parent"
+          android:paddingLeft="10dp"
+          android:paddingRight="10dp"
+          android:paddingTop="5dp"/>
    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
    <FrameLayout
        android:id="@+id/floating_button_layout"
