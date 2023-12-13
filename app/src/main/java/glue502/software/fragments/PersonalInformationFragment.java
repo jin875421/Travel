@@ -44,8 +44,13 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 
 import glue502.software.R;
 import glue502.software.activities.login.CodeLoginActivity;
@@ -137,7 +142,7 @@ public class PersonalInformationFragment extends Fragment {
             txtName.setText(userName);
             txtUserId.setText("账号: "+userId);
             loadUserAvatar(false);
-
+            remindBind();
         }
         txtCollect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -422,10 +427,82 @@ public class PersonalInformationFragment extends Fragment {
                     txtName.setText(userName);
                     txtUserId.setText("账号: "+userId);
                     loadUserAvatar(false);
-
+                    remindBind();
                 }
             }
         }
+    }
+    private void remindBind() {
+        SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+        String userPhoneNumber=sharedPreferences.getString("userPhoneNumber","");
+        String email=sharedPreferences.getString("email","");
+
+        checkAndShowReminder(userPhoneNumber, email);
+    }
+
+    private void checkAndShowReminder(String userPhoneNumber, String email) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+        String lastReminderDate = sharedPreferences.getString("lastReminderDate", "");
+
+        if (userPhoneNumber.isEmpty() && email.isEmpty() && !isSameDay(lastReminderDate)) {
+            // 提示绑定的逻辑
+            showBindingReminderDialog();
+
+            // 更新上次提醒的日期为今天
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("lastReminderDate", getCurrentDate());
+            editor.apply();
+        }
+    }
+
+    private boolean isSameDay(String date) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date currentDate = new Date();
+            Date storedDate = sdf.parse(date);
+
+            Calendar cal1 = Calendar.getInstance();
+            Calendar cal2 = Calendar.getInstance();
+            cal1.setTime(currentDate);
+            cal2.setTime(storedDate);
+
+            return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                    cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+                    cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(new Date());
+    }
+
+    private void showBindingReminderDialog() {
+        // 创建并显示提醒对话框的逻辑
+        // 可以使用 AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("绑定提醒");
+        builder.setMessage("请绑定手机号码和邮箱否则无法找回密码！");
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // 在这里执行取消按钮被点击后的操作
+                dialogInterface.dismiss(); // 关闭对话框
+            }
+        });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // 在这里执行确定按钮被点击后的操作
+                Intent intent = new Intent(getActivity(), UpdatePersonalInformationActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        builder.show();
     }
 
 }
