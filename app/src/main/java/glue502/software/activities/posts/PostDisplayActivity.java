@@ -4,6 +4,7 @@ import static glue502.software.activities.MainActivity.ip;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
@@ -64,6 +65,7 @@ import okhttp3.Response;
 
 public class PostDisplayActivity extends AppCompatActivity {
     private ImageView star_btn;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView back_btn;
     private ImageView submit;
     private LinearLayout dotLinerLayout;
@@ -173,6 +175,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                 .into(avatar);
     }
     public void initView(){
+        swipeRefreshLayout = findViewById(R.id.swiperefresh);
         postImage = findViewById(R.id.post_image);
         dotLinerLayout = findViewById(R.id.index_dot);
         content = findViewById(R.id.post_content);
@@ -188,6 +191,19 @@ public class PostDisplayActivity extends AppCompatActivity {
         view = findViewById(R.id.view);
     }
     public void setListener(){
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getCommentData();
+                        //关闭刷新
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                },2000);
+            }
+        });
         star_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
