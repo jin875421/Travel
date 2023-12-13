@@ -4,10 +4,42 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <RelativeLayout
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/background_frame_underline">
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="修改个人信息"
+            android:textSize="25dp"/>
+        <TextView
+            android:id="@+id/txt_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="保存"
+            android:textSize="20dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:padding="10dp"
         android:id="@+id/rltl_choose_avatar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+
         android:background="@drawable/background_frame_underline"
         >
         <TextView
@@ -15,29 +47,29 @@
             android:layout_height="wrap_content"
             android:text="头像"
             android:textSize="20dp"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
             />
         <ImageView
             android:id="@+id/img_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
+            android:layout_centerVertical="true"
             />
     </RelativeLayout>
 
 
 
     <RelativeLayout
+        android:padding="10dp"
         android:id="@+id/rltl_choose_name"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:background="@drawable/background_frame_underline">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
             android:text="昵称"
             android:textSize="20dp"/>
         <EditText
@@ -45,21 +77,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="20dp"
+            android:layout_centerVertical="true"
             android:background="@null"
             android:text=""/>
     </RelativeLayout>
     <RelativeLayout
+        android:padding="10dp"
         android:id="@+id/rltl_choose_sex"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:background="@drawable/background_frame_underline">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
             android:text="性别"
             android:textSize="20dp"/>
         <TextView
@@ -67,21 +98,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:paddingTop="10dp"
-            android:paddingRight="10dp"
+            android:layout_centerVertical="true"
             android:text=""
             android:textSize="20dp"/>
     </RelativeLayout>
     <RelativeLayout
+        android:padding="10dp"
         android:id="@+id/rltl_phone"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
         android:background="@drawable/background_frame_underline">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
             android:text="手机号"
             android:textSize="20dp"/>
         <EditText
@@ -89,21 +119,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="20dp"
+            android:layout_centerVertical="true"
             android:background="@null"
             android:hint="输入手机号"/>
     </RelativeLayout>
     <RelativeLayout
+        android:padding="10dp"
         android:id="@+id/rltl_email"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
         android:background="@drawable/background_frame_underline">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:layout_centerVertical="true"
             android:text="邮箱"
             android:textSize="20dp"/>
         <EditText
@@ -111,21 +140,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="20dp"
+            android:layout_centerVertical="true"
             android:background="@null"
             android:hint="输入邮箱"/>
     </RelativeLayout>
 
-    <Button
-        android:layout_marginTop="40dp"
-        android:id="@+id/btn_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="提交"/>
-    <Button
-        android:id="@+id/btn_back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="返回"/>
+
 </LinearLayout>

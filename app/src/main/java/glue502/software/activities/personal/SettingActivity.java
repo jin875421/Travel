@@ -8,6 +8,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,16 +19,16 @@ import glue502.software.R;
 
 public class SettingActivity extends AppCompatActivity {
     private Button btnDestroy;
-    private Button btnBcak;
-    private Button btnAccount;
+    private ImageView imgBcak;
+    private RelativeLayout rltlAccount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         btnDestroy=findViewById(R.id.btn_destroy);
-        btnBcak=findViewById(R.id.btn_back);
-        btnAccount=findViewById(R.id.btn_account);
-        btnAccount.setOnClickListener(new View.OnClickListener() {
+        imgBcak=findViewById(R.id.img_back);
+        rltlAccount=findViewById(R.id.rltl_account);
+        rltlAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SettingActivity.this, UpdatePersonalInformationActivity.class);
@@ -39,7 +42,7 @@ public class SettingActivity extends AppCompatActivity {
 
             }
         });
-        btnBcak.setOnClickListener(new View.OnClickListener() {
+        imgBcak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

@@ -3,19 +3,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <Button
-        android:id="@+id/btn_account"
+    <RelativeLayout
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/background_frame_underline">
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="设置"
+            android:textSize="25dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rltl_account"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="账户管理"/>
+        android:background="@drawable/background_frame_underline">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="账号管理"
+            android:textSize="20dp"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/play_store_512"
+            />
+
+    </RelativeLayout>
     <Button
         android:id="@+id/btn_destroy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="注销"/>
-    <Button
-        android:id="@+id/btn_back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="返回"/>
+        android:text="注销"
+        android:background="#AFDAE3"/>
+
 </LinearLayout>
