@@ -10,8 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import glue502.software.R;
 import glue502.software.activities.travelRecord.travelRecordActivity;
+import glue502.software.utils.Carousel;
 
 public class RecommendFragment extends Fragment {
     private Button createBtn;
@@ -21,6 +25,14 @@ public class RecommendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recommend,container,false);
         createBtn = view.findViewById(R.id.btn_Recording);
         setlistener();
+        Carousel carousel = new Carousel(getContext(), view.findViewById(R.id.recommend_lbt_dot), view.findViewById(R.id.recommend_lbt_image));
+        List<String> paths = new ArrayList<>();
+        paths.add("images/cat1_1.jpg");
+        paths.add("images/cat1_2.jpg");
+        paths.add("images/cat1_3.jpg");
+        paths.add("images/cat2_1.jpg");
+        paths.add("images/cat2_2.jpg");
+        carousel.initViewsLBT(paths);
         return view;
     }
     public void setlistener(){
