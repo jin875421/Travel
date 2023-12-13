@@ -40,6 +40,7 @@ import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
 import glue502.software.models.UserInfo;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -60,8 +61,10 @@ public class CommunityFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_community,container,false);
         listView = view.findViewById(R.id.post_display);
-        uploadBtn = view.findViewById(R.id.upload_post_btn);
+        uploadBtn = view.findViewById(R.id.floating_button);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        //添加沉浸式状态栏
+        MyViewUtils.setImmersiveStatusBar(getActivity(),uploadBtn.getRootView());
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         status = sharedPreferences.getString("status","");
         setListener();
@@ -69,7 +72,6 @@ public class CommunityFragment extends Fragment {
         return view;
 
     }
-
     public void initData(){
         posts = new ArrayList<>();
         userInfos = new ArrayList<>();
@@ -106,7 +108,6 @@ public class CommunityFragment extends Fragment {
                                     if (posts !=null&&userInfos!=null){
                                         PostListAdapter postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
                                         listView.setAdapter(postAdapter);
-
                                     }else {
 
                                     }
@@ -137,7 +138,7 @@ public class CommunityFragment extends Fragment {
                         //关闭刷新
                         swipeRefreshLayout.setRefreshing(false);
                     }
-                },3000);
+                },2000);
             }
         });
 
@@ -200,9 +201,5 @@ public class CommunityFragment extends Fragment {
                 initData();
             }
         }
-    }
-    //判断页面是否位于最顶部
-    private boolean isTop() {
-        return getActivity().getSupportFragmentManager().getBackStackEntryCount() == 0;
     }
 }

@@ -62,10 +62,14 @@ public class LoginActivity extends AppCompatActivity {
                         //存id
                         String userId = loginResult.getUserId();
                         String userName = loginResult.getUserName();
+                        String userPhoneNumber=loginResult.getUserPhoneNumber();
+                        String email=loginResult.getEmail();
                         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("userName", userName);
                         editor.putString("userId", userId);
+                        editor.putString("userPhoneNumber",userPhoneNumber);
+                        editor.putString("email",email);
                         editor.putString("status","1");
                         editor.apply();
 
