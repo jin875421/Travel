@@ -394,8 +394,8 @@ public class travelRecordActivity extends Activity {
 // 创建 ImageView
         ImageView imageView = new ImageView(this);
         LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                400,
+               400);
         imageView.setLayoutParams(imageParams);
         imageView.setImageResource(R.drawable.add_image);
         imageView.setVisibility(View.VISIBLE); // 设置为可见

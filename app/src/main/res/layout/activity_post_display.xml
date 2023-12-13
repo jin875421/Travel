@@ -26,12 +26,6 @@
             android:text="正文"
             android:textSize="20sp" />
     </RelativeLayout>
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefresh"
-        android:layout_below="@+id/head"
-        android:layout_marginHorizontal="6dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -150,5 +144,5 @@
         </LinearLayout>
 
     </RelativeLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </RelativeLayout>
