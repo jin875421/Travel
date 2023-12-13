@@ -63,8 +63,6 @@ public class CommunityFragment extends Fragment {
         listView = view.findViewById(R.id.post_display);
         uploadBtn = view.findViewById(R.id.floating_button);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
-        //添加沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(getActivity(),uploadBtn.getRootView());
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         status = sharedPreferences.getString("status","");
         setListener();
