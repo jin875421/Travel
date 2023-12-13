@@ -52,8 +52,8 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
     private RelativeLayout rltlChooseAvatar;
     private EditText edtPhone;
     private EditText edtEmail;
-    private Button btnSubmit;
-    private Button btnBcak;
+    private TextView txtSave;
+    private ImageView imgBcak;
     private String urlAvatar="http://"+ip+"/travel/user/upload";
     private String urlUpdate="http://"+ip+"/travel/user/updateData";
     private String urlFindData="http://"+ip+"/travel/user/getAvatar?userId=";
@@ -65,8 +65,8 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upadte_person_information);
         edtName=findViewById(R.id.edt_name);
-        btnSubmit=findViewById(R.id.btn_submit);
-        btnBcak=findViewById(R.id.btn_back);
+        txtSave=findViewById(R.id.txt_save);
+        imgBcak=findViewById(R.id.img_back);
         imgAvatar=findViewById(R.id.img_avatar);
         rltlChooseSex=findViewById(R.id.rltl_choose_sex);
         edtPhone=findViewById(R.id.edt_phone);
@@ -87,13 +87,13 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
                 openGallery();
             }
         });
-        btnBcak.setOnClickListener(new View.OnClickListener() {
+        imgBcak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        txtSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 获取用户输入的昵称

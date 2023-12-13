@@ -189,6 +189,7 @@ public class PersonalInformationFragment extends Fragment {
 
             }
         });
+
         txtPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
