@@ -4,20 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activities.posts.PostDisplayActivity"
-    tools:ignore="HardcodedText"
-    android:orientation="vertical">
+    tools:ignore="HardcodedText">
+
     <RelativeLayout
         android:id="@+id/head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true">
+
         <ImageView
             android:id="@+id/btn_back"
-            android:src="@drawable/back"
-            android:layout_alignParentLeft="true"
             android:layout_width="30dp"
-            android:layout_height="30dp" />
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/back" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,90 +29,103 @@
             android:text="正文"
             android:textSize="20sp" />
     </RelativeLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
-        android:layout_below="@+id/head"
-        android:layout_marginHorizontal="6dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/mChatInputPanel"
         android:layout_below="@+id/head"
-        android:id="@+id/view">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginHorizontal="6dp">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/post_image"
+        <ScrollView
+            android:id="@+id/view"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            />
-        <LinearLayout
-            android:id="@+id/index_dot"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/viewPager2"
-            app:layout_constraintEnd_toEndOf="@+id/viewPager2"
-            app:layout_constraintStart_toStartOf="parent"/>
-        <LinearLayout
-            android:paddingLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/avatar"
-                android:layout_width="20dp"
-                android:layout_height="20dp"/>
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"/>
-        </LinearLayout>
-        <TextView
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:id="@+id/post_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="30dp"/>
-        <TextView
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:id="@+id/post_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:background="@drawable/background_frame_underline"/>
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="  评论："
-            android:textSize="20sp"
-            />
+            android:layout_above="@+id/mChatInputPanel"
+            android:layout_below="@+id/head">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ListView
-                android:id="@+id/comment_list"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    </LinearLayout>
-    </ScrollView>
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/post_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp" />
+
+                <LinearLayout
+                    android:id="@+id/index_dot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@+id/viewPager2"
+                    app:layout_constraintEnd_toEndOf="@+id/viewPager2"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp">
+
+                    <ImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp" />
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/post_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textSize="30dp" />
+
+                <TextView
+                    android:id="@+id/post_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_frame_underline"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="  评论："
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ListView
+                        android:id="@+id/comment_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <RelativeLayout
         android:id="@+id/mChatInputPanel"
-        android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/topdivider"
         android:orientation="horizontal">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -123,32 +139,33 @@
                 android:layout_marginRight="15dp"
                 android:hint="请友好交流哦" />
         </LinearLayout>
-<!--        <Button-->
-<!--            android:id="@+id/submit"-->
-<!--            android:layout_width="70dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:text="提交"/>-->
+        <!--        <Button-->
+        <!--            android:id="@+id/submit"-->
+        <!--            android:layout_width="70dp"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:text="提交"/>-->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true">
+
             <ImageButton
                 android:id="@+id/submit"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
-                android:src="@mipmap/upload"/>
+                android:src="@mipmap/upload" />
+
             <ImageButton
                 android:id="@+id/btn_star"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="4dp"
+                android:layout_marginTop="5dp"
                 android:background="@color/white"
-                android:src="@mipmap/star"/>
+                android:src="@mipmap/star" />
         </LinearLayout>
 
     </RelativeLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>
