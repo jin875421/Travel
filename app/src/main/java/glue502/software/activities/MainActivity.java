@@ -2,10 +2,14 @@ package glue502.software.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +34,7 @@ import glue502.software.utils.MyViewUtils;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
 //    public static final String ip = "10.7.89.27:8080";
     public static final String ip = "10.7.89.91:8080";//z
@@ -42,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            // 如果权限尚未授予，则请求权限
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_CODE);
+        }
         //每次启动软件，先清空glide中缓存的数据
         new ClearGlideCacheTask().execute();
         tabLayout = findViewById(R.id.tbl);

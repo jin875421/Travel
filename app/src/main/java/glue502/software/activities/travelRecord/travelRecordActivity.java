@@ -1,12 +1,15 @@
 package glue502.software.activities.travelRecord;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,8 +33,12 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+
+import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,6 +54,7 @@ import java.util.Locale;
 import glue502.software.R;
 
 public class travelRecordActivity extends Activity {
+
     // 在 PostActivity 中定义一个 SharedPreferences 的实例变量,持久化保存
     private SharedPreferences sharedPreferences;
     private List<File> fileList = new ArrayList<>();
@@ -72,6 +80,7 @@ public class travelRecordActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
+        // 检查是否已经授予了所需的权限
         Log.d("PostActivity", "onCreate() called");
         initCtrl();
         // 获取 SharedPreferences 实例
@@ -100,13 +109,13 @@ public class travelRecordActivity extends Activity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                System.out.println("11111111");
+                System.out.println("11111111");
             }
         });
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                System.out.println("11111111");
+                System.out.println("11111111");
             }
         });
         imageInput.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +126,9 @@ public class travelRecordActivity extends Activity {
                 showPopupWindow();
             }
         });
-
+// 请求焦点给按钮
+        btnSubmit.requestFocus();
+        btnReturn.requestFocus();
     }
 
         private void showPopupWindow(){
@@ -264,11 +275,12 @@ public class travelRecordActivity extends Activity {
                     for (int i = 0; i < count; i++) {
                         Uri selectedImage = clipData.getItemAt(i).getUri();
                         savefile(selectedImage);
+                        //则通过循环11保存一个uri，12保存一个uri，13保存一个uri，以此类推
+                        savePicture(selectedImage,10000,i,count);
+                        System.out.println("count"+count);
                         //下面是展示图片
                         putPicture(selectedImage,10000);
-                        //下面是保存图片，通过sharp保存，保存两个数添加到一起，第一组数是显示的Tag位置，第二组数是第几个照片对应的第几个uri，例子保存在tag为1，照片为10张
-                        //则通过循环11保存一个uri，12保存一个uri，13保存一个uri，以此类推
-
+                        //TODO 下面是保存图片，通过sharp保存，保存两个数添加到一起，第一组数是显示的Tag位置，第二组数是第几个照片对应的第几个uri，例子保存在tag为1，照片为10张
                     }
                 } else if(data.getData() != null) {
                     Uri selectedImage = data.getData();
@@ -281,14 +293,34 @@ public class travelRecordActivity extends Activity {
             }
         }
     }
-private void putPicture(Uri selectedImage,int a){
+
+    private void savePicture(Uri uri,int tag,int save,int count) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if(tag==10000){
+            tag = getValue();
+            System.out.println("getValue"+tag);
+            String concatenated = String.valueOf(tag) + String.valueOf(save);
+            System.out.println("拼接后的结果：" + concatenated); // 输出：109
+            String Tag = String.valueOf(tag);
+            String COUNT = String.valueOf(count);
+            String URI =  uri.toString();
+            editor.putString(concatenated, URI);
+            editor.putString(Tag,COUNT);
+        }editor.apply();
+
+        }
+
+
+    private void putPicture(Uri selectedImage,int a){
+
         if(a==10000){
             LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(getValue()); // 获取第一个LinearLayout
             // 获取第一个LinearLayout}
             HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
             LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
             ImageView imageView1 = new ImageView(this);
-            imageView1.setImageURI(selectedImage);
+            Glide.with(this)
+                    .load(selectedImage).into(imageView1);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     convertDpToPixel(150), // 宽度 150dp 转换为像素
                     convertDpToPixel(150) // 高度 150dp 转换为像素
@@ -304,7 +336,8 @@ private void putPicture(Uri selectedImage,int a){
             HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
             LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
             ImageView imageView1 = new ImageView(this);
-            imageView1.setImageURI(selectedImage);
+            Glide.with(this)
+                    .load(selectedImage).into(imageView1);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     convertDpToPixel(150), // 宽度 150dp 转换为像素
                     convertDpToPixel(150) // 高度 150dp 转换为像素
@@ -386,9 +419,6 @@ private void putPicture(Uri selectedImage,int a){
 // 添加到您的布局容器中（假设容器是 llContentView）
         layout.addView(scrollView);
 
-//TODO 以上是图片的新加
-
-
 // 创建 EditText1
         EditText etContent1 = new EditText(this);
         LinearLayout.LayoutParams etParams1 = new LinearLayout.LayoutParams(
@@ -442,7 +472,6 @@ private void putPicture(Uri selectedImage,int a){
         btnAdd.setId(btnIDIndex);
         // 设置点击操作
         btnAdd.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 addContent(v);
@@ -480,6 +509,20 @@ private void putPicture(Uri selectedImage,int a){
 
         btnIDIndex++;
 //TODO 在这里进行读取操作，通过减去i来得到一个j循环j读取展示，例如1110，则减去11得到10，循环十次，依次读取1101，1102，得到uri，惊进行展示
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String I = String.valueOf(i);
+        String num = sharedPreferences.getString(I, "0");
+        int count = Integer.parseInt(num);
+        int tag =Integer.parseInt(I);
+        System.out.println("count"+count);
+        for(int j=0;j<count;j++){
+            String concatenated = String.valueOf(tag) + String.valueOf(j);
+            System.out.println("concatenated"+concatenated);
+            String which = sharedPreferences.getString(concatenated, "");
+            Uri uri = Uri.parse(which); // 将字符串转换为 Uri
+            putPicture(uri,tag);
+
+        }
 
     }
 
@@ -613,7 +656,6 @@ private void putPicture(Uri selectedImage,int a){
 // 添加到您的布局容器中（假设容器是 llContentView）
             layout.addView(scrollView);
 
-//TODO 以上是图片的新加
 
 // 创建 EditText1
             EditText etContent1 = new EditText(this);
@@ -766,8 +808,6 @@ private void putPicture(Uri selectedImage,int a){
                         }
                         String title = editText.getText().toString();
                         String content = editText.getText().toString();
-                        System.out.println(title+"saveContentToSharedPreferencestitle"+ index);
-                        System.out.println(content+"saveContentToSharedPreferencescontent"+ index);
                         if (editTextCount == 0) {
                             // First EditText - Assume it as title EditText
                             editor.putString("userTitle" + index, title);
@@ -808,22 +848,16 @@ private void putPicture(Uri selectedImage,int a){
                     }
                 }
                 if (etTitle != null && etContent != null) {
-                    System.out.println("1111111");
                     Object tagObject = etTitle.getTag();
                     int savedIndex;
                     if (tagObject instanceof Integer) {
                         //(Integer) tagObject;
                         savedIndex = (Integer) tagObject;
-                        System.out.println("22222222"+savedIndex);
                     } else {
                         savedIndex = 0; // 如果标签不是 Integer 类型或为空，则使用默认索引
-                        System.out.println("333333333"+savedIndex);
                     }
-                    System.out.println(savedIndex);
                     String savedTitle = sharedPreferences.getString("userTitle" + savedIndex, "");
                     String savedContent = sharedPreferences.getString("userContent" + savedIndex, "");
-                    System.out.println(savedTitle+"loadSavedContent");
-                    System.out.println(savedContent+"loadSavedContent");
                     etTitle.setText(savedTitle);
                     etContent.setText(savedContent);
                 }
