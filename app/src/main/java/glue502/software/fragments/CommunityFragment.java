@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
@@ -48,19 +49,22 @@ import okhttp3.ResponseBody;
 
 
 public class CommunityFragment extends Fragment {
-    private  String url="http://"+ip+"/travel/posts/getpostlist";
+    private String url="http://"+ip+"/travel/posts/getpostlist";
+    private String searchUrl="http://"+ip+"/travel/posts/search";
     private ListView listView;
     private Button uploadBtn;
     private List<Post> posts;
     private List<UserInfo> userInfos;
     private String status;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private EditText searchText;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_community,container,false);
         listView = view.findViewById(R.id.post_display);
+        searchText = view.findViewById(R.id.et_searchtext);
         uploadBtn = view.findViewById(R.id.floating_button);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
@@ -126,6 +130,74 @@ public class CommunityFragment extends Fragment {
 
     }
     public void setListener(){
+        searchText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().length()>0){
+                    //开启线程接收帖子数据
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            OkHttpClient client = new OkHttpClient();
+                            //创建请求获取Post类
+                            Request request = new Request.Builder()
+                                   .url(searchUrl+"?searchText="+s)
+                                   .build();
+                            try {
+                                //发起请求并获取响应
+                                Response response = client.newCall(request).execute();
+                                //检测响应是否成功
+                                if (response.isSuccessful()){
+                                    //获取响应数据
+                                    ResponseBody responseBody = response.body();
+                                    if (responseBody!=null){
+                                        //处理数据
+                                        String responseData = responseBody.string();
+                                        Gson gson = new Gson();
+                                        List<PostWithUserInfo> postWithUserInfoList = gson.fromJson(responseData,new TypeToken<List<PostWithUserInfo>>(){}.getType());
+                                        posts = new ArrayList<>();
+                                        userInfos = new ArrayList<>();
+                                        for (PostWithUserInfo postWithUserInfo: postWithUserInfoList){
+                                            posts.add(postWithUserInfo.getPost());
+                                            userInfos.add(postWithUserInfo.getUserInfo());
+                                            getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (posts!=null&&userInfos!=null){
+                                                        PostListAdapter postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
+                                                        listView.setAdapter(postAdapter);
+                                                    }else {
+
+                                                    }
+
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }).start();
+
+                }else {
+                    //开启线程接收帖子数据
+                }
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+                if (s.toString().length()>0){
+                    //开启线程接收帖子数据
+                }
+            }
+        });
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -133,6 +205,7 @@ public class CommunityFragment extends Fragment {
                     @Override
                     public void run() {
                         initData();
+                        searchText.setText("");
                         //关闭刷新
                         swipeRefreshLayout.setRefreshing(false);
                     }
