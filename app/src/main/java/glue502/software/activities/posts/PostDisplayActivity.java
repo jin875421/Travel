@@ -51,6 +51,7 @@ import glue502.software.models.Comment;
 import glue502.software.models.UploadComment;
 import glue502.software.utils.Carousel;
 import glue502.software.models.PostWithUserInfo;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -91,7 +92,8 @@ public class PostDisplayActivity extends AppCompatActivity {
         initView();
         setListener();
         getCommentData();
-
+        //添加沉浸式状态栏
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.head));
         displayPost();
     }
 
