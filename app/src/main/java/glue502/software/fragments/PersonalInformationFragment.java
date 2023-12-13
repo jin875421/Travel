@@ -441,11 +441,10 @@ public class PersonalInformationFragment extends Fragment {
     private void checkAndShowReminder(String userPhoneNumber, String email) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String lastReminderDate = sharedPreferences.getString("lastReminderDate", "");
-
         if (userPhoneNumber.isEmpty() && email.isEmpty() && !isSameDay(lastReminderDate)) {
             // 提示绑定的逻辑
             showBindingReminderDialog();
-
+            System.out.println(userPhoneNumber+":"+email);
             // 更新上次提醒的日期为今天
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("lastReminderDate", getCurrentDate());

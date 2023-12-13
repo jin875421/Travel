@@ -15,15 +15,19 @@ import java.util.List;
 
 import glue502.software.R;
 import glue502.software.activities.travelRecord.travelRecordActivity;
+import glue502.software.activities.travelRecord.travelReviewActivity;
+import glue502.software.adapters.TravelReviewAdapter;
 import glue502.software.utils.Carousel;
 
 public class RecommendFragment extends Fragment {
     private Button createBtn;
+    private Button reviewBtn;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recommend,container,false);
         createBtn = view.findViewById(R.id.btn_Recording);
+        reviewBtn = view.findViewById(R.id.bottomRightButton);
         setlistener();
         Carousel carousel = new Carousel(getContext(), view.findViewById(R.id.recommend_lbt_dot), view.findViewById(R.id.recommend_lbt_image));
         List<String> paths = new ArrayList<>();
@@ -40,6 +44,13 @@ public class RecommendFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), travelRecordActivity.class);
+                startActivity(intent);
+            }
+        });
+        reviewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), travelReviewActivity.class);
                 startActivity(intent);
             }
         });
