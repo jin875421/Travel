@@ -29,7 +29,7 @@ import glue502.software.fragments.RecommendFragment;
 public class MainActivity extends AppCompatActivity {
     //换成自己电脑的ip地址，连接后端需要
     //jwh:10.7.89.89:8080
-    public static final String ip = "192.168.155.92:8080";
+    public static final String ip = "10.7.89.91:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
