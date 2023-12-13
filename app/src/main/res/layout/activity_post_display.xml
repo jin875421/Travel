@@ -7,31 +7,36 @@
     tools:context=".activities.posts.PostDisplayActivity"
     tools:ignore="HardcodedText"
     android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true">
+        <ImageView
+            android:id="@+id/btn_back"
+            android:src="@drawable/back"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <Button
+            android:id="@+id/btn_star"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="收藏"/>
+    </RelativeLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/mChatInputPanel"
+        android:layout_below="@+id/head"
         android:id="@+id/view">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
-            <Button
-                android:id="@+id/btn_back"
-                android:layout_alignParentLeft="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="返回"/>
-            <Button
-                android:id="@+id/btn_star"
-                android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="收藏"/>
-        </RelativeLayout>
+
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/post_image"
             android:layout_width="match_parent"

@@ -35,6 +35,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ import okhttp3.Response;
 
 public class PostDisplayActivity extends AppCompatActivity {
     private Button star_btn;
-    private Button back_btn;
+    private ImageView back_btn;
     private Button submit;
     private LinearLayout dotLinerLayout;
     private ViewPager2 postImage;
