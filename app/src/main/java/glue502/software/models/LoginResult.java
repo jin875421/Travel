@@ -5,8 +5,24 @@ public class LoginResult {
     private String msg;
     private String userId;
     private String userName;
+    private String userPhoneNumber;
+    private String email;
 
+    public String getUserPhoneNumber() {
+        return userPhoneNumber;
+    }
 
+    public void setUserPhoneNumber(String userPhoneNumber) {
+        this.userPhoneNumber = userPhoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getUserName() {
         return userName;

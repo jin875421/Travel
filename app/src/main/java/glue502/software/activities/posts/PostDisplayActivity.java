@@ -25,6 +25,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -231,12 +232,14 @@ public class PostDisplayActivity extends AppCompatActivity {
                                     .build();
                             try {
                                 Response response = client.newCall(request).execute();
+
                             } catch (IOException e) {
                                 Log.e("NetworkError", "Error: " + e.getMessage());
                                 throw new RuntimeException(e);
                             }
                         }
                     }).start();
+                    Toast.makeText(PostDisplayActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
                 }
 
             }
