@@ -315,6 +315,7 @@ public class PersonalInformationFragment extends Fragment {
 
                 Gson gson=new Gson();
                 // 获取 avatarUrl 和 userNickname
+                System.out.println(responseData);
                 UserInfo userInfo = gson.fromJson(responseData,UserInfo.class);
                 String avatarUrl=userInfo.getAvatar();
                 String userName =userInfo.getUserName();

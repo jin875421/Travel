@@ -5,19 +5,27 @@
     android:layout_height="match_parent"
     tools:context=".fragments.CommunityFragment">
 
-   <RelativeLayout
+   <LinearLayout
        android:id="@+id/community_top"
-       android:layout_width="match_parent"
+       android:layout_centerHorizontal="true"
+       android:layout_width="350dp"
        android:layout_height="wrap_content">
-      <Button
-          android:id="@+id/upload_post_btn"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="+"
-          android:layout_alignParentRight="true"
+      <EditText
+          android:id="@+id/et_searchtext"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="3"
+          android:hint="输入关键字搜索"
+          android:background="#F1F3F5"
+          android:textSize="18sp"
+          android:drawableLeft="@android:drawable/ic_menu_search"
+          android:singleLine="true"
+          android:imeOptions="actionSearch"
           />
 
-   </RelativeLayout>
+
+
+   </LinearLayout>
    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
        android:id="@+id/swiperefresh"
        android:layout_below="@+id/community_top"
@@ -28,6 +36,24 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"/>
    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+   <FrameLayout
+       android:id="@+id/floating_button_layout"
+       android:layout_width="65dp"
+       android:layout_height="65dp"
+       android:layout_alignParentBottom="true"
+       android:layout_alignParentEnd="true"
+       android:layout_marginBottom="25dp"
+       android:layout_marginEnd="25dp">
 
+      <Button
+          android:id="@+id/floating_button"
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+          android:background="@xml/round_button"
+          android:text="+"
+          android:textSize="25sp"
+          android:textColor="@color/white" />
+
+   </FrameLayout>
 
 </RelativeLayout>

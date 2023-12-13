@@ -244,8 +244,7 @@ public class UploadPostActivity extends AppCompatActivity {
             photoFile = createImageFile();
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        getApplicationContext().getPackageName() + ".fileprovider",
-                        photoFile);
+                        getApplicationContext().getPackageName() + ".fileprovider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, num);
             }
