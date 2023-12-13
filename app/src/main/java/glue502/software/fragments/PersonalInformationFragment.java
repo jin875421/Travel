@@ -483,7 +483,7 @@ public class PersonalInformationFragment extends Fragment {
         // 可以使用 AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("绑定提醒");
-        builder.setMessage("请绑定手机号码和邮箱否则无法找回密码！");
+        builder.setMessage("请绑定手机号码或邮箱否则无法找回密码！");
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
