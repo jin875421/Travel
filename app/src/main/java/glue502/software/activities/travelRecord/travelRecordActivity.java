@@ -285,7 +285,7 @@ public class travelRecordActivity extends Activity {
                 } else if(data.getData() != null) {
                     Uri selectedImage = data.getData();
                     savefile(selectedImage);
-// 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
+                // 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
                     putPicture(selectedImage,10000);
                 }
             } else if (requestCode == RESULT_CAMERA_IMAGE) {
