@@ -30,6 +30,9 @@
             android:name=".activities.travelRecord.travelReviewActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.posts.RespondDetail"
+            android:exported="false" />
+        <activity
             android:name=".activities.travelRecord.travelRecordActivity"
             android:exported="false" />
         <activity
@@ -58,7 +61,8 @@
             android:exported="false" />
         <activity
             android:name=".activities.posts.PostDisplayActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.posts.UploadPostActivity"
             android:exported="false" />
