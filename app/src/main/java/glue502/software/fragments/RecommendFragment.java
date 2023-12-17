@@ -30,11 +30,11 @@ public class RecommendFragment extends Fragment {
         setlistener();
         Carousel carousel = new Carousel(getContext(), view.findViewById(R.id.recommend_lbt_dot), view.findViewById(R.id.recommend_lbt_image));
         List<String> paths = new ArrayList<>();
-        paths.add("images/cat1_1.jpg");
-        paths.add("images/cat1_2.jpg");
-        paths.add("images/cat1_3.jpg");
-        paths.add("images/cat2_1.jpg");
-        paths.add("images/cat2_2.jpg");
+        paths.add("images/cat1.jpg");
+        paths.add("images/cat2.jpg");
+        paths.add("images/cat3.jpg");
+        paths.add("images/cat4.jpg");
+        paths.add("images/cat5.jpg");
         carousel.initViewsLBT(paths);
         return view;
     }

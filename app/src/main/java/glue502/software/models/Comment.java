@@ -1,7 +1,10 @@
 package glue502.software.models;
 
+import java.io.Serializable;
+import java.util.List;
+
 //用于在显示评论区获取评论内容
-public class Comment {
+public class Comment implements Serializable {
     private String commentId;
     private String username;
     private String postId;
@@ -9,6 +12,7 @@ public class Comment {
     private String uploadTime;
     private String avatar;
     private String userId;
+    private List<ReturnCommentRespond> returnCommentResponds;
 
     public String toString() {
         return "Comment{" +
@@ -76,5 +80,13 @@ public class Comment {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public List<ReturnCommentRespond> getReturnCommentResponds() {
+        return returnCommentResponds;
+    }
+
+    public void setReturnCommentResponds(List<ReturnCommentRespond> returnCommentResponds) {
+        this.returnCommentResponds = returnCommentResponds;
     }
 }

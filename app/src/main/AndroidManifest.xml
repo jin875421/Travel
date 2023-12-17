@@ -39,6 +39,9 @@
             android:name=".activities.travelRecord.TravelReviewActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.posts.RespondDetail"
+            android:exported="false" />
+        <activity
             android:name=".activities.travelRecord.travelRecordActivity"
             android:exported="false" />
         <activity
@@ -67,12 +70,10 @@
             android:exported="false" />
         <activity
             android:name=".activities.posts.PostDisplayActivity"
-            android:theme="@style/mainStyle"
             android:exported="false" />
         <activity
             android:name=".activities.posts.UploadPostActivity"
             android:exported="false" />
-
         <activity
             android:name=".activities.MainActivity"
             android:exported="true">
@@ -82,7 +83,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="tSbMf5hhwaxtgIE5g3Z0IeldzZ6IYQoN" />
