@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <TextView
-        android:id="@+id/travel_name"
+        android:id="@+id/trace_place"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textSize="20sp"/>
     <HorizontalScrollView
         android:id="@+id/scrollView"
-        android:layout_below="@+id/travel_name"
+        android:layout_below="@+id/travel_place"
         android:layout_width="match_parent"
         android:layout_height="150dp">
         <LinearLayout
-            android:id="@+id/image_container"
+            android:id="@+id/imageContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
@@ -20,4 +22,4 @@
 
         </LinearLayout>
     </HorizontalScrollView>
-</RelativeLayout>
+</LinearLayout>

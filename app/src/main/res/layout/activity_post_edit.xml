@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.posts.UploadPostActivity">
+    tools:context=".activities.posts.PostEditActivity">
     <RelativeLayout
         android:layout_marginTop="30dp"
         android:layout_alignParentTop="true"
@@ -33,41 +33,41 @@
             />
 
     </RelativeLayout>
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="150dp">
-            <LinearLayout
-                android:id="@+id/imageContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <ImageView
-                    android:id="@+id/input_image"
-                    android:paddingLeft="10dp"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:src="@drawable/add_image"
-                    />
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
-
-        <EditText
-            android:id="@+id/input_title"
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+        <LinearLayout
+            android:id="@+id/imageContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="请输入标题"
-            android:gravity="left"
-            />
-        <EditText
-            android:id="@+id/input_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="请输入内容"
-            android:gravity="left|top"
-            />
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/input_image"
+                android:paddingLeft="10dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:src="@drawable/add_image"
+                />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <EditText
+        android:id="@+id/input_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入标题"
+        android:gravity="left"
+        />
+    <EditText
+        android:id="@+id/input_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="请输入内容"
+        android:gravity="left|top"
+        />
 
 </LinearLayout>

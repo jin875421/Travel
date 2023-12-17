@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,27 +16,26 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import glue502.software.R;
-import glue502.software.models.TravelReview;
+import glue502.software.models.travelRecord;
 
-public class TravelReviewAdapter extends BaseAdapter {
+public class TravelDetailAdapter extends BaseAdapter {
     private Context context;
+    private List<travelRecord> travelRecords;
+    private String url = "http://"+ip+"/travel/";
     private int layoutId;
-    private List<TravelReview> travelReview;
-    private String url = "http://"+ip+"/travel";
-
-    public TravelReviewAdapter(Context context,List<TravelReview> travelReview,int layoutId) {
+    public TravelDetailAdapter(Context context, List<travelRecord> travelRecords, int layoutId) {
         this.context = context;
-        this.travelReview = travelReview;
+        this.travelRecords = travelRecords;
         this.layoutId = layoutId;
     }
     @Override
     public int getCount() {
-        return travelReview.size();
+        return travelRecords.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return travelReview.get(i);
+        return travelRecords.get(i);
     }
 
     @Override
@@ -47,19 +45,17 @@ public class TravelReviewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View v = LayoutInflater.from(context).inflate(layoutId, null);
-        TextView travelName = v.findViewById(R.id.travel_name);
-        //给滚动图添加图片
-        if (travelReview.get(i).getImages().size() > 0) {
-            LinearLayout imagecontainer = v.findViewById(R.id.imageContainer);
-            for (String path : travelReview.get(i).getImages()) {
+        View v = LayoutInflater.from(context).inflate(layoutId,null);
+        TextView travelName = v.findViewById(R.id.travel_place);
+        LinearLayout imageContainer = v.findViewById(R.id.image_container);
+        for(String path:travelRecords.get(i).getImage()){
+            if(path!=null){
                 ImageView imageView = new ImageView(context);
-                // 通过服务器地址设置图片
-                Glide.with(context).load(url + path).into(imageView);
+                Glide.with(context).load(url+path).into(imageView);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(10, 10, 10, 10);
                 imageView.setLayoutParams(params);
-                imagecontainer.addView(imageView);
+                imageContainer.addView(imageView);
             }
         }
         return v;

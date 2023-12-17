@@ -508,7 +508,7 @@ public class travelRecordActivity extends Activity {
         llContentView.addView(layout, 1);
 
         btnIDIndex++;
-//TODO 在这里进行读取操作，通过减去i来得到一个j循环j读取展示，例如1110，则减去11得到10，循环十次，依次读取1101，1102，得到uri，惊进行展示
+        //TODO 在这里进行读取操作，通过减去i来得到一个j循环j读取展示，例如1110，则减去11得到10，循环十次，依次读取1101，1102，得到uri，惊进行展示
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String I = String.valueOf(i);
         String num = sharedPreferences.getString(I, "0");

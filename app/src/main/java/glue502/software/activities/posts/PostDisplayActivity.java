@@ -4,9 +4,11 @@ import static glue502.software.activities.MainActivity.ip;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -15,16 +17,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +47,7 @@ import com.google.gson.JsonParser;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -65,12 +73,13 @@ import okhttp3.Response;
 
 public class PostDisplayActivity extends AppCompatActivity {
     private ImageView star_btn;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    private int checkedItemId = R.id.edit;
     private ImageView back_btn;
     private ImageView submit;
     private LinearLayout dotLinerLayout;
     private ViewPager2 postImage;
     private PostWithUserInfo postWithUserInfo;
+    private PostWithUserInfo post;
     private TextView content;
     private TextView title;
     private TextView text;
@@ -85,12 +94,12 @@ public class PostDisplayActivity extends AppCompatActivity {
     private String postId;
     private List<Comment> commentList = new ArrayList<>();
     private OkHttpClient client = new OkHttpClient();
+    private ImageView menuBtn;
     private CommentListAdapter commentListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_display);
-
         initData();
         initView();
         setListener();
@@ -99,7 +108,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.head));
         displayPost();
     }
-
     private void initData() {
         postWithUserInfo = (PostWithUserInfo) getIntent().getSerializableExtra("postwithuserinfo");
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
@@ -132,7 +140,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                         commentList = new ArrayList<>();
                         //获取响应的数据
                         String result = response.body().string();
-                        Log.v("MainActivity", "lzx获取服务器返回的数据"+result);
                         //反序列化消息
                         JsonArray jsonArray = JsonParser.parseString(result).getAsJsonArray();
                         for (JsonElement jsonElement : jsonArray) {
@@ -160,22 +167,45 @@ public class PostDisplayActivity extends AppCompatActivity {
     }
 
     public void displayPost(){
-        //Carousel为自定义轮播图工具类
-        Carousel carousel = new Carousel(this.getApplicationContext(), dotLinerLayout, postImage);
-        carousel.initViews(postWithUserInfo.getPost().getPicturePath());
-
-        content.setText(postWithUserInfo.getPost().getPostContent());
-        title.setText(postWithUserInfo.getPost().getPostTitle());
-        userName.setText(postWithUserInfo.getUserInfo().getUserName());
-        RequestOptions requestOptions = new RequestOptions()
-                .transform(new CircleCrop());
-        Glide.with(PostDisplayActivity.this)
-                .load(url+postWithUserInfo.getUserInfo().getAvatar())
-                .apply(requestOptions)
-                .into(avatar);
+        //通过postid从服务器获取帖子内容
+        OkHttpClient client1 = new OkHttpClient();
+        Request request = new Request.Builder()
+               .url(url+"posts/getPostById?postId="+postId)
+               .build();
+        System.out.println(url+"posts/getPostById?postId="+postId);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response response = client1.newCall(request).execute();
+                    String result = response.body().string();
+                    JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
+                    post = new Gson().fromJson(jsonObject, PostWithUserInfo.class);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Carousel为自定义轮播图工具类
+                            Carousel carousel = new Carousel(PostDisplayActivity.this, dotLinerLayout, postImage);
+                            carousel.initViews(post.getPost().getPicturePath());
+                            content.setText(post.getPost().getPostContent());
+                            title.setText(post.getPost().getPostTitle());
+                            userName.setText(post.getUserInfo().getUserName());
+                            RequestOptions requestOptions = new RequestOptions()
+                                    .transform(new CircleCrop());
+                            Glide.with(PostDisplayActivity.this)
+                                    .load(url+post.getUserInfo().getAvatar())
+                                    .apply(requestOptions)
+                                    .into(avatar);
+                        }
+                    });
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
     }
     public void initView(){
-//        swipeRefreshLayout = findViewById(R.id.swiperefresh);
+        menuBtn = findViewById(R.id.popupmenu);
         postImage = findViewById(R.id.post_image);
         dotLinerLayout = findViewById(R.id.index_dot);
         content = findViewById(R.id.post_content);
@@ -191,19 +221,20 @@ public class PostDisplayActivity extends AppCompatActivity {
         view = findViewById(R.id.view);
     }
     public void setListener(){
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                swipeRefreshLayout.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        getCommentData();
-//                        //关闭刷新
-//                        swipeRefreshLayout.setRefreshing(false);
-//                    }
-//                },2000);
-//            }
-//        });
+        //如果为作者，提供修改和删除功能
+        if (userId.equals(postWithUserInfo.getUserInfo().getUserId())){
+            //弹出选择框，修改，删除，取消
+            menuBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showPopupMenu(view);
+                }
+            });
+
+        }else {
+            //设置隐藏
+            menuBtn.setVisibility(View.GONE);
+        }
         star_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -235,7 +266,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            String postId = postWithUserInfo.getPost().getPostId();
                             client = new OkHttpClient();
                             MultipartBody.Builder builder = new MultipartBody.Builder()
                                     .setType(MultipartBody.FORM)
@@ -378,6 +408,77 @@ public class PostDisplayActivity extends AppCompatActivity {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+    @SuppressLint("RestrictedApi")
+    private void showPopupMenu(View view){
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(PostDisplayActivity.this, view);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
+        //设置选中
+        popupMenu.getMenu().findItem(checkedItemId).setChecked(true);
+        //使用反射。强制显示菜单图标
+        try {
+            Field field = popupMenu.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+            mHelper.setForceShowIcon(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //显示PopupMenu
+        popupMenu.show();
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.delete:
+                        //执行删除操作
+                        AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
+                            builder.setTitle("删除")
+                                   .setMessage("是否删除该帖子？")
+                                   .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // 点击“确定”按钮后的操作
+                                            // 发送请求
+                                            OkHttpClient client = new OkHttpClient();
+                                            Request request = new Request.Builder()
+                                                   .url(url+"posts/deletePost?postId="+postId)
+                                                   .build();
+                                            System.out.println(url+"posts/deletePost?postId="+postId);
+                                            //开启线程发送请求
+                                            new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try {
+                                                        //开启线程
+                                                        Response response = client.newCall(request).execute();
+                                                        //关闭帖子
+                                                        Intent resultIntent = new Intent();
+                                                        setResult(Activity.RESULT_OK, resultIntent); // 设置删除完成的结果码
+                                                        finish(); // 关闭页面
+                                                    } catch (IOException e) {
+                                                        throw new RuntimeException(e);
+                                                    }
+                                                }
+                                            }).start();
+                                        }
+                                           }).show();
+                        break;
+                    case R.id.edit:
+                        //进行编辑操作
+                        Intent intent = new Intent(PostDisplayActivity.this, PostEditActivity.class);
+                                    intent.putExtra("postwithuserinfo",post);
+                                    startActivity(intent);
+                        break;
+                    case R.id.cancel:
+                        System.out.println("取消");
+                }
+                return true;
+            }
+        });
     }
 
 }

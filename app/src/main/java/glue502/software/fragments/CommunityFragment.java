@@ -224,7 +224,7 @@ public class CommunityFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), PostDisplayActivity.class);
                 intent.putExtra("postwithuserinfo", clickItem);
                 System.out.println(clickItem.getUserInfo().getAvatar());
-                startActivity(intent);
+                startActivityForResult(intent,1);
 
             }
         });

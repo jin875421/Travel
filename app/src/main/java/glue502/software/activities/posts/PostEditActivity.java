@@ -11,7 +11,6 @@ import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,7 +25,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,7 +43,7 @@ import java.util.UUID;
 
 import glue502.software.R;
 import glue502.software.models.Post;
-import glue502.software.utils.MyViewUtils;
+import glue502.software.models.PostWithUserInfo;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -50,9 +51,15 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class UploadPostActivity extends AppCompatActivity {
+public class PostEditActivity extends AppCompatActivity {
+    private PostWithUserInfo postWithUserInfo;
+    private List<String> deltetedImages = new ArrayList<>();
     private List<View> viewList = new ArrayList<>();
+    private List<View> viewList2 = new ArrayList<>();
+
     private  List<File> fileList = new ArrayList<>();
+    private List<String> imageList = new ArrayList<>();
+
     private Post post = new Post();
     private EditText title, content;
     private Button back, upload;
@@ -61,32 +68,19 @@ public class UploadPostActivity extends AppCompatActivity {
     private ImageView uploadImage;
     private String mCurrentPhotoPath;
     private final int RESULT_LOAD_IMAGES = 1, RESULT_CAMERA_IMAGE = 2;
-    private String url = "http://"+ip+"/travel/posts/upload";
+    private String url = "http://"+ip+"/travel/posts/updatewithnewimage";
+    private String url2 = "http://"+ip+"/travel/posts/updatewithoutnewimage";
+
+    private String imageurl ="http://"+ip+"/travel/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload_post);
-        SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId","");
+        setContentView(R.layout.activity_post_edit);
         initView();
-        MyViewUtils.setImmersiveStatusBar(this, imgLinerLayout);
+        initData();
         setListener();
     }
-
-    private void setListener() {
-
-        uploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPopupWindow();
-            }
-        });
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+    public void setListener(){
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,8 +108,15 @@ public class UploadPostActivity extends AppCompatActivity {
                         MultipartBody.Builder builder = new MultipartBody.Builder()
                                 .setType(MultipartBody.FORM)
                                 .addFormDataPart("post", json, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json));
-
-                        //循环处理图片
+                        //在builder中添加已删除图片路径的list
+                        if (deltetedImages.size() > 0){
+                            builder.addFormDataPart("deletedPicturePaths", gson.toJson(deltetedImages));
+                        }else {
+                            deltetedImages.add("[]");
+                            builder.addFormDataPart("deletedPicturePaths", gson.toJson(deltetedImages));
+                        }
+                        builder.addFormDataPart("postId", postWithUserInfo.getPost().getPostId());
+                        //循环处理图片，这里是新增的图片列表
                         for (int i = 0; i < fileList.size(); i++) {
                             File file = fileList.get(i);
                             if (file != null && file.exists()) {
@@ -129,12 +130,10 @@ public class UploadPostActivity extends AppCompatActivity {
 
                                     while ((bytesRead = inputStream.read(buffer))!=-1){
                                         byte[] actualBuffer = Arrays.copyOfRange(buffer, 0, bytesRead);
-
                                         builder.addFormDataPart("identifiers", identifier);
                                         builder.addFormDataPart("sequenceNumbers", String.valueOf(sequenceNumber));
                                         builder.addFormDataPart("totalChunks", String.valueOf(totalChunks));
                                         builder.addFormDataPart("images", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), actualBuffer));
-
                                         sequenceNumber++;
                                     }
 
@@ -146,10 +145,20 @@ public class UploadPostActivity extends AppCompatActivity {
                             }
                         }
                         RequestBody requestBody = builder.build();
-                        Request request = new Request.Builder()
-                                .url(url)
-                                .post(requestBody)
-                                .build();
+                        Request request;
+                        //如果存在新创建的图片
+                        if(fileList.size() > 0){
+                            request = new Request.Builder()
+                                    .url(url)
+                                    .post(requestBody)
+                                    .build();
+                        }else {
+                            request = new Request.Builder()
+                                    .url(url2)
+                                    .post(requestBody)
+                                    .build();
+                        }
+
                         try {
                             //发送请求
                             Response response = client.newCall(request).execute();
@@ -169,7 +178,93 @@ public class UploadPostActivity extends AppCompatActivity {
                 }).start();
             }
         });
-        // 循环遍历控件列表
+        uploadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupWindow();
+            }
+        });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        //给新增的图片控件添加长按事件
+        if(viewList2.size() > 0){
+            for(int i = 0; i < viewList2.size(); i++){
+                viewList2.get(i).setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        showExistDeleteDialog(v);
+                        return false;
+                    }
+                });
+            }
+        }
+    }
+    public void initData(){
+        //获取之前页面传来的postWithUserInfo
+        postWithUserInfo = (PostWithUserInfo) getIntent().getSerializableExtra("postwithuserinfo");
+        title.setText(postWithUserInfo.getPost().getPostTitle());
+        content.setText(postWithUserInfo.getPost().getPostContent());
+        imageList = postWithUserInfo.getPost().getPicturePath();
+        //给scrollView添加图片
+        for(int i = 0; i < postWithUserInfo.getPost().getPicturePath().size(); i++){
+            System.out.println(postWithUserInfo.getPost().getPicturePath().get(i));
+            ImageView imageView = new ImageView(this);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    convertDpToPixel(150), // 宽度 150dp 转换为像素
+                    convertDpToPixel(150) // 高度 150dp 转换为像素
+            );
+            layoutParams.setMargins(0, 0, 0, 16);
+            imageView.setLayoutParams(layoutParams);
+            imageView.setTag(postWithUserInfo.getPost().getPicturePath().get(i));
+            imgLinerLayout.addView(imageView);
+            viewList2.add(imageView);
+            Glide.with(this).load(imageurl+"/"+imageList.get(i)).into(imageView);
+            imgLinerLayout.removeView(uploadImage);
+            imgLinerLayout.addView(uploadImage);
+        }
+    }
+    //处理已有图片
+    private void showExistDeleteDialog(View view) {
+        // 弹出对话框
+        new AlertDialog.Builder(this)
+                .setTitle("删除")
+                .setMessage("确定删除吗？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 点击确定按钮
+                        //在页面上删除这个控件
+                        imgLinerLayout.removeView(view);
+                        //在file列表中删除这个控件对应的文件
+                        for(String imagepath : imageList){
+                            if(imagepath.equals(view.getTag())){
+                                //从imageList中删除这个图片的路径
+                                imageList.remove(imagepath);
+                                deltetedImages.add(imagepath);
+                                viewList2.remove(view);
+                                break;
+                            }
+                        }
+                        // 关闭对话框
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(
+                        "取消",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // 点击取消按钮
+                                // 关闭对话框
+                                dialogInterface.dismiss();
+                            }
+                        }
+                ).show();
+        // 循环遍历控件列表,给新增的图片添加点击事件
         for (View control : viewList) {
             //绑定长按事件
 
@@ -177,19 +272,31 @@ public class UploadPostActivity extends AppCompatActivity {
                 @Override
                 public boolean onLongClick(View view) {
                     // 长按弹出删除选项
-                        showDeleteDialog(view);
+                    showDeleteDialog(view);
 
                     return false;
                 }
             });
         }
+
+    }
+    //图片分片上传，计算文件总分片数
+    private int calculateTotalChunks(File file) {
+        // 计算分片数的逻辑，根据文件大小和分片大小计算
+        return (int) Math.ceil((double) file.length() / (1024 * 1024));
+
+    }
+    private void uploadComplete() {
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_OK, resultIntent); // 设置上传完成的结果码
+        finish(); // 结束上传页面
     }
     private void showDeleteDialog(View view) {
         // 弹出对话框
         new AlertDialog.Builder(this)
-               .setTitle("删除")
-               .setMessage("确定删除吗？")
-               .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                .setTitle("删除")
+                .setMessage("确定删除吗？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // 点击确定按钮
@@ -206,7 +313,7 @@ public class UploadPostActivity extends AppCompatActivity {
                         dialogInterface.dismiss();
                     }
                 })
-               .setNegativeButton(
+                .setNegativeButton(
                         "取消",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -216,13 +323,9 @@ public class UploadPostActivity extends AppCompatActivity {
                                 dialogInterface.dismiss();
                             }
                         }
-               ).show();
+                ).show();
     }
-    private String generateUniqueIdentifier() {
-        return UUID.randomUUID().toString();
-    }
-    //获取控件对象
-    private void initView() {
+    public void initView(){
         imgLinerLayout = findViewById(R.id.imageContainer);
         uploadImage = findViewById(R.id.input_image);
         title = findViewById(R.id.input_title);
@@ -230,7 +333,10 @@ public class UploadPostActivity extends AppCompatActivity {
         back = findViewById(R.id.post_back_btn);
         upload = findViewById(R.id.post_upload_btn);
     }
-    //供用户选择拍照或从相册选择
+    private int convertDpToPixel(int dp) {
+        float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
     private void showPopupWindow() {
         View popView = View.inflate(this, R.layout.popupwindow_camera_need, null);
         Button bt_album = popView.findViewById(R.id.btn_pop_album);
@@ -352,8 +458,7 @@ public class UploadPostActivity extends AppCompatActivity {
                 displayCapturedPhoto();
             }
         }
-    }
-    //展示所选择的图片
+    } //展示所选择的图片
     private void displaySelectedImage(Uri selectedImage,String fileName) {
         ImageView imageView = new ImageView(this);
         imageView.setImageURI(selectedImage);
@@ -393,11 +498,8 @@ public class UploadPostActivity extends AppCompatActivity {
         viewList.add(imageView);
         setListener();
     }
-    //图片分片上传，计算文件总分片数
-    private int calculateTotalChunks(File file) {
-        // 计算分片数的逻辑，根据文件大小和分片大小计算
-        return (int) Math.ceil((double) file.length() / (1024 * 1024));
-
+    private String generateUniqueIdentifier() {
+        return UUID.randomUUID().toString();
     }
     //通过uri获取文件
     private File getFileFromUri(Uri uri) {
@@ -434,17 +536,4 @@ public class UploadPostActivity extends AppCompatActivity {
         }
         return null;
     }
-    private int convertDpToPixel(int dp) {
-        float scale = getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
-    private void uploadComplete() {
-        Intent resultIntent = new Intent();
-        setResult(Activity.RESULT_OK, resultIntent); // 设置上传完成的结果码
-        finish(); // 结束上传页面
-    }
-
-
-
-
 }

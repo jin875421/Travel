@@ -25,6 +25,12 @@
             android:layout_marginLeft="10dp"
             android:text="正文"
             android:textSize="20sp" />
+        <ImageView
+            android:id="@+id/popupmenu"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
     </RelativeLayout>
     <ScrollView
         android:layout_width="match_parent"

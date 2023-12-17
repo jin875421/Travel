@@ -15,8 +15,7 @@ import java.util.List;
 
 import glue502.software.R;
 import glue502.software.activities.travelRecord.travelRecordActivity;
-import glue502.software.activities.travelRecord.travelReviewActivity;
-import glue502.software.adapters.TravelReviewAdapter;
+import glue502.software.activities.travelRecord.TravelReviewActivity;
 import glue502.software.utils.Carousel;
 
 public class RecommendFragment extends Fragment {
@@ -50,7 +49,7 @@ public class RecommendFragment extends Fragment {
         reviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), travelReviewActivity.class);
+                Intent intent = new Intent(getActivity(), TravelReviewActivity.class);
                 startActivity(intent);
             }
         });

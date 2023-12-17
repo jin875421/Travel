@@ -8,7 +8,7 @@ public class travelRecord {
     private String travelId;//整个旅程的id
     private String placeName;//小的名称，也就是标题
     private String travelName;//大的名称
-    private List image;//旅行的图片
+    private List<String> image;//旅行的图片
     private String content;//包含的内容
 
 
@@ -56,11 +56,11 @@ public class travelRecord {
         this.travelName = travelName;
     }
 
-    public List getImage() {
+    public List<String> getImage() {
         return image;
     }
 
-    public void setImage(List image) {
+    public void setImage(List<String> image) {
         this.image = image;
     }
 
