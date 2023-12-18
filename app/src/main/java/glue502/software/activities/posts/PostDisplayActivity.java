@@ -216,7 +216,7 @@ public class PostDisplayActivity extends AppCompatActivity {
         }).start();
         //通过postId和userId获取用户点赞和收藏状态
         Request request1 = new Request.Builder()
-               .url(url+"posts/getLikeAndStatus?postId="+postId+"&userId="+userId)
+               .url(url+"posts/getLikeAndStarStatus?postId="+postId+"&userId="+userId)
                .build();
         new Thread(new Runnable() {
             @Override
@@ -225,10 +225,13 @@ public class PostDisplayActivity extends AppCompatActivity {
                     Response response = client1.newCall(request1).execute();
                     //从请求中获取用户点赞和收藏状态
                     String result = response.body().string();
+                    System.out.println("result:"+result);
                     //转换为likeAndStarStatus对象
                     LikeAndStarStatus likeAndStarStatus = new Gson().fromJson(result, LikeAndStarStatus.class);
                     likeStatus = likeAndStarStatus.getLikeStatus();
                     starStatus = likeAndStarStatus.getStarStatus();
+                    System.out.println("likeStatus:"+likeStatus);
+                    System.out.println("starStatus:"+starStatus);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -332,8 +335,8 @@ public class PostDisplayActivity extends AppCompatActivity {
                             }
                         }
                     }).start();
-                    likeStatus=0;
-                    like_btn.setImageResource(R.mipmap.like1);
+                    likeStatus=1;
+                    like_btn.setImageResource(R.mipmap.like);
                 } else if (likeStatus==1) {
                     //取消点赞
                     new Thread(new Runnable() {
@@ -360,7 +363,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         }
                     }).start();
                     likeStatus=0;
-                    like_btn.setImageResource(R.mipmap.like);
+                    like_btn.setImageResource(R.mipmap.like1);
                 }
             }
         });
@@ -415,7 +418,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                             }
                         }
                     }).start();
-                    star_btn.setImageResource(R.mipmap.star1);
+                    star_btn.setImageResource(R.mipmap.star);
                     starStatus = 1;
                 } else if (starStatus == 1) {
                     new Thread(new Runnable() {
@@ -440,7 +443,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                             }
                         }
                     }).start();
-                    star_btn.setImageResource(R.mipmap.star);
+                    star_btn.setImageResource(R.mipmap.star1);
                     starStatus = 0;
                 }
             }

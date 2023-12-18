@@ -266,7 +266,8 @@ public class AddLabelActivity extends AppCompatActivity {
                         suggest,
                         R.layout.item_layout,
                         new String[]{"key", "city", "dis"},
-                        new int[]{R.id.sug_key, R.id.sug_city, R.id.sug_dis});
+                        new int[]{R.id.sug_key, R.id.sug_city, R.id.sug_dis}
+                );
                 mSugListView.setVisibility(View.VISIBLE);
                 mSugListView.setAdapter(simpleAdapter);
                 mSugListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
