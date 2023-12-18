@@ -285,7 +285,7 @@ public class travelRecordActivity extends Activity {
                 } else if(data.getData() != null) {
                     Uri selectedImage = data.getData();
                     savefile(selectedImage);
-                // 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
+// 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
                     putPicture(selectedImage,10000);
                 }
             } else if (requestCode == RESULT_CAMERA_IMAGE) {
@@ -394,8 +394,8 @@ public class travelRecordActivity extends Activity {
 // 创建 ImageView
         ImageView imageView = new ImageView(this);
         LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
-                400,
-               400);
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         imageView.setLayoutParams(imageParams);
         imageView.setImageResource(R.drawable.add_image);
         imageView.setVisibility(View.VISIBLE); // 设置为可见
@@ -508,7 +508,7 @@ public class travelRecordActivity extends Activity {
         llContentView.addView(layout, 1);
 
         btnIDIndex++;
-        //TODO 在这里进行读取操作，通过减去i来得到一个j循环j读取展示，例如1110，则减去11得到10，循环十次，依次读取1101，1102，得到uri，惊进行展示
+//TODO 在这里进行读取操作，通过减去i来得到一个j循环j读取展示，例如1110，则减去11得到10，循环十次，依次读取1101，1102，得到uri，惊进行展示
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String I = String.valueOf(i);
         String num = sharedPreferences.getString(I, "0");

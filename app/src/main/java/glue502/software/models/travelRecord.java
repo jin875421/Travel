@@ -11,9 +11,18 @@ public class travelRecord {
     private List<String> image;//旅行的图片
     private String content;//包含的内容
 
+    private String createTime;//时间
 
+    private int pictureNumber;//图片的数量
     public travelRecord() {
 
+    }
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     public String getUserId() {

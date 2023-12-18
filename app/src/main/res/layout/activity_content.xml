@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/bg2"
+    android:background="@android:color/darker_gray"
+
     tools:context=".activities.travelRecord.travelRecordActivity" >
     <RelativeLayout
         android:layout_alignParentTop="true"
@@ -49,14 +50,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
-                android:background="#FFFFFF"
+                android:background="#A9A9A9"
                 android:orientation="vertical"
                 android:padding="5dip" >
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:background="#FFFFFF">
+                    android:background="#FFFFFFFF">
 
                     <LinearLayout
                         android:id="@+id/imageContainer"
@@ -74,8 +75,8 @@
 
                         <ImageView
                             android:id="@+id/input_image"
-                            android:layout_width="140dp"
-                            android:layout_height="140dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:src="@drawable/add_image" />
                     </LinearLayout>
 
@@ -84,7 +85,7 @@
                     android:id="@+id/et_content1"
                     android:layout_width="match_parent"
                     android:layout_height="25dip"
-                    android:background="#FFFFFF"
+                    android:background="#FFFFFFFF"
                     android:gravity="left"
                     android:inputType="textMultiLine"
                     android:paddingLeft="5dip"
@@ -95,7 +96,7 @@
                     android:id="@+id/et_content2"
                     android:layout_width="match_parent"
                     android:layout_height="80dip"
-                    android:background="#FFFFFF"
+                    android:background="#FFFFFFFF"
                     android:gravity="left"
                     android:inputType="textMultiLine"
                     android:paddingLeft="5dip"
