@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -61,6 +62,7 @@ public class RespondDetail extends AppCompatActivity {
     private ListView listView;
     private ImageView submit;
     private String status;
+    private String postId;
     private EditText chatInputEt;
     private ImageView avatar;
     private TextView username;
@@ -117,9 +119,12 @@ public class RespondDetail extends AppCompatActivity {
                             SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :HH:mm:ss");
                             System.out.println(dateFormat.format(date));
                             String time = dateFormat.format(date);
+                            String parentId = comment.getCommentId();
                             SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
                             String userId = sharedPreferences.getString("userId","");
-                            CommentRespond commentRespond = new CommentRespond(id, userId, text, time, comment.getCommentId());
+                            //UploadComment commentRespond = new UploadComment(id, userId, text, time, comment.getCommentId());
+                            UploadComment commentRespond = new UploadComment(postId, userId, text, id, time, parentId);
+                            Log.v("commentRespond", "lzx上传回复的父Id" + parentId);
                             //okHttp
                             Gson gson = new Gson();
                             String json = gson.toJson(commentRespond);
@@ -129,7 +134,7 @@ public class RespondDetail extends AppCompatActivity {
                             );
                             Request request = new Request.Builder()
                                     .post(body)
-                                    .url(url + "comment/addCommentRespond")
+                                    .url(url + "comment/addComment")
                                     .build();
                             //3.Call对象
                             Call call = client.newCall(request);
@@ -260,6 +265,8 @@ public class RespondDetail extends AppCompatActivity {
         Bundle bundle = intent.getBundleExtra("bundle");
         comment = (Comment) bundle.getSerializable("comment");
         System.out.println("回复详情页面上的评论主体"+comment.toString());
+        //获取评论回复所属帖子Id
+        postId = comment.getPostId();
         //显示头像
         Glide.with(RespondDetail.this)
                 .load(url + comment.getAvatar())
