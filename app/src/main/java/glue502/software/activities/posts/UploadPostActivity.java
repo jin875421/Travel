@@ -6,12 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -50,6 +51,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class UploadPostActivity extends AppCompatActivity {
+    private List<View> viewList = new ArrayList<>();
     private  List<File> fileList = new ArrayList<>();
     private Post post = new Post();
     private EditText title, content;
@@ -72,6 +74,7 @@ public class UploadPostActivity extends AppCompatActivity {
     }
 
     private void setListener() {
+
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,18 +130,19 @@ public class UploadPostActivity extends AppCompatActivity {
                                     while ((bytesRead = inputStream.read(buffer))!=-1){
                                         byte[] actualBuffer = Arrays.copyOfRange(buffer, 0, bytesRead);
 
-                                        builder.addFormDataPart("images", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), actualBuffer));
                                         builder.addFormDataPart("identifiers", identifier);
                                         builder.addFormDataPart("sequenceNumbers", String.valueOf(sequenceNumber));
                                         builder.addFormDataPart("totalChunks", String.valueOf(totalChunks));
+                                        builder.addFormDataPart("images", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), actualBuffer));
+
                                         sequenceNumber++;
                                     }
-
 
                                 }catch (IOException e){
                                     e.printStackTrace();
                                 }
 
+                            }else {
                             }
                         }
                         RequestBody requestBody = builder.build();
@@ -165,8 +169,55 @@ public class UploadPostActivity extends AppCompatActivity {
                 }).start();
             }
         });
-    }
+        // 循环遍历控件列表
+        for (View control : viewList) {
+            //绑定长按事件
 
+            control.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    // 长按弹出删除选项
+                        showDeleteDialog(view);
+
+                    return false;
+                }
+            });
+        }
+    }
+    private void showDeleteDialog(View view) {
+        // 弹出对话框
+        new AlertDialog.Builder(this)
+               .setTitle("删除")
+               .setMessage("确定删除吗？")
+               .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 点击确定按钮
+                        //在页面上删除这个控件
+                        imgLinerLayout.removeView(view);
+                        //在file列表中删除这个控件对应的文件
+                        for(File file : fileList){
+                            if(file.getName().equals(view.getTag().toString())){
+                                file.delete();
+                                break;
+                            }
+                        }
+                        // 关闭对话框
+                        dialogInterface.dismiss();
+                    }
+                })
+               .setNegativeButton(
+                        "取消",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // 点击取消按钮
+                                // 关闭对话框
+                                dialogInterface.dismiss();
+                            }
+                        }
+               ).show();
+    }
     private String generateUniqueIdentifier() {
         return UUID.randomUUID().toString();
     }
@@ -179,7 +230,6 @@ public class UploadPostActivity extends AppCompatActivity {
         back = findViewById(R.id.post_back_btn);
         upload = findViewById(R.id.post_upload_btn);
     }
-
     //供用户选择拍照或从相册选择
     private void showPopupWindow() {
         View popView = View.inflate(this, R.layout.popupwindow_camera_need, null);
@@ -236,7 +286,6 @@ public class UploadPostActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), RESULT_LOAD_IMAGES);
-
     }
     //启动相机
     private void takeCamera(int num) {
@@ -281,13 +330,23 @@ public class UploadPostActivity extends AppCompatActivity {
                     int count = clipData.getItemCount();
                     for (int i = 0; i < count; i++) {
                         Uri selectedImage = clipData.getItemAt(i).getUri();
-                        savefile(selectedImage);
-                        displaySelectedImage(selectedImage);
+                        //生成文件唯一标识
+                        String fileName = generateUniqueIdentifier();
+                        File file = getFileFromUri(selectedImage);
+                        //获取文件名
+                        String fileName1 = file.getName();
+                        fileList.add(file);
+                        displaySelectedImage(selectedImage,fileName1);
                     }
                 } else if(data.getData() != null) {
                     Uri selectedImage = data.getData();
-                    savefile(selectedImage);
-                    displaySelectedImage(selectedImage);
+                    //生成文件唯一标识
+                    String fileName = generateUniqueIdentifier();
+                    File file = getFileFromUri(selectedImage);
+                    //获取文件名
+                    String fileName1 = file.getName();
+                    fileList.add(file);
+                    displaySelectedImage(selectedImage,fileName1);
                 }
             } else if (requestCode == RESULT_CAMERA_IMAGE) {
                 displayCapturedPhoto();
@@ -295,7 +354,7 @@ public class UploadPostActivity extends AppCompatActivity {
         }
     }
     //展示所选择的图片
-    private void displaySelectedImage(Uri selectedImage) {
+    private void displaySelectedImage(Uri selectedImage,String fileName) {
         ImageView imageView = new ImageView(this);
         imageView.setImageURI(selectedImage);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -304,16 +363,22 @@ public class UploadPostActivity extends AppCompatActivity {
         );
         layoutParams.setMargins(0, 0, 0, 16);
         imageView.setLayoutParams(layoutParams);
+        //设置Tag
+        imageView.setTag(fileName);
         imgLinerLayout.addView(imageView);
         imgLinerLayout.removeView(uploadImage);
         imgLinerLayout.addView(uploadImage);
+        viewList.add(imageView);
+        setListener();
     }
     //展示拍摄的图片
     private void displayCapturedPhoto() {
         ImageView imageView = new ImageView(this);
         // 接下来可以将图片以文件形式保存到您的应用内部存储或缓存目录中
-        imageView.setImageURI(Uri.fromFile(new File(mCurrentPhotoPath)));
-        fileList.add(new File(mCurrentPhotoPath));
+        File file = new File(mCurrentPhotoPath);
+        //给ImageView设置图片
+        imageView.setImageURI(Uri.fromFile(file));
+        fileList.add(file);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 convertDpToPixel(150), // 宽度 150dp 转换为像素
@@ -321,12 +386,12 @@ public class UploadPostActivity extends AppCompatActivity {
         );
         layoutParams.setMargins(0, 0, 0, 16);
         imageView.setLayoutParams(layoutParams);
+        imageView.setTag(file.getName());
         imgLinerLayout.addView(imageView);
         imgLinerLayout.removeView(uploadImage);
         imgLinerLayout.addView(uploadImage);
-    }
-    private void savefile(Uri uri){
-        fileList.add(getFileFromUri(uri));
+        viewList.add(imageView);
+        setListener();
     }
     //图片分片上传，计算文件总分片数
     private int calculateTotalChunks(File file) {
@@ -359,6 +424,8 @@ public class UploadPostActivity extends AppCompatActivity {
                     }
                     outputStream.close();
                     inputStream.close();
+                    //给文件命名
+
                     return file;
                 }
             }

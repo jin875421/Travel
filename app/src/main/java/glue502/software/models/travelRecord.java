@@ -65,11 +65,11 @@ public class travelRecord {
         this.travelName = travelName;
     }
 
-    public List getImage() {
+    public List<String> getImage() {
         return image;
     }
 
-    public void setImage(List image) {
+    public void setImage(List<String> image) {
         this.image = image;
     }
 

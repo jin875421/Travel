@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/comment"
     android:orientation="vertical">
 
 
@@ -59,5 +60,26 @@
 
   </LinearLayout>
 
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/gray"
+      android:id="@+id/respond"
+      android:orientation="vertical"
+      android:layout_marginTop="10dp"
+      android:layout_marginLeft="60dp"
+      android:layout_marginRight="60dp">
+    <TextView
+        android:id="@+id/first_respond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="刘梓煊 回复 楼主:哈哈哈"/>
+    <TextView
+        android:id="@+id/respond_num"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="共N条回复 >"/>
+  </LinearLayout>
 
 </LinearLayout>

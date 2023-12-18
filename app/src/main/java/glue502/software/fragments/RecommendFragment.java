@@ -14,24 +14,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.map.AddLabelActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
+import glue502.software.activities.travelRecord.TravelReviewActivity;
 import glue502.software.utils.Carousel;
 
 public class RecommendFragment extends Fragment {
     private Button createBtn;
+    private Button reviewBtn;
+    private Button lzxBtn;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recommend,container,false);
         createBtn = view.findViewById(R.id.btn_Recording);
+        reviewBtn = view.findViewById(R.id.bottomRightButton);
+        lzxBtn = view.findViewById(R.id.lzx);
         setlistener();
         Carousel carousel = new Carousel(getContext(), view.findViewById(R.id.recommend_lbt_dot), view.findViewById(R.id.recommend_lbt_image));
         List<String> paths = new ArrayList<>();
-        paths.add("images/cat1_1.jpg");
-        paths.add("images/cat1_2.jpg");
-        paths.add("images/cat1_3.jpg");
-        paths.add("images/cat2_1.jpg");
-        paths.add("images/cat2_2.jpg");
+        paths.add("images/cat1.jpg");
+        paths.add("images/cat2.jpg");
+        paths.add("images/cat3.jpg");
+        paths.add("images/cat4.jpg");
+        paths.add("images/cat5.jpg");
         carousel.initViewsLBT(paths);
         return view;
     }
@@ -40,6 +46,20 @@ public class RecommendFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), travelRecordActivity.class);
+                startActivity(intent);
+            }
+        });
+        reviewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), TravelReviewActivity.class);
+                startActivity(intent);
+            }
+        });
+        lzxBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AddLabelActivity.class);
                 startActivity(intent);
             }
         });

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
@@ -17,7 +16,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -41,55 +39,25 @@ import androidx.core.content.FileProvider;
 
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import glue502.software.R;
-import glue502.software.activities.posts.PostDisplayActivity;
-import glue502.software.fragments.RecommendFragment;
-import glue502.software.models.UserInfo;
-import glue502.software.models.travelRecord;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class travelRecordActivity extends Activity {
 
-    private static Map<String, String> uriIdentifierMap = new HashMap<>();
-    private UserInfo  userInfo= new UserInfo();
-    private String userId ;
     // 在 PostActivity 中定义一个 SharedPreferences 的实例变量,持久化保存
     private SharedPreferences sharedPreferences;
     private List<File> fileList = new ArrayList<>();
-
-    static final int PICK_IMAGE_REQUEST = 1; // 定义一个请求代码
-    private List<travelRecord> record = new ArrayList<>();
     private int value=0;
     // 外围的LinearLayout容器
     private LinearLayout llContentView;
@@ -116,11 +84,8 @@ public class travelRecordActivity extends Activity {
         Log.d("PostActivity", "onCreate() called");
         initCtrl();
         // 获取 SharedPreferences 实例
-        sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId","");
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
-        System.out.println(numberOfControls);
         // 如果之前有保存的控件数量，则重新创建控件
         if (numberOfControls > 0) {
 
@@ -140,66 +105,17 @@ public class travelRecordActivity extends Activity {
     private int getValue() {
         return this.value;
     }
-    //TODO 保存List到SharedPreferences,通过tag区分
-    private void saveListToSharedPreferences(List<String> list,int tag) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-
-        editor.putString("myList"+tag, json);
-        editor.apply();
-    }
-
-    // 从SharedPreferences中获取List
-    private List<String> getListFromSharedPreferences(int tag) {
-        String json = sharedPreferences.getString("myList"+tag, "");
-        if(json.equals("")){
-            return new ArrayList<>();
-        }else {
-            Gson gson = new Gson();
-            Type type = new TypeToken<List<String>>() {}.getType();
-            return gson.fromJson(json, type);
-        }
-    }
-
-
     private void setListener() {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO 提交的代码 逻辑如下 通过sharp得到总数 依次上传
-//                {
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            SharedPreferences.Editor editor = sharedPreferences.edit();
-//                            int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
-//                            for (int i = numberOfControls; i > 0; i--) {
-//                                travelRecord travelrecord = new travelRecord();
-//                                travelrecord.setPlaceName(sharedPreferences.getString("userTitle" + i,""));
-//                                travelrecord.setContent(sharedPreferences.getString("userContent" + i,""));
-//                                travelrecord.setUserId(userId);
-//                                Date currentTime = new Date();
-//
-//                                // 定义日期时间格式
-//                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//
-//                                // 格式化当前时间
-//                                String formattedTime = sdf.format(currentTime);
-//                                travelrecord.setCreateTime(formattedTime);
-//
-//
-//                            }
-//                        }
-//                    }).start();
-//                }
+                System.out.println("11111111");
             }
         });
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                System.out.println("11111111");
             }
         });
         imageInput.setOnClickListener(new View.OnClickListener() {
@@ -211,6 +127,8 @@ public class travelRecordActivity extends Activity {
             }
         });
 // 请求焦点给按钮
+        btnSubmit.requestFocus();
+        btnReturn.requestFocus();
     }
 
         private void showPopupWindow(){
@@ -264,69 +182,6 @@ public class travelRecordActivity extends Activity {
             }
 
         }
-        //TODO Uri与真实路径转换
-    public static String getRealPathFromUri(Context context, Uri uri) {
-        String filePath = "";
-        String scheme = uri.getScheme();
-        if (scheme == null)
-            filePath = uri.getPath();
-        else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
-            filePath = uri.getPath();
-        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    filePath = cursor.getString(columnIndex);
-                }
-                cursor.close();
-            }
-            if (TextUtils.isEmpty(filePath)) {
-                filePath = getFilePathForNonMediaUri(context, uri);
-            }
-        }
-        return filePath;
-    }
-
-    //非媒体文件中查找
-    private static String getFilePathForNonMediaUri(Context context, Uri uri) {
-        String filePath = "";
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                int columnIndex = cursor.getColumnIndexOrThrow("_data");
-                filePath = cursor.getString(columnIndex);
-            }
-            cursor.close();
-        }
-        return filePath;
-    }
-    //TODO 哈希函数
-
-    // 使用 MD5 哈希函数生成唯一标识符
-    public static String generateIdentifierFromUri(String uri) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-            digest.update(uri.getBytes());
-            byte[] messageDigest = digest.digest();
-
-            // 将 byte 数组转换成十六进制的字符串表示
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : messageDigest) {
-                String hex = Integer.toHexString(0xFF & b);
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 //启动相机
     private void takeCamera(int num) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -421,139 +276,51 @@ public class travelRecordActivity extends Activity {
                         Uri selectedImage = clipData.getItemAt(i).getUri();
                         savefile(selectedImage);
                         //则通过循环11保存一个uri，12保存一个uri，13保存一个uri，以此类推
-                        savePicture(selectedImage,10000);
+                        savePicture(selectedImage,10000,i,count);
                         System.out.println("count"+count);
                         //下面是展示图片
-                        putPicture(selectedImage,10000,null);
+                        putPicture(selectedImage,10000);
+                        //TODO 下面是保存图片，通过sharp保存，保存两个数添加到一起，第一组数是显示的Tag位置，第二组数是第几个照片对应的第几个uri，例子保存在tag为1，照片为10张
                     }
                 } else if(data.getData() != null) {
                     Uri selectedImage = data.getData();
                     savefile(selectedImage);
-                    savePicture(selectedImage,10000);
 // 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
-                    putPicture(selectedImage,10000,null);
+                    putPicture(selectedImage,10000);
                 }
             } else if (requestCode == RESULT_CAMERA_IMAGE) {
+
             }
         }
     }
-    //TODO 下面是保存图片，使用哈希函数把他uri的特殊标识符作为名字存储在本地中。若要读取则需要通过特殊标识符得到uri
-    private void savePicture(Uri uri,int tag) {
+
+    private void savePicture(Uri uri,int tag,int save,int count) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if(tag==10000){
-            List<String > path = new ArrayList<>();
             tag = getValue();
-            path =  getListFromSharedPreferences(tag);
+            System.out.println("getValue"+tag);
+            String concatenated = String.valueOf(tag) + String.valueOf(save);
+            System.out.println("拼接后的结果：" + concatenated); // 输出：109
+            String Tag = String.valueOf(tag);
+            String COUNT = String.valueOf(count);
             String URI =  uri.toString();
-            path.add(URI);
-            saveListToSharedPreferences(path,tag);
-            try {
-                System.out.println(generateIdentifierFromUri(URI)+"djp");
-                // 通过 URI 获取 Bitmap 对象
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                // 将 Bitmap 对象保存到内部存储
-                FileOutputStream fileOutputStream = openFileOutput(generateIdentifierFromUri(URI), 0);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                fileOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-
-            List<String > path = new ArrayList<>();
-            String URI =  uri.toString();
-            path.add(URI);
-            saveListToSharedPreferences(path,tag);
-            try {
-                System.out.println(generateIdentifierFromUri(URI)+"djp");
-                // 通过 URI 获取 Bitmap 对象
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                // 将 Bitmap 对象保存到内部存储
-                FileOutputStream fileOutputStream = openFileOutput(generateIdentifierFromUri(URI), 0);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                fileOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        editor.apply();
+            editor.putString(concatenated, URI);
+            editor.putString(Tag,COUNT);
+        }editor.apply();
 
         }
 
-//TODO 展示图片
-    private void putPicture(Uri selectedImage,int a,Bitmap bitmap){
-        if(bitmap == null) {
-            if(a==10000){
-                LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(getValue()); // 获取第一个LinearLayout
-                System.out.println("putPicture+getValue"+getValue());
-                // 获取第一个LinearLayout}
-                HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
-                LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
-                ImageView imageView1 = new ImageView(this);
-                Glide.with(this)
-                        .load(selectedImage)
-                        .into(imageView1);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        convertDpToPixel(150), // 宽度 150dp 转换为像素
-                        convertDpToPixel(150) // 高度 150dp 转换为像素
-                );
-                imageView1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
-                        showPopupWindow();
-                    }
-                });
-                layoutParams.setMargins(0, 0, 0, 16);
-                imageView1.setLayoutParams(layoutParams);
-// 添加新的imageView1 到 innerLayout
-                innerLayout.addView(imageView1);
-            }
-            else {
-                LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(a);
-                System.out.println("putPicture+a"+a);
-                // 获取第一个LinearLayout}
-                HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
-                LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
-                ImageView imageView1 = new ImageView(this);
-                Glide.with(this)
-                        .load(selectedImage)
-                        .into(imageView1);
-                imageView1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
-                        showPopupWindow();
 
-                    }
-                });
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        convertDpToPixel(150), // 宽度 150dp 转换为像素
-                        convertDpToPixel(150) // 高度 150dp 转换为像素
-                );
-                layoutParams.setMargins(0, 0, 0, 16);
-                imageView1.setLayoutParams(layoutParams);
-// 添加新的imageView1 到 innerLayout
-                innerLayout.addView(imageView1);
-            }
-        }else {
-            LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(a);
-            System.out.println("putPicture+a"+a);
+    private void putPicture(Uri selectedImage,int a){
+
+        if(a==10000){
+            LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(getValue()); // 获取第一个LinearLayout
             // 获取第一个LinearLayout}
             HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
             LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
             ImageView imageView1 = new ImageView(this);
             Glide.with(this)
-                    .load(bitmap)
-                    .into(imageView1);
-            imageView1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
-                    showPopupWindow();
-
-                }
-            });
+                    .load(selectedImage).into(imageView1);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     convertDpToPixel(150), // 宽度 150dp 转换为像素
                     convertDpToPixel(150) // 高度 150dp 转换为像素
@@ -563,8 +330,23 @@ public class travelRecordActivity extends Activity {
 // 添加新的imageView1 到 innerLayout
             innerLayout.addView(imageView1);
         }
-
-
+    else {
+            LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(a);
+            // 获取第一个LinearLayout}
+            HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
+            LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
+            ImageView imageView1 = new ImageView(this);
+            Glide.with(this)
+                    .load(selectedImage).into(imageView1);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    convertDpToPixel(150), // 宽度 150dp 转换为像素
+                    convertDpToPixel(150) // 高度 150dp 转换为像素
+            );
+            layoutParams.setMargins(0, 0, 0, 16);
+            imageView1.setLayoutParams(layoutParams);
+// 添加新的imageView1 到 innerLayout
+            innerLayout.addView(imageView1);
+    }
 }
     //下面是新建的控件
     private void addContentWithTag(int i) {
@@ -629,7 +411,7 @@ public class travelRecordActivity extends Activity {
         });
 
 // 将 ImageView 添加到内部 LinearLayout
-        innerLayout.addView(imageView,0);
+        innerLayout.addView(imageView);
 
 // 将内部 LinearLayout 添加到 HorizontalScrollView
         scrollView.addView(innerLayout);
@@ -707,8 +489,9 @@ public class travelRecordActivity extends Activity {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         btnDeleteAddParam.setMargins(0, 0, (int) (fDimRatio * 5), 0);
         // “-”按钮放在“+”按钮左侧
-        btnDeleteAddParam.addRule(RelativeLayout.LEFT_OF,   btnIDIndex);
+        btnDeleteAddParam.addRule(RelativeLayout.LEFT_OF, btnIDIndex);
         btnDelete.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 deleteContent(v);
@@ -725,9 +508,23 @@ public class travelRecordActivity extends Activity {
         llContentView.addView(layout, 1);
 
         btnIDIndex++;
+//TODO 在这里进行读取操作，通过减去i来得到一个j循环j读取展示，例如1110，则减去11得到10，循环十次，依次读取1101，1102，得到uri，惊进行展示
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String I = String.valueOf(i);
+        String num = sharedPreferences.getString(I, "0");
+        int count = Integer.parseInt(num);
+        int tag =Integer.parseInt(I);
+        System.out.println("count"+count);
+        for(int j=0;j<count;j++){
+            String concatenated = String.valueOf(tag) + String.valueOf(j);
+            System.out.println("concatenated"+concatenated);
+            String which = sharedPreferences.getString(concatenated, "");
+            Uri uri = Uri.parse(which); // 将字符串转换为 Uri
+            putPicture(uri,tag);
 
         }
 
+    }
 
     // Method to convert dp to pixels
     private int dpToPx(Context context, int dp) {
@@ -768,6 +565,7 @@ public class travelRecordActivity extends Activity {
                 }
             }
         });
+
         listIBTNAdd.add(ibtnAdd1);
         listIBTNDel.add(null);  // 第一组隐藏了“-”按钮，所以为null
     }
@@ -916,6 +714,7 @@ public class travelRecordActivity extends Activity {
             btnAdd.setId(btnIDIndex);
             // 设置点击操作
             btnAdd.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
                     addContent(v);
@@ -981,13 +780,13 @@ public class travelRecordActivity extends Activity {
             llContentView.removeViewAt(iIndex);
             removeFromSharedPreferences(iIndex);
         }
+
+
     }
 // 保存内容到 SharedPreferences
     private void saveContentToSharedPreferences() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         for (int i = 0; i < llContentView.getChildCount(); i++) {
-            //TODO 在这里执行关闭保存 通过i先读取，读取出总数，得到总数，清空总数，循环count保存，读取出uri再保存
-            saveListToSharedPreferences(getListFromSharedPreferences(i),i);
             View view = llContentView.getChildAt(i);
             if (view instanceof LinearLayout) {
                 LinearLayout linearLayout = (LinearLayout) view;
@@ -1016,6 +815,7 @@ public class travelRecordActivity extends Activity {
                             // Second EditText - Assume it as content EditText
                             editor.putString("userContent" + index, content);
                         }
+
                         editTextCount++; // Increment EditText counter
                     }
                 }
@@ -1027,30 +827,7 @@ public class travelRecordActivity extends Activity {
 //打开时执行加载的代码，把上一次保存的东西加载进来
     private void loadSavedContent() {
         for (int i = 0; i < llContentView.getChildCount(); i++) {
-            List<String> path =  getListFromSharedPreferences(i);
             View view = llContentView.getChildAt(i);
-            //TODO 在这里进行读取操作，得到uri，进行展示
-            if (path != null && !path.isEmpty()) {
-                // 如果列表不为空，则执行操作
-                // 在这里执行您想要执行的操作，例如遍历列表、获取列表的大小等
-                for (String URI : path) {
-                    Uri uri = Uri.parse(URI);
-                    try {
-                        FileInputStream localStream =openFileInput(generateIdentifierFromUri(URI));
-                        Bitmap bitmap = BitmapFactory.decodeStream(localStream);
-
-                        putPicture(uri,i,bitmap);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    // 这里可以对列表中的每个元素执行操作
-                    System.out.println(URI);
-                }
-            } else {
-                System.out.println("列表为空，跳过执行操作");
-            }
             if (view instanceof LinearLayout) {
                 LinearLayout linearLayout = (LinearLayout) view;
                 EditText etTitle = null;
@@ -1112,8 +889,6 @@ public class travelRecordActivity extends Activity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove("userContent" + index);
         editor.remove("userTitle" + index);
-        String a =   String.valueOf(index);
-        editor.remove(a);
         editor.apply();
     }
 
