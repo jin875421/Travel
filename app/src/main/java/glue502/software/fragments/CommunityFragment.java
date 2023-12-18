@@ -6,30 +6,28 @@ import static glue502.software.activities.MainActivity.ip;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smart.refresh.footer.ClassicsFooter;
+import com.scwang.smart.refresh.header.ClassicsHeader;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +41,6 @@ import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
 import glue502.software.models.UserInfo;
-import glue502.software.utils.MyViewUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -58,7 +55,7 @@ public class CommunityFragment extends Fragment {
     private List<Post> posts;
     private List<UserInfo> userInfos;
     private String status;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private RefreshLayout refreshLayout;
     private EditText searchText;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,7 +65,7 @@ public class CommunityFragment extends Fragment {
         listView = view.findViewById(R.id.post_display);
         searchText = view.findViewById(R.id.et_searchtext);
         uploadBtn = view.findViewById(R.id.floating_button);
-        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        refreshLayout = (RefreshLayout) view.findViewById(R.id.refreshLayout);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         status = sharedPreferences.getString("status","");
         setListener();
@@ -200,18 +197,34 @@ public class CommunityFragment extends Fragment {
             }
         });
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                swipeRefreshLayout.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        initData();
+//                        searchText.setText("");
+//                        //关闭刷新
+//                        swipeRefreshLayout.setRefreshing(false);
+//                    }
+//                },2000);
+//            }
+//        });
+        refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
+        refreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh() {
-                swipeRefreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        initData();
-                        searchText.setText("");
-                        //关闭刷新
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                },2000);
+            public void onRefresh(RefreshLayout refreshlayout) {
+                initData();
+                searchText.setText("");
+                refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshlayout) {
+                refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
             }
         });
 

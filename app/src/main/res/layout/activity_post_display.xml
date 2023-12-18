@@ -136,13 +136,21 @@
                 android:background="@color/white"
                 android:src="@mipmap/upload"/>
             <ImageButton
+                android:id="@+id/btn_like"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="4dp"
+                android:background="@color/white"
+                android:src="@mipmap/like1"/>
+            <ImageButton
                 android:id="@+id/btn_star"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="4dp"
                 android:background="@color/white"
-                android:src="@mipmap/star"/>
+                android:src="@mipmap/star1"/>
         </LinearLayout>
 
     </RelativeLayout>

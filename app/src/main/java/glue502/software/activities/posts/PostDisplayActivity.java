@@ -63,6 +63,7 @@ import glue502.software.activities.login.LoginActivity;
 import glue502.software.adapters.CommentListAdapter;
 import glue502.software.models.Comment;
 import glue502.software.models.CommentRespond;
+import glue502.software.models.LikeAndStarStatus;
 import glue502.software.models.ReturnCommentRespond;
 import glue502.software.models.UploadComment;
 import glue502.software.utils.Carousel;
@@ -79,6 +80,7 @@ import okhttp3.Response;
 
 public class PostDisplayActivity extends AppCompatActivity {
     private ImageView star_btn;
+    private ImageView like_btn;
     private int checkedItemId = R.id.edit;
     private ImageView back_btn;
     private ImageView submit;
@@ -102,6 +104,8 @@ public class PostDisplayActivity extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
     private ImageView menuBtn;
     private CommentListAdapter commentListAdapter;
+    //记录用户收藏和点赞状态
+    private int likeStatus, starStatus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,7 +184,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         Request request = new Request.Builder()
                .url(url+"posts/getPostById?postId="+postId)
                .build();
-        System.out.println(url+"posts/getPostById?postId="+postId);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -211,8 +214,44 @@ public class PostDisplayActivity extends AppCompatActivity {
                 }
             }
         }).start();
+        //通过postId和userId获取用户点赞和收藏状态
+        Request request1 = new Request.Builder()
+               .url(url+"posts/getLikeAndStatus?postId="+postId+"&userId="+userId)
+               .build();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response response = client1.newCall(request1).execute();
+                    //从请求中获取用户点赞和收藏状态
+                    String result = response.body().string();
+                    //转换为likeAndStarStatus对象
+                    LikeAndStarStatus likeAndStarStatus = new Gson().fromJson(result, LikeAndStarStatus.class);
+                    likeStatus = likeAndStarStatus.getLikeStatus();
+                    starStatus = likeAndStarStatus.getStarStatus();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(likeStatus == 1){
+                                like_btn.setImageResource(R.mipmap.like);
+                            }else{
+                                like_btn.setImageResource(R.mipmap.like1);
+                            }
+                            if(starStatus == 1){
+                                star_btn.setImageResource(R.mipmap.star);
+                            }else{
+                                star_btn.setImageResource(R.mipmap.star1);
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
     }
     public void initView(){
+        like_btn = findViewById(R.id.btn_like);
         menuBtn = findViewById(R.id.popupmenu);
         postImage = findViewById(R.id.post_image);
         dotLinerLayout = findViewById(R.id.index_dot);
@@ -243,7 +282,7 @@ public class PostDisplayActivity extends AppCompatActivity {
             //设置隐藏
             menuBtn.setVisibility(View.GONE);
         }
-        star_btn.setOnClickListener(new View.OnClickListener() {
+        like_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 执行收藏代码
@@ -269,8 +308,116 @@ public class PostDisplayActivity extends AppCompatActivity {
                     // 创建并显示对话框
                     AlertDialog dialog = builder.create();
                     dialog.show();
+                }else if (likeStatus==0){
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String postId = postWithUserInfo.getPost().getPostId();
+                            client = new OkHttpClient();
+                            MultipartBody.Builder builder = new MultipartBody.Builder()
+                                    .setType(MultipartBody.FORM)
+                                    .addFormDataPart("postId",postId)
+                                    .addFormDataPart("userId",userId);
+                            RequestBody requestBody = builder.build();
+                            Request request = new Request.Builder()
+                                    .url(url+"posts/like")
+                                    .post(requestBody)
+                                    .build();
+                            try {
+                                Response response = client.newCall(request).execute();
 
-                }else{
+                            } catch (IOException e) {
+                                Log.e("NetworkError", "Error: " + e.getMessage());
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }).start();
+                    likeStatus=0;
+                    like_btn.setImageResource(R.mipmap.like1);
+                } else if (likeStatus==1) {
+                    //取消点赞
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String postId = postWithUserInfo.getPost().getPostId();
+                            client = new OkHttpClient();
+                            MultipartBody.Builder builder = new MultipartBody.Builder()
+                                    .setType(MultipartBody.FORM)
+                                    .addFormDataPart("postId",postId)
+                                    .addFormDataPart("userId",userId);
+                            RequestBody requestBody = builder.build();
+                            Request request = new Request.Builder()
+                                    .url(url+"posts/like")
+                                    .post(requestBody)
+                                    .build();
+                            try {
+                                Response response = client.newCall(request).execute();
+
+                            } catch (IOException e) {
+                                Log.e("NetworkError", "Error: " + e.getMessage());
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }).start();
+                    likeStatus=0;
+                    like_btn.setImageResource(R.mipmap.like);
+                }
+            }
+        });
+        star_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 执行收藏代码
+                if (status == "") {
+                    // 创建AlertDialog构建器
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
+                    builder.setTitle("账号未登录！")
+                            .setMessage("是否前往登录账号")
+                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“确定”按钮后的操作
+                                    Intent intent = new Intent(PostDisplayActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“取消”按钮后的操作
+                                    dialog.dismiss(); // 关闭对话框
+                                }
+                            });
+
+                    // 创建并显示对话框
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                } else if (starStatus == 0) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String postId = postWithUserInfo.getPost().getPostId();
+                            client = new OkHttpClient();
+                            MultipartBody.Builder builder = new MultipartBody.Builder()
+                                    .setType(MultipartBody.FORM)
+                                    .addFormDataPart("postId", postId)
+                                    .addFormDataPart("userId", userId);
+                            RequestBody requestBody = builder.build();
+                            Request request = new Request.Builder()
+                                    .url(url + "posts/star")
+                                    .post(requestBody)
+                                    .build();
+                            try {
+                                Response response = client.newCall(request).execute();
+
+                            } catch (IOException e) {
+                                Log.e("NetworkError", "Error: " + e.getMessage());
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }).start();
+                    star_btn.setImageResource(R.mipmap.star1);
+                    starStatus = 1;
+                } else if (starStatus == 1) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -287,16 +434,15 @@ public class PostDisplayActivity extends AppCompatActivity {
                                     .build();
                             try {
                                 Response response = client.newCall(request).execute();
-
                             } catch (IOException e) {
                                 Log.e("NetworkError", "Error: " + e.getMessage());
                                 throw new RuntimeException(e);
                             }
                         }
                     }).start();
-                    Toast.makeText(PostDisplayActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
+                    star_btn.setImageResource(R.mipmap.star);
+                    starStatus = 0;
                 }
-
             }
         });
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -340,7 +486,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                             String id = UUID.randomUUID().toString();
                             Date date = new Date();
                             SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
-                            System.out.println(dateFormat.format(date));
                             String time = dateFormat.format(date);
                             UploadComment uploadComment = new UploadComment(postId,
                                     userId,
