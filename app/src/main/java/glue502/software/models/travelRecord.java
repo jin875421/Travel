@@ -14,6 +14,15 @@ public class travelRecord {
     private String createTime;//时间
 
     private int pictureNumber;//图片的数量
+
+    public int getPictureNumber() {
+        return pictureNumber;
+    }
+
+    public void setPictureNumber(int pictureNumber) {
+        this.pictureNumber = pictureNumber;
+    }
+
     public travelRecord() {
 
     }
