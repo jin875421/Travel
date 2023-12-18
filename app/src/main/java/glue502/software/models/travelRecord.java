@@ -8,12 +8,21 @@ public class travelRecord {
     private String travelId;//整个旅程的id
     private String placeName;//小的名称，也就是标题
     private String travelName;//大的名称
-    private List image;//旅行的图片
+    private List<String> image;//旅行的图片
     private String content;//包含的内容
 
+    private String createTime;//时间
 
+    private int pictureNumber;//图片的数量
     public travelRecord() {
 
+    }
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     public String getUserId() {
