@@ -421,9 +421,10 @@ public class PostDisplayActivity extends AppCompatActivity {
                         //生成UUID
                         String commentRespondId = UUID.randomUUID().toString();
                         if (text.length() > 0) {
-                            CommentRespond commentRespond = new CommentRespond(commentRespondId,
+                            UploadComment commentRespond = new UploadComment(postId,
                                     userId,
                                     text,
+                                    commentRespondId,
                                     time,
                                     commentId);
                             //生成线程提交回复内容
@@ -439,7 +440,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                                     );
                                     Request request = new Request.Builder()
                                             .post(body)
-                                            .url(url + "comment/addCommentRespond")
+                                            .url(url + "comment/addComment")
                                             .build();
                                     //3.Call对象
                                     Call call = client.newCall(request);

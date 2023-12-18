@@ -7,6 +7,7 @@ public class UploadComment {
     private String text;
     private String commentId;
     private String time;
+    private String parentId;
 
     public UploadComment(String postId, String userId, String text, String commentId, String time) {
         this.postId = postId;
@@ -16,6 +17,21 @@ public class UploadComment {
         this.time = time;
     }
 
+    public UploadComment(String postId, String userId, String text, String commentId, String time, String parentId) {
+        this.postId = postId;
+        this.userId = userId;
+        this.text = text;
+        this.commentId = commentId;
+        this.time = time;
+        this.parentId = parentId;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
     public String getTime() {
         return time;
     }
