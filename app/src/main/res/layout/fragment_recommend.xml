@@ -75,12 +75,6 @@
             android:textSize="36dp"
             android:textStyle="bold" />
 
-        <!-- 刘梓煊用于测试的按钮 -->
-        <Button
-            android:id="@+id/lzx"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:text="刘梓煊用于测试的按钮"/>
 
     </RelativeLayout>
 

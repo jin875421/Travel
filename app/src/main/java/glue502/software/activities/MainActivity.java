@@ -8,15 +8,21 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -25,18 +31,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.adapters.PageAdapter;
+import glue502.software.fragments.Add;
 import glue502.software.fragments.CommunityFragment;
 import glue502.software.fragments.FunctionFragment;
 import glue502.software.fragments.PersonalInformationFragment;
 import glue502.software.fragments.RecommendFragment;
 import glue502.software.utils.MyViewUtils;
+import glue502.software.utils.ZoomOutPageTransformer;
 
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
-    public static final String ip = "10.7.89.88:8080";
+    public static final String ip = "192.168.198.91:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
@@ -59,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tbl);
         viewPager2 = findViewById(R.id.vp2);
         setViewPager2ScrollSensitivity(10);
-
+        SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+        String phone = sharedPreferences.getString("userPhoneNumber", "");
+        String email=sharedPreferences.getString("email", "");
         //添加沉浸式导航栏
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.main_root));
         //初始化
@@ -68,6 +79,32 @@ public class MainActivity extends AppCompatActivity {
         PageAdapter adapter = new PageAdapter(fragments,this);
         //给viewpager2绑定适配器
         viewPager2.setAdapter(adapter);
+        // 在 TabLayout 中添加选中监听器
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                // 选中时的操作
+                YoYo.with(Techniques.RubberBand)
+                        .duration(700)
+                        .playOn(tab.view);
+                tab.setIcon(getSelectedIcon(tab.getPosition()));
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // 未选中时的操作
+                tab.setIcon(getUnselectedIcon(tab.getPosition()));
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // 重新选中时的操作
+                YoYo.with(Techniques.RubberBand)
+                        .duration(700)
+                        .playOn(tab.view);
+            }
+        });
         TabLayoutMediator mediator = new TabLayoutMediator(
                 tabLayout,
                 viewPager2,
@@ -76,30 +113,49 @@ public class MainActivity extends AppCompatActivity {
                     public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                         switch(position){
                             case 0:
+                                tab.setIcon(R.drawable.tab_home);
                                 tab.setText("首页");
                                 break;
                             case 1:
+                                tab.setIcon(R.drawable.tab_community);
                                 tab.setText("社区");
                                 break;
                             case 2:
-                                tab.setText("工具");
+                                tab.setIcon(R.drawable.ic_add);
+                                tab.view.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(MainActivity.this, travelRecordActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
                                 break;
                             case 3:
+                                tab.setIcon(R.drawable.tab_tool);
+                                tab.setText("工具");
+                                break;
+                            case 4:
+                                tab.setIcon(R.drawable.tab_user);
                                 tab.setText("我的");
                                 break;
+
                         }
                     }
                 }
         );
         mediator.attach();
+        viewPager2.setPageTransformer(new ZoomOutPageTransformer());
     }
     private void initpages(){
         fragments = new ArrayList<>();
         fragments.add(new RecommendFragment());
         fragments.add(new CommunityFragment());
+        fragments.add(new Add());
         fragments.add(new FunctionFragment());
         fragments.add(new PersonalInformationFragment());
     }
+
+
     private class ClearGlideCacheTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -110,7 +166,42 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+    private int getSelectedIcon(int position) {
+        // 返回选中状态的图标资源ID
+        // 例如，你可以在这里根据位置返回不同的图标
+        switch (position) {
+            case 0:
+                return R.drawable.tab_home1;
+            case 1:
+                return R.drawable.tab_community1;
+            case 2:
+                return R.drawable.ic_add;
+            case 3:
+                return R.drawable.tab_tool1;
+            case 4:
+                return R.drawable.tab_user1;
+            default:
+                return R.drawable.tab_home1;
+        }
+    }
+    private int getUnselectedIcon(int position) {
+        // 返回未选中状态的图标资源ID
+        // 例如，你可以在这里根据位置返回不同的图标
+        switch (position) {
+            case 0:
+                return R.drawable.tab_home;
+            case 1:
+                return R.drawable.tab_community;
+            case 2:
+                return R.drawable.ic_add;
+            case 3:
+                return R.drawable.tab_tool;
+            case 4:
+                return R.drawable.tab_user;
+            default:
+                return R.drawable.tab_home;
+        }
+    }
     @Override
     public void onBackPressed() {
         if (backPressedOnce) {
@@ -141,6 +232,4 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-    // ... 其他代码
 }

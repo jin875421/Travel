@@ -8,9 +8,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView txtForget;
     private EditText edtUserId;
     private EditText edtPassword;
+    private ImageView  eyeImageView;
     private String password;
     private String url="http://"+ip+"/travel/user/login";
     private Handler mHandler = new Handler() {
@@ -99,7 +105,14 @@ public class LoginActivity extends AppCompatActivity {
         txtCode =findViewById(R.id.txt_code);
         txtRegister=findViewById(R.id.txt_register);
         txtForget=findViewById(R.id.txt_forget);
-
+        eyeImageView = findViewById(R.id.img_eye);
+        eyeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("LoginActivity", "eyeImageView clicked");
+                changeImage();
+            }
+        });
         txtCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,5 +194,23 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void changeImage() {
+        // 切换密码可见性
+        boolean isPasswordVisible = (edtPassword.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD));
+        edtPassword.setInputType(isPasswordVisible
+                ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+                : InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+
+        // 切换眼睛状态
+        int eyeIconResId = isPasswordVisible ? R.drawable.baseline_visibility_off_black_48 : R.drawable.baseline_visibility_black_48;
+        eyeImageView.setImageResource(eyeIconResId);
+
+        // 将光标移到最后
+        edtPassword.setSelection(edtPassword.getText().length());
+
+        // 强制刷新视图
+        eyeImageView.postInvalidate();
     }
 }

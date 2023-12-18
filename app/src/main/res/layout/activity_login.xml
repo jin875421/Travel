@@ -40,21 +40,29 @@
             android:id="@+id/edt_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
             android:drawableLeft="@mipmap/pwd"
             android:hint="请输入密码" />
+        <ImageView
+            android:id="@+id/img_eye"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/baseline_visibility_off_black_48" />
 
-        <TextView
-            android:id="@+id/txt_forget"
-            android:layout_width="60dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="300dp"
-            android:layout_marginTop="20dp"
-            android:text="忘记密码"
-            android:textColor="@color/black"
-            android:layout_gravity="right" />
 
 
     </FrameLayout>
+    <TextView
+        android:id="@+id/txt_forget"
+        android:layout_width="60dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="300dp"
+        android:layout_marginTop="20dp"
+        android:text="忘记密码"
+        android:textColor="@color/black"
+        android:layout_gravity="right" />
     <!--登录-->
     <LinearLayout
         android:layout_width="match_parent"

@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_home"
+        android:title="首页"
+        android:icon="@drawable/back" />
+
+    <item
+        android:id="@+id/menu_community"
+        android:title="社区"
+        android:icon="@drawable/back" />
+
+    <item
+        android:id="@+id/menu_tools"
+        android:title="工具"
+        android:icon="@drawable/back" />
+
+    <item
+        android:id="@+id/menu_profile"
+        android:title="我的"
+        android:icon="@drawable/back" />
+</menu>

@@ -29,7 +29,6 @@ public class RecommendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recommend,container,false);
         createBtn = view.findViewById(R.id.btn_Recording);
         reviewBtn = view.findViewById(R.id.bottomRightButton);
-        lzxBtn = view.findViewById(R.id.lzx);
         setlistener();
         Carousel carousel = new Carousel(getContext(), view.findViewById(R.id.recommend_lbt_dot), view.findViewById(R.id.recommend_lbt_image));
         List<String> paths = new ArrayList<>();
@@ -56,12 +55,6 @@ public class RecommendFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        lzxBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), AddLabelActivity.class);
-                startActivity(intent);
-            }
-        });
+
     }
 }
