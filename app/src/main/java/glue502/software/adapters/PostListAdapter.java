@@ -67,12 +67,9 @@ public class PostListAdapter extends BaseAdapter {
         TextView username = v.findViewById(R.id.textViewUsername);
         TextView title = v.findViewById(R.id.textViewTitle);
         TextView content = v.findViewById(R.id.textViewContentPreview);
-        LinearLayout iamges = v.findViewById(R.id.image_container);
+        LinearLayout images = v.findViewById(R.id.image_container);
         TextView likeCount = v.findViewById(R.id.like_count);
         TextView commentCount = v.findViewById(R.id.comment_count);
-//        ImageView view1 = v.findViewById(R.id.image1);
-//        ImageView view2 = v.findViewById(R.id.image2);
-//        ImageView view3 = v.findViewById(R.id.image3);
         Post post1 = posts.get(i);
         title.setText(post1.getPostTitle());
         if (post1.getPostContent().length()<20){
@@ -89,35 +86,23 @@ public class PostListAdapter extends BaseAdapter {
                 .apply(requestOptions)
                 .into(useravatar);
         //分离地址并获取
-        //最多展示三张图片
-//            if (post1.getPicturePath().size()>0) {
-//                //执行展示代码，将图片展示到页面上
-//                Glide.with(context)
-//                        .load(url + post1.getPicturePath().get(0))
-//                        .override(convertDpToPixel(125), convertDpToPixel(125))
-//                        .into(view1);
-//            }
-//            if (post1.getPicturePath().size()>1) {
-//                Glide.with(context)
-//                        .load(url + post1.getPicturePath().get(1))
-//                        .override(convertDpToPixel(125), convertDpToPixel(125))
-//                        .into(view2);
-//            }
-//            if (post1.getPicturePath().size()>2) {
-//                Glide.with(context)
-//                        .load(url + post1.getPicturePath().get(2))
-//                        .override(convertDpToPixel(125), convertDpToPixel(125))
-//                        .into(view3);
-//            }
-        for (String path:post1.getPicturePath()){
-                ImageView imageView = new ImageView(context);
-//                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setLayoutParams(new LinearLayout.LayoutParams(convertDpToPixel(125),convertDpToPixel(125)));
-                Glide.with(context)
-                       .load(url+path)
-                       .into(imageView);
-                iamges.addView(imageView);
+        int x = 0;
+        for (String path : post1.getPicturePath()) {
+            ImageView imageView = new ImageView(context);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPixel(110), convertDpToPixel(110));
+            layoutParams.setMargins(convertDpToPixel(4), 0, 0, 0); // 左边距为5dp
+            imageView.setLayoutParams(layoutParams);
+            Glide.with(context)
+                    .load(url + path)
+                    .into(imageView);
+            images.addView(imageView);
+            x++;
+            if(x==3){
+                break;
+            }
         }
+
         //从服务器查询点赞和评论数
         new Thread(new Runnable() {
             @Override
