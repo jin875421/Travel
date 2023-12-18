@@ -131,8 +131,8 @@ public class MainActivity extends AppCompatActivity {
                                 });
                                 break;
                             case 3:
-                                tab.setIcon(R.drawable.tab_tool);
-                                tab.setText("工具");
+                                tab.setIcon(R.drawable.tab_map);
+                                tab.setText("地图");
                                 break;
                             case 4:
                                 tab.setIcon(R.drawable.tab_user);
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
             case 2:
                 return R.drawable.ic_add;
             case 3:
-                return R.drawable.tab_tool1;
+                return R.drawable.tab_map1;
             case 4:
                 return R.drawable.tab_user1;
             default:
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             case 2:
                 return R.drawable.ic_add;
             case 3:
-                return R.drawable.tab_tool;
+                return R.drawable.tab_map;
             case 4:
                 return R.drawable.tab_user;
             default:
