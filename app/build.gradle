@@ -38,6 +38,10 @@ android {
 }
 
 dependencies {
+
+    //用于实现相册功能顺利下拉
+    implementation 'com.github.donkingliang:ConsecutiveScroller:2.6.2'
+
     //djp新加的
     implementation 'com.github.bumptech.glide:glide:4.15.1'
     //implementation 'com.google.code.gson:gson:2.8.6'
