@@ -63,8 +63,6 @@ public class Carousel {
         }
 
 
-//        originalImages.add(0, originalImages.get(originalImages.size() - 1));//将originalImages最后一张插入到开头
-//        originalImages.add(originalImages.get(1));//将第二张插入到结尾
         BannerPagerAdapter bannerPagerAdapter = new BannerPagerAdapter(imagePaths, viewPager2);
         viewPager2.setAdapter(bannerPagerAdapter);
         //设置当前项为第一个元素，使其为轮播图的开始
@@ -80,30 +78,10 @@ public class Carousel {
                 }
                 mDotVIewList.get(current).setImageResource(R.drawable.dot_red);
 
-//                //j
-//                for (int i = 0; i < mDotVIewList.size(); i++) {
-//                    if (i == position - 1) {
-//                        mDotVIewList.get(i).setImageResource(R.drawable.dot_red);
-//                    } else {
-//                        mDotVIewList.get(i).setImageResource(R.drawable.dot_white);
-//                    }
-//                }
-//                if (position == originalImages.size() - 1) {
-//                    viewPager2.setCurrentItem(1, false);
-//                } else if (position == 0) {
-//                    viewPager2.setCurrentItem(originalImages.size() - 2, false);
-//                }
             }
 
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//                super.onPageScrollStateChanged(state);
-//                if (state == viewPager2.SCROLL_STATE_IDLE) {
-//                    mHandler.postDelayed(runnable,5000);//延时5秒，自动轮播图片
-//                }
-//            }
         });
-//        mHandler.postDelayed(runnable,5000);
+
     }
 
     public void initViewsLBT(List<String> imagePaths) {

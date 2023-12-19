@@ -225,13 +225,10 @@ public class PostDisplayActivity extends AppCompatActivity {
                     Response response = client1.newCall(request1).execute();
                     //从请求中获取用户点赞和收藏状态
                     String result = response.body().string();
-                    System.out.println("result:"+result);
                     //转换为likeAndStarStatus对象
                     LikeAndStarStatus likeAndStarStatus = new Gson().fromJson(result, LikeAndStarStatus.class);
                     likeStatus = likeAndStarStatus.getLikeStatus();
                     starStatus = likeAndStarStatus.getStarStatus();
-                    System.out.println("likeStatus:"+likeStatus);
-                    System.out.println("starStatus:"+starStatus);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

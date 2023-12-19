@@ -41,6 +41,7 @@ import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
 import glue502.software.models.UserInfo;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -70,6 +71,9 @@ public class CommunityFragment extends Fragment {
         status = sharedPreferences.getString("status","");
         setListener();
         initData();
+        //添加沉浸式导航栏
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.layout_community));
+
         return view;
 
     }
@@ -196,21 +200,6 @@ public class CommunityFragment extends Fragment {
                 }
             }
         });
-
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                swipeRefreshLayout.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        initData();
-//                        searchText.setText("");
-//                        //关闭刷新
-//                        swipeRefreshLayout.setRefreshing(false);
-//                    }
-//                },2000);
-//            }
-//        });
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
         refreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -236,9 +225,7 @@ public class CommunityFragment extends Fragment {
                 PostWithUserInfo clickItem = (PostWithUserInfo) postListAdapter.getItem(i);
                 Intent intent = new Intent(getActivity(), PostDisplayActivity.class);
                 intent.putExtra("postwithuserinfo", clickItem);
-                System.out.println(clickItem.getUserInfo().getAvatar());
                 startActivityForResult(intent,1);
-
             }
         });
 
