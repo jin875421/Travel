@@ -1,5 +1,6 @@
 package glue502.software.fragments;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,37 +10,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.CalendarView;
 
 import glue502.software.R;
-import glue502.software.activities.map.AddLabelActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
-import glue502.software.utils.Carousel;
-
 public class RecommendFragment extends Fragment {
     private Button createBtn;
     private Button reviewBtn;
-    private Button lzxBtn;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recommend,container,false);
         createBtn = view.findViewById(R.id.btn_Recording);
         reviewBtn = view.findViewById(R.id.bottomRightButton);
+//        // 获取 CalendarView 对象
+//        CalendarView calendarView = view.findViewById(R.id.calendar_view);
+
+        // 设置最小日期和最大日期范围
+//        calendarView.setMinDate(minDateMillis); // minDateMillis为long类型的时间值表示最小日期
+//        calendarView.setMaxDate(maxDateMillis); // maxDateMillis为long类型的时间值表示最大日期
+
         setlistener();
-        Carousel carousel = new Carousel(getContext(), view.findViewById(R.id.recommend_lbt_dot), view.findViewById(R.id.recommend_lbt_image));
-        List<String> paths = new ArrayList<>();
-        paths.add("images/cat1.jpg");
-        paths.add("images/cat2.jpg");
-        paths.add("images/cat3.jpg");
-        paths.add("images/cat4.jpg");
-        paths.add("images/cat5.jpg");
-        carousel.initViewsLBT(paths);
+        date();
         return view;
     }
+
+    private void date() {
+
+
+
+    }
+
     public void setlistener(){
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override

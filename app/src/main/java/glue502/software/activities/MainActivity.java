@@ -38,8 +38,6 @@ import glue502.software.fragments.CommunityFragment;
 import glue502.software.fragments.FunctionFragment;
 import glue502.software.fragments.PersonalInformationFragment;
 import glue502.software.fragments.RecommendFragment;
-import glue502.software.utils.MyViewUtils;
-import glue502.software.utils.ZoomOutPageTransformer;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -71,8 +69,13 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String phone = sharedPreferences.getString("userPhoneNumber", "");
         String email=sharedPreferences.getString("email", "");
-        //添加沉浸式导航栏
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.main_root));
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                // 设置状态栏透明
+//                MyViewUtils.setImmersiveStatusBar(MainActivity.this,findViewById(R.id.main_root));
+//            }
+//        }, 100);
         //初始化
         initpages();
         //实例化
@@ -144,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
         mediator.attach();
-        viewPager2.setPageTransformer(new ZoomOutPageTransformer());
     }
     private void initpages(){
         fragments = new ArrayList<>();
