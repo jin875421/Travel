@@ -1,9 +1,8 @@
 package glue502.software.models;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class travelRecord implements Serializable {
+public class travelRecord {
     private String userId;//用户id
     private String placeId;//位置id
     private String travelId;//整个旅程的id
@@ -11,7 +10,18 @@ public class travelRecord implements Serializable {
     private String travelName;//大的名称
     private List<String> image;//旅行的图片
     private String content;//包含的内容
+
     private String createTime;//时间
+
+    private int pictureNumber;//图片的数量
+
+    public int getPictureNumber() {
+        return pictureNumber;
+    }
+
+    public void setPictureNumber(int pictureNumber) {
+        this.pictureNumber = pictureNumber;
+    }
 
     public travelRecord() {
 
