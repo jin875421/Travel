@@ -90,16 +90,22 @@
                     android:textStyle="bold"
                     android:hint="标题"
                     android:textSize="20sp" />
-                <EditText
-                    android:id="@+id/et_content2"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dip"
-                    android:background="#FFFFFFFF"
-                    android:gravity="left"
-                    android:inputType="textMultiLine"
-                    android:paddingLeft="5dip"
-                    android:hint="输入你的内容"
-                    android:textSize="16sp" />
+
+
+                    <EditText
+                        android:id="@+id/et_content2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FFFFFFFF"
+                        android:gravity="left"
+                        android:inputType="textMultiLine"
+                        android:paddingLeft="5dip"
+                        android:hint="输入你的内容"
+                        android:textSize="16sp"
+                        android:lines="20"
+                        android:minLines="12" />
+
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"

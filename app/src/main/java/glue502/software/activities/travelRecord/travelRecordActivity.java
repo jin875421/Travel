@@ -85,6 +85,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class travelRecordActivity extends Activity {
+
     private String url = "http://"+ip+"/travel/posts/upload";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
     private UserInfo  userInfo= new UserInfo();
@@ -185,8 +186,13 @@ public class travelRecordActivity extends Activity {
                                 List<String> path = new ArrayList<>();
                                 path = getListFromSharedPreferences(j);
                                 for (String URI : path) {
-                                    Uri uri = Uri.parse(URI);
-                                    savefile(fileList,uri);
+                                    try {
+                                        FileInputStream localStream =openFileInput(generateIdentifierFromUri(URI));
+                                        Bitmap bitmap = BitmapFactory.decodeStream(localStream);
+                                        savefile(fileList,bitmap);
+                                    } catch (FileNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                                 travelRecord travelrecord = new travelRecord();
                                 travelrecord.setPlaceName(sharedPreferences.getString("userTitle" + j,""));
@@ -406,40 +412,27 @@ public class travelRecordActivity extends Activity {
     }
 
     //通过uri获取文件
-    private File getFileFromUri(Uri uri) {
+    private File getFileFromBitmap(Bitmap bitmap) {
         try {
-            ContentResolver contentResolver = getContentResolver();
-            String displayName = null;
-            String[] projection = {MediaStore.Images.Media.DISPLAY_NAME};
-            Cursor cursor = contentResolver.query(uri, projection, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-                displayName = cursor.getString(index);
-            }
-            cursor.close();
+            String displayName = "image_file.png"; // 设置文件名（可以根据需要修改）
+            File file = new File(getCacheDir(), displayName);
+            FileOutputStream outputStream = new FileOutputStream(file);
 
-            if (displayName != null) {
-                InputStream inputStream = contentResolver.openInputStream(uri);
-                if (inputStream != null) {
-                    File file = new File(getCacheDir(), displayName);
-                    FileOutputStream outputStream = new FileOutputStream(file);
-                    byte[] buffer = new byte[1024];
-                    int bytesRead;
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        outputStream.write(buffer, 0, bytesRead);
-                    }
-                    outputStream.close();
-                    inputStream.close();
-                    return file;
-                }
-            }
+            // 将 Bitmap 写入文件
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+
+            outputStream.flush();
+            outputStream.close();
+
+            return file;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
-    private void savefile(List<File> file,Uri uri){
-        file.add(getFileFromUri(uri));
+
+    private void savefile(List<File> file,Bitmap bitmap){
+        file.add(getFileFromBitmap(bitmap));
     }
     private int convertDpToPixel(int dp) {
         float scale = getResources().getDisplayMetrics().density;
@@ -542,13 +535,21 @@ public class travelRecordActivity extends Activity {
                 imageView1.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
+                        showDeleteDialog(new DeleteConfirmationListener() {
+                            @Override
+                            public void onConfirmDelete() {
+                                int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
+                                List<String> list = getListFromSharedPreferences(getValue());
+                                list.remove(index- 2);
+                                saveListToSharedPreferences(list, getValue());
+                                // 用户确认删除的处理逻辑，可以在这里执行删除操作
+                                innerLayout.removeView(v);
+                            }
 
-                        int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
-                        System.out.println(index);
-                        if(showDeleteDialog(v,index)==false){
-                            innerLayout.removeView(v);
-                            System.out.println("delete");
-                        }
+                            @Override
+                            public void onCancelDelete() {
+                            }
+                        });
                         return true;
                     }
                 });
@@ -583,11 +584,21 @@ public class travelRecordActivity extends Activity {
                 imageView1.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
-                        if(showDeleteDialog(v,index)==true){
-                            innerLayout.removeView(v);
-                            System.out.println("delete");
-                        }
+                        showDeleteDialog(new DeleteConfirmationListener() {
+                            @Override
+                            public void onConfirmDelete() {
+                                int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
+                                List<String> list = getListFromSharedPreferences(getValue());
+                                list.remove(index- 2);
+                                saveListToSharedPreferences(list, getValue());
+                                // 用户确认删除的处理逻辑，可以在这里执行删除操作
+                                innerLayout.removeView(v);
+                            }
+
+                            @Override
+                            public void onCancelDelete() {
+                            }
+                        });
                         return true;
                     }
                 });
@@ -625,11 +636,21 @@ public class travelRecordActivity extends Activity {
             imageView1.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
-                    if(showDeleteDialog(v,index)==true){
-                        innerLayout.removeView(v);
-                        System.out.println("delete");
-                    }
+                    showDeleteDialog(new DeleteConfirmationListener() {
+                        @Override
+                        public void onConfirmDelete() {
+                            // 用户确认删除的处理逻辑，可以在这里执行删除操作
+                            int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
+                            List<String> list = getListFromSharedPreferences(getValue());
+                            list.remove(index- 2);
+                            saveListToSharedPreferences(list, getValue());
+                            innerLayout.removeView(v);
+                        }
+
+                        @Override
+                        public void onCancelDelete() {
+                        }
+                    });
                     return true;
                 }
             });
@@ -645,13 +666,14 @@ public class travelRecordActivity extends Activity {
 
 
     }
-    //下面是新建的控件
+    // TODO 下面是新建的控件
     private void addContentWithTag(int i) {
         // 1.创建外围LinearLayout控件
         LinearLayout layout = new LinearLayout(travelRecordActivity.this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
+        layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(layoutParams);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -677,16 +699,16 @@ public class travelRecordActivity extends Activity {
         innerLayout.setOrientation(LinearLayout.HORIZONTAL);
         innerLayout.setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8)); // 设置内边距
 
-// 创建 GridView
-        GridView gridView = new GridView(this);
-        LinearLayout.LayoutParams gridParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        gridView.setLayoutParams(gridParams);
-        gridView.setNumColumns(3);
-
-// 将 GridView 添加到内部 LinearLayout
-        innerLayout.addView(gridView);
+//// 创建 GridView
+//        GridView gridView = new GridView(this);
+//        LinearLayout.LayoutParams gridParams = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT);
+//        gridView.setLayoutParams(gridParams);
+//        gridView.setNumColumns(3);
+//
+//// 将 GridView 添加到内部 LinearLayout
+//        innerLayout.addView(gridView);
 
 // 创建 ImageView
         ImageView imageView = new ImageView(this);
@@ -736,14 +758,18 @@ public class travelRecordActivity extends Activity {
         EditText etContent2 = new EditText(this);
         LinearLayout.LayoutParams etParams2 = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                dpToPx(80));
+                LinearLayout.LayoutParams.WRAP_CONTENT,// 将高度设置为 WRAP_CONTENT
+                dpToPx(50));
         etContent2.setLayoutParams(etParams2);
+        etContent2.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
         etContent2.setBackgroundColor(Color.parseColor("#FFFFFF"));
         etContent2.setGravity(Gravity.LEFT);
-        etContent2.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         etContent2.setPadding(dpToPx(5), 0, 0, 0);
         etContent2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         etContent2.setHint("输入你的内容");
+        etContent2.setSingleLine(false);
+        etContent2.setLines(25); // 设置初始行数为5行
+        etContent2.setMinLines(12); // 设置最大行数为5行
         etContent2.setTag(i);
         layout.addView(etContent2);
 
@@ -856,6 +882,7 @@ public class travelRecordActivity extends Activity {
      *
      * @param v 事件触发控件，其实就是触发添加事件对应的“+”按钮
      */
+    //TODO 生成页面
     private void addContent(View v) {
         if (v == null) {
             return;
@@ -898,16 +925,16 @@ public class travelRecordActivity extends Activity {
             innerLayout.setLayoutParams(innerParams);
             innerLayout.setOrientation(LinearLayout.HORIZONTAL);
             innerLayout.setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8)); // 设置内边距
-// 创建 GridView
-            GridView gridView = new GridView(this);
-            LinearLayout.LayoutParams gridParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            gridView.setLayoutParams(gridParams);
-            gridView.setNumColumns(3);
-
-// 将 GridView 添加到内部 LinearLayout
-            innerLayout.addView(gridView);
+//// 创建 GridView
+//            GridView gridView = new GridView(this);
+//            LinearLayout.LayoutParams gridParams = new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT);
+//            gridView.setLayoutParams(gridParams);
+//            gridView.setNumColumns(3);
+//
+//// 将 GridView 添加到内部 LinearLayout
+//            innerLayout.addView(gridView);
 
 // 创建 ImageView
             ImageView imageView = new ImageView(this);
@@ -959,13 +986,17 @@ public class travelRecordActivity extends Activity {
             EditText etContent2 = new EditText(this);
             LinearLayout.LayoutParams etParams2 = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    dpToPx(80));
+                    LinearLayout.LayoutParams.WRAP_CONTENT,// 将高度设置为 WRAP_CONTENT
+                    dpToPx(50));
             etContent2.setLayoutParams(etParams2);
+            etContent2.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
             etContent2.setBackgroundColor(Color.parseColor("#FFFFFF"));
             etContent2.setGravity(Gravity.LEFT);
-            etContent2.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
             etContent2.setPadding(dpToPx(5), 0, 0, 0);
             etContent2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            etContent2.setSingleLine(false);
+            etContent2.setLines(25); // 设置初始行数为5行
+            etContent2.setMinLines(12); // 设置最大行数为5行
             etContent2.setHint("输入你的内容");
             etContent2.setTag(newIndex);
             layout.addView(etContent2);
@@ -1031,10 +1062,7 @@ public class travelRecordActivity extends Activity {
 
             btnIDIndex++;
         }
-
     }
-
-
     /**
      * 删除一组控件
      *
@@ -1070,12 +1098,9 @@ public class travelRecordActivity extends Activity {
             View view = llContentView.getChildAt(i);
             if (view instanceof LinearLayout) {
                 LinearLayout linearLayout = (LinearLayout) view;
-
                 int editTextCount = 0;
-
                 for (int j = 0; j < linearLayout.getChildCount(); j++) {
                     View childView = linearLayout.getChildAt(j);
-
                     // Ensure childView is an instance of EditText
                     if (childView instanceof EditText) {
                         EditText editText = (EditText) childView;
@@ -1122,8 +1147,6 @@ public class travelRecordActivity extends Activity {
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-
-
                     // 这里可以对列表中的每个元素执行操作
                     System.out.println(URI);
                 }
@@ -1200,23 +1223,15 @@ public class travelRecordActivity extends Activity {
         setResult(Activity.RESULT_OK, resultIntent); // 设置上传完成的结果码
         finish(); // 结束上传页面
     }
-    private boolean showDeleteDialog(View view,int a) {
-        final boolean[] isConfirmed = {true}; // 用于跟踪用户的选择
-        // 弹出对话框
+    private void showDeleteDialog(final DeleteConfirmationListener listener) {
         new AlertDialog.Builder(this)
                 .setTitle("删除")
                 .setMessage("确定删除吗？")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        List<String> list = new ArrayList<>() ;
-                        list = getListFromSharedPreferences(getValue());
-                        System.out.println(a);
-                        list.remove(a-2);
-                        saveListToSharedPreferences(list,getValue());
-                        isConfirmed[0] = true; // 用户确认删除，设为 true
-                        // 关闭对话框
                         dialogInterface.dismiss();
+                        listener.onConfirmDelete(); // 用户确认删除的处理逻辑
                     }
                 })
                 .setNegativeButton(
@@ -1224,16 +1239,11 @@ public class travelRecordActivity extends Activity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // 点击取消按钮
-                                // 关闭对话框
                                 dialogInterface.dismiss();
-                                isConfirmed[0] = false; // 设为 false
+                                listener.onCancelDelete(); // 用户取消删除的处理逻辑
                             }
                         }
-                ).show();
-        System.out.println(isConfirmed[0]);
-        return isConfirmed[0]; // 返回用户的选择
-
+                )
+                .show();
     }
-
 }
