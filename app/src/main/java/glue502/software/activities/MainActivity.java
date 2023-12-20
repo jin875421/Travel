@@ -93,13 +93,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String phone = sharedPreferences.getString("userPhoneNumber", "");
         String email=sharedPreferences.getString("email", "");
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                // 设置状态栏透明
-//                MyViewUtils.setImmersiveStatusBar(MainActivity.this,findViewById(R.id.main_root));
-//            }
-//        }, 100);
         //初始化
         initpages();
         //实例化
