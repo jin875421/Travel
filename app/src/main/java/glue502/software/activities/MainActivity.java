@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case 2:
                                 tab.setIcon(R.drawable.ic_add);
+
                                 tab.view.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         fragments = new ArrayList<>();
         fragments.add(new RecommendFragment());
         fragments.add(new CommunityFragment());
-        fragments.add(new Add());
+        fragments.add(new Fragment());
         fragments.add(new FunctionFragment());
         fragments.add(new PersonalInformationFragment());
     }

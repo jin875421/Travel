@@ -14,10 +14,17 @@ import android.widget.LinearLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import glue502.software.R;
 import glue502.software.utils.MyViewUtils;
 
 public class SplashActivity extends AppCompatActivity {
+    private LottieAnimationView lottieAnimationView;
+    private List<String> animationFiles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +32,12 @@ public class SplashActivity extends AppCompatActivity {
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(R.layout.activity_splash);
         LinearLayout rootView = findViewById(R.id.rootView);
-        LottieAnimationView lottieAnimationView = findViewById(R.id.lottieAnimationView);
-        lottieAnimationView.setAnimation("data.json");
-        lottieAnimationView.playAnimation();
-        lottieAnimationView.setRepeatCount(0);
+        lottieAnimationView = findViewById(R.id.lottieAnimationView);
+        animationFiles = new ArrayList<>();
+        animationFiles.add("camera.json");
+        animationFiles.add("data.json");
+        animationFiles.add("earth1.json");
+        showRandomAnimation();
         //添加沉浸式导航栏
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.rootView));
         // 添加动画监听器
@@ -55,7 +64,17 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
     }
+    private void showRandomAnimation() {
+        // 从列表中随机选择一个 JSON 文件
+        Random random = new Random();
+        int randomIndex = random.nextInt(animationFiles.size());
+        String randomAnimationFile = animationFiles.get(randomIndex);
 
+        // 设置并播放选定的动画
+        lottieAnimationView.setAnimation(randomAnimationFile);
+        lottieAnimationView.playAnimation();
+        lottieAnimationView.setRepeatCount(0); // 可根据需要进行调整
+    }
     private void navigateToMainActivityWithAnimation(final LinearLayout rootView) {
         // 创建透明度渐变动画
         ObjectAnimator fadeOut = ObjectAnimator.ofFloat(rootView, View.ALPHA, 1.0f, 0f);

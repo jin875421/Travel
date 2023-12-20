@@ -5,7 +5,8 @@
     android:id="@+id/ct_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background1">
+    android:background="@drawable/background1"
+    android:paddingTop="30dp">
     <LinearLayout
         android:id="@+id/containerLayout"
         android:layout_width="match_parent"
