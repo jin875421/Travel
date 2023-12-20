@@ -34,6 +34,7 @@
 
     </RelativeLayout>
         <HorizontalScrollView
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="150dp">
             <LinearLayout
@@ -42,17 +43,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="8dp">
-                <GridView
-                    android:id="@+id/gridView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:numColumns="3" />
+
                 <ImageView
                     android:id="@+id/input_image"
                     android:paddingLeft="10dp"
                     android:layout_width="130dp"
-                    android:layout_height="130dp"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/add_image"
                     />
 
@@ -62,6 +58,7 @@
 
         <EditText
             android:id="@+id/input_title"
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="请输入标题"

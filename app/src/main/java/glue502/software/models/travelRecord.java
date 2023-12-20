@@ -1,19 +1,38 @@
 package glue502.software.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class travelRecord {
+public class travelRecord implements Serializable {
     private String userId;//用户id
     private String placeId;//位置id
     private String travelId;//整个旅程的id
     private String placeName;//小的名称，也就是标题
     private String travelName;//大的名称
-    private List image;//旅行的图片
+    private List<String> image;//旅行的图片
     private String content;//包含的内容
 
+    private String createTime;//时间
+
+    private int pictureNumber;//图片的数量
+
+    public int getPictureNumber() {
+        return pictureNumber;
+    }
+
+    public void setPictureNumber(int pictureNumber) {
+        this.pictureNumber = pictureNumber;
+    }
 
     public travelRecord() {
 
+    }
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     public String getUserId() {
@@ -56,11 +75,11 @@ public class travelRecord {
         this.travelName = travelName;
     }
 
-    public List getImage() {
+    public List<String> getImage() {
         return image;
     }
 
-    public void setImage(List image) {
+    public void setImage(List<String> image) {
         this.image = image;
     }
 

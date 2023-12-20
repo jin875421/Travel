@@ -11,4 +11,10 @@
     <color name="theme_color">#AFDAE3</color>
     <color name="orange">#EB8F3B</color>
     <color name="blue">#009688</color>
+    <color name="gray">#EEEEEE</color>
+    <color name="djp">#9C9C9C</color>
+    <color name="cwn">#68BECA</color>
+    <color name="one">#70B5A5</color>
+    <color name="djpback">#189DA8</color>
+
 </resources>

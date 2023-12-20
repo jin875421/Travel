@@ -2,33 +2,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/bg2"
+    android:background="@color/cwn"
+
     tools:context=".activities.travelRecord.travelRecordActivity" >
+
     <RelativeLayout
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"></RelativeLayout>
+    <Button
+        android:id="@+id/btn_return"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="返回" />
 
-        <Button
-            android:id="@+id/btn_return"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="返回" />
+    <EditText
+        android:id="@+id/Ed_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textSize="30dp"
-            android:text="图文" />
-
-        <Button
-            android:id="@+id/btn_submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="提交" />
-    </RelativeLayout>
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="提交" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -42,21 +41,24 @@
             android:layout_height="wrap_content"
             android:isScrollContainer="true"
             android:orientation="vertical"
-            android:padding="10dip" >
+            android:background="@drawable/border_backgrounddjp"
+            android:padding="10dip"
+            >
 
             <LinearLayout
                 android:id="@+id/ll_one"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
-                android:background="#FFFFFF"
+                android:background= "@color/djpback"
                 android:orientation="vertical"
-                android:padding="5dip" >
+                android:padding="5dip"
+                >
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:background="#FFFFFF">
+                    android:background="#189DA8">
 
                     <LinearLayout
                         android:id="@+id/imageContainer"
@@ -74,8 +76,8 @@
 
                         <ImageView
                             android:id="@+id/input_image"
-                            android:layout_width="140dp"
-                            android:layout_height="140dp"
+                            android:layout_width="152dp"
+                            android:layout_height="150dp"
                             android:src="@drawable/add_image" />
                     </LinearLayout>
 
@@ -84,23 +86,29 @@
                     android:id="@+id/et_content1"
                     android:layout_width="match_parent"
                     android:layout_height="25dip"
-                    android:background="#FFFFFF"
+                    android:background="#FFFFFFFF"
                     android:gravity="left"
                     android:inputType="textMultiLine"
                     android:paddingLeft="5dip"
                     android:textStyle="bold"
                     android:hint="标题"
                     android:textSize="20sp" />
-                <EditText
-                    android:id="@+id/et_content2"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dip"
-                    android:background="#FFFFFF"
-                    android:gravity="left"
-                    android:inputType="textMultiLine"
-                    android:paddingLeft="5dip"
-                    android:hint="输入你的内容"
-                    android:textSize="16sp" />
+
+
+                    <EditText
+                        android:id="@+id/et_content2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#FFFFFFFF"
+                        android:gravity="left"
+                        android:inputType="textMultiLine"
+                        android:paddingLeft="5dip"
+                        android:hint="输入你的内容"
+                        android:textSize="16sp"
+                        android:lines="20"
+                        android:minLines="12" />
+
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"

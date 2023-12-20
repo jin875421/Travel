@@ -1,14 +1,19 @@
 package glue502.software.activities.travelRecord;
 
+import static glue502.software.activities.MainActivity.ip;
+
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
@@ -16,6 +21,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -39,25 +45,57 @@ import androidx.core.content.FileProvider;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 
 import glue502.software.R;
+import glue502.software.activities.posts.PostDisplayActivity;
+import glue502.software.fragments.RecommendFragment;
+import glue502.software.models.UserInfo;
+import glue502.software.models.travelRecord;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class travelRecordActivity extends Activity {
 
+    private String url = "http://"+ip+"/travel/posts/upload";
+    private static Map<String, String> uriIdentifierMap = new HashMap<>();
+    private UserInfo  userInfo= new UserInfo();
+    private String userId ;
     // 在 PostActivity 中定义一个 SharedPreferences 的实例变量,持久化保存
     private SharedPreferences sharedPreferences;
-    private List<File> fileList = new ArrayList<>();
+
+
+    static final int PICK_IMAGE_REQUEST = 1; // 定义一个请求代码
+    private List<travelRecord> record = new ArrayList<>();
     private int value=0;
     // 外围的LinearLayout容器
     private LinearLayout llContentView;
@@ -84,8 +122,11 @@ public class travelRecordActivity extends Activity {
         Log.d("PostActivity", "onCreate() called");
         initCtrl();
         // 获取 SharedPreferences 实例
+        sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+        userId = sharedPreferences.getString("userId","");
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
+        System.out.println(numberOfControls);
         // 如果之前有保存的控件数量，则重新创建控件
         if (numberOfControls > 0) {
 
@@ -105,17 +146,133 @@ public class travelRecordActivity extends Activity {
     private int getValue() {
         return this.value;
     }
+    //TODO 保存List到SharedPreferences,通过tag区分
+    private void saveListToSharedPreferences(List<String> list,int tag) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+
+        editor.putString("myList"+tag, json);
+        editor.apply();
+    }
+
+    // 从SharedPreferences中获取List
+    private List<String> getListFromSharedPreferences(int tag) {
+        String json = sharedPreferences.getString("myList"+tag, "");
+        if(json.equals("")){
+            return new ArrayList<>();
+        }else {
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<String>>() {}.getType();
+            return gson.fromJson(json, type);
+        }
+    }
+
+
     private void setListener() {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("11111111");
+                //TODO 提交的代码 逻辑如下 通过sharp得到总数 依次上传
+                {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
+                            for (int j = numberOfControls; j >= 0; j--) {
+                                 List<File> fileList = new ArrayList<>();
+                                List<String> path = new ArrayList<>();
+                                path = getListFromSharedPreferences(j);
+                                for (String URI : path) {
+                                    try {
+                                        FileInputStream localStream =openFileInput(generateIdentifierFromUri(URI));
+                                        Bitmap bitmap = BitmapFactory.decodeStream(localStream);
+                                        savefile(fileList,bitmap);
+                                    } catch (FileNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                travelRecord travelrecord = new travelRecord();
+                                travelrecord.setPlaceName(sharedPreferences.getString("userTitle" + j,""));
+                                travelrecord.setContent(sharedPreferences.getString("userContent" + j,""));
+                                travelrecord.setUserId(userId);
+                                Date currentTime = new Date();
+
+                                // 定义日期时间格式
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                                // 格式化当前时间
+                                String formattedTime = sdf.format(currentTime);
+                                travelrecord.setCreateTime(formattedTime);
+                                travelrecord.setPictureNumber(fileList.size());
+                                OkHttpClient client = new OkHttpClient();
+                                Gson gson = new Gson();
+                                String json = gson.toJson(travelrecord);
+                                MultipartBody.Builder builder = new MultipartBody.Builder()
+                                        .setType(MultipartBody.FORM)
+                                        .addFormDataPart("travelrecord", json, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json));
+                                //循环处理图片
+                                for (int i = 0; i < fileList.size(); i++){
+                                    File file = fileList.get(i);
+                                    if (file != null && file.exists()) {
+                                        int totalChunks = calculateTotalChunks(file);//计算分片数
+                                        String identifier = generateUniqueIdentifier();//生成唯一标识符
+                                        int sequenceNumber = 0;
+
+                                        try(InputStream inputStream = new FileInputStream(file)) {
+                                            byte[] buffer = new byte[1024*1024];//设定分片大小
+                                            int bytesRead;
+
+                                            while ((bytesRead = inputStream.read(buffer))!=-1){
+                                                byte[] actualBuffer = Arrays.copyOfRange(buffer, 0, bytesRead);
+
+                                                builder.addFormDataPart("identifiers", identifier);
+                                                builder.addFormDataPart("sequenceNumbers", String.valueOf(sequenceNumber));
+                                                builder.addFormDataPart("totalChunks", String.valueOf(totalChunks));
+                                                builder.addFormDataPart("images", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), actualBuffer));
+                                                sequenceNumber++;
+                                            }
+
+                                        }catch (IOException e){
+                                            e.printStackTrace();
+                                        }
+
+                                    }else {
+                                    }
+                                }
+                                RequestBody requestBody = builder.build();
+                                Request request = new Request.Builder()
+                                        .url(url)
+                                        .post(requestBody)
+                                        .build();
+                                try {
+                                    //发送请求
+                                    Response response = client.newCall(request).execute();
+
+                                    if (response.isSuccessful()) {
+                                        String responseData = response.body().string();
+                                        // 处理响应数据
+                                    } else {
+                                        // 请求失败处理错误
+                                    }
+                                } catch (Exception e) {
+
+                                    e.printStackTrace();
+                                }
+                                uploadComplete();
+                            }
+                        }
+                    }).start();
+                }
             }
+            //TODO 在这里要删除页面的content和照片
         });
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("11111111");
+                finish();
             }
         });
         imageInput.setOnClickListener(new View.OnClickListener() {
@@ -127,62 +284,94 @@ public class travelRecordActivity extends Activity {
             }
         });
 // 请求焦点给按钮
-        btnSubmit.requestFocus();
-        btnReturn.requestFocus();
     }
 
-        private void showPopupWindow(){
-            {
-                View popView = View.inflate(this, R.layout.popupwindow_camera_need, null);
-                Button bt_album = popView.findViewById(R.id.btn_pop_album);
-                Button bt_camera = popView.findViewById(R.id.btn_pop_camera);
-                Button bt_cancel = popView.findViewById(R.id.btn_pop_cancel);
-                int width = getResources().getDisplayMetrics().widthPixels;
-                int height = getResources().getDisplayMetrics().heightPixels * 1 / 3;
-                final PopupWindow popupWindow = new PopupWindow(popView, width, height);
-                popupWindow.setFocusable(true);
-                popupWindow.setOutsideTouchable(true);
-                //用户点击从相册选择
-                bt_album.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openFilePicker();
-                        popupWindow.dismiss();
-                    }
-                });
-                //用户选择拍照上传
-                bt_camera.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        takeCamera(RESULT_CAMERA_IMAGE);
-                        popupWindow.dismiss();
-                    }
-                });
-                //用户选择取消
-                bt_cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        popupWindow.dismiss();
-                    }
-                });
+    private void showPopupWindow(){
+        {
+            View popView = View.inflate(this, R.layout.popupwindow_camera_need, null);
+            Button bt_album = popView.findViewById(R.id.btn_pop_album);
+            Button bt_camera = popView.findViewById(R.id.btn_pop_camera);
+            Button bt_cancel = popView.findViewById(R.id.btn_pop_cancel);
+            int width = getResources().getDisplayMetrics().widthPixels;
+            int height = getResources().getDisplayMetrics().heightPixels * 1 / 3;
+            final PopupWindow popupWindow = new PopupWindow(popView, width, height);
+            popupWindow.setFocusable(true);
+            popupWindow.setOutsideTouchable(true);
+            //用户点击从相册选择
+            bt_album.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openFilePicker();
+                    popupWindow.dismiss();
+                }
+            });
+            //用户选择拍照上传
+            bt_camera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    takeCamera(RESULT_CAMERA_IMAGE);
+                    popupWindow.dismiss();
+                }
+            });
+            //用户选择取消
+            bt_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupWindow.dismiss();
+                }
+            });
 
-                popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        WindowManager.LayoutParams lp = getWindow().getAttributes();
-                        lp.alpha = 1.0f;
-                        getWindow().setAttributes(lp);
-                    }
-                });
+            popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    WindowManager.LayoutParams lp = getWindow().getAttributes();
+                    lp.alpha = 1.0f;
+                    getWindow().setAttributes(lp);
+                }
+            });
 
-                WindowManager.LayoutParams lp = getWindow().getAttributes();
-                lp.alpha = 0.5f;
-                getWindow().setAttributes(lp);
-                popupWindow.showAtLocation(popView, Gravity.BOTTOM, 0, 50);
-            }
-
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.alpha = 0.5f;
+            getWindow().setAttributes(lp);
+            popupWindow.showAtLocation(popView, Gravity.BOTTOM, 0, 50);
         }
-//启动相机
+
+    }
+    private String generateUniqueIdentifier() {
+        return UUID.randomUUID().toString();
+    }
+
+    private int calculateTotalChunks(File file) {
+        // 计算分片数的逻辑，根据文件大小和分片大小计算
+        return (int) Math.ceil((double) file.length() / (1024 * 1024));
+
+    }
+    //TODO 哈希函数
+
+    // 使用 MD5 哈希函数生成唯一标识符
+    public static String generateIdentifierFromUri(String uri) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            digest.update(uri.getBytes());
+            byte[] messageDigest = digest.digest();
+
+            // 将 byte 数组转换成十六进制的字符串表示
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : messageDigest) {
+                String hex = Integer.toHexString(0xFF & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //启动相机
     private void takeCamera(int num) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
@@ -224,40 +413,27 @@ public class travelRecordActivity extends Activity {
     }
 
     //通过uri获取文件
-    private File getFileFromUri(Uri uri) {
+    private File getFileFromBitmap(Bitmap bitmap) {
         try {
-            ContentResolver contentResolver = getContentResolver();
-            String displayName = null;
-            String[] projection = {MediaStore.Images.Media.DISPLAY_NAME};
-            Cursor cursor = contentResolver.query(uri, projection, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-                displayName = cursor.getString(index);
-            }
-            cursor.close();
+            String displayName = "image_file.png"; // 设置文件名（可以根据需要修改）
+            File file = new File(getCacheDir(), displayName);
+            FileOutputStream outputStream = new FileOutputStream(file);
 
-            if (displayName != null) {
-                InputStream inputStream = contentResolver.openInputStream(uri);
-                if (inputStream != null) {
-                    File file = new File(getCacheDir(), displayName);
-                    FileOutputStream outputStream = new FileOutputStream(file);
-                    byte[] buffer = new byte[1024];
-                    int bytesRead;
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        outputStream.write(buffer, 0, bytesRead);
-                    }
-                    outputStream.close();
-                    inputStream.close();
-                    return file;
-                }
-            }
+            // 将 Bitmap 写入文件
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+
+            outputStream.flush();
+            outputStream.close();
+
+            return file;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
-    private void savefile(Uri uri){
-        fileList.add(getFileFromUri(uri));
+
+    private void savefile(List<File> file,Bitmap bitmap){
+        file.add(getFileFromBitmap(bitmap));
     }
     private int convertDpToPixel(int dp) {
         float scale = getResources().getDisplayMetrics().density;
@@ -274,87 +450,231 @@ public class travelRecordActivity extends Activity {
                     int count = clipData.getItemCount();
                     for (int i = 0; i < count; i++) {
                         Uri selectedImage = clipData.getItemAt(i).getUri();
-                        savefile(selectedImage);
                         //则通过循环11保存一个uri，12保存一个uri，13保存一个uri，以此类推
-                        savePicture(selectedImage,10000,i,count);
+                        savePicture(selectedImage,10000);
                         System.out.println("count"+count);
                         //下面是展示图片
-                        putPicture(selectedImage,10000);
-                        //TODO 下面是保存图片，通过sharp保存，保存两个数添加到一起，第一组数是显示的Tag位置，第二组数是第几个照片对应的第几个uri，例子保存在tag为1，照片为10张
+                        putPicture(selectedImage,10000,null);
                     }
                 } else if(data.getData() != null) {
                     Uri selectedImage = data.getData();
-                    savefile(selectedImage);
-                // 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
-                    putPicture(selectedImage,10000);
+                    savePicture(selectedImage,10000);
+// 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
+                    putPicture(selectedImage,10000,null);
                 }
             } else if (requestCode == RESULT_CAMERA_IMAGE) {
-
             }
         }
     }
-
-    private void savePicture(Uri uri,int tag,int save,int count) {
+    //TODO 下面是保存图片，使用哈希函数把他uri的特殊标识符作为名字存储在本地中。若要读取则需要通过特殊标识符得到uri
+    private void savePicture(Uri uri,int tag) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if(tag==10000){
+            List<String> path = new ArrayList<>();
             tag = getValue();
-            System.out.println("getValue"+tag);
-            String concatenated = String.valueOf(tag) + String.valueOf(save);
-            System.out.println("拼接后的结果：" + concatenated); // 输出：109
-            String Tag = String.valueOf(tag);
-            String COUNT = String.valueOf(count);
+            path =  getListFromSharedPreferences(tag);
             String URI =  uri.toString();
-            editor.putString(concatenated, URI);
-            editor.putString(Tag,COUNT);
-        }editor.apply();
+            path.add(URI);
+            saveListToSharedPreferences(path,tag);
+            try {
+                System.out.println(generateIdentifierFromUri(URI)+"djp");
+                // 通过 URI 获取 Bitmap 对象
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                // 将 Bitmap 对象保存到内部存储
+                FileOutputStream fileOutputStream = openFileOutput(generateIdentifierFromUri(URI), 0);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
 
+            List<String > path = new ArrayList<>();
+            String URI =  uri.toString();
+            path.add(URI);
+            saveListToSharedPreferences(path,tag);
+            try {
+                System.out.println(generateIdentifierFromUri(URI)+"djp");
+                // 通过 URI 获取 Bitmap 对象
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                // 将 Bitmap 对象保存到内部存储
+                FileOutputStream fileOutputStream = openFileOutput(generateIdentifierFromUri(URI), 0);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        editor.apply();
 
-
-    private void putPicture(Uri selectedImage,int a){
-
-        if(a==10000){
-            LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(getValue()); // 获取第一个LinearLayout
-            // 获取第一个LinearLayout}
-            HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
-            LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
-            ImageView imageView1 = new ImageView(this);
-            Glide.with(this)
-                    .load(selectedImage).into(imageView1);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    convertDpToPixel(150), // 宽度 150dp 转换为像素
-                    convertDpToPixel(150) // 高度 150dp 转换为像素
-            );
-            layoutParams.setMargins(0, 0, 0, 16);
-            imageView1.setLayoutParams(layoutParams);
-// 添加新的imageView1 到 innerLayout
-            innerLayout.addView(imageView1);
-        }
-    else {
-            LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(a);
-            // 获取第一个LinearLayout}
-            HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
-            LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
-            ImageView imageView1 = new ImageView(this);
-            Glide.with(this)
-                    .load(selectedImage).into(imageView1);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    convertDpToPixel(150), // 宽度 150dp 转换为像素
-                    convertDpToPixel(150) // 高度 150dp 转换为像素
-            );
-            layoutParams.setMargins(0, 0, 0, 16);
-            imageView1.setLayoutParams(layoutParams);
-// 添加新的imageView1 到 innerLayout
-            innerLayout.addView(imageView1);
     }
-}
-    //下面是新建的控件
+
+    //TODO 展示图片
+    private void putPicture(Uri selectedImage,int a,Bitmap bitmap){
+        if(bitmap == null) {
+            if(a==10000){
+                LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(getValue()); // 获取第一个LinearLayout
+                System.out.println("putPicture+getValue"+getValue());
+                // 获取第一个LinearLayout}
+                HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
+                LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
+                ImageView imageView1 = new ImageView(this);
+                Glide.with(this)
+                        .load(selectedImage)
+                        .into(imageView1);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        convertDpToPixel(150), // 宽度 150dp 转换为像素
+                        convertDpToPixel(150) // 高度 150dp 转换为像素
+                );
+                imageView1.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                imageView1.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        showDeleteDialog(new DeleteConfirmationListener() {
+                            @Override
+                            public void onConfirmDelete() {
+                                int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
+                                List<String> list = getListFromSharedPreferences(getValue());
+                                list.remove(index- 2);
+                                saveListToSharedPreferences(list, getValue());
+                                // 用户确认删除的处理逻辑，可以在这里执行删除操作
+                                innerLayout.removeView(v);
+                            }
+
+                            @Override
+                            public void onCancelDelete() {
+                            }
+                        });
+                        return true;
+                    }
+                });
+//                imageView1.setOnLongClickListener(new View.OnLongClickListener() {
+//                    @Override
+//                    public boolean onLongClick(View v) {
+//                        // 在这里执行长按事件触发的操作，比如删除图片
+//                        int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
+//                        List<String> list = new ArrayList<>() ;
+//                        list = getListFromSharedPreferences(getValue());
+//                        list.remove(index);
+//                        saveListToSharedPreferences(list,getValue());
+//                        // 返回 true 表示消费了长按事件，不会触发普通的点击事件
+//                        return true;
+//                    }
+//                });
+                layoutParams.setMargins(0, 0, 0, 16);
+                imageView1.setLayoutParams(layoutParams);
+// 添加新的imageView1 到 innerLayout
+                innerLayout.addView(imageView1);
+            }
+            else {
+                LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(a);
+                System.out.println("putPicture+a"+a);
+                // 获取第一个LinearLayout}
+                HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
+                LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
+                ImageView imageView1 = new ImageView(this);
+                Glide.with(this)
+                        .load(selectedImage)
+                        .into(imageView1);
+                imageView1.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        showDeleteDialog(new DeleteConfirmationListener() {
+                            @Override
+                            public void onConfirmDelete() {
+                                int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
+                                List<String> list = getListFromSharedPreferences(getValue());
+                                list.remove(index- 2);
+                                saveListToSharedPreferences(list, getValue());
+                                // 用户确认删除的处理逻辑，可以在这里执行删除操作
+                                innerLayout.removeView(v);
+                            }
+
+                            @Override
+                            public void onCancelDelete() {
+                            }
+                        });
+                        return true;
+                    }
+                });
+                imageView1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        convertDpToPixel(150), // 宽度 150dp 转换为像素
+                        convertDpToPixel(150) // 高度 150dp 转换为像素
+                );
+                layoutParams.setMargins(0, 0, 0, 16);
+                imageView1.setLayoutParams(layoutParams);
+// 添加新的imageView1 到 innerLayout
+                innerLayout.addView(imageView1);
+            }
+        }else {
+            LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(a);
+            System.out.println("putPicture+a"+a);
+            // 获取第一个LinearLayout}
+            HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
+            LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
+            ImageView imageView1 = new ImageView(this);
+            Glide.with(this)
+                    .load(bitmap)
+                    .into(imageView1);
+            imageView1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            imageView1.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    showDeleteDialog(new DeleteConfirmationListener() {
+                        @Override
+                        public void onConfirmDelete() {
+                            // 用户确认删除的处理逻辑，可以在这里执行删除操作
+                            int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
+                            List<String> list = getListFromSharedPreferences(getValue());
+                            list.remove(index- 2);
+                            saveListToSharedPreferences(list, getValue());
+                            innerLayout.removeView(v);
+                        }
+
+                        @Override
+                        public void onCancelDelete() {
+                        }
+                    });
+                    return true;
+                }
+            });
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    convertDpToPixel(150), // 宽度 150dp 转换为像素
+                    convertDpToPixel(150) // 高度 150dp 转换为像素
+            );
+            layoutParams.setMargins(0, 0, 0, 16);
+            imageView1.setLayoutParams(layoutParams);
+// 添加新的imageView1 到 innerLayout
+            innerLayout.addView(imageView1);
+        }
+
+
+    }
+    // TODO 下面是新建的控件
     private void addContentWithTag(int i) {
         // 1.创建外围LinearLayout控件
         LinearLayout layout = new LinearLayout(travelRecordActivity.this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
+        layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(layoutParams);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -380,24 +700,24 @@ public class travelRecordActivity extends Activity {
         innerLayout.setOrientation(LinearLayout.HORIZONTAL);
         innerLayout.setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8)); // 设置内边距
 
-// 创建 GridView
-        GridView gridView = new GridView(this);
-        LinearLayout.LayoutParams gridParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        gridView.setLayoutParams(gridParams);
-        gridView.setNumColumns(3);
-
-// 将 GridView 添加到内部 LinearLayout
-        innerLayout.addView(gridView);
+//// 创建 GridView
+//        GridView gridView = new GridView(this);
+//        LinearLayout.LayoutParams gridParams = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT);
+//        gridView.setLayoutParams(gridParams);
+//        gridView.setNumColumns(3);
+//
+//// 将 GridView 添加到内部 LinearLayout
+//        innerLayout.addView(gridView);
 
 // 创建 ImageView
         ImageView imageView = new ImageView(this);
         LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(
-                400,
-               400);
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         imageView.setLayoutParams(imageParams);
-        imageView.setImageResource(R.drawable.add_image);
+        imageView.setImageResource(R.drawable.recommend_fm_btn_bg);
         imageView.setVisibility(View.VISIBLE); // 设置为可见
         imageView.setTag(i);
 
@@ -411,7 +731,7 @@ public class travelRecordActivity extends Activity {
         });
 
 // 将 ImageView 添加到内部 LinearLayout
-        innerLayout.addView(imageView);
+        innerLayout.addView(imageView,0);
 
 // 将内部 LinearLayout 添加到 HorizontalScrollView
         scrollView.addView(innerLayout);
@@ -439,14 +759,18 @@ public class travelRecordActivity extends Activity {
         EditText etContent2 = new EditText(this);
         LinearLayout.LayoutParams etParams2 = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                dpToPx(80));
+                LinearLayout.LayoutParams.WRAP_CONTENT,// 将高度设置为 WRAP_CONTENT
+                dpToPx(50));
         etContent2.setLayoutParams(etParams2);
+        etContent2.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
         etContent2.setBackgroundColor(Color.parseColor("#FFFFFF"));
         etContent2.setGravity(Gravity.LEFT);
-        etContent2.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         etContent2.setPadding(dpToPx(5), 0, 0, 0);
         etContent2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         etContent2.setHint("输入你的内容");
+        etContent2.setSingleLine(false);
+        etContent2.setLines(25); // 设置初始行数为5行
+        etContent2.setMinLines(12); // 设置最大行数为5行
         etContent2.setTag(i);
         layout.addView(etContent2);
 
@@ -489,9 +813,8 @@ public class travelRecordActivity extends Activity {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         btnDeleteAddParam.setMargins(0, 0, (int) (fDimRatio * 5), 0);
         // “-”按钮放在“+”按钮左侧
-        btnDeleteAddParam.addRule(RelativeLayout.LEFT_OF, btnIDIndex);
+        btnDeleteAddParam.addRule(RelativeLayout.LEFT_OF,   btnIDIndex);
         btnDelete.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 deleteContent(v);
@@ -508,23 +831,9 @@ public class travelRecordActivity extends Activity {
         llContentView.addView(layout, 1);
 
         btnIDIndex++;
-//TODO 在这里进行读取操作，通过减去i来得到一个j循环j读取展示，例如1110，则减去11得到10，循环十次，依次读取1101，1102，得到uri，惊进行展示
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        String I = String.valueOf(i);
-        String num = sharedPreferences.getString(I, "0");
-        int count = Integer.parseInt(num);
-        int tag =Integer.parseInt(I);
-        System.out.println("count"+count);
-        for(int j=0;j<count;j++){
-            String concatenated = String.valueOf(tag) + String.valueOf(j);
-            System.out.println("concatenated"+concatenated);
-            String which = sharedPreferences.getString(concatenated, "");
-            Uri uri = Uri.parse(which); // 将字符串转换为 Uri
-            putPicture(uri,tag);
-
-        }
 
     }
+
 
     // Method to convert dp to pixels
     private int dpToPx(Context context, int dp) {
@@ -565,7 +874,6 @@ public class travelRecordActivity extends Activity {
                 }
             }
         });
-
         listIBTNAdd.add(ibtnAdd1);
         listIBTNDel.add(null);  // 第一组隐藏了“-”按钮，所以为null
     }
@@ -575,6 +883,7 @@ public class travelRecordActivity extends Activity {
      *
      * @param v 事件触发控件，其实就是触发添加事件对应的“+”按钮
      */
+    //TODO 生成页面
     private void addContent(View v) {
         if (v == null) {
             return;
@@ -617,16 +926,16 @@ public class travelRecordActivity extends Activity {
             innerLayout.setLayoutParams(innerParams);
             innerLayout.setOrientation(LinearLayout.HORIZONTAL);
             innerLayout.setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8)); // 设置内边距
-// 创建 GridView
-            GridView gridView = new GridView(this);
-            LinearLayout.LayoutParams gridParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            gridView.setLayoutParams(gridParams);
-            gridView.setNumColumns(3);
-
-// 将 GridView 添加到内部 LinearLayout
-            innerLayout.addView(gridView);
+//// 创建 GridView
+//            GridView gridView = new GridView(this);
+//            LinearLayout.LayoutParams gridParams = new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.WRAP_CONTENT);
+//            gridView.setLayoutParams(gridParams);
+//            gridView.setNumColumns(3);
+//
+//// 将 GridView 添加到内部 LinearLayout
+//            innerLayout.addView(gridView);
 
 // 创建 ImageView
             ImageView imageView = new ImageView(this);
@@ -678,13 +987,17 @@ public class travelRecordActivity extends Activity {
             EditText etContent2 = new EditText(this);
             LinearLayout.LayoutParams etParams2 = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    dpToPx(80));
+                    LinearLayout.LayoutParams.WRAP_CONTENT,// 将高度设置为 WRAP_CONTENT
+                    dpToPx(50));
             etContent2.setLayoutParams(etParams2);
+            etContent2.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
             etContent2.setBackgroundColor(Color.parseColor("#FFFFFF"));
             etContent2.setGravity(Gravity.LEFT);
-            etContent2.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
             etContent2.setPadding(dpToPx(5), 0, 0, 0);
             etContent2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            etContent2.setSingleLine(false);
+            etContent2.setLines(25); // 设置初始行数为5行
+            etContent2.setMinLines(12); // 设置最大行数为5行
             etContent2.setHint("输入你的内容");
             etContent2.setTag(newIndex);
             layout.addView(etContent2);
@@ -714,7 +1027,6 @@ public class travelRecordActivity extends Activity {
             btnAdd.setId(btnIDIndex);
             // 设置点击操作
             btnAdd.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     addContent(v);
@@ -751,10 +1063,7 @@ public class travelRecordActivity extends Activity {
 
             btnIDIndex++;
         }
-
     }
-
-
     /**
      * 删除一组控件
      *
@@ -780,22 +1089,19 @@ public class travelRecordActivity extends Activity {
             llContentView.removeViewAt(iIndex);
             removeFromSharedPreferences(iIndex);
         }
-
-
     }
-// 保存内容到 SharedPreferences
+    // 保存内容到 SharedPreferences
     private void saveContentToSharedPreferences() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         for (int i = 0; i < llContentView.getChildCount(); i++) {
+            //TODO 在这里执行关闭保存 通过i先读取，读取出总数，得到总数，清空总数，循环count保存，读取出uri再保存
+            saveListToSharedPreferences(getListFromSharedPreferences(i),i);
             View view = llContentView.getChildAt(i);
             if (view instanceof LinearLayout) {
                 LinearLayout linearLayout = (LinearLayout) view;
-
                 int editTextCount = 0;
-
                 for (int j = 0; j < linearLayout.getChildCount(); j++) {
                     View childView = linearLayout.getChildAt(j);
-
                     // Ensure childView is an instance of EditText
                     if (childView instanceof EditText) {
                         EditText editText = (EditText) childView;
@@ -815,7 +1121,6 @@ public class travelRecordActivity extends Activity {
                             // Second EditText - Assume it as content EditText
                             editor.putString("userContent" + index, content);
                         }
-
                         editTextCount++; // Increment EditText counter
                     }
                 }
@@ -824,10 +1129,31 @@ public class travelRecordActivity extends Activity {
         editor.apply();
         Log.d("PostActivity", "saveContentToSharedPreferences() called");
     }
-//打开时执行加载的代码，把上一次保存的东西加载进来
+    //打开时执行加载的代码，把上一次保存的东西加载进来
     private void loadSavedContent() {
         for (int i = 0; i < llContentView.getChildCount(); i++) {
+            List<String> path =  getListFromSharedPreferences(i);
             View view = llContentView.getChildAt(i);
+            //TODO 在这里进行读取操作，得到uri，进行展示
+            if (path != null && !path.isEmpty()) {
+                // 如果列表不为空，则执行操作
+                // 在这里执行您想要执行的操作，例如遍历列表、获取列表的大小等
+                for (String URI : path) {
+                    Uri uri = Uri.parse(URI);
+                    try {
+                        FileInputStream localStream =openFileInput(generateIdentifierFromUri(URI));
+                        Bitmap bitmap = BitmapFactory.decodeStream(localStream);
+
+                        putPicture(uri,i,bitmap);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    // 这里可以对列表中的每个元素执行操作
+                    System.out.println(URI);
+                }
+            } else {
+                System.out.println("列表为空，跳过执行操作");
+            }
             if (view instanceof LinearLayout) {
                 LinearLayout linearLayout = (LinearLayout) view;
                 EditText etTitle = null;
@@ -871,7 +1197,7 @@ public class travelRecordActivity extends Activity {
         return Math.round(dp * density);
     }
 
-//关闭时执行的代码
+    //关闭时执行的代码
     @Override
     protected void onPause() {
         super.onPause();
@@ -889,7 +1215,36 @@ public class travelRecordActivity extends Activity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove("userContent" + index);
         editor.remove("userTitle" + index);
+        String a =   String.valueOf(index);
+        editor.remove(a);
         editor.apply();
     }
-
+    private void uploadComplete() {
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_OK, resultIntent); // 设置上传完成的结果码
+        finish(); // 结束上传页面
+    }
+    private void showDeleteDialog(final DeleteConfirmationListener listener) {
+        new AlertDialog.Builder(this)
+                .setTitle("删除")
+                .setMessage("确定删除吗？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        listener.onConfirmDelete(); // 用户确认删除的处理逻辑
+                    }
+                })
+                .setNegativeButton(
+                        "取消",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                listener.onCancelDelete(); // 用户取消删除的处理逻辑
+                            }
+                        }
+                )
+                .show();
+    }
 }

@@ -2,7 +2,11 @@ package glue502.software.adapters;
 
 import static glue502.software.activities.MainActivity.ip;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +20,19 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.io.IOException;
 import java.util.List;
 
 import glue502.software.R;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
 import glue502.software.models.UserInfo;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class PostListAdapter extends BaseAdapter {
     private Context context;
     private int layoutId;
@@ -56,12 +67,9 @@ public class PostListAdapter extends BaseAdapter {
         TextView username = v.findViewById(R.id.textViewUsername);
         TextView title = v.findViewById(R.id.textViewTitle);
         TextView content = v.findViewById(R.id.textViewContentPreview);
-        LinearLayout imgLinerLayout = v.findViewById(R.id.imageContainer);
-        ImageView view1 = v.findViewById(R.id.image1);
-        ImageView view2 = v.findViewById(R.id.image2);
-        ImageView view3 = v.findViewById(R.id.image3);
-
-//        HorizontalScrollView scrollView = v.findViewById(R.id.horizontalScrollView);
+        LinearLayout images = v.findViewById(R.id.image_container);
+        TextView likeCount = v.findViewById(R.id.like_count);
+        TextView commentCount = v.findViewById(R.id.comment_count);
         Post post1 = posts.get(i);
         title.setText(post1.getPostTitle());
         if (post1.getPostContent().length()<20){
@@ -78,26 +86,88 @@ public class PostListAdapter extends BaseAdapter {
                 .apply(requestOptions)
                 .into(useravatar);
         //分离地址并获取
-        //最多展示三张图片
-            if (post1.getPicturePath().size()>0) {
-                //执行展示代码，将图片展示到页面上
-                Glide.with(context)
-                        .load(url + post1.getPicturePath().get(0))
-                        .override(convertDpToPixel(125), convertDpToPixel(125))
-                        .into(view1);
+        int x = 0;
+        for (String path : post1.getPicturePath()) {
+            ImageView imageView = new ImageView(context);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPixel(110), convertDpToPixel(110));
+            layoutParams.setMargins(convertDpToPixel(4), 0, 0, 0); // 左边距为4dp
+            imageView.setLayoutParams(layoutParams);
+            Glide.with(context)
+                    .load(url + path)
+                    .into(imageView);
+            images.addView(imageView);
+            x++;
+            if(x==3){
+                break;
             }
-            if (post1.getPicturePath().size()>1) {
-                Glide.with(context)
-                        .load(url + post1.getPicturePath().get(1))
-                        .override(convertDpToPixel(125), convertDpToPixel(125))
-                        .into(view2);
+        }
+
+        //从服务器查询点赞和评论数
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url+"posts/getLikeCount?postId="+post1.getPostId())
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()){
+                        String responseData = response.body().string();
+                        //获取点赞数
+                        Handler mainHandler = new Handler(Looper.getMainLooper());
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (responseData.equals("0")) {
+                                    likeCount.setText("0");
+                                } else {
+                                    likeCount.setText(responseData);
+                                }
+                            }
+                        });
+                    }
+
+                } catch (IOException e) {
+                    Log.e("NetworkError", "Error: " + e.getMessage());
+                    throw new RuntimeException(e);
+                }
             }
-            if (post1.getPicturePath().size()>2) {
-                Glide.with(context)
-                        .load(url + post1.getPicturePath().get(2))
-                        .override(convertDpToPixel(125), convertDpToPixel(125))
-                        .into(view3);
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url+"comment/getCommentCount?postId="+post1.getPostId())
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()){
+                        String responseData = response.body().string();
+                        //给控件设置评论数
+                        Handler mainHandler = new Handler(Looper.getMainLooper());
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (responseData.equals("0")) {
+                                    commentCount.setText("0");
+                                } else {
+                                    commentCount.setText(responseData);
+                                }
+                            }
+                        });
+
+                    }
+
+                } catch (IOException e) {
+                    Log.e("NetworkError", "Error: " + e.getMessage());
+                    throw new RuntimeException(e);
+                }
             }
+        }).start();
+
         return v;
     }
     private int convertDpToPixel(int dp) {

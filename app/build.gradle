@@ -19,7 +19,7 @@ android {
     }
 
     namespace 'glue502.software'
-    compileSdk 33
+    compileSdk 32
 
     defaultConfig {
         applicationId "glue502.software"
@@ -38,14 +38,15 @@ android {
 }
 
 dependencies {
-    //djp新加的
-    implementation 'com.github.bumptech.glide:glide:4.15.1'
-    //implementation 'com.google.code.gson:gson:2.8.6'
+    //djp新
+//    implementation 'com.github.bumptech.glide:glide:4.15.1'
+//    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.daimajia.androidanimations:library:2.4@aar'
     //以上是新加的
-
-    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
-    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'com.airbnb.android:lottie:3.2.2'
+//    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+//    implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.github.bumptech.glide:glide:4.16.0'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.android.volley:volley:1.2.1'
@@ -55,7 +56,17 @@ dependencies {
     implementation 'io.github.FlyJingFish.OpenImage:OpenImageFullLib:2.1.9'
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
     implementation files('libs\\BaiduLBS_Android.jar')
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    //smartrefresh
+    implementation  'io.github.scwang90:refresh-layout-kernel:2.1.0'      //核心必须依赖
+    implementation  'io.github.scwang90:refresh-header-classics:2.1.0'    //经典刷新头
+    implementation  'io.github.scwang90:refresh-header-radar:2.1.0'       //雷达刷新头
+    implementation  'io.github.scwang90:refresh-header-falsify:2.1.0'     //虚拟刷新头
+    implementation  'io.github.scwang90:refresh-header-material:2.1.0'    //谷歌刷新头
+    implementation  'io.github.scwang90:refresh-header-two-level:2.1.0'   //二级刷新头
+    implementation  'io.github.scwang90:refresh-footer-ball:2.1.0'        //球脉冲加载
+    implementation  'io.github.scwang90:refresh-footer-classics:2.1.0'    //经典加载
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'

@@ -4,9 +4,11 @@ import static glue502.software.activities.MainActivity.ip;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,17 +16,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +50,8 @@ import com.google.gson.JsonParser;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,6 +62,9 @@ import glue502.software.R;
 import glue502.software.activities.login.LoginActivity;
 import glue502.software.adapters.CommentListAdapter;
 import glue502.software.models.Comment;
+import glue502.software.models.CommentRespond;
+import glue502.software.models.LikeAndStarStatus;
+import glue502.software.models.ReturnCommentRespond;
 import glue502.software.models.UploadComment;
 import glue502.software.utils.Carousel;
 import glue502.software.models.PostWithUserInfo;
@@ -65,12 +80,14 @@ import okhttp3.Response;
 
 public class PostDisplayActivity extends AppCompatActivity {
     private ImageView star_btn;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    private ImageView like_btn;
+    private int checkedItemId = R.id.edit;
     private ImageView back_btn;
     private ImageView submit;
     private LinearLayout dotLinerLayout;
     private ViewPager2 postImage;
     private PostWithUserInfo postWithUserInfo;
+    private PostWithUserInfo post;
     private TextView content;
     private TextView title;
     private TextView text;
@@ -85,12 +102,14 @@ public class PostDisplayActivity extends AppCompatActivity {
     private String postId;
     private List<Comment> commentList = new ArrayList<>();
     private OkHttpClient client = new OkHttpClient();
+    private ImageView menuBtn;
     private CommentListAdapter commentListAdapter;
+    //记录用户收藏和点赞状态
+    private int likeStatus, starStatus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_display);
-
         initData();
         initView();
         setListener();
@@ -99,7 +118,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.head));
         displayPost();
     }
-
     private void initData() {
         postWithUserInfo = (PostWithUserInfo) getIntent().getSerializableExtra("postwithuserinfo");
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
@@ -132,7 +150,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                         commentList = new ArrayList<>();
                         //获取响应的数据
                         String result = response.body().string();
-                        Log.v("MainActivity", "lzx获取服务器返回的数据"+result);
                         //反序列化消息
                         JsonArray jsonArray = JsonParser.parseString(result).getAsJsonArray();
                         for (JsonElement jsonElement : jsonArray) {
@@ -151,6 +168,8 @@ public class PostDisplayActivity extends AppCompatActivity {
                                 );
                                 listView.setAdapter(commentListAdapter);
                                 setListViewHeightBasedOnChildren(listView);
+                                //绑定adapter点击事件监听器
+                                setAdapterListener();
                             }
                         });
                     }
@@ -160,22 +179,80 @@ public class PostDisplayActivity extends AppCompatActivity {
     }
 
     public void displayPost(){
-        //Carousel为自定义轮播图工具类
-        Carousel carousel = new Carousel(this.getApplicationContext(), dotLinerLayout, postImage);
-        carousel.initViews(postWithUserInfo.getPost().getPicturePath());
-
-        content.setText(postWithUserInfo.getPost().getPostContent());
-        title.setText(postWithUserInfo.getPost().getPostTitle());
-        userName.setText(postWithUserInfo.getUserInfo().getUserName());
-        RequestOptions requestOptions = new RequestOptions()
-                .transform(new CircleCrop());
-        Glide.with(PostDisplayActivity.this)
-                .load(url+postWithUserInfo.getUserInfo().getAvatar())
-                .apply(requestOptions)
-                .into(avatar);
+        //通过postid从服务器获取帖子内容
+        OkHttpClient client1 = new OkHttpClient();
+        Request request = new Request.Builder()
+               .url(url+"posts/getPostById?postId="+postId)
+               .build();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response response = client1.newCall(request).execute();
+                    String result = response.body().string();
+                    JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
+                    post = new Gson().fromJson(jsonObject, PostWithUserInfo.class);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Carousel为自定义轮播图工具类
+                            Carousel carousel = new Carousel(PostDisplayActivity.this, dotLinerLayout, postImage);
+                            carousel.initViews(post.getPost().getPicturePath());
+                            content.setText(post.getPost().getPostContent());
+                            title.setText(post.getPost().getPostTitle());
+                            userName.setText(post.getUserInfo().getUserName());
+                            RequestOptions requestOptions = new RequestOptions()
+                                    .transform(new CircleCrop());
+                            Glide.with(PostDisplayActivity.this)
+                                    .load(url+post.getUserInfo().getAvatar())
+                                    .apply(requestOptions)
+                                    .into(avatar);
+                        }
+                    });
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+        //通过postId和userId获取用户点赞和收藏状态
+        Request request1 = new Request.Builder()
+               .url(url+"posts/getLikeAndStarStatus?postId="+postId+"&userId="+userId)
+               .build();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response response = client1.newCall(request1).execute();
+                    //从请求中获取用户点赞和收藏状态
+                    String result = response.body().string();
+                    //转换为likeAndStarStatus对象
+                    LikeAndStarStatus likeAndStarStatus = new Gson().fromJson(result, LikeAndStarStatus.class);
+                    likeStatus = likeAndStarStatus.getLikeStatus();
+                    starStatus = likeAndStarStatus.getStarStatus();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(likeStatus == 1){
+                                like_btn.setImageResource(R.mipmap.like);
+                            }else{
+                                like_btn.setImageResource(R.mipmap.like1);
+                            }
+                            if(starStatus == 1){
+                                star_btn.setImageResource(R.mipmap.star);
+                            }else{
+                                star_btn.setImageResource(R.mipmap.star1);
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
     }
     public void initView(){
-//        swipeRefreshLayout = findViewById(R.id.swiperefresh);
+        like_btn = findViewById(R.id.btn_like);
+        menuBtn = findViewById(R.id.popupmenu);
         postImage = findViewById(R.id.post_image);
         dotLinerLayout = findViewById(R.id.index_dot);
         content = findViewById(R.id.post_content);
@@ -191,20 +268,21 @@ public class PostDisplayActivity extends AppCompatActivity {
         view = findViewById(R.id.view);
     }
     public void setListener(){
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                swipeRefreshLayout.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        getCommentData();
-//                        //关闭刷新
-//                        swipeRefreshLayout.setRefreshing(false);
-//                    }
-//                },2000);
-//            }
-//        });
-        star_btn.setOnClickListener(new View.OnClickListener() {
+        //如果为作者，提供修改和删除功能
+        if (userId.equals(postWithUserInfo.getUserInfo().getUserId())){
+            //弹出选择框，修改，删除，取消
+            menuBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showPopupMenu(view);
+                }
+            });
+
+        }else {
+            //设置隐藏
+            menuBtn.setVisibility(View.GONE);
+        }
+        like_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 执行收藏代码
@@ -230,8 +308,116 @@ public class PostDisplayActivity extends AppCompatActivity {
                     // 创建并显示对话框
                     AlertDialog dialog = builder.create();
                     dialog.show();
+                }else if (likeStatus==0){
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String postId = postWithUserInfo.getPost().getPostId();
+                            client = new OkHttpClient();
+                            MultipartBody.Builder builder = new MultipartBody.Builder()
+                                    .setType(MultipartBody.FORM)
+                                    .addFormDataPart("postId",postId)
+                                    .addFormDataPart("userId",userId);
+                            RequestBody requestBody = builder.build();
+                            Request request = new Request.Builder()
+                                    .url(url+"posts/like")
+                                    .post(requestBody)
+                                    .build();
+                            try {
+                                Response response = client.newCall(request).execute();
 
-                }else{
+                            } catch (IOException e) {
+                                Log.e("NetworkError", "Error: " + e.getMessage());
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }).start();
+                    likeStatus=1;
+                    like_btn.setImageResource(R.mipmap.like);
+                } else if (likeStatus==1) {
+                    //取消点赞
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String postId = postWithUserInfo.getPost().getPostId();
+                            client = new OkHttpClient();
+                            MultipartBody.Builder builder = new MultipartBody.Builder()
+                                    .setType(MultipartBody.FORM)
+                                    .addFormDataPart("postId",postId)
+                                    .addFormDataPart("userId",userId);
+                            RequestBody requestBody = builder.build();
+                            Request request = new Request.Builder()
+                                    .url(url+"posts/like")
+                                    .post(requestBody)
+                                    .build();
+                            try {
+                                Response response = client.newCall(request).execute();
+
+                            } catch (IOException e) {
+                                Log.e("NetworkError", "Error: " + e.getMessage());
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }).start();
+                    likeStatus=0;
+                    like_btn.setImageResource(R.mipmap.like1);
+                }
+            }
+        });
+        star_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 执行收藏代码
+                if (status == "") {
+                    // 创建AlertDialog构建器
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
+                    builder.setTitle("账号未登录！")
+                            .setMessage("是否前往登录账号")
+                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“确定”按钮后的操作
+                                    Intent intent = new Intent(PostDisplayActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“取消”按钮后的操作
+                                    dialog.dismiss(); // 关闭对话框
+                                }
+                            });
+
+                    // 创建并显示对话框
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                } else if (starStatus == 0) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String postId = postWithUserInfo.getPost().getPostId();
+                            client = new OkHttpClient();
+                            MultipartBody.Builder builder = new MultipartBody.Builder()
+                                    .setType(MultipartBody.FORM)
+                                    .addFormDataPart("postId", postId)
+                                    .addFormDataPart("userId", userId);
+                            RequestBody requestBody = builder.build();
+                            Request request = new Request.Builder()
+                                    .url(url + "posts/star")
+                                    .post(requestBody)
+                                    .build();
+                            try {
+                                Response response = client.newCall(request).execute();
+
+                            } catch (IOException e) {
+                                Log.e("NetworkError", "Error: " + e.getMessage());
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }).start();
+                    star_btn.setImageResource(R.mipmap.star);
+                    starStatus = 1;
+                } else if (starStatus == 1) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -248,16 +434,15 @@ public class PostDisplayActivity extends AppCompatActivity {
                                     .build();
                             try {
                                 Response response = client.newCall(request).execute();
-
                             } catch (IOException e) {
                                 Log.e("NetworkError", "Error: " + e.getMessage());
                                 throw new RuntimeException(e);
                             }
                         }
                     }).start();
-                    Toast.makeText(PostDisplayActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
+                    star_btn.setImageResource(R.mipmap.star1);
+                    starStatus = 0;
                 }
-
             }
         });
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -301,7 +486,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                             String id = UUID.randomUUID().toString();
                             Date date = new Date();
                             SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
-                            System.out.println(dateFormat.format(date));
                             String time = dateFormat.format(date);
                             UploadComment uploadComment = new UploadComment(postId,
                                     userId,
@@ -356,6 +540,114 @@ public class PostDisplayActivity extends AppCompatActivity {
         });
     }
 
+    public void setAdapterListener(){
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //获取点击的评论
+                Comment comment = commentList.get(position);
+                //获取评论的id
+                String commentId = comment.getCommentId();
+                //获取评论者的Id
+                String userId = comment.getUserId();
+                //弹出软键盘后用户输入文本内容
+                showInput(chatInputEt);
+                //点击submit后获取输入的内容并提交
+                submit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String text = chatInputEt.getText().toString();
+                        //生成回复实体
+                        //获取时间
+                        Date date = new Date();
+                        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
+                        System.out.println(dateFormat.format(date));
+                        String time = dateFormat.format(date);
+                        //生成UUID
+                        String commentRespondId = UUID.randomUUID().toString();
+                        if (text.length() > 0) {
+                            UploadComment commentRespond = new UploadComment(postId,
+                                    userId,
+                                    text,
+                                    commentRespondId,
+                                    time,
+                                    commentId);
+                            //生成线程提交回复内容
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //okHttp
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(commentRespond);
+                                    RequestBody body = RequestBody.create(
+                                            MediaType.parse("application/json;charset=utf-8"),
+                                            json
+                                    );
+                                    Request request = new Request.Builder()
+                                            .post(body)
+                                            .url(url + "comment/addComment")
+                                            .build();
+                                    //3.Call对象
+                                    Call call = client.newCall(request);
+                                    call.enqueue((new Callback() {
+                                        @Override
+                                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+                                        }
+                                        // 这里可以包含获取数据的逻辑，比如使用OkHttp请求数据
+                                        // 返回模拟的数据
+                                        @Override
+                                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                            //获取响应的数据
+                                            String result = response.body().string();
+                                            if (result!=null){
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        getCommentData();
+                                                        commentListAdapter.notifyDataSetChanged();
+                                                        setListViewHeightBasedOnChildren(listView);
+                                                    }
+                                                });
+                                            }
+                                            //清空EditText
+                                            chatInputEt.setText("");
+                                            hideInput();
+                                        }
+                                    }));
+                                }
+                            }).start();
+                        }else {
+                            Handler handler = new Handler(Looper.getMainLooper());
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //放在UI线程弹Toast
+                                    Toast.makeText(PostDisplayActivity.this, "评论内容不能为空", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        commentListAdapter.setOnRespondClickListener(new CommentListAdapter.onRespondClickListener() {
+            @Override
+            public void onRespondClick(int i) {
+                Log.v("PostDisplayActivity", "lzx onRespondClick");
+                Intent intent = new Intent(PostDisplayActivity.this, RespondDetail.class);
+                Comment comment = commentList.get(i);
+                System.out.println(comment);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("comment", (Serializable) comment);
+                //把bundle对象添加到intent对象中
+                intent.putExtra("bundle", bundle);
+                //启动跳转页面
+                startActivity(intent);
+            }
+        });
+    }
+
     //动态设定ListView的高度
     private void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -379,5 +671,92 @@ public class PostDisplayActivity extends AppCompatActivity {
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
+    @SuppressLint("RestrictedApi")
+    private void showPopupMenu(View view){
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(PostDisplayActivity.this, view);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
+        //设置选中
+        popupMenu.getMenu().findItem(checkedItemId).setChecked(true);
+        //使用反射。强制显示菜单图标
+        try {
+            Field field = popupMenu.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+            mHelper.setForceShowIcon(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        //显示PopupMenu
+        popupMenu.show();
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.delete:
+                        //执行删除操作
+                        AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
+                            builder.setTitle("删除")
+                                   .setMessage("是否删除该帖子？")
+                                   .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // 点击“确定”按钮后的操作
+                                            // 发送请求
+                                            OkHttpClient client = new OkHttpClient();
+                                            Request request = new Request.Builder()
+                                                   .url(url+"posts/deletePost?postId="+postId)
+                                                   .build();
+                                            System.out.println(url+"posts/deletePost?postId="+postId);
+                                            //开启线程发送请求
+                                            new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try {
+                                                        //开启线程
+                                                        Response response = client.newCall(request).execute();
+                                                        //关闭帖子
+                                                        Intent resultIntent = new Intent();
+                                                        setResult(Activity.RESULT_OK, resultIntent); // 设置删除完成的结果码
+                                                        finish(); // 关闭页面
+                                                    } catch (IOException e) {
+                                                        throw new RuntimeException(e);
+                                                    }
+                                                }
+                                            }).start();
+                                        }
+                                           }).show();
+                        break;
+                    case R.id.edit:
+                        //进行编辑操作
+                        Intent intent = new Intent(PostDisplayActivity.this, PostEditActivity.class);
+                                    intent.putExtra("postwithuserinfo",post);
+                                    startActivity(intent);
+                        break;
+                    case R.id.cancel:
+                        System.out.println("取消");
+                }
+                return true;
+            }
+        });
+    }
+
+    public void showInput(final EditText et) {
+        et.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    /**
+     * 隐藏键盘
+     */
+    protected void hideInput() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        View v = getWindow().peekDecorView();
+        if (null != v) {
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package glue502.software.fragments;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,16 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.CalendarView;
 
 import glue502.software.R;
 import glue502.software.activities.travelRecord.travelRecordActivity;
-import glue502.software.activities.travelRecord.travelReviewActivity;
-import glue502.software.adapters.TravelReviewAdapter;
-import glue502.software.utils.Carousel;
-
+import glue502.software.activities.travelRecord.TravelReviewActivity;
 public class RecommendFragment extends Fragment {
     private Button createBtn;
     private Button reviewBtn;
@@ -28,17 +24,24 @@ public class RecommendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recommend,container,false);
         createBtn = view.findViewById(R.id.btn_Recording);
         reviewBtn = view.findViewById(R.id.bottomRightButton);
+//        // 获取 CalendarView 对象
+//        CalendarView calendarView = view.findViewById(R.id.calendar_view);
+
+        // 设置最小日期和最大日期范围
+//        calendarView.setMinDate(minDateMillis); // minDateMillis为long类型的时间值表示最小日期
+//        calendarView.setMaxDate(maxDateMillis); // maxDateMillis为long类型的时间值表示最大日期
+
         setlistener();
-        Carousel carousel = new Carousel(getContext(), view.findViewById(R.id.recommend_lbt_dot), view.findViewById(R.id.recommend_lbt_image));
-        List<String> paths = new ArrayList<>();
-        paths.add("images/cat1_1.jpg");
-        paths.add("images/cat1_2.jpg");
-        paths.add("images/cat1_3.jpg");
-        paths.add("images/cat2_1.jpg");
-        paths.add("images/cat2_2.jpg");
-        carousel.initViewsLBT(paths);
+        date();
         return view;
     }
+
+    private void date() {
+
+
+
+    }
+
     public void setlistener(){
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,9 +53,10 @@ public class RecommendFragment extends Fragment {
         reviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), travelReviewActivity.class);
+                Intent intent = new Intent(getActivity(), TravelReviewActivity.class);
                 startActivity(intent);
             }
         });
+
     }
 }

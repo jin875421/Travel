@@ -5,23 +5,17 @@
     <TextView
         android:id="@+id/travel_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="30dp"/>
     <HorizontalScrollView
+        android:id="@+id/image_scroll"
         android:layout_below="@+id/travel_name"
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="wrap_content">
         <LinearLayout
-            android:id="@+id/imageContainer"
+            android:id="@+id/image_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="8dp">
-            <GridView
-                android:id="@+id/gridView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:numColumns="3" />
-        </LinearLayout>
+            android:padding="8dp"/>
     </HorizontalScrollView>
 </RelativeLayout>

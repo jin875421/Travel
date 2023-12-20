@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity"
     android:id="@+id/main_root"
-    android:background="@mipmap/bg2"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -21,9 +20,21 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tbl"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            app:tabTextAppearance="@style/CustomTabLayout"
             android:background="#ffffff"
-            android:layout_alignParentBottom="true"/>
+            app:tabIndicator="@null"
+            app:tabRippleColor="@android:color/white"
+            android:layout_alignParentBottom="true"
+            />
+        <Button
+            android:id="@+id/start"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"/>
+
+
 
 
     </RelativeLayout>
