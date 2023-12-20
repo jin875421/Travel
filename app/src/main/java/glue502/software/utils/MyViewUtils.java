@@ -20,7 +20,6 @@ public class MyViewUtils {
      * addFlags:添加了一个标志位 FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS，表示窗口将绘制系统栏的背景,让应用的布局能够覆盖状态栏和导航栏
      * setStatusBarColor:将状态栏的颜色设置为透明,状态栏将不再有实际的背景颜色，让应用的内容能够显示在状态栏的区域
      * setNavigationBarColor:将导航栏的颜色设置为透明，使得应用的内容能够显示在导航栏的区域
-     *
      * @param activity 传入调用该方法的Activity对象
      * @param view     需要设置的View
      */
