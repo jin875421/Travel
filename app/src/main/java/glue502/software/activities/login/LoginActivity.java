@@ -33,6 +33,7 @@ import glue502.software.R;
 import glue502.software.activities.MainActivity;
 import glue502.software.models.UserInfo;
 import glue502.software.models.LoginResult;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -106,10 +107,11 @@ public class LoginActivity extends AppCompatActivity {
         txtRegister=findViewById(R.id.txt_register);
         txtForget=findViewById(R.id.txt_forget);
         eyeImageView = findViewById(R.id.img_eye);
+        //添加沉浸式导航栏
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.img_background_login));
         eyeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("LoginActivity", "eyeImageView clicked");
                 changeImage();
             }
         });

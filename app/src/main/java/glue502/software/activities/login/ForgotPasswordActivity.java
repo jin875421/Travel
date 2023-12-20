@@ -25,6 +25,7 @@ import java.security.NoSuchAlgorithmException;
 import glue502.software.R;
 import glue502.software.models.UserInfo;
 import glue502.software.models.LoginResult;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -97,6 +98,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         edtEmailOrPhone=findViewById(R.id.edt_email_or_phone);
         btnChange=findViewById(R.id.btn_change);
         btnGainCode=findViewById(R.id.btn_gaincode);
+        //添加沉浸式导航栏
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.img_background_forgot));
         btnGainCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

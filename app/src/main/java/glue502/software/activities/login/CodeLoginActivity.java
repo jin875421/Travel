@@ -24,6 +24,7 @@ import glue502.software.R;
 import glue502.software.activities.MainActivity;
 import glue502.software.models.UserInfo;
 import glue502.software.models.LoginResult;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -108,6 +109,8 @@ public class CodeLoginActivity extends AppCompatActivity {
         btnLogin=findViewById(R.id.btn_login);
         txtAccount=findViewById(R.id.txt_account);
         txtRegister=findViewById(R.id.txt_register);
+        //添加沉浸式导航栏
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.img_background_code_login));
         txtAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

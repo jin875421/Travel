@@ -34,7 +34,6 @@ public class SplashActivity extends AppCompatActivity {
         LinearLayout rootView = findViewById(R.id.rootView);
         lottieAnimationView = findViewById(R.id.lottieAnimationView);
         animationFiles = new ArrayList<>();
-        animationFiles.add("camera.json");
         animationFiles.add("data.json");
         animationFiles.add("earth1.json");
         showRandomAnimation();

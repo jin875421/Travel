@@ -18,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import glue502.software.R;
 import glue502.software.models.UserInfo;
 import glue502.software.models.LoginResult;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -75,7 +76,8 @@ public class RegisterActivity extends AppCompatActivity {
         edtName=findViewById(R.id.edt_name);
         btnregister=findViewById(R.id.btn_register);
         edtPhoneNumber=findViewById(R.id.edt_phone_number);
-
+        //添加沉浸式导航栏
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.img_background_register));
         btnregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,7 +149,6 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }).start();
 
-//                    register(username,password);
                 }
             }
         });
