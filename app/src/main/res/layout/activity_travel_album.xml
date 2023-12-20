@@ -1,19 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.travelRecord.TravelAlbumActivity">
-    <RelativeLayout
-        android:layout_marginTop="30dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
+<!--    <RelativeLayout-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp">-->
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="30sp"-->
+<!--            android:text="我的相册"-->
+<!--            android:layout_centerHorizontal="true"/>-->
+<!--    </RelativeLayout>-->
+
+
+    <!--这是一个用于集成所有listView的下拉的控件，在这里要添加很多个GlideView-->
+    <com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <!-- 设置app:layout_isSticky="true"就可以使View吸顶 -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:text="我的相册"
-            android:layout_centerHorizontal="true"/>
-    </RelativeLayout>
-</RelativeLayout>
+            android:background="@android:color/white"
+            android:padding="10dp"
+            android:text="最近"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_isSticky="true" />
+
+        <GridView
+            android:id="@+id/gv_view1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="90dp"
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            android:text="一个月前"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_isSticky="true" />
+
+        <GridView
+            android:id="@+id/gv_view2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="90dp"
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            android:text="半年前"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_isSticky="true" />
+
+        <GridView
+            android:id="@+id/gv_view3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="90dp"
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            android:text="一年前"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_isSticky="true" />
+
+        <GridView
+            android:id="@+id/gv_view4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="90dp"
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" />
+
+
+
+    </com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout>
+
+
+</LinearLayout>

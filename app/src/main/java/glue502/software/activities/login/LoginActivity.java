@@ -51,19 +51,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edtPassword;
     private ImageView  eyeImageView;
     private String password;
-    private final int[] backgroundImages = {
-            R.drawable.login_bg001,
-            R.drawable.login_background2,
-            R.drawable.login_background3,
-            R.drawable.login_background4,
-            R.drawable.login_background5,
-            R.drawable.login_background6,
-            R.drawable.login_background7,
-            R.drawable.login_background8,
-            R.drawable.login_background9,
-            R.drawable.login_background13,
-            R.drawable.login_background19
-    };
     private String url="http://"+ip+"/travel/user/login";
     private Handler mHandler = new Handler() {
         @Override
@@ -109,6 +96,19 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     };
+    private final int[] backgroundImages = {
+            R.drawable.login_bg001,
+            R.drawable.login_background2,
+            R.drawable.login_background3,
+            R.drawable.login_background4,
+            R.drawable.login_background5,
+            R.drawable.login_background6,
+            R.drawable.login_background7,
+            R.drawable.login_background8,
+            R.drawable.login_background9,
+            R.drawable.login_background13,
+            R.drawable.login_background19
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,10 +120,9 @@ public class LoginActivity extends AppCompatActivity {
         txtRegister=findViewById(R.id.txt_register);
         txtForget=findViewById(R.id.txt_forget);
         eyeImageView = findViewById(R.id.img_eye);
-        setRandomBackground();
+//        setRandomBackground();
         //添加沉浸式导航栏
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.img_background_login));
-        setRandomBackground();
+        MyViewUtils.setISBarWithoutView(this);
         eyeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
