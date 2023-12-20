@@ -267,6 +267,7 @@ public class travelRecordActivity extends Activity {
                     }).start();
                 }
             }
+            //TODO 在这里要删除页面的content和照片
         });
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -716,7 +717,7 @@ public class travelRecordActivity extends Activity {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         imageView.setLayoutParams(imageParams);
-        imageView.setImageResource(R.drawable.add_image);
+        imageView.setImageResource(R.drawable.recommend_fm_btn_bg);
         imageView.setVisibility(View.VISIBLE); // 设置为可见
         imageView.setTag(i);
 

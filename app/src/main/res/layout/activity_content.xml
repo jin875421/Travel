@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
+    android:background="@color/cwn"
 
     tools:context=".activities.travelRecord.travelRecordActivity" >
 
@@ -41,21 +41,24 @@
             android:layout_height="wrap_content"
             android:isScrollContainer="true"
             android:orientation="vertical"
-            android:padding="10dip" >
+            android:background="@drawable/border_backgrounddjp"
+            android:padding="10dip"
+            >
 
             <LinearLayout
                 android:id="@+id/ll_one"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
-                android:background="#A9A9A9"
+                android:background= "@color/djpback"
                 android:orientation="vertical"
-                android:padding="5dip" >
+                android:padding="5dip"
+                >
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:background="#FFFFFFFF">
+                    android:background="#189DA8">
 
                     <LinearLayout
                         android:id="@+id/imageContainer"
