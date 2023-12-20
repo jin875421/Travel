@@ -44,6 +44,7 @@ import java.util.UUID;
 import glue502.software.R;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -76,6 +77,8 @@ public class PostEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_edit);
+        //沉浸式状态栏
+        MyViewUtils.setImmersiveStatusBar(this, findViewById(R.id.post_back_btn));
         initView();
         initData();
         setListener();

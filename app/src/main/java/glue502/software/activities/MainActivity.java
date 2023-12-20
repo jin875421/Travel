@@ -51,7 +51,7 @@ import glue502.software.utils.MyViewUtils;
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
-    public static final String ip = "10.7.89.94:8080";
+    public static final String ip = "10.7.89.69:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.start));
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView());
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
@@ -86,10 +86,8 @@ public class MainActivity extends AppCompatActivity {
         layoutParam1.height = screenWidth/5;
         buttoncontainer.setLayoutParams(layoutParam1);
         ViewGroup.LayoutParams layoutParams = start.getLayoutParams();
-        layoutParams.width = screenWidth/6;
-        layoutParams.height = screenWidth/6;
-        //设置水平居中
-
+        layoutParams.width = screenWidth/7;
+        layoutParams.height = screenWidth/7;
         start.setLayoutParams(layoutParams);
 
         start.setOnClickListener(new View.OnClickListener() {

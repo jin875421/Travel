@@ -103,7 +103,7 @@ public class TravelDetailAdapter extends BaseAdapter {
                             // 执行跳转至详情页面
                             Intent intent = new Intent(context, PlaceDetailActivity .class);
                             //传递travelRecord
-//                            intent.putExtra("travelRecord", travelRecords.get(i));
+                            intent.putExtra("travelRecord", travelRecords.get(i));
                             context.startActivity(intent);
                         }
                         break;

@@ -115,7 +115,7 @@ public class PostDisplayActivity extends AppCompatActivity {
         setListener();
         getCommentData();
         //添加沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.head));
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView());
         displayPost();
     }
     private void initData() {

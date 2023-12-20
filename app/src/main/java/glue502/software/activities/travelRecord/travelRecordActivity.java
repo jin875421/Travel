@@ -77,6 +77,7 @@ import glue502.software.activities.posts.PostDisplayActivity;
 import glue502.software.fragments.RecommendFragment;
 import glue502.software.models.UserInfo;
 import glue502.software.models.travelRecord;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -118,6 +119,7 @@ public class travelRecordActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView());
         // 检查是否已经授予了所需的权限
         Log.d("PostActivity", "onCreate() called");
         initCtrl();
@@ -126,10 +128,8 @@ public class travelRecordActivity extends Activity {
         userId = sharedPreferences.getString("userId","");
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
-        System.out.println(numberOfControls);
         // 如果之前有保存的控件数量，则重新创建控件
         if (numberOfControls > 0) {
-
             for (int i = numberOfControls-1; i > 0; i--) {
                 addContentWithTag(i);
             }
@@ -182,7 +182,7 @@ public class travelRecordActivity extends Activity {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
                             for (int j = numberOfControls; j >= 0; j--) {
-                                 List<File> fileList = new ArrayList<>();
+                                List<File> fileList = new ArrayList<>();
                                 List<String> path = new ArrayList<>();
                                 path = getListFromSharedPreferences(j);
                                 for (String URI : path) {
@@ -258,7 +258,6 @@ public class travelRecordActivity extends Activity {
                                         // 请求失败处理错误
                                     }
                                 } catch (Exception e) {
-
                                     e.printStackTrace();
                                 }
                                 uploadComplete();
