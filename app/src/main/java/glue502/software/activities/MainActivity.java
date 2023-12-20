@@ -51,7 +51,7 @@ import glue502.software.utils.MyViewUtils;
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
-    public static final String ip = "10.7.89.69:8080";
+    public static final String ip = "10.7.89.94:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
@@ -105,13 +105,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String phone = sharedPreferences.getString("userPhoneNumber", "");
         String email=sharedPreferences.getString("email", "");
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                // 设置状态栏透明
-//                MyViewUtils.setImmersiveStatusBar(MainActivity.this,findViewById(R.id.main_root));
-//            }
-//        }, 100);
         //初始化
         initpages();
         //实例化
