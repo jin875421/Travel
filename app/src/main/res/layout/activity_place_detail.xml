@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.travelRecord.PlaceDetailActivity"
+    tools:ignore="HardcodedText"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+        <ImageView
+            android:id="@+id/btn_back"
+            android:src="@drawable/back"
+            android:layout_alignParentLeft="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:text=""
+            android:textSize="20sp" />
+<!--        <ImageView-->
+<!--            android:id="@+id/popupmenu"-->
+<!--            android:layout_alignParentRight="true"-->
+<!--            android:src="@drawable/back"-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"/>-->
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/head"
+        android:id="@+id/view">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/post_image"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                />
+            <LinearLayout
+                android:id="@+id/index_dot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@+id/viewPager2"
+                app:layout_constraintEnd_toEndOf="@+id/viewPager2"
+                app:layout_constraintStart_toStartOf="parent"/>
+            <TextView
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:background="@drawable/background_frame_underline"/>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
+

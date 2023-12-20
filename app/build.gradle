@@ -19,7 +19,7 @@ android {
     }
 
     namespace 'glue502.software'
-    compileSdk 33
+    compileSdk 32
 
     defaultConfig {
         applicationId "glue502.software"

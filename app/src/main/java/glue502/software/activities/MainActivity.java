@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +16,10 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -38,21 +41,24 @@ import glue502.software.fragments.CommunityFragment;
 import glue502.software.fragments.FunctionFragment;
 import glue502.software.fragments.PersonalInformationFragment;
 import glue502.software.fragments.RecommendFragment;
+import glue502.software.utils.MyViewUtils;
 
 
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
-    public static final String ip = "192.168.198.91:8080";
+    public static final String ip = "10.7.89.69:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
     private boolean backPressedOnce = false;
-
+    private Button start;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //沉浸式状态栏
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.start));
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
@@ -65,6 +71,24 @@ public class MainActivity extends AppCompatActivity {
         new ClearGlideCacheTask().execute();
         tabLayout = findViewById(R.id.tbl);
         viewPager2 = findViewById(R.id.vp2);
+        start = findViewById(R.id.start);
+        //设置按钮大小，五分之一的屏幕宽度
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        ViewGroup.LayoutParams layoutParams = start.getLayoutParams();
+        layoutParams.height = screenWidth/5;
+        layoutParams.width = screenWidth/5;
+        start.setLayoutParams(layoutParams);
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, travelRecordActivity.class);
+                startActivity(intent);
+            }
+        });
+        //禁止viewpager2左右滑动
+        viewPager2.setUserInputEnabled(false);
         setViewPager2ScrollSensitivity(10);
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String phone = sharedPreferences.getString("userPhoneNumber", "");
@@ -125,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case 2:
                                 tab.setIcon(R.drawable.ic_add);
-
                                 tab.view.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -153,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         fragments = new ArrayList<>();
         fragments.add(new RecommendFragment());
         fragments.add(new CommunityFragment());
-        fragments.add(new Fragment());
+        fragments.add(new Add());
         fragments.add(new FunctionFragment());
         fragments.add(new PersonalInformationFragment());
     }

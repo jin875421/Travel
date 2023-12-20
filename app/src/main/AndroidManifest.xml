@@ -29,8 +29,20 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.travelRecord.PlaceDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.posts.PostEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.travelRecord.TravelDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.travelRecord.TravelReviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.map.AddLabelActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".activities.posts.RespondDetail"
             android:exported="false" />
@@ -39,9 +51,6 @@
             android:exported="false" />
         <activity
             android:name=".activities.personal.MineStarActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.CreateRecordActivity"
             android:exported="false" />
         <activity
             android:name=".activities.login.RegisterActivity"
@@ -69,17 +78,15 @@
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"
-            android:exported="false"/>
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
+            android:exported="false" /> <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
         <activity
             android:name=".activities.SplashActivity"
-            android:theme="@style/Theme.Design.NoActionBar"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Design.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -96,11 +103,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="tSbMf5hhwaxtgIE5g3Z0IeldzZ6IYQoN" />
-
-
     </application>
 
 </manifest>

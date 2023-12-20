@@ -8,7 +8,6 @@ public class TravelReview {
     private String travelId;
     private List<String> images;
     private String travelName;
-
     private Date date;
 
     public String getUserId() {

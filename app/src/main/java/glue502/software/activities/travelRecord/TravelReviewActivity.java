@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -19,6 +21,7 @@ import java.util.List;
 import glue502.software.R;
 import glue502.software.adapters.TravelReviewAdapter;
 import glue502.software.models.TravelReview;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -31,7 +34,9 @@ public class TravelReviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_review);
-        SharedPreferences sharedPreferences = getSharedPreferences("userId",MODE_PRIVATE);
+        //沉浸式状态栏
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.back));
+        SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId",MODE_PRIVATE);
         initview();
         setlistener();
         initData(sharedPreferences.getString("userId",""));
@@ -47,7 +52,7 @@ public class TravelReviewActivity extends AppCompatActivity {
             @Override
             public void run() {
                 OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url(url+"/showTravels?userId="+userId).build();
+                Request request = new Request.Builder().url(url+"/getReview?userId="+userId).build();
                 try {
                     //打开连接接收数据
                     Response response = client.newCall(request).execute();
@@ -65,24 +70,14 @@ public class TravelReviewActivity extends AppCompatActivity {
                                 travelReviewList.setAdapter(travelReviewAdapter);
                             });
                         }
-
                     }
-
-
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();
     }
     public void setlistener(){
-        travelReviewList.setOnItemClickListener((parent, view, position, id) -> {
-            TravelReviewAdapter travelReviewAdapter = (TravelReviewAdapter) parent.getAdapter();
-            TravelReview travelReview = (TravelReview) travelReviewAdapter.getItem(position);
-            //将travelReview数据传递到TravelReviewActivity中
-            Intent intent = new Intent(TravelReviewActivity.this,TravelDetailActivity.class);
-            intent.putExtra("travelReviewId",travelReview.getTravelId());
-            startActivity(intent);
-        });
+
     }
 }

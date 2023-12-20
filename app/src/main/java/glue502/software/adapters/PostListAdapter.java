@@ -91,7 +91,7 @@ public class PostListAdapter extends BaseAdapter {
             ImageView imageView = new ImageView(context);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPixel(110), convertDpToPixel(110));
-            layoutParams.setMargins(convertDpToPixel(4), 0, 0, 0); // 左边距为5dp
+            layoutParams.setMargins(convertDpToPixel(4), 0, 0, 0); // 左边距为4dp
             imageView.setLayoutParams(layoutParams);
             Glide.with(context)
                     .load(url + path)

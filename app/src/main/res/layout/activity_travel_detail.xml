@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:textSize="30sp"
-            android:text="标题"/>
+            />
     </RelativeLayout>
     <ListView
         android:id="@+id/list_view"

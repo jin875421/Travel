@@ -200,21 +200,6 @@ public class CommunityFragment extends Fragment {
                 }
             }
         });
-
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                swipeRefreshLayout.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        initData();
-//                        searchText.setText("");
-//                        //关闭刷新
-//                        swipeRefreshLayout.setRefreshing(false);
-//                    }
-//                },2000);
-//            }
-//        });
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
         refreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -240,9 +225,7 @@ public class CommunityFragment extends Fragment {
                 PostWithUserInfo clickItem = (PostWithUserInfo) postListAdapter.getItem(i);
                 Intent intent = new Intent(getActivity(), PostDisplayActivity.class);
                 intent.putExtra("postwithuserinfo", clickItem);
-                System.out.println(clickItem.getUserInfo().getAvatar());
                 startActivityForResult(intent,1);
-
             }
         });
 
