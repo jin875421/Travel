@@ -58,7 +58,6 @@ public class TravelDetailActivity extends AppCompatActivity {
                 try {
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
-                    System.out.println(responseData);
                     travelRecords = new Gson().fromJson(responseData,new TypeToken<List<travelRecord>>(){}.getType());
                     //打开ui线程
                     runOnUiThread(()->{

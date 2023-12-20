@@ -321,7 +321,6 @@ public class PersonalInformationFragment extends Fragment {
 
                 Gson gson=new Gson();
                 // 获取 avatarUrl 和 userNickname
-                System.out.println(responseData);
                 UserInfo userInfo = gson.fromJson(responseData,UserInfo.class);
                 String avatarUrl=userInfo.getAvatar();
                 String userName =userInfo.getUserName();
@@ -444,7 +443,6 @@ public class PersonalInformationFragment extends Fragment {
         if (userPhoneNumber.isEmpty() && email.isEmpty() && !isSameDay(lastReminderDate)) {
             // 提示绑定的逻辑
             showBindingReminderDialog();
-            System.out.println(userPhoneNumber+":"+email);
             // 更新上次提醒的日期为今天
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("lastReminderDate", getCurrentDate());

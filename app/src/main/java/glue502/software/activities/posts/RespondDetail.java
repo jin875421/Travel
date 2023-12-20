@@ -124,7 +124,6 @@ public class RespondDetail extends AppCompatActivity {
                             String userId = sharedPreferences.getString("userId","");
                             //UploadComment commentRespond = new UploadComment(id, userId, text, time, comment.getCommentId());
                             UploadComment commentRespond = new UploadComment(postId, userId, text, id, time, parentId);
-                            Log.v("commentRespond", "lzx上传回复的父Id" + parentId);
                             //okHttp
                             Gson gson = new Gson();
                             String json = gson.toJson(commentRespond);
@@ -264,7 +263,6 @@ public class RespondDetail extends AppCompatActivity {
         //获得封装数据
         Bundle bundle = intent.getBundleExtra("bundle");
         comment = (Comment) bundle.getSerializable("comment");
-        System.out.println("回复详情页面上的评论主体"+comment.toString());
         //获取评论回复所属帖子Id
         postId = comment.getPostId();
         //显示头像

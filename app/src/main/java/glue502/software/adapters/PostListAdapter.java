@@ -138,8 +138,7 @@ public class PostListAdapter extends BaseAdapter {
                     }
 
                 } catch (IOException e) {
-                    Log.e("NetworkError", "Error: " + e.getMessage());
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -170,8 +169,7 @@ public class PostListAdapter extends BaseAdapter {
                     }
 
                 } catch (IOException e) {
-                    Log.e("NetworkError", "Error: " + e.getMessage());
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();

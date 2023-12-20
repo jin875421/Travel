@@ -142,7 +142,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                 call.enqueue((new Callback() {
                     @Override
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                        Log.v("MainActivity", "lzx网络请求失败"+e.getMessage());
                     }
 
                     @Override
@@ -327,8 +326,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                                 Response response = client.newCall(request).execute();
 
                             } catch (IOException e) {
-                                Log.e("NetworkError", "Error: " + e.getMessage());
-                                throw new RuntimeException(e);
+                                e.printStackTrace();
                             }
                         }
                     }).start();
@@ -354,8 +352,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                                 Response response = client.newCall(request).execute();
 
                             } catch (IOException e) {
-                                Log.e("NetworkError", "Error: " + e.getMessage());
-                                throw new RuntimeException(e);
+                                e.printStackTrace();
                             }
                         }
                     }).start();
@@ -410,8 +407,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                                 Response response = client.newCall(request).execute();
 
                             } catch (IOException e) {
-                                Log.e("NetworkError", "Error: " + e.getMessage());
-                                throw new RuntimeException(e);
+                                e.printStackTrace();
                             }
                         }
                     }).start();
@@ -435,8 +431,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                             try {
                                 Response response = client.newCall(request).execute();
                             } catch (IOException e) {
-                                Log.e("NetworkError", "Error: " + e.getMessage());
-                                throw new RuntimeException(e);
+                                e.printStackTrace();
                             }
                         }
                     }).start();
@@ -561,7 +556,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                         //获取时间
                         Date date = new Date();
                         SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
-                        System.out.println(dateFormat.format(date));
                         String time = dateFormat.format(date);
                         //生成UUID
                         String commentRespondId = UUID.randomUUID().toString();
@@ -634,7 +628,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         commentListAdapter.setOnRespondClickListener(new CommentListAdapter.onRespondClickListener() {
             @Override
             public void onRespondClick(int i) {
-                Log.v("PostDisplayActivity", "lzx onRespondClick");
                 Intent intent = new Intent(PostDisplayActivity.this, RespondDetail.class);
                 Comment comment = commentList.get(i);
                 System.out.println(comment);
@@ -709,7 +702,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                                             Request request = new Request.Builder()
                                                    .url(url+"posts/deletePost?postId="+postId)
                                                    .build();
-                                            System.out.println(url+"posts/deletePost?postId="+postId);
                                             //开启线程发送请求
                                             new Thread(new Runnable() {
                                                 @Override
@@ -722,7 +714,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                                                         setResult(Activity.RESULT_OK, resultIntent); // 设置删除完成的结果码
                                                         finish(); // 关闭页面
                                                     } catch (IOException e) {
-                                                        throw new RuntimeException(e);
+                                                        e.printStackTrace();
                                                     }
                                                 }
                                             }).start();
@@ -736,7 +728,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                                     startActivity(intent);
                         break;
                     case R.id.cancel:
-                        System.out.println("取消");
+
                 }
                 return true;
             }

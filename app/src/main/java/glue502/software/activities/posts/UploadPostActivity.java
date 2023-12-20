@@ -90,7 +90,8 @@ public class UploadPostActivity extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+// 禁用按钮防止多次点击触发上传
+                upload.setEnabled(false);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -100,7 +101,6 @@ public class UploadPostActivity extends AppCompatActivity {
                         // id需从本地获取，待个人信息模块完成后补充实现
                         post.setuserId(userId);
                         Date currentTime = new Date();
-
                         // 定义日期时间格式
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -128,12 +128,10 @@ public class UploadPostActivity extends AppCompatActivity {
                                     int bytesRead;
                                     while ((bytesRead = inputStream.read(buffer))!=-1){
                                         byte[] actualBuffer = Arrays.copyOfRange(buffer, 0, bytesRead);
-
                                         builder.addFormDataPart("identifiers", identifier);
                                         builder.addFormDataPart("sequenceNumbers", String.valueOf(sequenceNumber));
                                         builder.addFormDataPart("totalChunks", String.valueOf(totalChunks));
                                         builder.addFormDataPart("images", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), actualBuffer));
-
                                         sequenceNumber++;
                                     }
 
@@ -160,9 +158,10 @@ public class UploadPostActivity extends AppCompatActivity {
                                 // 请求失败处理错误
                             }
                         } catch (Exception e) {
-
                             e.printStackTrace();
                         }
+                        //上传完成，重新启用
+                        upload.setEnabled(true);
                         uploadComplete();
                     }
                 }).start();
@@ -171,13 +170,11 @@ public class UploadPostActivity extends AppCompatActivity {
         // 循环遍历控件列表
         for (View control : viewList) {
             //绑定长按事件
-
             control.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     // 长按弹出删除选项
                         showDeleteDialog(view);
-
                     return false;
                 }
             });
@@ -329,8 +326,6 @@ public class UploadPostActivity extends AppCompatActivity {
                     int count = clipData.getItemCount();
                     for (int i = 0; i < count; i++) {
                         Uri selectedImage = clipData.getItemAt(i).getUri();
-                        //生成文件唯一标识
-                        String fileName = generateUniqueIdentifier();
                         File file = getFileFromUri(selectedImage);
                         //获取文件名
                         String fileName1 = file.getName();
@@ -339,8 +334,6 @@ public class UploadPostActivity extends AppCompatActivity {
                     }
                 } else if(data.getData() != null) {
                     Uri selectedImage = data.getData();
-                    //生成文件唯一标识
-                    String fileName = generateUniqueIdentifier();
                     File file = getFileFromUri(selectedImage);
                     //获取文件名
                     String fileName1 = file.getName();
@@ -378,7 +371,6 @@ public class UploadPostActivity extends AppCompatActivity {
         //给ImageView设置图片
         imageView.setImageURI(Uri.fromFile(file));
         fileList.add(file);
-
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 convertDpToPixel(150), // 宽度 150dp 转换为像素
                 convertDpToPixel(150) // 高度 150dp 转换为像素
@@ -396,7 +388,6 @@ public class UploadPostActivity extends AppCompatActivity {
     private int calculateTotalChunks(File file) {
         // 计算分片数的逻辑，根据文件大小和分片大小计算
         return (int) Math.ceil((double) file.length() / (1024 * 1024));
-
     }
     //通过uri获取文件
     private File getFileFromUri(Uri uri) {
@@ -423,7 +414,6 @@ public class UploadPostActivity extends AppCompatActivity {
                     }
                     outputStream.close();
                     inputStream.close();
-                    //给文件命名
 
                     return file;
                 }

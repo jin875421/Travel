@@ -108,9 +108,7 @@ public class MineStarActivity extends AppCompatActivity {
                 PostWithUserInfo clickItem = (PostWithUserInfo) postListAdapter.getItem(i);
                 Intent intent = new Intent(MineStarActivity.this, PostDisplayActivity.class);
                 intent.putExtra("postwithuserinfo", clickItem);
-                System.out.println(clickItem.getUserInfo().getAvatar());
                 startActivity(intent);
-
             }
         });
     }
