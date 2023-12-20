@@ -63,13 +63,14 @@
                 android:id="@+id/linear_customer_service"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/linear_setting"
                 android:gravity="center"
                 android:orientation="vertical">
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_support_agent_black_24"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/personal_headset"
 
                     />
                 <TextView
@@ -86,9 +87,9 @@
                 android:orientation="vertical"
                 android:layout_alignParentRight="true">
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_settings_black_24"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/personal_setting"
                     />
                 <TextView
                     android:layout_width="wrap_content"

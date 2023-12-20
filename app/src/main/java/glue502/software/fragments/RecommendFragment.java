@@ -11,26 +11,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.LinearLayout;
 
 import glue502.software.R;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
 public class RecommendFragment extends Fragment {
-    private Button createBtn;
-    private Button reviewBtn;
+    private LinearLayout rltlCreate;
+    private LinearLayout rltlFootprint;
+    private LinearLayout rltlPhoto;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recommend,container,false);
-        createBtn = view.findViewById(R.id.btn_Recording);
-        reviewBtn = view.findViewById(R.id.bottomRightButton);
-//        // 获取 CalendarView 对象
-//        CalendarView calendarView = view.findViewById(R.id.calendar_view);
-
-        // 设置最小日期和最大日期范围
-//        calendarView.setMinDate(minDateMillis); // minDateMillis为long类型的时间值表示最小日期
-//        calendarView.setMaxDate(maxDateMillis); // maxDateMillis为long类型的时间值表示最大日期
-
+        rltlCreate = view.findViewById(R.id.lrlt_create);
+        rltlFootprint = view.findViewById(R.id.lrlt_footprint);
+        rltlPhoto=view.findViewById(R.id.lrlt_photo);
         setlistener();
         date();
         return view;
@@ -43,14 +39,14 @@ public class RecommendFragment extends Fragment {
     }
 
     public void setlistener(){
-        createBtn.setOnClickListener(new View.OnClickListener() {
+        rltlCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), travelRecordActivity.class);
                 startActivity(intent);
             }
         });
-        reviewBtn.setOnClickListener(new View.OnClickListener() {
+        rltlFootprint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), TravelReviewActivity.class);
