@@ -183,7 +183,7 @@ public class CommunityFragment extends Fragment {
                                     }
                                 }
                             } catch (IOException e) {
-                                throw new RuntimeException(e);
+                                e.printStackTrace();
                             }
                         }
                     }).start();
@@ -196,7 +196,7 @@ public class CommunityFragment extends Fragment {
             @Override
             public void afterTextChanged(android.text.Editable s) {
                 if (s.toString().length()>0){
-                    //开启线程接收帖子数据
+
                 }
             }
         });

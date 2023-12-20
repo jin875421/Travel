@@ -14,6 +14,7 @@ import android.widget.CalendarView;
 import android.widget.LinearLayout;
 
 import glue502.software.R;
+import glue502.software.activities.travelRecord.TravelAlbumActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
 public class RecommendFragment extends Fragment {
@@ -50,6 +51,13 @@ public class RecommendFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), TravelReviewActivity.class);
+                startActivity(intent);
+            }
+        });
+        rltlPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), TravelAlbumActivity.class);
                 startActivity(intent);
             }
         });

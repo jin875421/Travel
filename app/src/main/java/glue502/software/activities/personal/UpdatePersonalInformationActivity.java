@@ -227,8 +227,6 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String responseData = response.body().string();
 
-
-
                 // 获取 avatarUrl 和 userNickname,sex
                 Gson gson=new Gson();
                 // 获取 avatarUrl 和 userNickname

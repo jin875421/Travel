@@ -125,7 +125,6 @@ public class TravelReviewAdapter extends BaseAdapter {
                 // 通过服务器地址设置图片
                 Glide.with(context).load(url + path).into(imageView);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(convertDpToPixel(130), convertDpToPixel(130));
-//                `
                 imageView.setLayoutParams(params);
                 imagecontainer.addView(imageView);
             }
