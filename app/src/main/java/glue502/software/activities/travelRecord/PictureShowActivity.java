@@ -3,6 +3,7 @@ package glue502.software.activities.travelRecord;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.GridView;
@@ -22,7 +23,8 @@ public class PictureShowActivity extends AppCompatActivity {
 
     GridView gvPictureShow;
     //把数据源中的照片都展示出来，为此要再写一个适配器
-    List<String> pictures = getIntent().getStringArrayListExtra("pictures");//这里报错了，显示空指针
+    Intent intent = getIntent();
+    List<String> pictures = intent.getStringArrayListExtra("pictures");//这里报错了，显示空指针
 
 
 //    SharedPreferences sharedPreferences = getSharedPreferences("Pictures", MODE_PRIVATE);
