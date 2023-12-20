@@ -10,6 +10,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 import glue502.software.R;
 import glue502.software.models.UserInfo;
@@ -41,6 +43,19 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private Button btnChange;
     private String password;
     private String againpassword;
+    private final int[] backgroundImages = {
+            R.drawable.login_bg001,
+            R.drawable.login_background2,
+            R.drawable.login_background3,
+            R.drawable.login_background4,
+            R.drawable.login_background5,
+            R.drawable.login_background6,
+            R.drawable.login_background7,
+            R.drawable.login_background8,
+            R.drawable.login_background9,
+            R.drawable.login_background13,
+            R.drawable.login_background19
+    };
     private String url="http://"+ip+"/travel/user/forgotPassword";
     private String urlEmail="http://"+ip+"/travel/user/sendEmail";
     private String urlPhone="http://"+ip+"/travel/user/sendSms";
@@ -100,6 +115,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         btnGainCode=findViewById(R.id.btn_gaincode);
         //添加沉浸式导航栏
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.img_background_forgot));
+        setRandomBackground();
         btnGainCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -268,5 +284,16 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         // 进行手机号合法性判断的逻辑，可以使用正则表达式等方式
         // 此处简单示例，你可以根据实际需要扩展
         return phoneNumber.matches("^1[3-9]\\d{9}$");
+    }
+    private void setRandomBackground() {
+        // 获取 ImageView 实例
+        ImageView imgBackgroundLogin = findViewById(R.id.img_background_forgot);
+
+        // 随机选择一个索引
+        Random random = new Random();
+        int randomIndex = random.nextInt(backgroundImages.length);
+
+        // 设置随机选择的背景图片
+        imgBackgroundLogin.setImageResource(backgroundImages[randomIndex]);
     }
 }

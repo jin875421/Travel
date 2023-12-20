@@ -11,6 +11,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Random;
 
 import glue502.software.R;
 import glue502.software.activities.MainActivity;
@@ -38,6 +40,19 @@ public class CodeLoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private TextView txtAccount;
     private TextView txtRegister;
+    private final int[] backgroundImages = {
+            R.drawable.login_bg001,
+            R.drawable.login_background2,
+            R.drawable.login_background3,
+            R.drawable.login_background4,
+            R.drawable.login_background5,
+            R.drawable.login_background6,
+            R.drawable.login_background7,
+            R.drawable.login_background8,
+            R.drawable.login_background9,
+            R.drawable.login_background13,
+            R.drawable.login_background19
+    };
     private String url="http://"+ip+"/travel/user/emailOrPhoneLogin";
     private String urlEmail="http://"+ip+"/travel/user/sendEmail";
     private String urlPhone="http://"+ip+"/travel/user/sendSms";
@@ -111,6 +126,7 @@ public class CodeLoginActivity extends AppCompatActivity {
         txtRegister=findViewById(R.id.txt_register);
         //添加沉浸式导航栏
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.img_background_code_login));
+        setRandomBackground();
         txtAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -268,5 +284,16 @@ public class CodeLoginActivity extends AppCompatActivity {
         // 进行手机号合法性判断的逻辑，可以使用正则表达式等方式
         // 此处简单示例，你可以根据实际需要扩展
         return phoneNumber.matches("^1[3-9]\\d{9}$");
+    }
+    private void setRandomBackground() {
+        // 获取 ImageView 实例
+        ImageView imgBackgroundLogin = findViewById(R.id.img_background_code_login);
+
+        // 随机选择一个索引
+        Random random = new Random();
+        int randomIndex = random.nextInt(backgroundImages.length);
+
+        // 设置随机选择的背景图片
+        imgBackgroundLogin.setImageResource(backgroundImages[randomIndex]);
     }
 }
