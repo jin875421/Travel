@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background2"
     android:id="@+id/layout_community"
     tools:context=".fragments.CommunityFragment"
     android:paddingTop="35dp">
@@ -30,7 +29,6 @@
    <com.scwang.smart.refresh.layout.SmartRefreshLayout
        android:id="@+id/refreshLayout"
        android:layout_below="@+id/community_top"
-       android:layout_marginHorizontal="6dp"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
       <com.scwang.smart.refresh.header.ClassicsHeader
@@ -53,8 +51,8 @@
        android:layout_height="65dp"
        android:layout_alignParentBottom="true"
        android:layout_alignParentEnd="true"
-       android:layout_marginBottom="25dp"
-       android:layout_marginEnd="25dp">
+       android:layout_marginBottom="15dp"
+       android:layout_marginEnd="15dp">
 
       <Button
           android:id="@+id/floating_button"

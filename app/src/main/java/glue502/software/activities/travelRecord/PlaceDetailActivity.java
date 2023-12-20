@@ -23,8 +23,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_detail);
         //沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.btn_back));
-
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView());
         initView();
         setlistener();
         initData();

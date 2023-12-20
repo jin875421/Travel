@@ -50,7 +50,7 @@
         android:id="@+id/btn_destroy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="注销"
+        android:text="退出登录"
         android:background="#AFDAE3"/>
 
 </LinearLayout>

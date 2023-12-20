@@ -55,7 +55,7 @@ public class UploadPostActivity extends AppCompatActivity {
     private  List<File> fileList = new ArrayList<>();
     private Post post = new Post();
     private EditText title, content;
-    private Button back, upload;
+    private ImageView back, upload;
     private String userId;
     private LinearLayout imgLinerLayout;
     private ImageView uploadImage;
@@ -69,7 +69,7 @@ public class UploadPostActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         userId = sharedPreferences.getString("userId","");
         initView();
-        MyViewUtils.setImmersiveStatusBar(this, imgLinerLayout);
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView());
         setListener();
     }
 
@@ -126,7 +126,6 @@ public class UploadPostActivity extends AppCompatActivity {
                                 try(InputStream inputStream = new FileInputStream(file)) {
                                     byte[] buffer = new byte[1024*1024];//设定分片大小
                                     int bytesRead;
-
                                     while ((bytesRead = inputStream.read(buffer))!=-1){
                                         byte[] actualBuffer = Arrays.copyOfRange(buffer, 0, bytesRead);
 

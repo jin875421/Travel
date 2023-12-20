@@ -71,7 +71,7 @@ public class CommunityFragment extends Fragment {
         status = sharedPreferences.getString("status","");
         setListener();
         initData();
-        //添加沉浸式导航栏
+        //添加沉浸式
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.layout_community));
 
         return view;
