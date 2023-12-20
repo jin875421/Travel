@@ -13,17 +13,21 @@ import android.widget.Button;
 import android.widget.CalendarView;
 
 import glue502.software.R;
+import glue502.software.activities.travelRecord.TravelAlbumActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
 public class RecommendFragment extends Fragment {
     private Button createBtn;
     private Button reviewBtn;
+    private Button topRightButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recommend,container,false);
         createBtn = view.findViewById(R.id.btn_Recording);
         reviewBtn = view.findViewById(R.id.bottomRightButton);
+        topRightButton = view.findViewById(R.id.topRightButton);
+
 //        // 获取 CalendarView 对象
 //        CalendarView calendarView = view.findViewById(R.id.calendar_view);
 
@@ -54,6 +58,13 @@ public class RecommendFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), TravelReviewActivity.class);
+                startActivity(intent);
+            }
+        });
+        topRightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), TravelAlbumActivity.class);
                 startActivity(intent);
             }
         });
