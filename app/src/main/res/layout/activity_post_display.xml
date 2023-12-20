@@ -28,7 +28,7 @@
         <ImageView
             android:id="@+id/popupmenu"
             android:layout_alignParentRight="true"
-            android:src="@drawable/back"
+            android:src="@mipmap/menu"
             android:layout_width="30dp"
             android:layout_height="30dp"/>
     </RelativeLayout>
@@ -47,9 +47,10 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/post_image"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="wrap_content"
                 />
             <LinearLayout
+                android:layout_marginTop="2dp"
                 android:id="@+id/index_dot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,9 +64,10 @@
                 android:layout_height="wrap_content">
                 <ImageView
                     android:id="@+id/avatar"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"/>
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"/>
                 <TextView
+                    android:paddingLeft="5dp"
                     android:id="@+id/user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"/>
@@ -76,13 +78,17 @@
                 android:id="@+id/post_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"/>
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
             <TextView
+                android:paddingTop="5dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:id="@+id/post_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:textSize="20dp"
                 android:background="@drawable/background_frame_underline"/>
             <TextView

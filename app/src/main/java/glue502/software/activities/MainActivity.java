@@ -20,9 +20,13 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -52,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private List<Fragment> fragments;
     private boolean backPressedOnce = false;
-    private Button start;
+    private ImageView start;
+    private RelativeLayout buttoncontainer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,15 +76,22 @@ public class MainActivity extends AppCompatActivity {
         new ClearGlideCacheTask().execute();
         tabLayout = findViewById(R.id.tbl);
         viewPager2 = findViewById(R.id.vp2);
+        buttoncontainer = findViewById(R.id.button_container);
         start = findViewById(R.id.start);
         //设置按钮大小，五分之一的屏幕宽度
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
+        ViewGroup.LayoutParams layoutParam1 = buttoncontainer.getLayoutParams();
+        layoutParam1.height = screenWidth/5;
+        buttoncontainer.setLayoutParams(layoutParam1);
         ViewGroup.LayoutParams layoutParams = start.getLayoutParams();
-        layoutParams.height = screenWidth/5;
-        layoutParams.width = screenWidth/5;
+        layoutParams.width = screenWidth/6;
+        layoutParams.height = screenWidth/6;
+        //设置水平居中
+
         start.setLayoutParams(layoutParams);
+
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

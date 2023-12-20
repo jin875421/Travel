@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.IOException;
@@ -80,7 +81,9 @@ public class PostListAdapter extends BaseAdapter {
 
         username.setText(userInfos.get(i).getUserName());
         RequestOptions requestOptions = new RequestOptions()
-                .transform(new CircleCrop());
+                .transform(new CircleCrop())
+                .placeholder(R.mipmap.loading);
+        ;
         Glide.with(context)
                 .load(url+ userInfos.get(i).getAvatar())
                 .apply(requestOptions)
@@ -90,11 +93,16 @@ public class PostListAdapter extends BaseAdapter {
         for (String path : post1.getPicturePath()) {
             ImageView imageView = new ImageView(context);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPixel(110), convertDpToPixel(110));
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPixel(117), convertDpToPixel(117));
             layoutParams.setMargins(convertDpToPixel(4), 0, 0, 0); // 左边距为4dp
+            RequestOptions requestOption = new RequestOptions();
+            requestOption.placeholder(R.mipmap.loading);
+            requestOption.circleCropTransform();
+            requestOption.transform(new RoundedCorners(30));
             imageView.setLayoutParams(layoutParams);
             Glide.with(context)
                     .load(url + path)
+                    .apply(requestOption)
                     .into(imageView);
             images.addView(imageView);
             x++;

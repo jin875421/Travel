@@ -8,28 +8,28 @@
     tools:context=".activities.posts.UploadPostActivity">
     <RelativeLayout
         android:layout_marginTop="30dp"
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <Button
+        <ImageView
             android:id="@+id/post_back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="返回"
+            android:layout_centerVertical="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="30dp"
-            android:text="图文"
             />
-        <Button
+        <ImageView
             android:id="@+id/post_upload_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="7dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/upload_post"
             android:layout_alignParentRight="true"
-            android:text="提交"
             />
 
     </RelativeLayout>
