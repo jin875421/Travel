@@ -87,7 +87,8 @@ public class PostEditActivity extends AppCompatActivity {
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //避免多次上传
+                upload.setEnabled(false);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -173,9 +174,10 @@ public class PostEditActivity extends AppCompatActivity {
                                 // 请求失败处理错误
                             }
                         } catch (Exception e) {
-
                             e.printStackTrace();
                         }
+                        //启用按钮
+                        upload.setEnabled(true);
                         uploadComplete();
                     }
                 }).start();
@@ -209,12 +211,12 @@ public class PostEditActivity extends AppCompatActivity {
     public void initData(){
         //获取之前页面传来的postWithUserInfo
         postWithUserInfo = (PostWithUserInfo) getIntent().getSerializableExtra("postwithuserinfo");
+        userId = postWithUserInfo.getUserInfo().getUserId();
         title.setText(postWithUserInfo.getPost().getPostTitle());
         content.setText(postWithUserInfo.getPost().getPostContent());
         imageList = postWithUserInfo.getPost().getPicturePath();
         //给scrollView添加图片
         for(int i = 0; i < postWithUserInfo.getPost().getPicturePath().size(); i++){
-            System.out.println(postWithUserInfo.getPost().getPicturePath().get(i));
             ImageView imageView = new ImageView(this);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     convertDpToPixel(150), // 宽度 150dp 转换为像素
@@ -270,13 +272,11 @@ public class PostEditActivity extends AppCompatActivity {
         // 循环遍历控件列表,给新增的图片添加点击事件
         for (View control : viewList) {
             //绑定长按事件
-
             control.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     // 长按弹出删除选项
                     showDeleteDialog(view);
-
                     return false;
                 }
             });
@@ -440,7 +440,6 @@ public class PostEditActivity extends AppCompatActivity {
                     for (int i = 0; i < count; i++) {
                         Uri selectedImage = clipData.getItemAt(i).getUri();
                         //生成文件唯一标识
-                        String fileName = generateUniqueIdentifier();
                         File file = getFileFromUri(selectedImage);
                         //获取文件名
                         String fileName1 = file.getName();
@@ -450,7 +449,6 @@ public class PostEditActivity extends AppCompatActivity {
                 } else if(data.getData() != null) {
                     Uri selectedImage = data.getData();
                     //生成文件唯一标识
-                    String fileName = generateUniqueIdentifier();
                     File file = getFileFromUri(selectedImage);
                     //获取文件名
                     String fileName1 = file.getName();
@@ -487,7 +485,6 @@ public class PostEditActivity extends AppCompatActivity {
         //给ImageView设置图片
         imageView.setImageURI(Uri.fromFile(file));
         fileList.add(file);
-
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 convertDpToPixel(150), // 宽度 150dp 转换为像素
                 convertDpToPixel(150) // 高度 150dp 转换为像素
@@ -529,8 +526,6 @@ public class PostEditActivity extends AppCompatActivity {
                     }
                     outputStream.close();
                     inputStream.close();
-                    //给文件命名
-
                     return file;
                 }
             }

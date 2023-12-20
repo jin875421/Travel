@@ -82,9 +82,6 @@ public class MainActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
-        ViewGroup.LayoutParams layoutParam1 = buttoncontainer.getLayoutParams();
-        layoutParam1.height = screenWidth/5;
-        buttoncontainer.setLayoutParams(layoutParam1);
         ViewGroup.LayoutParams layoutParams = start.getLayoutParams();
         layoutParams.width = screenWidth/7;
         layoutParams.height = screenWidth/7;
