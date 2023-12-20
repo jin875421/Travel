@@ -125,8 +125,8 @@ public class CodeLoginActivity extends AppCompatActivity {
         txtAccount=findViewById(R.id.txt_account);
         txtRegister=findViewById(R.id.txt_register);
         //添加沉浸式导航栏
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.img_background_code_login));
-        setRandomBackground();
+        MyViewUtils.setISBarWithoutView(this);
+//        setRandomBackground();
         txtAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,8 +141,6 @@ public class CodeLoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(CodeLoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
-                finish();
-                return;
             }
         });
         //获得验证码

@@ -93,8 +93,8 @@ public class RegisterActivity extends AppCompatActivity {
         btnregister=findViewById(R.id.btn_register);
         edtPhoneNumber=findViewById(R.id.edt_phone_number);
         //添加沉浸式导航栏
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.img_background_register));
-        setRandomBackground();
+        MyViewUtils.setISBarWithoutView(this);
+//        setRandomBackground();
         btnregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
