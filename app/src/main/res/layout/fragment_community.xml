@@ -5,14 +5,15 @@
     android:layout_height="match_parent"
     android:background="@drawable/background2"
     android:id="@+id/layout_community"
-    tools:context=".fragments.CommunityFragment">
+    tools:context=".fragments.CommunityFragment"
+    android:paddingTop="35dp">
 
    <LinearLayout
        android:id="@+id/community_top"
        android:layout_centerHorizontal="true"
        android:layout_width="350dp"
        android:layout_height="wrap_content"
-       android:layout_marginVertical="10dp">
+       android:layout_marginVertical="5dp">
       <EditText
           android:id="@+id/et_searchtext"
           android:layout_width="0dp"
