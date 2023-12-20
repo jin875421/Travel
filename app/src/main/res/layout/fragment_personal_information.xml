@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:layout_margin="15dp"
     android:background="#AFDAE3"
-    tools:context=".fragments.PersonalInformationFragment">
+    tools:context=".fragments.PersonalInformationFragment"
+    android:paddingTop="25dp">
 
     <LinearLayout
 

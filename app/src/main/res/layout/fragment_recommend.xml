@@ -6,91 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background1"
-    android:paddingTop="30dp">
-    <LinearLayout
-        android:id="@+id/containerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:orientation="vertical"
-        android:background="@drawable/border_background"
-        android:gravity="center_horizontal">
+    android:paddingTop="25dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:orientation="horizontal"
-           >
-        <!-- 时间 -->
-        <RelativeLayout
-            android:id="@+id/time"
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:gravity="center"
-            android:layout_margin="25dp"
-
-            >
-
-            <TextClock
-                android:id="@+id/textClockTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="50dp"
-                android:format24Hour="kk:mm"
-                tools:ignore="MissingConstraints" />
-        </RelativeLayout>
-            <View
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:background="#DFDFDF"/>
-        <!-- 星期 -->
-        <RelativeLayout
-            android:id="@+id/week"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:gravity="center">
-
-            <TextClock
-                android:id="@+id/textClockWeekday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="30dp"
-                android:format24Hour="EEEE"
-                tools:ignore="MissingConstraints" />
-        </RelativeLayout>
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#DFDFDF"/>
-            <!-- 今日日期 -->
-            <RelativeLayout
-                android:id="@+id/date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-
-                >
-
-                <TextClock
-                    android:id="@+id/textClockDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="40dp"
-                    android:format24Hour="MMMM d, yyyy"
-                    tools:ignore="MissingConstraints" />
-            </RelativeLayout>
-    </LinearLayout>
 
     <!-- 大按钮 -->
     <RelativeLayout
         android:id="@+id/btn_group_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/containerLayout">
+        >
 
         <!-- 右上角按钮 -->
         <Button
