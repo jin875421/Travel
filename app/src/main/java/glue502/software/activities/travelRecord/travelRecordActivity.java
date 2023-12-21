@@ -85,7 +85,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class travelRecordActivity extends Activity {
-    private String url = "http://"+ip+"/travel/posts/upload";
+    private String url = "http://"+ip+"/travel/travel/createTravelRecoed";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
     private UserInfo  userInfo= new UserInfo();
     private String userId ;
@@ -202,12 +202,13 @@ public class travelRecordActivity extends Activity {
                             int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
                             for (int j = numberOfControls-1; j >= 0; j--) {
                                  List<File> fileList = new ArrayList<>();
-                               List<List<String>> list = new ArrayList<>();
+                               List<List<String>> list = getListFromSharedPreferences();
                                List<String> path  = list.get(j);
                                 for (String URI : path) {
                                     try {
                                         FileInputStream localStream =openFileInput(generateIdentifierFromUri(URI));
                                         Bitmap bitmap = BitmapFactory.decodeStream(localStream);
+                                        System.out.println(bitmap);
                                         savefile(fileList,bitmap);
                                     } catch (FileNotFoundException e) {
                                         e.printStackTrace();
@@ -426,7 +427,7 @@ public class travelRecordActivity extends Activity {
     //通过uri获取文件
     private File getFileFromBitmap(Bitmap bitmap) {
         try {
-            String displayName = "image_file.png"; // 设置文件名（可以根据需要修改）
+            String displayName = bitmap+".png"; // 设置文件名（可以根据需要修改）
             File file = new File(getCacheDir(), displayName);
             FileOutputStream outputStream = new FileOutputStream(file);
 
@@ -675,7 +676,6 @@ public class travelRecordActivity extends Activity {
                                 saveListToSharedPreferences(path, c);
                                 // 用户确认删除的处理逻辑，可以在这里执行删除操作
                                 innerLayout.removeView(v);
-
                             }
 
                             @Override
@@ -738,7 +738,6 @@ public class travelRecordActivity extends Activity {
                             saveListToSharedPreferences(path, a);
                             innerLayout.removeView(v);
                         }
-
                         @Override
                         public void onCancelDelete() {
                         }
@@ -769,6 +768,7 @@ public class travelRecordActivity extends Activity {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setBackgroundResource(R.drawable.border_backgrounddjp);
         layout.setLayoutParams(layoutParams);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -1029,7 +1029,7 @@ public class travelRecordActivity extends Activity {
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             layout.setLayoutParams(layoutParams);
             layout.setOrientation(LinearLayout.VERTICAL);
-            layout.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            layout.setBackgroundResource(R.drawable.border_backgrounddjp);
             layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
             layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
 //TODO 以下是图片的新加
@@ -1427,6 +1427,20 @@ public class travelRecordActivity extends Activity {
                         }
                 )
                 .show();
+    }
+    private static String convertFileToBinaryString(File file) throws IOException {
+        StringBuilder binaryContent = new StringBuilder();
+        FileInputStream fileInputStream = new FileInputStream(file);
+        int byteRead;
+
+        while ((byteRead = fileInputStream.read()) != -1) {
+            // 将字节转换为8位二进制字符串并追加到StringBuilder中
+            String binary = String.format("%8s", Integer.toBinaryString(byteRead)).replace(' ', '0');
+            binaryContent.append(binary);
+        }
+
+        fileInputStream.close();
+        return binaryContent.toString();
     }
     private String generateUUID() {
         return UUID.randomUUID().toString();
