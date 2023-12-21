@@ -72,7 +72,7 @@ public class CommunityFragment extends Fragment {
         setListener();
         initData();
         //添加沉浸式
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.layout_community));
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.layout_community),false);
 
         return view;
 

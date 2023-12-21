@@ -3,9 +3,12 @@ package glue502.software.activities;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.app.StatusBarManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -38,7 +41,7 @@ public class SplashActivity extends AppCompatActivity {
         animationFiles.add("earth1.json");
         showRandomAnimation();
         //添加沉浸式导航栏
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.rootView));
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.rootView),false);
         // 添加动画监听器
         lottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
             @Override
@@ -108,5 +111,7 @@ public class SplashActivity extends AppCompatActivity {
         // 启动透明度渐变动画
         fadeOut.start();
     }
+    public void setStatusBarTranslucent(){
 
+    }
 }

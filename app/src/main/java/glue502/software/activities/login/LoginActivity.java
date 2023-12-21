@@ -121,8 +121,10 @@ public class LoginActivity extends AppCompatActivity {
         txtForget=findViewById(R.id.txt_forget);
         eyeImageView = findViewById(R.id.img_eye);
 //        setRandomBackground();
-        //添加沉浸式导航栏
-        MyViewUtils.setISBarWithoutView(this);
+//        //添加沉浸式导航栏
+        MyViewUtils.setISBarWithoutView(this,true);
+
+
         eyeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

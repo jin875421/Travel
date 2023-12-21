@@ -125,7 +125,7 @@ public class CodeLoginActivity extends AppCompatActivity {
         txtAccount=findViewById(R.id.txt_account);
         txtRegister=findViewById(R.id.txt_register);
         //添加沉浸式导航栏
-        MyViewUtils.setISBarWithoutView(this);
+        MyViewUtils.setISBarWithoutView(this,true);
 //        setRandomBackground();
         txtAccount.setOnClickListener(new View.OnClickListener() {
             @Override

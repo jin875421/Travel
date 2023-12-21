@@ -26,7 +26,7 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView());
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
         btnDestroy=findViewById(R.id.btn_destroy);
         imgBcak=findViewById(R.id.img_back);
         rltlAccount=findViewById(R.id.rltl_account);

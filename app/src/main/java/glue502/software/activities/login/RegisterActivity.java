@@ -93,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnregister=findViewById(R.id.btn_register);
         edtPhoneNumber=findViewById(R.id.edt_phone_number);
         //添加沉浸式导航栏
-        MyViewUtils.setISBarWithoutView(this);
+        MyViewUtils.setISBarWithoutView(this,true);
 //        setRandomBackground();
         btnregister.setOnClickListener(new View.OnClickListener() {
             @Override
