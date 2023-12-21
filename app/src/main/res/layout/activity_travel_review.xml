@@ -25,6 +25,7 @@
             android:textSize="30dp"
             android:text="旅游回顾"
             />
+
     </RelativeLayout>
     <ListView
         android:id="@+id/travel_review"

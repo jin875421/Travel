@@ -3,22 +3,32 @@ package glue502.software.activities.travelRecord;
 import static glue502.software.activities.MainActivity.ip;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuPopupHelper;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.posts.PostDisplayActivity;
+import glue502.software.activities.posts.PostEditActivity;
 import glue502.software.adapters.TravelReviewAdapter;
 import glue502.software.models.TravelReview;
 import glue502.software.utils.MyViewUtils;
@@ -29,7 +39,9 @@ import okhttp3.Response;
 public class TravelReviewActivity extends AppCompatActivity {
     private ListView travelReviewList;
     private ImageView back;
+
     private String url = "http://"+ip+"/travel/travel";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +55,7 @@ public class TravelReviewActivity extends AppCompatActivity {
     }
     private void initview(){
         travelReviewList = findViewById(R.id.travel_review);
+
         back = findViewById(R.id.back);
         back.setOnClickListener(v -> finish());
     }
@@ -79,5 +92,7 @@ public class TravelReviewActivity extends AppCompatActivity {
     }
     public void setlistener(){
 
+
     }
+
 }
