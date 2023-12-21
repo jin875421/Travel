@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cwn"
+    android:background="@drawable/gradient_background"
 
     tools:context=".activities.travelRecord.travelRecordActivity" >
 
@@ -81,7 +81,7 @@
                     android:id="@+id/et_content1"
                     android:layout_width="match_parent"
                     android:layout_height="25dip"
-                    android:background="#FFFFFFFF"
+                    android:background="#00FFFFFF"
                     android:gravity="left"
                     android:inputType="textMultiLine"
                     android:paddingLeft="5dip"
@@ -94,7 +94,7 @@
                         android:id="@+id/et_content2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#FFFFFFFF"
+                        android:background="#00FFFFFF"
                         android:gravity="left"
                         android:inputType="textMultiLine"
                         android:paddingLeft="5dip"
