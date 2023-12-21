@@ -2,6 +2,7 @@ package glue502.software.utils;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,7 +24,7 @@ public class MyViewUtils {
      * @param activity 传入调用该方法的Activity对象
      * @param view     需要设置的View
      */
-    public static void setImmersiveStatusBar(Activity activity, View view) {
+    public static void setImmersiveStatusBar(Activity activity, View view, boolean isDark) {
         Window window = activity.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                 | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -46,9 +47,12 @@ public class MyViewUtils {
                     view.getPaddingBottom()
             );
         }
+        if(isDark){
+            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏图标和文字颜色为暗色
+        }
     }
 
-    public static void setISBarWithoutView(Activity activity) {
+    public static void setISBarWithoutView(Activity activity,boolean isDark) {
         Window window = activity.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                 | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -58,5 +62,8 @@ public class MyViewUtils {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
         window.setNavigationBarColor(Color.TRANSPARENT);
+        if(isDark){
+            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//实现状态栏图标和文字颜色为暗色
+        }
     }
 }

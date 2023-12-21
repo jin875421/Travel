@@ -119,7 +119,7 @@ public class travelRecordActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
-        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView());
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(),false);
         // 检查是否已经授予了所需的权限
         Log.d("PostActivity", "onCreate() called");
         initCtrl();

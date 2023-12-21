@@ -114,7 +114,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         btnChange=findViewById(R.id.btn_change);
         btnGainCode=findViewById(R.id.btn_gaincode);
         //添加沉浸式导航栏
-        MyViewUtils.setISBarWithoutView(this);
+        MyViewUtils.setISBarWithoutView(this,true);
 //        setRandomBackground();
         btnGainCode.setOnClickListener(new View.OnClickListener() {
             @Override

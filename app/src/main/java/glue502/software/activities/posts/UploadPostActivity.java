@@ -69,7 +69,7 @@ public class UploadPostActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         userId = sharedPreferences.getString("userId","");
         initView();
-        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView());
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(),false);
         setListener();
     }
 

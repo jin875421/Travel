@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
         animationFiles.add("earth1.json");
         showRandomAnimation();
         //添加沉浸式导航栏
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.rootView));
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.rootView),false);
         // 添加动画监听器
         lottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
             @Override
