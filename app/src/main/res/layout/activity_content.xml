@@ -41,7 +41,6 @@
             android:layout_height="wrap_content"
             android:isScrollContainer="true"
             android:orientation="vertical"
-            android:background="@drawable/border_backgrounddjp"
             android:padding="10dip"
             >
 
@@ -50,15 +49,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
-                android:background= "@color/djpback"
                 android:orientation="vertical"
+                android:background="@drawable/border_backgrounddjp"
                 android:padding="5dip"
                 >
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:background="#189DA8">
+                    >
 
                     <LinearLayout
                         android:id="@+id/imageContainer"
@@ -74,11 +73,7 @@
                             android:layout_gravity="center_vertical"
                             android:numColumns="3" />
 
-                        <ImageView
-                            android:id="@+id/input_image"
-                            android:layout_width="152dp"
-                            android:layout_height="150dp"
-                            android:src="@drawable/add_image" />
+
                     </LinearLayout>
 
                 </HorizontalScrollView>
@@ -119,8 +114,33 @@
                         android:id="@+id/ibn_add1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentStart="true"
                         android:background="@drawable/ic_add" />
+
+                    <ImageButton
+                        android:id="@+id/ibn_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/ibn_add1"
+                        android:layout_marginStart="20dp"
+                        android:background="@drawable/ic_delete" />
+
+                    <ImageButton
+                        android:id="@+id/ibn_photoAdd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/ibn_delete"
+                        android:layout_marginStart="20dp"
+                        android:background="@drawable/cameraline" />
+
+                    <ImageButton
+                        android:id="@+id/ibn_PhotoAlbum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/ibn_photoAdd"
+                        android:layout_marginStart="20dp"
+                        android:background="@drawable/imageadd" />
+
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
