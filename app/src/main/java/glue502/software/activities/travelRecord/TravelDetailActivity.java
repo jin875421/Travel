@@ -36,7 +36,7 @@ public class TravelDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_detail);
         //沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.btn_back));
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),false);
         //获取上页面传过来的travelId
         travelId = getIntent().getStringExtra("travelId");
         initView();
@@ -58,7 +58,6 @@ public class TravelDetailActivity extends AppCompatActivity {
                 try {
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
-                    System.out.println(responseData);
                     travelRecords = new Gson().fromJson(responseData,new TypeToken<List<travelRecord>>(){}.getType());
                     //打开ui线程
                     runOnUiThread(()->{
@@ -74,10 +73,5 @@ public class TravelDetailActivity extends AppCompatActivity {
     }
     public void setlistener(){
         back.setOnClickListener(v -> finish());
-        travelRecordList.setOnItemClickListener((parent, view, position, id) -> {
-            travelRecord travelRecord1 = travelRecords.get(position);
-            //TODO 跳转详情页面
-
-        });
     }
 }

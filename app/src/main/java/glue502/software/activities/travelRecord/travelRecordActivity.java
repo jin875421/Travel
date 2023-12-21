@@ -77,6 +77,7 @@ import glue502.software.activities.posts.PostDisplayActivity;
 import glue502.software.fragments.RecommendFragment;
 import glue502.software.models.UserInfo;
 import glue502.software.models.travelRecord;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -117,6 +118,7 @@ public class travelRecordActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(),false);
         // 检查是否已经授予了所需的权限
         Log.d("PostActivity", "onCreate() called");
         initCtrl();
@@ -728,7 +730,6 @@ public class travelRecordActivity extends Activity {
                     showDeleteDialog(new DeleteConfirmationListener() {
                         @Override
                         public void onConfirmDelete() {
-                            loadSave();
                             // 用户确认删除的处理逻辑，可以在这里执行删除操作
                             int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
                             int a = (int)innerLayout.getTag();

@@ -9,29 +9,24 @@
     android:orientation="vertical">
     <RelativeLayout
         android:id="@+id/head"
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true">
         <ImageView
             android:id="@+id/btn_back"
             android:src="@drawable/back"
-            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_width="30dp"
             android:layout_height="30dp" />
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="10dp"
             android:text=""
             android:textSize="20sp" />
-<!--        <ImageView-->
-<!--            android:id="@+id/popupmenu"-->
-<!--            android:layout_alignParentRight="true"-->
-<!--            android:src="@drawable/back"-->
-<!--            android:layout_width="30dp"-->
-<!--            android:layout_height="30dp"/>-->
     </RelativeLayout>
 
     <ScrollView
@@ -47,7 +42,7 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/post_image"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="wrap_content"
                 />
             <LinearLayout
                 android:id="@+id/index_dot"

@@ -65,7 +65,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upadte_person_information);
-        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView());
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
         edtName=findViewById(R.id.edt_name);
         txtSave=findViewById(R.id.txt_save);
         imgBcak=findViewById(R.id.img_back);
@@ -227,8 +227,6 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String responseData = response.body().string();
 
-
-
                 // 获取 avatarUrl 和 userNickname,sex
                 Gson gson=new Gson();
                 // 获取 avatarUrl 和 userNickname
@@ -248,7 +246,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
                         if (avatarUrl != null && !avatarUrl.isEmpty()) {
                             Glide.with(getApplicationContext())
                                     .load(urlLoadImage + avatarUrl)
-                                    .placeholder(R.drawable.ic_launcher_background)  // 设置占位图
+                                    .placeholder(R.drawable.headimg)  // 设置占位图
                                     .apply(requestOptions)// 设置签名
                                     .into(imgAvatar);
 
@@ -261,7 +259,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
                             // 处理返回的不是有效地址的情况
                             // 可以设置默认头像或给用户提示
                             Glide.with(getApplicationContext())
-                                    .load(R.drawable.ic_launcher_background)
+                                    .load(R.drawable.headimg)
                                     .apply(requestOptions)
                                     .into(imgAvatar);
 

@@ -16,10 +16,17 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -38,6 +45,7 @@ import glue502.software.fragments.CommunityFragment;
 import glue502.software.fragments.FunctionFragment;
 import glue502.software.fragments.PersonalInformationFragment;
 import glue502.software.fragments.RecommendFragment;
+import glue502.software.utils.MyViewUtils;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -48,11 +56,14 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private List<Fragment> fragments;
     private boolean backPressedOnce = false;
-
+    private ImageView start;
+    private RelativeLayout buttoncontainer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //沉浸式状态栏
+        MyViewUtils.setISBarWithoutView(this,false);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
@@ -65,17 +76,30 @@ public class MainActivity extends AppCompatActivity {
         new ClearGlideCacheTask().execute();
         tabLayout = findViewById(R.id.tbl);
         viewPager2 = findViewById(R.id.vp2);
+        buttoncontainer = findViewById(R.id.button_container);
+        start = findViewById(R.id.start);
+        //设置按钮大小，五分之一的屏幕宽度
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
+        ViewGroup.LayoutParams layoutParams = start.getLayoutParams();
+        layoutParams.width = screenWidth/7;
+        layoutParams.height = screenWidth/7;
+        start.setLayoutParams(layoutParams);
+
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, travelRecordActivity.class);
+                startActivity(intent);
+            }
+        });
+        //禁止viewpager2左右滑动
+        viewPager2.setUserInputEnabled(false);
         setViewPager2ScrollSensitivity(10);
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String phone = sharedPreferences.getString("userPhoneNumber", "");
         String email=sharedPreferences.getString("email", "");
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                // 设置状态栏透明
-//                MyViewUtils.setImmersiveStatusBar(MainActivity.this,findViewById(R.id.main_root));
-//            }
-//        }, 100);
         //初始化
         initpages();
         //实例化

@@ -42,7 +42,7 @@ public class MineStarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mine_star);
-        MyViewUtils.setImmersiveStatusBar(this, postList);
+        MyViewUtils.setImmersiveStatusBar(this, postList,false);
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         userId = sharedPreferences.getString("userId","");
         initView();
@@ -108,9 +108,7 @@ public class MineStarActivity extends AppCompatActivity {
                 PostWithUserInfo clickItem = (PostWithUserInfo) postListAdapter.getItem(i);
                 Intent intent = new Intent(MineStarActivity.this, PostDisplayActivity.class);
                 intent.putExtra("postwithuserinfo", clickItem);
-                System.out.println(clickItem.getUserInfo().getAvatar());
                 startActivity(intent);
-
             }
         });
     }

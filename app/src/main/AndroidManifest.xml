@@ -31,6 +31,15 @@
         <activity android:name=".activities.travelRecord.SearchActivity"
             android:exported="false"/>
         <activity
+            android:name=".activities.travelRecord.TravelPicturesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.personal.MyPostActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.travelRecord.TravelAlbumActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.travelRecord.PlaceDetailActivity"
             android:exported="false" />
         <activity

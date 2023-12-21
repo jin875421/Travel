@@ -131,7 +131,7 @@ public class PersonalInformationFragment extends Fragment {
             RequestOptions requestOptions = new RequestOptions()
                     .transform(new CircleCrop());
             Glide.with(requireContext())
-                    .load(R.drawable.ic_launcher_background )
+                    .load(R.drawable.headimg )
                     .apply(requestOptions)// 设置签名
                     .into(imgAvatar);
         }else{
@@ -321,7 +321,6 @@ public class PersonalInformationFragment extends Fragment {
 
                 Gson gson=new Gson();
                 // 获取 avatarUrl 和 userNickname
-                System.out.println(responseData);
                 UserInfo userInfo = gson.fromJson(responseData,UserInfo.class);
                 String avatarUrl=userInfo.getAvatar();
                 String userName =userInfo.getUserName();
@@ -338,7 +337,7 @@ public class PersonalInformationFragment extends Fragment {
                             RequestOptions requestOptions = new RequestOptions()
                                     .transform(new CircleCrop());
                             Glide.with(requireContext())
-                                    .load(R.drawable.ic_launcher_background)
+                                    .load(R.drawable.headimg)
                                     .apply(requestOptions)
                                     .into(imgAvatar);
                         }
@@ -371,7 +370,7 @@ public class PersonalInformationFragment extends Fragment {
                     .load(urlLoadImage + avatarUrl)
                     .skipMemoryCache(false)  //允许内存缓存
                     .diskCacheStrategy(DiskCacheStrategy.ALL)  // 使用磁盘缓存
-                    .placeholder(R.drawable.ic_launcher_background)  // 设置占位图
+                    .placeholder(R.drawable.headimg)  // 设置占位图
                     .apply(requestOptions)
                     .signature(new ObjectKey(userId))  // 设置签名
                     .into(imgAvatar);
@@ -387,7 +386,7 @@ public class PersonalInformationFragment extends Fragment {
                     .load(urlLoadImage + avatarUrl)
                     .skipMemoryCache(true)  //允许内存缓存
                     .diskCacheStrategy(DiskCacheStrategy.NONE)  // 不使用磁盘缓存
-                    .placeholder(R.drawable.ic_launcher_background)  // 设置占位图
+                    .placeholder(R.drawable.headimg)  // 设置占位图
                     .apply(requestOptions)
                     .signature(new ObjectKey(userId))  // 设置签名
                     .into(imgAvatar);
@@ -416,7 +415,7 @@ public class PersonalInformationFragment extends Fragment {
                     RequestOptions requestOptions = new RequestOptions()
                             .transform(new CircleCrop());
                     Glide.with(requireContext())
-                            .load(R.drawable.ic_launcher_background )
+                            .load(R.drawable.headimg )
                             .apply(requestOptions)// 设置签名
                             .into(imgAvatar);
                 }else{
@@ -444,7 +443,6 @@ public class PersonalInformationFragment extends Fragment {
         if (userPhoneNumber.isEmpty() && email.isEmpty() && !isSameDay(lastReminderDate)) {
             // 提示绑定的逻辑
             showBindingReminderDialog();
-            System.out.println(userPhoneNumber+":"+email);
             // 更新上次提醒的日期为今天
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("lastReminderDate", getCurrentDate());

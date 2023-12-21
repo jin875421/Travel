@@ -107,7 +107,7 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
                                         @Override
                                         public void onLoadViewFinish(View view) {
                                             TextView tv = view.findViewById(R.id.big_img_tv);
-                                            tv.setText("我是猫不是狗");
+                                            tv.setText("");
                                         }
                                     })
                             .show();

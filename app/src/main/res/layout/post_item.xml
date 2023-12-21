@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="@xml/post_layout"
-        android:layout_marginBottom="4dp">
+        android:background="@color/white"
+        android:layout_marginBottom="3dp">
         <!-- 头像和用户名 -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +44,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp" />
 
         <!-- 内容预览 -->
         <TextView
@@ -70,11 +70,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:layout_alignParentRight="true"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@mipmap/like"/>
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@mipmap/like2"/>
                 <TextView
+                    android:paddingRight="10dp"
                     android:id="@+id/like_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -82,8 +82,8 @@
                     android:text="  "/>
                 <ImageView
                     android:layout_alignLeft="@+id/likes"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@mipmap/comment"/>
                 <TextView
                     android:id="@+id/comment_count"

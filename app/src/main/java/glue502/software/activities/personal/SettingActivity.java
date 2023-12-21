@@ -26,7 +26,7 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView());
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
         btnDestroy=findViewById(R.id.btn_destroy);
         imgBcak=findViewById(R.id.img_back);
         rltlAccount=findViewById(R.id.rltl_account);
@@ -53,14 +53,14 @@ public class SettingActivity extends AppCompatActivity {
     }
     private void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("确认注销");
-        builder.setMessage("确定要注销登录吗？");
+        builder.setTitle("退出登录");
+        builder.setMessage("确定要退出登录吗？");
 
         builder.setPositiveButton("确认", (dialog, which) -> {
             // 清除SharedPreferences中的用户信息
             clearSharedPreferences();
             // 提示注销成功
-            Toast.makeText(SettingActivity.this, "已注销", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SettingActivity.this, "已退出", Toast.LENGTH_SHORT).show();
 
         });
 
