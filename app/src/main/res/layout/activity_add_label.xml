@@ -9,7 +9,7 @@
     tools:context=".activities.map.AddLabelActivity">
 
     <com.baidu.mapapi.map.MapView
-        android:id="@+id/bmapView"
+        android:id="@+id/add_label_bmapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

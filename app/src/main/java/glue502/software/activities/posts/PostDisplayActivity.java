@@ -1,5 +1,6 @@
 package glue502.software.activities.posts;
 
+
 import static glue502.software.activities.MainActivity.ip;
 
 import androidx.annotation.NonNull;
@@ -446,6 +447,98 @@ public class PostDisplayActivity extends AppCompatActivity {
                 finish();
             }
         });
+        chatInputEt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (status==""){
+                            // 创建AlertDialog构建器
+                            AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
+                            builder.setTitle("账号未登录！")
+                                    .setMessage("是否前往登录账号")
+                                    .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // 点击“确定”按钮后的操作
+                                            Intent intent = new Intent(PostDisplayActivity.this, LoginActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    })
+                                    .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // 点击“取消”按钮后的操作
+                                            dialog.dismiss(); // 关闭对话框
+                                        }
+                                    });
+
+                            // 创建并显示对话框
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+
+                        } else {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //生成评论实体comment
+                                    String text = chatInputEt.getText().toString();;
+                                    String id = UUID.randomUUID().toString();
+                                    Date date = new Date();
+                                    SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
+                                    String time = dateFormat.format(date);
+                                    UploadComment uploadComment = new UploadComment(postId,
+                                            userId,
+                                            text,
+                                            id,
+                                            time);
+                                    //okHttp
+                                    Gson gson = new Gson();
+                                    String json = gson.toJson(uploadComment);
+                                    RequestBody body = RequestBody.create(
+                                            MediaType.parse("application/json;charset=utf-8"),
+                                            json
+                                    );
+                                    Request request = new Request.Builder()
+                                            .post(body)
+                                            .url(url + "comment/addComment")
+                                            .build();
+                                    //3.Call对象
+                                    Call call = client.newCall(request);
+                                    call.enqueue((new Callback() {
+                                        @Override
+                                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+                                        }
+                                        // 这里可以包含获取数据的逻辑，比如使用OkHttp请求数据
+                                        // 返回模拟的数据
+                                        @Override
+                                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                            //获取响应的数据
+                                            String result = response.body().string();
+                                            if (result!=null){
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        getCommentData();
+                                                        commentListAdapter.notifyDataSetChanged();
+                                                        setListViewHeightBasedOnChildren(listView);
+                                                    }
+                                                });
+                                            }
+                                            //清空EditText
+                                            chatInputEt.setText("");
+                                        }
+                                    }));
+                                }
+                            }).start();
+                            //点击提交后收回键盘
+                            InputMethodManager inputMethodManager = (InputMethodManager) PostDisplayActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        }
+                    }
+                });
+            }
+        });
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -733,6 +826,23 @@ public class PostDisplayActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getCommentData();
+        commentListAdapter = new CommentListAdapter(
+                PostDisplayActivity.this,
+                R.layout.activity_comment_list_adapter,
+                commentList
+        );
+        listView.setAdapter(commentListAdapter);
+        setListViewHeightBasedOnChildren(listView);
+        //绑定adapter点击事件监听器
+        setAdapterListener();
+        commentListAdapter.notifyDataSetChanged();
+        setListViewHeightBasedOnChildren(listView);
     }
 
     public void showInput(final EditText et) {

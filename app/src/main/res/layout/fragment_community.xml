@@ -23,8 +23,7 @@
           android:textSize="18sp"
           android:drawableLeft="@android:drawable/ic_menu_search"
           android:singleLine="true"
-          android:imeOptions="actionSearch"
-          />
+          android:imeOptions="actionSearch" />
    </LinearLayout>
    <com.scwang.smart.refresh.layout.SmartRefreshLayout
        android:id="@+id/refreshLayout"
