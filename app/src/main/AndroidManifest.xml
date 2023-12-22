@@ -52,6 +52,15 @@
             android:name=".activities.travelRecord.TravelReviewActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.map.StrategyDisplayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.map.StrategyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.map.AddStrategyActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.map.AddLabelActivity"
             android:exported="false" />
         <activity
@@ -80,6 +89,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.posts.PostDisplayActivity"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
             android:exported="false" />
         <activity
             android:name=".activities.posts.UploadPostActivity"

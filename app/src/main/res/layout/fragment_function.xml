@@ -5,11 +5,29 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FunctionFragment"
     android:paddingTop="25dp">
+    android:orientation="vertical"
+    tools:context=".fragments.FunctionFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/bmapView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent" />
 
+
+    <LinearLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+        <!-- 刘梓煊用于测试的按钮 -->
+        <ImageButton
+            android:id="@+id/uploadBtn"
+            android:layout_alignParentEnd="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/white"
+            android:src="@mipmap/upload"/>
+    </LinearLayout>
 </FrameLayout>
