@@ -6,17 +6,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background1"
-    android:gravity="center_horizontal">
+    android:background="#EFF3F4"
+    >
+    <!--    android:gravity="center_horizontal"-->
+    <!--    android:background="@drawable/background1"-->
+    <FrameLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginBottom="6dp">
+        <ImageView
+            android:id="@+id/img_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="3dp"
+            android:src="@mipmap/loading"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/img_avatar"
+                android:layout_margin="4dp"
+                android:text="首页"
+                android:textSize="24dp" />
+        </LinearLayout>
+
+    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp">
-
+        android:layout_height="205dp"
+        android:layout_marginBottom="6dp"
+        android:background="@mipmap/img">
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:layout_marginHorizontal="6dp"
+        android:background="@drawable/background_frame_0"
         android:orientation="horizontal">
         <LinearLayout
             android:id="@+id/lrlt_create"

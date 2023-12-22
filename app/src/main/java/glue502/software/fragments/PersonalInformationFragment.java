@@ -125,6 +125,8 @@ public class PersonalInformationFragment extends Fragment {
         txtPersonal=view.findViewById(R.id.txt_personal);
         SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String status=sharedPreferences.getString("status","");
+        //沉浸式状态栏
+        MyViewUtils.setISBarWithoutView(getActivity(),false);
         if("".equals(status)){
             txtName.setText("请登录");
             txtUserId.setText("");
@@ -500,4 +502,11 @@ public class PersonalInformationFragment extends Fragment {
         builder.show();
     }
 
+    //生命周期管理
+    @Override
+    public void onResume() {
+        super.onResume();
+        //沉浸式状态栏
+        MyViewUtils.setISBarWithoutView(getActivity(),false);
+    }
 }
