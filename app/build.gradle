@@ -73,6 +73,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     //smartrefresh
+
     implementation  'io.github.scwang90:refresh-layout-kernel:2.1.0'      //核心必须依赖
     implementation  'io.github.scwang90:refresh-header-classics:2.1.0'    //经典刷新头
     implementation  'io.github.scwang90:refresh-header-radar:2.1.0'       //雷达刷新头

@@ -1,19 +1,14 @@
-package glue502.software.activities.map;
+package glue502.software.activities.travelRecord;
 
 import androidx.appcompat.app.AppCompatActivity;
-import glue502.software.R;
-import glue502.software.models.MarkerIntentInfo;
-
-import android.os.Bundle;
-
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,20 +25,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.OverlayOptions;
-import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.search.core.SearchResult;
-import com.baidu.mapapi.search.geocode.GeoCodeOption;
-import com.baidu.mapapi.search.geocode.GeoCodeResult;
-import com.baidu.mapapi.search.geocode.GeoCoder;
-import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
@@ -53,7 +35,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AddLabelActivity extends AppCompatActivity {
+import glue502.software.R;
+
+public class SearchActivity extends AppCompatActivity {
 
     Button toMap;
     MapView mMapView;
@@ -66,11 +50,7 @@ public class AddLabelActivity extends AppCompatActivity {
     private ListView mSugListView;
     private LocationClient mLocationClient;
     double latitude, longitude;
-    private String city = "北京市";
-    private String TruthCity;
-    private String selectedKey;
-    private String selectedCity;
-    private String selectedDistrict;
+    String city = "北京市";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,39 +60,30 @@ public class AddLabelActivity extends AppCompatActivity {
         SDKInitializer.setAgreePrivacy(this.getApplicationContext(), true);
         SDKInitializer.initialize(this.getApplicationContext());
 
-        setContentView(R.layout.activity_add_label);
+        setContentView(R.layout.activity_search);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
 //            startLocation();
         }
-        //绑定地图控件
-        initView();
-        //获取地理位置
-        startLocation();
-        //Poi搜索
-        PoiSugSearch();
-        //绑定监听器
-        setListener();
-    }
-
-    private void initView() {
         toMap = findViewById(R.id.but_toMap);
         editText1 = findViewById(R.id.main_edt_city);
         editText2 = findViewById(R.id.main_edt_poi);
-        mMapView = findViewById(R.id.add_label_bmapView);
+        mMapView = findViewById(R.id.bmapView);
 //        mMapView.setVisibility(View.GONE);
         mBaiduMap = mMapView.getMap();
         mSugListView = findViewById(R.id.sug_list);
         editText2.setThreshold(1);
         mSuggestionSearch = SuggestionSearch.newInstance();
+        startLocation();
+        PoiSugSearch();
+        setListener();
     }
 
     public void startLocation() {
         // 初始化定位客户端
         try {
-            Log.v("AddLabelActivity", "lzxAddLabelActivity页面开启");
             Toast.makeText(getApplicationContext(),"开始定位",Toast.LENGTH_LONG).show();
             mLocationClient = new LocationClient(getApplicationContext());
             Toast.makeText(getApplicationContext(),"定位至此",Toast.LENGTH_LONG).show();
@@ -150,14 +121,10 @@ public class AddLabelActivity extends AppCompatActivity {
         editText2.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
-
             }
-
             @Override
             public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                 if (cs.length() <= 0) {
@@ -185,6 +152,13 @@ public class AddLabelActivity extends AppCompatActivity {
             }
         });
 
+        toMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toMap = new Intent(getApplicationContext(),travelRecordActivity.class);
+                startActivity(toMap);
+            }
+        });
         editText2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -194,48 +168,6 @@ public class AddLabelActivity extends AppCompatActivity {
                 } else {
                     mSugListView.setVisibility(View.GONE);
                 }
-            }
-        });
-
-        //设置marker可拖拽
-        mBaiduMap.setOnMarkerDragListener(new BaiduMap.OnMarkerDragListener() {
-            @Override
-            public void onMarkerDrag(Marker marker) {
-                Toast.makeText(getApplicationContext(), "拖拽了marker", Toast.LENGTH_LONG).show();
-                Log.v("AddLabelActivity", "lzx拖拽了marker");
-            }
-
-            @Override
-            public void onMarkerDragEnd(Marker marker) {
-                Toast.makeText(getApplicationContext(), "拖拽结束了marker", Toast.LENGTH_LONG).show();
-                Log.v("AddLabelActivity", "lzx拖拽结束了marker");
-            }
-
-            @Override
-            public void onMarkerDragStart(Marker marker) {
-
-            }
-        });
-
-        //绑定marker点击事件监听器
-        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                Log.v("AddLabelActivity", "lzx点击了marker");
-                Intent intent = new Intent(AddLabelActivity.this, AddStrategyActivity.class);
-                Bundle bundle = new Bundle();
-                MarkerIntentInfo markerIntentInfo = new MarkerIntentInfo(
-                        editText2.getText().toString(),
-                        marker.getPosition().latitude,
-                        marker.getPosition().longitude,
-                        selectedKey,
-                        selectedCity,
-                        selectedDistrict
-                );
-                bundle.putSerializable("markerIntentInfo", markerIntentInfo);
-                intent.putExtra("bundle", bundle);
-                startActivity(intent);
-                return true;
             }
         });
     }
@@ -270,8 +202,7 @@ public class AddLabelActivity extends AppCompatActivity {
                         suggest,
                         R.layout.item_layout,
                         new String[]{"key", "city", "dis"},
-                        new int[]{R.id.sug_key, R.id.sug_city, R.id.sug_dis}
-                );
+                        new int[]{R.id.sug_key, R.id.sug_city, R.id.sug_dis});
                 mSugListView.setVisibility(View.VISIBLE);
                 mSugListView.setAdapter(simpleAdapter);
                 mSugListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -280,74 +211,7 @@ public class AddLabelActivity extends AppCompatActivity {
                         // 获取点击的建议项的数据
                         HashMap<String, String> selectedItem = suggest.get(position);
 
-                        selectedKey = selectedItem.get("key");
-                        selectedCity = selectedItem.get("city");
-                        selectedDistrict = selectedItem.get("dis");
-                        Log.v("AddLabelActivity", "lzx key"+selectedKey);
-                        Log.v("AddLabelActivity", "lzx city"+selectedCity);
-                        Log.v("AddLabelActivity", "lzx dis"+selectedDistrict);
-                        System.out.println("===key" +  selectedKey + "city" + selectedCity + "dis" + selectedDistrict + "===");
-
-                        // 使用地理编码服务获取经纬度坐标
-                        GeoCoder geoCoder = GeoCoder.newInstance();
-                        geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
-                            @Override
-                            public void onGetGeoCodeResult(GeoCodeResult result) {
-                                if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-                                    // 没有检索到结果，处理错误
-                                    Log.v("AddLabelActivity", "lzx没东西");
-                                } else {
-                                    // 获取坐标信息
-                                    LatLng location = result.getLocation();
-
-                                    // 打印输出经纬度信息
-                                    Log.v("AddLabelActivity", "lzx Latitude: " + location.latitude);
-                                    Log.v("AddLabelActivity", "lzx Longitude: " + location.longitude);
-
-                                    // 在这里你可以将坐标信息存储到成员变量中，或者进行其他操作
-                                    LatLng point = location;
-
-                                    //创建marker
-                                    BitmapDescriptor bitmap = BitmapDescriptorFactory
-                                            .fromResource(R.drawable.ic_marker);
-                                    //构件MarkerOption，用于在地图上添加Marker
-                                    OverlayOptions option = new MarkerOptions()
-                                           .position(point)
-                                           .icon(bitmap)
-                                            .draggable(true)
-                                           .zIndex(1);
-
-                                    //在地图上添加并显示
-                                    mBaiduMap.addOverlay(option);
-
-                                    //将地图中心移动到当前位置
-                                    mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(point));
-                                    //将地图比例尺缩放到合适的级别
-                                    mBaiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(15.0f));
-
-                                    // 设置文本框的值
-                                    editText2.setText(selectedKey);
-
-                                    // 隐藏建议列表
-                                    mSugListView.setVisibility(View.GONE);
-                                }
-                            }
-
-                            @Override
-                            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
-                                // 反地理编码的结果，如果需要的话可以处理
-                            }
-                        });
-
-                        // 设置地理编码检索参数
-                        GeoCodeOption geoCodeOption = new GeoCodeOption()
-                                .city(selectedCity)
-                                .address(selectedDistrict + selectedKey);
-                        geoCoder.geocode(geoCodeOption);
-
-                        // 释放地理编码检索实例
-                        geoCoder.destroy();
-
+                        String selectedKey = selectedItem.get("key");
                         if (selectedKey != null) {
                             editText2.setText(selectedKey);
                         }

@@ -20,6 +20,8 @@ import glue502.software.activities.travelRecord.TravelReviewActivity;
 import glue502.software.utils.MyViewUtils;
 
 public class RecommendFragment extends Fragment {
+    private Button createBtn;
+    private Button reviewBtn;
     private LinearLayout rltlCreate;
     private LinearLayout rltlFootprint;
     private LinearLayout rltlPhoto;

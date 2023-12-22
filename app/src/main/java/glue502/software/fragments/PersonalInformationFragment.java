@@ -8,20 +8,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,14 +28,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
-import com.flyjingfish.openimagelib.BaseInnerFragment;
 import com.flyjingfish.openimagelib.OpenImage;
-import com.flyjingfish.openimagelib.beans.OpenImageUrl;
 import com.flyjingfish.openimagelib.enums.MediaType;
-import com.flyjingfish.openimagelib.enums.MoreViewShowType;
-import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
-import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,18 +44,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import glue502.software.R;
 import glue502.software.activities.login.CodeLoginActivity;
-import glue502.software.activities.login.LoginActivity;
-import glue502.software.activities.personal.MineStarActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
-import glue502.software.activities.posts.UploadPostActivity;
+import glue502.software.adapters.PageAdapter;
 import glue502.software.models.LoginResult;
 import glue502.software.models.UserInfo;
-import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -70,13 +62,11 @@ import okhttp3.Response;
 
 
 public class PersonalInformationFragment extends Fragment {
+    private ViewPager2 viewPager2;
+    private TabLayout tabLayout;
+    private List<Fragment> fragments;
     private TextView txtName;
     private TextView txtUserId;
-    private TextView txtCollect;
-    private TextView txtNews;
-    private TextView txtPublish;
-    private TextView txtHistory;
-    private TextView txtPersonal;
     private LinearLayout linearSetting;
     private LinearLayout linearTitle;
     private LinearLayout linearCustomerService;
@@ -118,11 +108,36 @@ public class PersonalInformationFragment extends Fragment {
         linearTitle=view.findViewById(R.id.linear_title);
         linearCustomerService=view.findViewById(R.id.linear_customer_service);
         imgAvatar=view.findViewById(R.id.img_avatar);
-        txtCollect=view.findViewById(R.id.txt_collect);
-        txtNews=view.findViewById(R.id.txt_news);
-        txtPublish=view.findViewById(R.id.txt_publish);
-        txtHistory=view.findViewById(R.id.txt_history);
-        txtPersonal=view.findViewById(R.id.txt_personal);
+        //收藏和发布
+        tabLayout = view.findViewById(R.id.tbl);
+        viewPager2 = view.findViewById(R.id.vp2);
+        fragments = new ArrayList<>();
+        fragments.add(new StarFragment());
+        fragments.add(new MyPostFragment());
+        PageAdapter adapter = new PageAdapter(fragments,getActivity());
+        //绑定监听器
+        viewPager2.setAdapter(adapter);
+        TabLayoutMediator mediator = new TabLayoutMediator(
+                tabLayout,
+                viewPager2,
+                new TabLayoutMediator.TabConfigurationStrategy() {
+
+                    @Override
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        switch (position){
+                            case 0:
+                                tab.setText("我的收藏");
+                                break;
+                            case 1:
+                                tab.setText("我的发布");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+        );
+        mediator.attach();
         SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String status=sharedPreferences.getString("status","");
         //沉浸式状态栏
@@ -144,38 +159,6 @@ public class PersonalInformationFragment extends Fragment {
             loadUserAvatar(false);
             remindBind();
         }
-        txtCollect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if ("".equals(status)){
-                    // 创建AlertDialog构建器
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("账号未登录！")
-                            .setMessage("是否前往登录账号")
-                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 点击“确定”按钮后的操作
-                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 点击“取消”按钮后的操作
-                                    dialog.dismiss(); // 关闭对话框
-                                }
-                            });
-
-                    // 创建并显示对话框
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
-                }else{
-                    Intent intent = new Intent(getActivity(), MineStarActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
         imgAvatar.setOnClickListener(v->{
             OpenImage.with(getContext()).setClickImageView(imgAvatar)
                     .setAutoScrollScanPosition(true)
@@ -189,32 +172,6 @@ public class PersonalInformationFragment extends Fragment {
 //                        }
 //                    })
                     .show();
-        });
-        txtNews.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        txtPublish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-        txtHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-        txtPersonal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), UpdatePersonalInformationActivity.class);
-                startActivity(intent);
-            }
         });
         linearTitle.setOnClickListener(new View.OnClickListener() {
             @Override

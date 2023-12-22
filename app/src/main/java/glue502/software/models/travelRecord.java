@@ -11,7 +11,6 @@ public class travelRecord implements Serializable {
     private String travelName;//大的名称
     private List<String> image;//旅行的图片
     private String content;//包含的内容
-
     private String createTime;//时间
 
     private int pictureNumber;//图片的数量

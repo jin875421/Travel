@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/layout_community"
     tools:context=".fragments.CommunityFragment"
-    android:paddingTop="35dp">
+    >
 
    <LinearLayout
        android:id="@+id/community_top"
@@ -23,8 +23,7 @@
           android:textSize="18sp"
           android:drawableLeft="@android:drawable/ic_menu_search"
           android:singleLine="true"
-          android:imeOptions="actionSearch"
-          />
+          android:imeOptions="actionSearch" />
    </LinearLayout>
    <com.scwang.smart.refresh.layout.SmartRefreshLayout
        android:id="@+id/refreshLayout"

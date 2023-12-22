@@ -1,39 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/cwn"
-
+    android:layout_height="wrap_content"
+    android:background="@drawable/gradient_background"
     tools:context=".activities.travelRecord.travelRecordActivity" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"></RelativeLayout>
-    <Button
-        android:id="@+id/btn_return"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="返回" />
 
-    <EditText
-        android:id="@+id/Ed_place"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center" />
-
-    <Button
-        android:id="@+id/btn_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="提交" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="55dp"
-        android:scrollbars="none" >
+        android:paddingTop="50dp"
+        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/content_view"
@@ -41,24 +19,20 @@
             android:layout_height="wrap_content"
             android:isScrollContainer="true"
             android:orientation="vertical"
-            android:background="@drawable/border_backgrounddjp"
-            android:padding="10dip"
-            >
+            android:padding="10dip">
 
             <LinearLayout
                 android:id="@+id/ll_one"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dip"
-                android:background= "@color/djpback"
+                android:background="@drawable/border_backgrounddjp"
                 android:orientation="vertical"
-                android:padding="5dip"
-                >
+                android:padding="5dip">
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:background="#189DA8">
+                    android:layout_height="150dp">
 
                     <LinearLayout
                         android:id="@+id/imageContainer"
@@ -74,56 +48,104 @@
                             android:layout_gravity="center_vertical"
                             android:numColumns="3" />
 
-                        <ImageView
-                            android:id="@+id/input_image"
-                            android:layout_width="152dp"
-                            android:layout_height="150dp"
-                            android:src="@drawable/add_image" />
+
                     </LinearLayout>
 
                 </HorizontalScrollView>
+
                 <EditText
                     android:id="@+id/et_content1"
                     android:layout_width="match_parent"
                     android:layout_height="25dip"
-                    android:background="#FFFFFFFF"
+                    android:background="#00FFFFFF"
                     android:gravity="left"
+                    android:hint="标题"
                     android:inputType="textMultiLine"
                     android:paddingLeft="5dip"
-                    android:textStyle="bold"
-                    android:hint="标题"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
 
-                    <EditText
-                        android:id="@+id/et_content2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#FFFFFFFF"
-                        android:gravity="left"
-                        android:inputType="textMultiLine"
-                        android:paddingLeft="5dip"
-                        android:hint="输入你的内容"
-                        android:textSize="16sp"
-                        android:lines="20"
-                        android:minLines="12" />
-
+                <EditText
+                    android:id="@+id/et_content2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00FFFFFF"
+                    android:gravity="left"
+                    android:hint="输入你的内容"
+                    android:inputType="textMultiLine"
+                    android:lines="20"
+                    android:minLines="12"
+                    android:paddingLeft="5dip"
+                    android:textSize="16sp" />
 
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dip" >
+                    android:layout_marginTop="5dip">
 
                     <ImageButton
                         android:id="@+id/ibn_add1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentStart="true"
                         android:background="@drawable/ic_add" />
+
+                    <ImageButton
+                        android:id="@+id/ibn_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@id/ibn_add1"
+                        android:background="@drawable/ic_delete" />
+
+                    <ImageButton
+                        android:id="@+id/ibn_photoAdd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@id/ibn_delete"
+                        android:background="@drawable/cameraline" />
+
+                    <ImageButton
+                        android:id="@+id/ibn_PhotoAlbum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@id/ibn_photoAdd"
+                        android:background="@drawable/imageadd" />
+
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"></RelativeLayout>
+    <Button
+        android:id="@+id/btn_return"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_backgrounddjp"
+        android:text="返回" />
 
+    <EditText
+        android:id="@+id/Ed_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-50dp"
+        android:layout_below="@id/btn_return"
+        android:gravity="center"
+        android:text="Your Text" />
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_backgrounddjp"
+        android:layout_alignParentRight="true"
+        android:text="提交" />
 </RelativeLayout>
