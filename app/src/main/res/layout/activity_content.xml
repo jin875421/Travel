@@ -5,8 +5,6 @@
     android:background="@drawable/gradient_background"
     android:paddingTop="35dp"
     tools:context=".activities.travelRecord.travelRecordActivity" >
-    
-
 
     <ScrollView
         android:layout_width="match_parent"
