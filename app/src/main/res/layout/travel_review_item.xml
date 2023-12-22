@@ -4,8 +4,10 @@
     android:layout_height="match_parent">
     <TextView
         android:id="@+id/travel_name"
+        android:layout_marginLeft="5dp"
         android:layout_width="match_parent"
-        android:layout_height="30dp"/>
+        android:layout_height="30dp"
+        android:textSize="20sp"/>
     <HorizontalScrollView
         android:id="@+id/image_scroll"
         android:layout_below="@+id/travel_name"

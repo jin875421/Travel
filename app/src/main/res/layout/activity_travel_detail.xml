@@ -7,7 +7,6 @@
     tools:context=".activities.travelRecord.TravelDetailActivity">
     <RelativeLayout
         android:id="@+id/travel_detail_layout"
-        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <ImageView
