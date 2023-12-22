@@ -63,6 +63,7 @@ public class PostListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        System.out.println("getView");
         View v = LayoutInflater.from(context).inflate(layoutId,null);
         ImageView useravatar = v.findViewById(R.id.imageViewUserAvatar);
         TextView username = v.findViewById(R.id.textViewUsername);

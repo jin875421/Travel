@@ -1,18 +1,27 @@
-package glue502.software.activities.personal;
+package glue502.software.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
 import static glue502.software.activities.MainActivity.ip;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smart.refresh.footer.ClassicsFooter;
+import com.scwang.smart.refresh.header.ClassicsHeader;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,33 +33,36 @@ import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
 import glue502.software.models.UserInfo;
-import glue502.software.utils.MyViewUtils;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class MineStarActivity extends AppCompatActivity {
+
+public class StarFragment extends Fragment {
     private ListView postList;
     private String url = "http://"+ip+"/travel/posts/getstarlist";
     private List<Post> posts;
     private List<UserInfo> userInfos;
     private String userId;
+    private RefreshLayout refreshLayout;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mine_star);
-        MyViewUtils.setImmersiveStatusBar(this, postList,false);
-        SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_star, container, false);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         userId = sharedPreferences.getString("userId","");
-        initView();
+        initView(view);
         setlistener();
         initData();
+        return view;
     }
-    public void initView(){
-        postList = findViewById(R.id.post_display);
+    public void initView(View view){
+        postList = view.findViewById(R.id.post_display);
+        refreshLayout = view.findViewById(R.id.refreshLayout);
+
     }
     public void initData(){
         posts = new ArrayList<>();
@@ -59,17 +71,22 @@ public class MineStarActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Gson gson = new Gson();
                 OkHttpClient client = new OkHttpClient();
+                //创建请求获取Post类
                 Request request = new Request.Builder()
                         .url(url+"?userId="+userId)
                         .build();
                 try {
+                    //发起请求并获取响应
                     Response response = client.newCall(request).execute();
+                    //检测响应是否成功
                     if (response.isSuccessful()){
+                        //获取响应数据
                         ResponseBody responseBody = response.body();
                         if (responseBody!=null){
+                            //处理数据
                             String responseData = responseBody.string();
+                            Gson gson = new Gson();
                             List<PostWithUserInfo> postWithUserInfoList = gson.fromJson(responseData,new TypeToken<List<PostWithUserInfo>>(){}.getType());
                             posts = new ArrayList<>();
                             userInfos = new ArrayList<>();
@@ -77,11 +94,11 @@ public class MineStarActivity extends AppCompatActivity {
                                 posts.add(postWithUserInfo.getPost());
                                 userInfos.add(postWithUserInfo.getUserInfo());
                             }
-                            runOnUiThread(new Runnable() {
+                            getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (posts !=null&&userInfos!=null){
-                                        PostListAdapter postAdapter = new PostListAdapter(MineStarActivity.this,R.layout.post_item,posts,userInfos);
+                                        PostListAdapter postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
                                         postList.setAdapter(postAdapter);
 
                                     }else {
@@ -90,11 +107,12 @@ public class MineStarActivity extends AppCompatActivity {
 
                                 }
                             });
+                        }else {
+                            //处理空数据
                         }
                     }
-
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                }catch (IOException e){
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -106,9 +124,24 @@ public class MineStarActivity extends AppCompatActivity {
                 PostListAdapter postListAdapter = (PostListAdapter) parent.getAdapter();
                 //获取点击项数据对象
                 PostWithUserInfo clickItem = (PostWithUserInfo) postListAdapter.getItem(i);
-                Intent intent = new Intent(MineStarActivity.this, PostDisplayActivity.class);
+                Intent intent = new Intent(getActivity(), PostDisplayActivity.class);
                 intent.putExtra("postwithuserinfo", clickItem);
                 startActivity(intent);
+            }
+        });
+        refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
+        refreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                initData();
+                refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshlayout) {
+                refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
             }
         });
     }
