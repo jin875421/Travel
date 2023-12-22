@@ -6,49 +6,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#EFF3F4"
-    >
-    <!--    android:gravity="center_horizontal"-->
-    <!--    android:background="@drawable/background1"-->
-    <FrameLayout
-        android:id="@+id/top"
+    android:background="@color/gray"
+    android:gravity="center_horizontal">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:layout_marginBottom="6dp">
+        android:paddingTop="35dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="首页"
+            android:textSize="30dp"/>
         <ImageView
-            android:id="@+id/img_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="3dp"
-            android:src="@mipmap/loading"
-            />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/img_avatar"
-                android:layout_margin="4dp"
-                android:text="首页"
-                android:textSize="24dp" />
-        </LinearLayout>
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/personal_setting"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="5dp"
 
-    </FrameLayout>
+            />
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="205dp"
-        android:layout_marginBottom="6dp"
-        android:background="@mipmap/img">
+        android:layout_marginTop="10dp"
+        android:background="@drawable/background_frame_login"
+        android:layout_height="200dp">
+<!--        <androidx.viewpager2.widget.ViewPager2-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"/>-->
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/login_background6"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="6dp"
-        android:background="@drawable/background_frame_0"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/background_frame_login"
         android:orientation="horizontal">
         <LinearLayout
             android:id="@+id/lrlt_create"
@@ -58,12 +61,12 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:src="@drawable/travel_begin"/>
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="30dp"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
                 android:src="@drawable/homepage_mytravel"/>
         </LinearLayout>
         <LinearLayout
@@ -74,12 +77,12 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:src="@drawable/travel_itinerary"/>
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="30dp"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
                 android:src="@drawable/homepage_myfootprint"/>
         </LinearLayout>
         <LinearLayout
@@ -90,14 +93,38 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:src="@drawable/travel_photo"/>
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="30dp"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
                 android:src="@drawable/homepage_myphoto"/>
         </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:orientation="vertical"
+        android:background="@drawable/background_frame_login">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingBottom="2dp"
+                android:drawableLeft="@drawable/homepage_gps"
+                android:text="当前城市"/>
+        </FrameLayout>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
     </LinearLayout>
 
 </LinearLayout>

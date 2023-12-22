@@ -40,7 +40,7 @@ android {
 dependencies {
     //这个依赖用于相册功能的页面布局
     implementation 'com.github.donkingliang:ConsecutiveScroller:2.6.2'
-
+    //修图
     // 使用了 Androidx
 //    implementation 'com.github.donkingliang:ConsecutiveScroller:2.3.0'
 //

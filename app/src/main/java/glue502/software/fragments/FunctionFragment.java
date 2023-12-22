@@ -39,6 +39,7 @@ import glue502.software.activities.map.AddLabelActivity;
 import glue502.software.activities.map.StrategyActivity;
 import glue502.software.models.Comment;
 import glue502.software.models.MarkerInfo;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;

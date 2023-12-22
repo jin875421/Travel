@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.GridView;
 
 import glue502.software.R;
+import glue502.software.utils.MyViewUtils;
 
 
 //这个页面是一个用于展示具体地点照片的页面
@@ -22,7 +23,8 @@ public class TravelPicturesActivity extends AppCompatActivity {
 
         //获取控件对象
         gvPictures = findViewById(R.id.gv_pictures);
-
+        //沉浸式状态栏
+        MyViewUtils.setISBarWithoutView(this,true);
 
 
     }
