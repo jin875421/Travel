@@ -17,16 +17,21 @@ import glue502.software.R;
 import glue502.software.activities.travelRecord.TravelAlbumActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
+import glue502.software.utils.MyViewUtils;
+
 public class RecommendFragment extends Fragment {
     private Button createBtn;
     private Button reviewBtn;
     private LinearLayout rltlCreate;
     private LinearLayout rltlFootprint;
     private LinearLayout rltlPhoto;
+    private View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recommend,container,false);
+        view = inflater.inflate(R.layout.fragment_recommend,container,false);
+        //沉浸式状态栏
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
         rltlCreate = view.findViewById(R.id.lrlt_create);
         rltlFootprint = view.findViewById(R.id.lrlt_footprint);
         rltlPhoto=view.findViewById(R.id.lrlt_photo);
@@ -64,5 +69,13 @@ public class RecommendFragment extends Fragment {
             }
         });
 
+    }
+
+    //生命周期管理
+    @Override
+    public void onResume() {
+        super.onResume();
+        //沉浸式状态栏
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
     }
 }
