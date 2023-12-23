@@ -55,7 +55,6 @@ public class TravelReviewActivity extends AppCompatActivity {
     }
     private void initview(){
         travelReviewList = findViewById(R.id.travel_review);
-
         back = findViewById(R.id.back);
         back.setOnClickListener(v -> finish());
     }

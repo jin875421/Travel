@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.Manifest;
@@ -38,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.login.LoginActivity;
+import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.adapters.PageAdapter;
 import glue502.software.fragments.Add;
@@ -51,17 +55,20 @@ import glue502.software.utils.MyViewUtils;
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
-    public static final String ip = "192.168.235.92:8080";
+    public static final String ip = "10.7.89.69:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
     private boolean backPressedOnce = false;
     private ImageView start;
     private RelativeLayout buttoncontainer;
+    private String status;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+        status = sharedPreferences.getString("status","");
         //沉浸式状态栏
         MyViewUtils.setISBarWithoutView(this,true);
         if (ContextCompat.checkSelfPermission(this,
@@ -82,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
+        ViewGroup.LayoutParams layoutParam1 = buttoncontainer.getLayoutParams();
+        layoutParam1.width = screenWidth/5;
+        //设置居中
+        buttoncontainer.setLayoutParams(layoutParam1);
         ViewGroup.LayoutParams layoutParams = start.getLayoutParams();
         layoutParams.width = screenWidth/7;
         layoutParams.height = screenWidth/7;
@@ -90,14 +101,40 @@ public class MainActivity extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, travelRecordActivity.class);
-                startActivity(intent);
+                //判断登录状态
+                if (status==""){
+                    // 创建AlertDialog构建器
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("账号未登录！")
+                            .setMessage("是否前往登录账号")
+                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“确定”按钮后的操作
+                                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“取消”按钮后的操作
+                                    dialog.dismiss(); // 关闭对话框
+                                }
+                            });
+
+                    // 创建并显示对话框
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                }else{
+                    Intent intent = new Intent(MainActivity.this, travelRecordActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
         //禁止viewpager2左右滑动
         viewPager2.setUserInputEnabled(false);
         setViewPager2ScrollSensitivity(10);
-        SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String phone = sharedPreferences.getString("userPhoneNumber", "");
         String email=sharedPreferences.getString("email", "");
         //初始化

@@ -1,7 +1,12 @@
 package glue502.software.fragments;
 
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +19,7 @@ import android.widget.CalendarView;
 import android.widget.LinearLayout;
 
 import glue502.software.R;
+import glue502.software.activities.login.LoginActivity;
 import glue502.software.activities.travelRecord.TravelAlbumActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
@@ -26,12 +32,13 @@ public class RecommendFragment extends Fragment {
     private LinearLayout rltlFootprint;
     private LinearLayout rltlPhoto;
     private View view;
+    private String status;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_recommend,container,false);
-        //沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+        status = sharedPreferences.getString("status","");
         rltlCreate = view.findViewById(R.id.lrlt_create);
         rltlFootprint = view.findViewById(R.id.lrlt_footprint);
         rltlPhoto=view.findViewById(R.id.lrlt_photo);
@@ -50,22 +57,97 @@ public class RecommendFragment extends Fragment {
         rltlCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), travelRecordActivity.class);
-                startActivity(intent);
+                if (status==""){
+                    // 创建AlertDialog构建器
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("账号未登录！")
+                            .setMessage("是否前往登录账号")
+                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“确定”按钮后的操作
+                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“取消”按钮后的操作
+                                    dialog.dismiss(); // 关闭对话框
+                                }
+                            });
+
+                    // 创建并显示对话框
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                }else{
+                    Intent intent = new Intent(getActivity(), travelRecordActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         rltlFootprint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), TravelReviewActivity.class);
-                startActivity(intent);
+                if (status==""){
+                    // 创建AlertDialog构建器
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("账号未登录！")
+                            .setMessage("是否前往登录账号")
+                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“确定”按钮后的操作
+                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“取消”按钮后的操作
+                                    dialog.dismiss(); // 关闭对话框
+                                }
+                            });
+
+                    // 创建并显示对话框
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                }else{
+                    Intent intent = new Intent(getActivity(), TravelReviewActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         rltlPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), TravelAlbumActivity.class);
-                startActivity(intent);
+                if (status==""){
+                    // 创建AlertDialog构建器
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("账号未登录！")
+                            .setMessage("是否前往登录账号")
+                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“确定”按钮后的操作
+                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 点击“取消”按钮后的操作
+                                    dialog.dismiss(); // 关闭对话框
+                                }
+                            });
+
+                    // 创建并显示对话框
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                }else{
+                    Intent intent = new Intent(getActivity(), TravelAlbumActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 

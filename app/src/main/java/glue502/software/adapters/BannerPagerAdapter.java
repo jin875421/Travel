@@ -56,7 +56,6 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
             datas.add(new ImageEntity(url+imageUrl,url+imageUrl,null,null,null, 0));
         }
     }
-
     @NonNull
     @Override
     public BannerPagerAdapter.ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -74,14 +73,6 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
             @Override
             public void onClick(View view) {
                 //图片全屏显示
-//j
-//                Intent intent = new Intent(context, FullScreenDisplayActivity.class);
-//                intent.putStringArrayListExtra("images", (ArrayList<String>) imagepath);
-//                intent.putExtra("position",position+"");
-//                context.startActivity(intent);
-
-                //z
-                holder.imageView.setOnClickListener(v -> {
                     OpenImage.with(context).setClickViewPager2(viewPager2, new SourceImageViewIdGet() {
                                 @Override
                                 public int getImageViewId(OpenImageUrl data, int position) {
@@ -111,7 +102,6 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
                                         }
                                     })
                             .show();
-                });
 
             }
         });

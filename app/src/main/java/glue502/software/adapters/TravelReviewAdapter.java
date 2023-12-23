@@ -26,7 +26,7 @@ public class TravelReviewAdapter extends BaseAdapter {
     private Context context;
     private int layoutId;
     private List<TravelReview> travelReview;
-    private String url = "http://"+ip+"/travel";
+    private String url = "http://"+ip+"/travel/";
 
     public TravelReviewAdapter(Context context,List<TravelReview> travelReview,int layoutId) {
         this.context = context;
