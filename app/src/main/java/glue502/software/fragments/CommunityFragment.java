@@ -177,7 +177,6 @@ public class CommunityFragment extends Fragment {
                                                     }else {
 
                                                     }
-
                                                 }
                                             });
                                         }
@@ -189,16 +188,12 @@ public class CommunityFragment extends Fragment {
                         }
                     }).start();
 
-                }else {
-                    //开启线程接收帖子数据
                 }
             }
 
             @Override
             public void afterTextChanged(android.text.Editable s) {
-                if (s.toString().length()>0){
 
-                }
             }
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
