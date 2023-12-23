@@ -155,7 +155,7 @@ public class TravelDetailActivity extends AppCompatActivity {
                         break;
                     case R.id.edit:
                         //TODO 调整编辑页面
-                        Intent intent = new Intent(TravelDetailActivity.this, PostEditActivity.class);
+                        Intent intent = new Intent(TravelDetailActivity.this, travelRecordEdit.class);
                         intent.putExtra("travelId",travelId);
                         startActivity(intent);
                         break;

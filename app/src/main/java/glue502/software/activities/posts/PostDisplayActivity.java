@@ -565,6 +565,17 @@ public class PostDisplayActivity extends AppCompatActivity {
                     AlertDialog dialog = builder.create();
                     dialog.show();
 
+                } else if(chatInputEt.getText().toString().equals("")){
+                    View toastView = getLayoutInflater().inflate(R.layout.toast_layout, null);
+
+                    // 获取自定义布局中的 TextView
+                    TextView textView = toastView.findViewById(R.id.toast_text);
+                    textView.setText("请填写完整信息");
+                    // 创建并显示自定义 Toast
+                    Toast toast = new Toast(PostDisplayActivity.this);
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.setView(toastView);
+                    toast.show();
                 } else {
                     new Thread(new Runnable() {
                         @Override

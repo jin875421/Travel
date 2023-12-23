@@ -12,6 +12,7 @@ import java.util.List;
 import glue502.software.R;
 import glue502.software.adapters.TravelAlbumAdapter;
 import glue502.software.models.ShowPicture;
+import glue502.software.utils.MyViewUtils;
 
 public class TravelAlbumActivity extends AppCompatActivity {
 
@@ -34,6 +35,8 @@ public class TravelAlbumActivity extends AppCompatActivity {
         //首先准备数据源,然后将数据源放到适配器当中
 
         findViews();
+        //沉浸式状态栏
+        MyViewUtils.setISBarWithoutView(this,true);
 
         //初始化数据源
         initData();

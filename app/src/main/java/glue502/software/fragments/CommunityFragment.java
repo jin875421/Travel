@@ -73,7 +73,7 @@ public class CommunityFragment extends Fragment {
         setListener();
         initData();
         //添加沉浸式
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.layout_community),true);
+        MyViewUtils.setISBarWithoutView(getActivity(),true);
 
         return view;
 
@@ -177,7 +177,6 @@ public class CommunityFragment extends Fragment {
                                                     }else {
 
                                                     }
-
                                                 }
                                             });
                                         }
@@ -189,16 +188,12 @@ public class CommunityFragment extends Fragment {
                         }
                     }).start();
 
-                }else {
-                    //开启线程接收帖子数据
                 }
             }
 
             @Override
             public void afterTextChanged(android.text.Editable s) {
-                if (s.toString().length()>0){
 
-                }
             }
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
@@ -281,6 +276,6 @@ public class CommunityFragment extends Fragment {
     public void onResume(){
         super.onResume();
         //添加沉浸式
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.layout_community),true);
+        MyViewUtils.setISBarWithoutView(getActivity(),true);
     }
 }

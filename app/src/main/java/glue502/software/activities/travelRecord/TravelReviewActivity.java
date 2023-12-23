@@ -47,7 +47,7 @@ public class TravelReviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_review);
         //沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),false);
+        MyViewUtils.setISBarWithoutView(this,true);
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId",MODE_PRIVATE);
         initview();
         setlistener();
@@ -55,7 +55,6 @@ public class TravelReviewActivity extends AppCompatActivity {
     }
     private void initview(){
         travelReviewList = findViewById(R.id.travel_review);
-
         back = findViewById(R.id.back);
         back.setOnClickListener(v -> finish());
     }

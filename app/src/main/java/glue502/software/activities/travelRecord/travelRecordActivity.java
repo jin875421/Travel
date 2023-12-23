@@ -20,14 +20,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -35,8 +39,10 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -44,6 +50,24 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 
+import com.baidu.location.LocationClient;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
@@ -61,6 +85,7 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,13 +111,17 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class travelRecordActivity extends Activity {
+
     private String url = "http://"+ip+"/travel/travel/createTravelRecoed";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
     private UserInfo  userInfo= new UserInfo();
     private String travelId = generateUUID();
     private String userId ;
+    private String city = "北京市";
+    private ListView mSugListView;
     // 在 PostActivity 中定义一个 SharedPreferences 的实例变量,持久化保存
     private SharedPreferences sharedPreferences;
+
     private int value=0;
     private int which=10000;
     // 外围的LinearLayout容器
@@ -108,17 +137,24 @@ public class travelRecordActivity extends Activity {
     private LinkedList<ImageButton> listIBTNDel;
     private LinkedList<ImageButton> listPhotoAdd;
     private LinkedList<ImageButton> listPhotoAlbum;
-
+    private SuggestionSearch mSuggestionSearch = null;
     //路径
     private String mCurrentPhotoPath;
     private int iETContentHeight = 0;   // EditText控件高度
     private float fDimRatio = 1.0f; // 尺寸比例（实际尺寸/xml文件里尺寸）
     private final int RESULT_LOAD_IMAGES = 1, RESULT_CAMERA_IMAGE = 2;
+    private String selectedKey;
+    private String selectedCity;
+    private String selectedDistrict;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //初始百度地图
+        LocationClient.setAgreePrivacy(true);
+        SDKInitializer.setAgreePrivacy(this.getApplicationContext(), true);
+        SDKInitializer.initialize(this.getApplicationContext());
+        mSuggestionSearch = SuggestionSearch.newInstance();
         setContentView(R.layout.activity_content);
-
         MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(),false);
         // 检查是否已经授予了所需的权限
         Log.d("PostActivity", "onCreate() called");
@@ -139,7 +175,10 @@ public class travelRecordActivity extends Activity {
         }
         // 加载保存的用户输入内容
         loadSavedContent();
+        PoiSugSearch();
         setListener();
+        //沉浸式状态栏
+        MyViewUtils.setISBarWithoutView(this,true);
     }
     private void setValue(int value) {
         this.value = value;
@@ -195,6 +234,39 @@ public class travelRecordActivity extends Activity {
         }
     }
     private void setListener() {
+        etContent1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                if (cs.length() <= 0) {
+                    return;
+                }
+                // 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
+                mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
+                        .keyword(cs.toString()) // 关键字
+                        .city(city)); // 城市
+            }
+        });
+        etContent1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    Toast.makeText(getApplicationContext(), "focus", Toast.LENGTH_LONG).show();
+                    mSugListView.setVisibility(View.VISIBLE);
+                } else {
+                    mSugListView.setVisibility(View.GONE);
+                }
+            }
+        });
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -974,10 +1046,12 @@ public class travelRecordActivity extends Activity {
         etTravelName = (EditText) this.findViewById(R.id.Ed_place);
         btnReturn =findViewById(R.id.btn_return);
         btnSubmit =findViewById(R.id.btn_submit);
+        mSugListView = findViewById(R.id.sug_list);
         listIBTNAdd = new LinkedList<ImageButton>();
         listIBTNDel = new LinkedList<   ImageButton>();
 //        listPhotoAdd = new LinkedList<ImageButton>();
         listPhotoAlbum = new LinkedList<ImageButton>();
+
 
         // “+”按钮（第一个）
         ImageButton ibtnAdd1 = (ImageButton) this.findViewById(R.id.ibn_add1);
@@ -1108,12 +1182,47 @@ public class travelRecordActivity extends Activity {
 // 添加到您的布局容器中（假设容器是 llContentView）
             layout.addView(scrollView);
 
+            ListView listView = new ListView(this);
 
 // 创建 EditText1
-            EditText etContent1 = new EditText(this);
+            AutoCompleteTextView etContent1 = new AutoCompleteTextView(this);
             LinearLayout.LayoutParams etParams1 = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     dpToPx(25));
+            PoiSugSearch(etContent1,listView);
+            etContent1.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable arg0) {
+
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                    if (cs.length() <= 0) {
+                        return;
+                    }
+                    // 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
+                    mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
+                            .keyword(cs.toString()) // 关键字
+                            .city(city)); // 城市
+                }
+            });
+            etContent1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        Toast.makeText(getApplicationContext(), "focus", Toast.LENGTH_LONG).show();
+                        listView.setVisibility(View.VISIBLE);
+                    } else {
+                        listView.setVisibility(View.GONE);
+                    }
+                }
+            });
             etContent1.setLayoutParams(etParams1);
             etContent1.setId(View.generateViewId());
             etContent1.setGravity(Gravity.LEFT);
@@ -1123,6 +1232,17 @@ public class travelRecordActivity extends Activity {
             etContent1.setHint("标题");
             etContent1.setTag(newIndex);
             layout.addView(etContent1);
+
+// 设置 ListView 的布局参数
+            LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    getResources().getDimensionPixelSize(R.dimen.list_height) // 这里的 R.dimen.list_height 是在 dimens.xml 文件中定义的高度，可以根据实际需求进行修改
+            );
+            listView.setLayoutParams(layoutParam);
+            listView.setVisibility(View.GONE); // 设置初始可见性为 GONE
+// 给 ListView 设置 ID
+            listView.setId(View.generateViewId()); // 为了确保唯一性，可以使用 generateViewId() 为 ListView 生成一个唯一的 ID
+            layout.addView(listView);
 
 // 创建 EditText2
             EditText etContent2 = new EditText(this);
@@ -1492,6 +1612,235 @@ public class travelRecordActivity extends Activity {
     private String generateUUID() {
         return UUID.randomUUID().toString();
     }
+    private void PoiSugSearch(final AutoCompleteTextView autoCompleteTextView,final ListView listView){
+        OnGetSuggestionResultListener listener = new OnGetSuggestionResultListener() {
+            /**
+             * 获取在线建议搜索结果，得到requestSuggestion返回的搜索结果
+             *
+             * @param suggestionResult    Sug检索结果
+             */
+            @Override
+            public void onGetSuggestionResult(SuggestionResult suggestionResult) {
+                if (suggestionResult == null || suggestionResult.getAllSuggestions() == null) {
+                    return;
+                }
 
+                List<HashMap<String, String>> suggest = new ArrayList<>();
+                for (SuggestionResult.SuggestionInfo info : suggestionResult.getAllSuggestions()) {
+                    if (info.getKey() != null && info.getDistrict() != null && info.getCity() != null) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("key", info.getKey());
+                        map.put("city", info.getCity());
+                        map.put("dis", info.getDistrict());
+                        System.out.println(map);
+                    }
+                }
+
+                SimpleAdapter simpleAdapter = new SimpleAdapter(getApplicationContext(),
+                        suggest,
+                        R.layout.item_layout,
+                        new String[]{"key", "city", "dis"},
+                        new int[]{R.id.sug_key, R.id.sug_city, R.id.sug_dis}
+                );
+                listView.setVisibility(View.VISIBLE);
+                listView.setAdapter(simpleAdapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        // 获取点击的建议项的数据
+                        HashMap<String, String> selectedItem = suggest.get(position);
+                        selectedKey = selectedItem.get("key");
+                        selectedCity = selectedItem.get("city");
+                        selectedDistrict = selectedItem.get("dis");
+                        Log.v("AddLabelActivity", "lzx key"+selectedKey);
+                        Log.v("AddLabelActivity", "lzx city"+selectedCity);
+                        Log.v("AddLabelActivity", "lzx dis"+selectedDistrict);
+                        System.out.println("===key" +  selectedKey + "city" + selectedCity + "dis" + selectedDistrict + "===");
+
+                        // 使用地理编码服务获取经纬度坐标
+                        GeoCoder geoCoder = GeoCoder.newInstance();
+                        geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+                            @Override
+                            public void onGetGeoCodeResult(GeoCodeResult result) {
+                                if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+                                    // 没有检索到结果，处理错误
+                                    Log.v("AddLabelActivity", "lzx没东西");
+                                } else {
+                                    // 获取坐标信息
+                                    LatLng location = result.getLocation();
+
+                                    // 打印输出经纬度信息
+                                    Log.v("AddLabelActivity", "lzx Latitude: " + location.latitude);
+                                    Log.v("AddLabelActivity", "lzx Longitude: " + location.longitude);
+
+                                    // 在这里你可以将坐标信息存储到成员变量中，或者进行其他操作
+                                    LatLng point = location;
+
+                                    //创建marker
+                                    BitmapDescriptor bitmap = BitmapDescriptorFactory
+                                            .fromResource(R.drawable.ic_marker);
+                                    //构件MarkerOption，用于在地图上添加Marker
+                                    OverlayOptions option = new MarkerOptions()
+                                            .position(point)
+                                            .icon(bitmap)
+                                            .draggable(true)
+                                            .zIndex(1);
+
+                                    // 设置文本框的值
+                                    autoCompleteTextView.setText(selectedKey);
+
+                                    // 隐藏建议列表
+                                    listView.setVisibility(View.GONE);
+                                }
+                            }
+
+                            @Override
+                            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+                                // 反地理编码的结果，如果需要的话可以处理
+                            }
+                        });
+
+                        // 设置地理编码检索参数
+                        GeoCodeOption geoCodeOption = new GeoCodeOption()
+                                .city(selectedCity)
+                                .address(selectedDistrict + selectedKey);
+                        geoCoder.geocode(geoCodeOption);
+
+                        // 释放地理编码检索实例
+                        geoCoder.destroy();
+
+                        if (selectedKey != null) {
+                            autoCompleteTextView.setText(selectedKey);
+                        }
+
+                        // 隐藏建议列表（假设 mSugListView 是你的建议列表）
+                        listView.setVisibility(View.GONE);
+                    }
+                });
+                simpleAdapter.notifyDataSetChanged();
+            }
+
+        };
+        // 初始化建议搜索模块，注册建议搜索事件监听
+        mSuggestionSearch = SuggestionSearch.newInstance();
+        mSuggestionSearch.setOnGetSuggestionResultListener(listener);
+
+    }
+    private void  PoiSugSearch(){
+        OnGetSuggestionResultListener listener = new OnGetSuggestionResultListener() {
+            /**
+             * 获取在线建议搜索结果，得到requestSuggestion返回的搜索结果
+             *
+             * @param suggestionResult    Sug检索结果
+             */
+            @Override
+            public void onGetSuggestionResult(SuggestionResult suggestionResult) {
+                if (suggestionResult == null || suggestionResult.getAllSuggestions() == null) {
+                    return;
+                }
+
+                List<HashMap<String, String>> suggest = new ArrayList<>();
+                for (SuggestionResult.SuggestionInfo info : suggestionResult.getAllSuggestions()) {
+                    if (info.getKey() != null && info.getDistrict() != null && info.getCity() != null) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("key", info.getKey());
+                        map.put("city", info.getCity());
+                        map.put("dis", info.getDistrict());
+                        suggest.add(map);
+                        System.out.println(map);
+                    }
+                }
+
+                SimpleAdapter simpleAdapter = new SimpleAdapter(getApplicationContext(),
+                        suggest,
+                        R.layout.item_layout,
+                        new String[]{"key", "city", "dis"},
+                        new int[]{R.id.sug_key, R.id.sug_city, R.id.sug_dis}
+                );
+                mSugListView.setVisibility(View.VISIBLE);
+                mSugListView.setAdapter(simpleAdapter);
+                mSugListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        // 获取点击的建议项的数据
+                        HashMap<String, String> selectedItem = suggest.get(position);
+
+                        selectedKey = selectedItem.get("key");
+                        selectedCity = selectedItem.get("city");
+                        selectedDistrict = selectedItem.get("dis");
+                        Log.v("AddLabelActivity", "lzx key"+selectedKey);
+                        Log.v("AddLabelActivity", "lzx city"+selectedCity);
+                        Log.v("AddLabelActivity", "lzx dis"+selectedDistrict);
+                        System.out.println("===key" +  selectedKey + "city" + selectedCity + "dis" + selectedDistrict + "===");
+
+                        // 使用地理编码服务获取经纬度坐标
+                        GeoCoder geoCoder = GeoCoder.newInstance();
+                        geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+                            @Override
+                            public void onGetGeoCodeResult(GeoCodeResult result) {
+                                if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+                                    // 没有检索到结果，处理错误
+                                    Log.v("AddLabelActivity", "lzx没东西");
+                                } else {
+                                    // 获取坐标信息
+                                    LatLng location = result.getLocation();
+
+                                    // 打印输出经纬度信息
+                                    Log.v("AddLabelActivity", "lzx Latitude: " + location.latitude);
+                                    Log.v("AddLabelActivity", "lzx Longitude: " + location.longitude);
+
+                                    // 在这里你可以将坐标信息存储到成员变量中，或者进行其他操作
+                                    LatLng point = location;
+
+                                    //创建marker
+                                    BitmapDescriptor bitmap = BitmapDescriptorFactory
+                                            .fromResource(R.drawable.ic_marker);
+                                    //构件MarkerOption，用于在地图上添加Marker
+                                    OverlayOptions option = new MarkerOptions()
+                                            .position(point)
+                                            .icon(bitmap)
+                                            .draggable(true)
+                                            .zIndex(1);
+
+                                    // 设置文本框的值
+                                    etContent1.setText(selectedKey);
+
+                                    // 隐藏建议列表
+                                    mSugListView.setVisibility(View.GONE);
+                                }
+                            }
+
+                            @Override
+                            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+                                // 反地理编码的结果，如果需要的话可以处理
+                            }
+                        });
+
+                        // 设置地理编码检索参数
+                        GeoCodeOption geoCodeOption = new GeoCodeOption()
+                                .city(selectedCity)
+                                .address(selectedDistrict + selectedKey);
+                        geoCoder.geocode(geoCodeOption);
+
+                        // 释放地理编码检索实例
+                        geoCoder.destroy();
+
+                        if (selectedKey != null) {
+                            etContent1.setText(selectedKey);
+                        }
+
+                        // 隐藏建议列表（假设 mSugListView 是你的建议列表）
+                        mSugListView.setVisibility(View.GONE);
+                    }
+                });
+                simpleAdapter.notifyDataSetChanged();
+            }
+
+        };
+        // 初始化建议搜索模块，注册建议搜索事件监听
+        mSuggestionSearch = SuggestionSearch.newInstance();
+        mSuggestionSearch.setOnGetSuggestionResultListener(listener);
+
+    }
     //TODO 上古遗留bugcontent和title并不是List<list<String>>保存删除中间后面的会消失 以后再改 ,要求用户按顺序添加
 }

@@ -25,6 +25,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import java.io.File;
@@ -95,74 +97,97 @@ public class UploadPostActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        post.setPostContent(content.getText().toString());
-                        post.setPostTitle(title.getText().toString());
-                        //设定1位用户发帖，2为用户分享旅游经历
-                        // id需从本地获取，待个人信息模块完成后补充实现
-                        post.setuserId(userId);
-                        Date currentTime = new Date();
-                        // 定义日期时间格式
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        if(title.getText().toString().equals("") || content.getText().toString().equals("") || fileList.size() == 0){
+                            //弹出提醒框
+                            //打开ui线程
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // 创建一个包含文本的自定义布局
+                                    View toastView = getLayoutInflater().inflate(R.layout.toast_layout, null);
 
-                        // 格式化当前时间
-                        String formattedTime = sdf.format(currentTime);
-                        post.setCreateTime(formattedTime);
-                        post.setPictureNumber(fileList.size());
-                        OkHttpClient client = new OkHttpClient();
-                        Gson gson = new Gson();
-                        String json = gson.toJson(post);
-                        MultipartBody.Builder builder = new MultipartBody.Builder()
-                                .setType(MultipartBody.FORM)
-                                .addFormDataPart("post", json, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json));
+                                    // 获取自定义布局中的 TextView
+                                    TextView textView = toastView.findViewById(R.id.toast_text);
+                                    textView.setText("请填写完整信息");
+                                    // 创建并显示自定义 Toast
+                                    Toast toast = new Toast(UploadPostActivity.this);
+                                    toast.setDuration(Toast.LENGTH_SHORT);
+                                    toast.setView(toastView);
+                                    toast.show();
 
-                        //循环处理图片
-                        for (int i = 0; i < fileList.size(); i++) {
-                            File file = fileList.get(i);
-                            if (file != null && file.exists()) {
-                                int totalChunks = calculateTotalChunks(file);//计算分片数
-                                String identifier = generateUniqueIdentifier();//生成唯一标识符
-                                int sequenceNumber = 0;
+                                    upload.setEnabled(true);
+                                }
+                            });
+                        }else {
+                            post.setPostContent(content.getText().toString());
+                            post.setPostTitle(title.getText().toString());
+                            //设定1位用户发帖，2为用户分享旅游经历
+                            // id需从本地获取，待个人信息模块完成后补充实现
+                            post.setuserId(userId);
+                            Date currentTime = new Date();
+                            // 定义日期时间格式
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-                                try(InputStream inputStream = new FileInputStream(file)) {
-                                    byte[] buffer = new byte[1024*1024];//设定分片大小
-                                    int bytesRead;
-                                    while ((bytesRead = inputStream.read(buffer))!=-1){
-                                        byte[] actualBuffer = Arrays.copyOfRange(buffer, 0, bytesRead);
-                                        builder.addFormDataPart("identifiers", identifier);
-                                        builder.addFormDataPart("sequenceNumbers", String.valueOf(sequenceNumber));
-                                        builder.addFormDataPart("totalChunks", String.valueOf(totalChunks));
-                                        builder.addFormDataPart("images", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), actualBuffer));
-                                        sequenceNumber++;
+                            // 格式化当前时间
+                            String formattedTime = sdf.format(currentTime);
+                            post.setCreateTime(formattedTime);
+                            post.setPictureNumber(fileList.size());
+                            OkHttpClient client = new OkHttpClient();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(post);
+                            MultipartBody.Builder builder = new MultipartBody.Builder()
+                                    .setType(MultipartBody.FORM)
+                                    .addFormDataPart("post", json, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json));
+
+                            //循环处理图片
+                            for (int i = 0; i < fileList.size(); i++) {
+                                File file = fileList.get(i);
+                                if (file != null && file.exists()) {
+                                    int totalChunks = calculateTotalChunks(file);//计算分片数
+                                    String identifier = generateUniqueIdentifier();//生成唯一标识符
+                                    int sequenceNumber = 0;
+
+                                    try(InputStream inputStream = new FileInputStream(file)) {
+                                        byte[] buffer = new byte[1024*1024];//设定分片大小
+                                        int bytesRead;
+                                        while ((bytesRead = inputStream.read(buffer))!=-1){
+                                            byte[] actualBuffer = Arrays.copyOfRange(buffer, 0, bytesRead);
+                                            builder.addFormDataPart("identifiers", identifier);
+                                            builder.addFormDataPart("sequenceNumbers", String.valueOf(sequenceNumber));
+                                            builder.addFormDataPart("totalChunks", String.valueOf(totalChunks));
+                                            builder.addFormDataPart("images", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), actualBuffer));
+                                            sequenceNumber++;
+                                        }
+
+                                    }catch (IOException e){
+                                        e.printStackTrace();
                                     }
 
-                                }catch (IOException e){
-                                    e.printStackTrace();
+                                }else {
                                 }
-
-                            }else {
                             }
-                        }
-                        RequestBody requestBody = builder.build();
-                        Request request = new Request.Builder()
-                                .url(url)
-                                .post(requestBody)
-                                .build();
-                        try {
-                            //发送请求
-                            Response response = client.newCall(request).execute();
+                            RequestBody requestBody = builder.build();
+                            Request request = new Request.Builder()
+                                    .url(url)
+                                    .post(requestBody)
+                                    .build();
+                            try {
+                                //发送请求
+                                Response response = client.newCall(request).execute();
 
-                            if (response.isSuccessful()) {
-                                String responseData = response.body().string();
-                                // 处理响应数据
-                            } else {
-                                // 请求失败处理错误
+                                if (response.isSuccessful()) {
+                                    String responseData = response.body().string();
+                                    // 处理响应数据
+                                } else {
+                                    // 请求失败处理错误
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            //上传完成，重新启用
+                            upload.setEnabled(true);
+                            uploadComplete();
                         }
-                        //上传完成，重新启用
-                        upload.setEnabled(true);
-                        uploadComplete();
                     }
                 }).start();
             }

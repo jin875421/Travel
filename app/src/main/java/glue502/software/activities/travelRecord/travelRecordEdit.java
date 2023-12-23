@@ -126,6 +126,7 @@ public class travelRecordEdit extends Activity {
     private int getWhich() {
         return this.which;
     }
+    //TODO 保存数据
     private void initData() {
         //获取数据
         OkHttpClient client = new OkHttpClient();
@@ -141,7 +142,7 @@ public class travelRecordEdit extends Activity {
                     runOnUiThread(()->{
                         etTravelName.setText(travelRecords.get(0).getTravelName());
                         for(int i = 0 ;i<=travelRecords.size();i++){
-                            addContentWithTag(i);
+                            addContentWithTag(i,travelRecords.get(i));
                         }
                     });
                 } catch (IOException e) {
@@ -760,7 +761,7 @@ public class travelRecordEdit extends Activity {
             }
         }
     }
-    private void addContentWithTag(int i){
+    private void addContentWithTag(int i,travelRecord travelRecord){
         // 1.创建外围LinearLayout控件
         LinearLayout layout = new LinearLayout(travelRecordEdit.this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -801,6 +802,8 @@ public class travelRecordEdit extends Activity {
 //// 将 ImageView 添加到内部 LinearLayout
         innerLayout.addView(imageView,0);
 
+        //TODO 在这里写图片的展示
+
 // 将内部 LinearLayout 添加到 HorizontalScrollView
         scrollView.addView(innerLayout);
 
@@ -814,11 +817,11 @@ public class travelRecordEdit extends Activity {
                 dpToPx(25));
         etContent1.setLayoutParams(etParams1);
         etContent1.setId(View.generateViewId());
+        etContent1.setText(travelRecord.getPlaceName());
         etContent1.setGravity(Gravity.LEFT);
         etContent1.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         etContent1.setPadding(dpToPx(5), 0, 0, 0);
         etContent1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-        etContent1.setHint("标题");
         etContent1.setTag(i);
         layout.addView(etContent1);
 
@@ -833,7 +836,7 @@ public class travelRecordEdit extends Activity {
         etContent2.setGravity(Gravity.LEFT);
         etContent2.setPadding(dpToPx(5), 0, 0, 0);
         etContent2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        etContent2.setHint("输入你的内容");
+        etContent2.setText(travelRecord.getContent());
         etContent2.setSingleLine(false);
         etContent2.setLines(25); // 设置初始行数为5行
         etContent2.setMinLines(12); // 设置最大行数为5行

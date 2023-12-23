@@ -1,11 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
+    android:paddingTop="35dp"
     tools:context=".activities.travelRecord.travelRecordActivity" >
-
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -64,6 +63,12 @@
                     android:paddingLeft="5dip"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <ListView
+                    android:id="@+id/sug_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:visibility="gone" />
 
 
                 <EditText

@@ -69,7 +69,6 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
         }
     }
 
-
     @NonNull
     @Override
     public BannerPagerAdapter.ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -136,6 +135,7 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
 
     @Override
     public int getItemCount() {
+//        return imagepath != null ? imagepath.size() : 0;
         return Integer.MAX_VALUE;
     }
 
@@ -147,4 +147,37 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
             imageView = itemView.findViewById(R.id.imageView);
         }
     }
+
+//    private void loadNetworkImageAndShowFullScreen(String imageUrl) {
+//        Glide.with(context)
+//                .asBitmap()
+//                .load(imageUrl)
+//                .diskCacheStrategy(DiskCacheStrategy.NONE) // 禁用缓存，可根据需求调整
+//                .skipMemoryCache(true) // 禁用内存缓存，可根据需求调整
+//                .into(new SimpleTarget<Bitmap>() {
+//                    @Override
+//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+//                        // 图片加载完成后显示全屏
+//                        showFullScreenImage(resource);
+//                    }
+//                });
+//
+//    }
+//    private void showFullScreenImage(Bitmap bitmap) {
+//        if (context instanceof Activity) {
+//            final Dialog dialog = new Dialog(context);
+//            ImageView image = new ImageView(context);
+//            image.setImageBitmap(bitmap);
+//            dialog.setContentView(image);
+//            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+//            dialog.show();
+//            // 点击图片取消
+//            image.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    dialog.cancel();
+//                }
+//            });
+//        }
+//    }
 }
