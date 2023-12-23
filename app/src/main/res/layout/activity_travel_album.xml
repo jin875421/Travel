@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.travelRecord.TravelAlbumActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="35dp">
 
-    <!--这是一个用于集成所有listView的下拉的控件，在这里要添加很多个GlideView-->
     <com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
-        <!-- 设置app:layout_isSticky="true"就可以使View吸顶 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
