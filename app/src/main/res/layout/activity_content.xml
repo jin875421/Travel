@@ -65,6 +65,12 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
+                <ListView
+                    android:id="@+id/sug_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:visibility="gone" />
+
 
                 <EditText
                     android:id="@+id/et_content2"
