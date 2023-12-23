@@ -10,11 +10,16 @@ import android.widget.LinearLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
 import glue502.software.adapters.BannerPagerAdapter;
+import glue502.software.models.RecoAttraction;
 
 public class Carousel {
     private Context mContext;
@@ -23,6 +28,7 @@ public class Carousel {
     private List<ImageView> mDotVIewList = new ArrayList<>();
     private List<String> originalImages = new ArrayList<>();
     private boolean isFiestDot = true;
+    private String extraPath;
     private Handler mHandler = new Handler();
     private final Runnable runnable = new Runnable() {
         @Override
@@ -35,10 +41,11 @@ public class Carousel {
         }
     };
 
-    public Carousel(Context mContext, LinearLayout dotLinerLayout, ViewPager2 viewPager2) {
+    public Carousel(Context mContext, LinearLayout dotLinerLayout, ViewPager2 viewPager2,String extraPath) {
         this.mContext = mContext;
         this.dotLinerLayout = dotLinerLayout;
         this.viewPager2 = viewPager2;
+        this.extraPath = extraPath;
     }
 
     public void initViews(List<String> imagePaths) {
@@ -61,9 +68,7 @@ public class Carousel {
             mDotVIewList.add(dotImageView);
             dotLinerLayout.addView(dotImageView);
         }
-
-
-        BannerPagerAdapter bannerPagerAdapter = new BannerPagerAdapter(imagePaths, viewPager2);
+        BannerPagerAdapter bannerPagerAdapter = new BannerPagerAdapter(imagePaths, viewPager2,extraPath);
         viewPager2.setAdapter(bannerPagerAdapter);
         //设置当前项为第一个元素，使其为轮播图的开始
         viewPager2.setCurrentItem(imagePaths.size() * 10000, false);
@@ -84,10 +89,11 @@ public class Carousel {
 
     }
 
-    public void initViewsLBT(List<String> imagePaths) {
+    public void initViews1(String recoAttractionsStr) {
+        Type RecoAttractionListType = new TypeToken<List<RecoAttraction>>(){}.getType();
+        List<RecoAttraction> recoAttractions = new Gson().fromJson(recoAttractionsStr,RecoAttractionListType);
         //加载绑定轮播图
-        for (String path : imagePaths) {
-//                    originalImages.add(path);
+        for (RecoAttraction r : recoAttractions) {
             //制作标志点的ImageView，并初始化第一张图片标志点
             ImageView dotImageView = new ImageView(mContext);
             if (isFiestDot) {
@@ -104,17 +110,15 @@ public class Carousel {
             mDotVIewList.add(dotImageView);
             dotLinerLayout.addView(dotImageView);
         }
-
-        BannerPagerAdapter bannerPagerAdapter = new BannerPagerAdapter(imagePaths, viewPager2);
+        BannerPagerAdapter bannerPagerAdapter = new BannerPagerAdapter(recoAttractions,recoAttractionsStr, viewPager2,1);
         viewPager2.setAdapter(bannerPagerAdapter);
         //设置当前项为第一个元素，使其为轮播图的开始
-        viewPager2.setCurrentItem(imagePaths.size() * 10000, false);
+        viewPager2.setCurrentItem((recoAttractions.size() * 10000)+1, false);
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                //z
-                int current = position % imagePaths.size();
+                int current = position % recoAttractions.size();
                 for (int i = 0; i < mDotVIewList.size(); i++) {
                     mDotVIewList.get(i).setImageResource(R.drawable.dot_white);
                 }
@@ -129,6 +133,6 @@ public class Carousel {
 //                }
 //            }
         });
-        mHandler.postDelayed(runnable,2000);
+        mHandler.postDelayed(runnable,3000);
     }
 }

@@ -39,7 +39,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         if (getIntent().getSerializableExtra("travelRecord")!= null) {
             travelRecord = (travelRecord) getIntent().getSerializableExtra("travelRecord");
             //设置图片
-            Carousel carousel = new Carousel(this, findViewById(R.id.index_dot), findViewById(R.id.post_image));
+            Carousel carousel = new Carousel(this, findViewById(R.id.index_dot), findViewById(R.id.post_image),"");
             carousel.initViews(travelRecord.getImage());
             title.setText(travelRecord.getPlaceName());
             content.setText(travelRecord.getContent());
