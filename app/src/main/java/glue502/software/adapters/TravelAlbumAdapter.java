@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
@@ -66,7 +67,13 @@ public class TravelAlbumAdapter extends BaseAdapter {
         String picturePath = sp.getPicturePath().get(0);
 
 //        String picturePath = list.get(i);
+
+        //将地点写上去
+        TextView tvPlace = view.findViewById(R.id.tv_picture);
+        tvPlace.setText(sp.getPlaceName());
         System.out.println(picturePath);
+
+        //显示图片
         Glide.with(context)
                 .load(picturePath)
                 .into(ivAlbum);
