@@ -78,7 +78,7 @@ public class PostEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_edit);
         //沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(this, findViewById(R.id.post_back_btn));
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(),true);
         initView();
         initData();
         setListener();

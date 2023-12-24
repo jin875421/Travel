@@ -40,7 +40,7 @@ android {
 dependencies {
     //这个依赖用于相册功能的页面布局
     implementation 'com.github.donkingliang:ConsecutiveScroller:2.6.2'
-
+    //修图
     // 使用了 Androidx
 //    implementation 'com.github.donkingliang:ConsecutiveScroller:2.3.0'
 //
@@ -56,6 +56,7 @@ dependencies {
 //    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation 'com.daimajia.androidanimations:library:2.4@aar'
+
     //以上是新加的
     implementation 'com.airbnb.android:lottie:3.2.2'
 //    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
@@ -72,6 +73,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     //smartrefresh
+
     implementation  'io.github.scwang90:refresh-layout-kernel:2.1.0'      //核心必须依赖
     implementation  'io.github.scwang90:refresh-header-classics:2.1.0'    //经典刷新头
     implementation  'io.github.scwang90:refresh-header-radar:2.1.0'       //雷达刷新头

@@ -5,26 +5,37 @@
     android:layout_height="match_parent"
     android:id="@+id/layout_community"
     tools:context=".fragments.CommunityFragment"
-    android:paddingTop="35dp">
+    >
 
    <LinearLayout
        android:id="@+id/community_top"
+       android:paddingTop="35dp"
        android:layout_centerHorizontal="true"
-       android:layout_width="350dp"
+       android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:layout_marginVertical="5dp">
+       android:background="@color/gray"
+       android:paddingBottom="5dp"
+       >
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="10dp"
+             android:layout_marginRight="5dp"
+             android:text="社区"
+             android:textSize="30dp"/>
+
       <EditText
           android:id="@+id/et_searchtext"
           android:layout_width="0dp"
           android:layout_height="match_parent"
           android:layout_weight="3"
           android:hint="输入关键字搜索"
-          android:background="#F1F3F5"
+          android:layout_marginRight="20dp"
+          android:background="@drawable/background_frame"
           android:textSize="18sp"
           android:drawableLeft="@android:drawable/ic_menu_search"
           android:singleLine="true"
-          android:imeOptions="actionSearch"
-          />
+          android:imeOptions="actionSearch" />
    </LinearLayout>
    <com.scwang.smart.refresh.layout.SmartRefreshLayout
        android:id="@+id/refreshLayout"

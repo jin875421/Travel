@@ -58,11 +58,12 @@ public class CommunityFragment extends Fragment {
     private String status;
     private RefreshLayout refreshLayout;
     private EditText searchText;
+    private View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_community,container,false);
+        view = inflater.inflate(R.layout.fragment_community,container,false);
         listView = view.findViewById(R.id.post_display);
         searchText = view.findViewById(R.id.et_searchtext);
         uploadBtn = view.findViewById(R.id.floating_button);
@@ -72,7 +73,7 @@ public class CommunityFragment extends Fragment {
         setListener();
         initData();
         //添加沉浸式
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.layout_community));
+        MyViewUtils.setISBarWithoutView(getActivity(),true);
 
         return view;
 
@@ -176,7 +177,6 @@ public class CommunityFragment extends Fragment {
                                                     }else {
 
                                                     }
-
                                                 }
                                             });
                                         }
@@ -188,16 +188,12 @@ public class CommunityFragment extends Fragment {
                         }
                     }).start();
 
-                }else {
-                    //开启线程接收帖子数据
                 }
             }
 
             @Override
             public void afterTextChanged(android.text.Editable s) {
-                if (s.toString().length()>0){
 
-                }
             }
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
@@ -274,5 +270,12 @@ public class CommunityFragment extends Fragment {
                 initData();
             }
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        //添加沉浸式
+        MyViewUtils.setISBarWithoutView(getActivity(),true);
     }
 }

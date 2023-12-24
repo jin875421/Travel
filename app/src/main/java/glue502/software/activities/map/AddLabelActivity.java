@@ -6,13 +6,11 @@ import glue502.software.models.MarkerIntentInfo;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -51,11 +49,9 @@ import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 public class AddLabelActivity extends AppCompatActivity {
 
@@ -70,7 +66,11 @@ public class AddLabelActivity extends AppCompatActivity {
     private ListView mSugListView;
     private LocationClient mLocationClient;
     double latitude, longitude;
-    String city = "北京市";
+    private String city = "北京市";
+    private String TruthCity;
+    private String selectedKey;
+    private String selectedCity;
+    private String selectedDistrict;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +101,7 @@ public class AddLabelActivity extends AppCompatActivity {
         toMap = findViewById(R.id.but_toMap);
         editText1 = findViewById(R.id.main_edt_city);
         editText2 = findViewById(R.id.main_edt_poi);
-        mMapView = findViewById(R.id.bmapView);
+        mMapView = findViewById(R.id.add_label_bmapView);
 //        mMapView.setVisibility(View.GONE);
         mBaiduMap = mMapView.getMap();
         mSugListView = findViewById(R.id.sug_list);
@@ -222,14 +222,18 @@ public class AddLabelActivity extends AppCompatActivity {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 Log.v("AddLabelActivity", "lzx点击了marker");
-                Intent intent = new Intent(AddLabelActivity.this, AddMarkerActivity.class);
+                Intent intent = new Intent(AddLabelActivity.this, AddStrategyActivity.class);
                 Bundle bundle = new Bundle();
                 MarkerIntentInfo markerIntentInfo = new MarkerIntentInfo(
                         editText2.getText().toString(),
                         marker.getPosition().latitude,
-                        marker.getPosition().longitude
+                        marker.getPosition().longitude,
+                        selectedKey,
+                        selectedCity,
+                        selectedDistrict
                 );
-                intent.putExtras(bundle);
+                bundle.putSerializable("markerIntentInfo", markerIntentInfo);
+                intent.putExtra("bundle", bundle);
                 startActivity(intent);
                 return true;
             }
@@ -276,12 +280,13 @@ public class AddLabelActivity extends AppCompatActivity {
                         // 获取点击的建议项的数据
                         HashMap<String, String> selectedItem = suggest.get(position);
 
-                        String selectedKey = selectedItem.get("key");
-                        String selectedCity = selectedItem.get("city");
-                        String selectedDistrict = selectedItem.get("dis");
+                        selectedKey = selectedItem.get("key");
+                        selectedCity = selectedItem.get("city");
+                        selectedDistrict = selectedItem.get("dis");
                         Log.v("AddLabelActivity", "lzx key"+selectedKey);
-                        Log.v("AddLabelActivity", "lzx city"+selectedCity.toString());
-                        Log.v("AddLabelActivity", "lzx dis"+selectedDistrict.toString());
+                        Log.v("AddLabelActivity", "lzx city"+selectedCity);
+                        Log.v("AddLabelActivity", "lzx dis"+selectedDistrict);
+                        System.out.println("===key" +  selectedKey + "city" + selectedCity + "dis" + selectedDistrict + "===");
 
                         // 使用地理编码服务获取经纬度坐标
                         GeoCoder geoCoder = GeoCoder.newInstance();

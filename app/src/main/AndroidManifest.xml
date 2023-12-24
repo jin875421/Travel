@@ -2,10 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <!-- 权限声明 -->
-    <!--    读写权限-->
+    <!-- 读写权限 -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <!-- 访问网络状态 -->
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" /> <!-- 访问网络状态 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 控制呼吸灯，振动器等，用于新消息提醒 -->
@@ -29,6 +28,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.recoAttraction.AttractionDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.travelRecord.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.travelRecord.travelRecordEdit"
+            android:exported="false" />
+        <activity
             android:name=".activities.travelRecord.TravelPicturesActivity"
             android:exported="false" />
         <activity
@@ -50,6 +58,15 @@
             android:name=".activities.travelRecord.TravelReviewActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.map.StrategyDisplayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.map.StrategyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.map.AddStrategyActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.map.AddLabelActivity"
             android:exported="false" />
         <activity
@@ -57,9 +74,6 @@
             android:exported="false" />
         <activity
             android:name=".activities.travelRecord.travelRecordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.personal.MineStarActivity"
             android:exported="false" />
         <activity
             android:name=".activities.login.RegisterActivity"
@@ -81,7 +95,8 @@
             android:exported="false" />
         <activity
             android:name=".activities.posts.PostDisplayActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".activities.posts.UploadPostActivity"
             android:exported="false" />

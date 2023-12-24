@@ -63,6 +63,9 @@ public class TravelPicturesActivity extends AppCompatActivity {
 //        travelPicturesAdapter = new TravelPicturesAdapter(list1,this);
 
 //        gvPictures.setAdapter(travelPicturesAdapter);
+//        gvPictures = findViewById(R.id.gv_pictures);
+        //沉浸式状态栏
+//        MyViewUtils.setISBarWithoutView(this,true);
 
 
 //        ViewPager viewPager = findViewById(R.id.viewPager);

@@ -7,7 +7,7 @@
     tools:context=".activities.travelRecord.TravelDetailActivity">
     <RelativeLayout
         android:id="@+id/travel_detail_layout"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="35dp"
         android:layout_width="match_parent"
         android:layout_height="50dp">
         <ImageView
@@ -24,6 +24,13 @@
             android:layout_centerHorizontal="true"
             android:textSize="30sp"
             />
+        <ImageView
+            android:id="@+id/popupmenu"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/menu"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
     </RelativeLayout>
     <ListView
         android:id="@+id/list_view"

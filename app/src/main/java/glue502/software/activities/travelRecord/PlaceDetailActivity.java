@@ -23,7 +23,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_detail);
         //沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView());
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),false);
         initView();
         setlistener();
         initData();
@@ -39,7 +39,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         if (getIntent().getSerializableExtra("travelRecord")!= null) {
             travelRecord = (travelRecord) getIntent().getSerializableExtra("travelRecord");
             //设置图片
-            Carousel carousel = new Carousel(this, findViewById(R.id.index_dot), findViewById(R.id.post_image));
+            Carousel carousel = new Carousel(this, findViewById(R.id.index_dot), findViewById(R.id.post_image),"");
             carousel.initViews(travelRecord.getImage());
             title.setText(travelRecord.getPlaceName());
             content.setText(travelRecord.getContent());

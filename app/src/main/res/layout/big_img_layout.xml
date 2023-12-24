@@ -6,7 +6,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="猫猫猫"
         android:textSize="24dp"
         android:textColor="@color/white"
         android:layout_marginTop="32dp"
@@ -15,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/big_img_tv"
-        android:text="喵喵喵"
         android:textSize="18dp"
         android:layout_marginBottom="16dp"
         android:textColor="@color/white"
