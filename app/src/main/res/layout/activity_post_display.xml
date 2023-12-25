@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
+            android:textColor="#0F0F0F"
             android:text="正文"
             android:textSize="20sp" />
         <ImageView
@@ -90,7 +91,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:background="@drawable/background_frame_underline"/>
+                android:background="@drawable/background_frame_underline"
+                android:paddingBottom="20dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

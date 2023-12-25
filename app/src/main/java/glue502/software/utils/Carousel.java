@@ -49,6 +49,8 @@ public class Carousel {
     }
 
     public void initViews(List<String> imagePaths) {
+        //先清空dotLinerLayout
+        dotLinerLayout.removeAllViews();
         //加载绑定轮播图
         for (String path : imagePaths) {
 //                    originalImages.add(path);
