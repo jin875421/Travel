@@ -75,6 +75,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
         txtSex=findViewById(R.id.txt_sex);
         edtEmail=findViewById(R.id.edt_email);
         rltlChooseAvatar=findViewById(R.id.rltl_choose_avatar);
+        MyViewUtils.setISBarWithoutView(this,true);
         //写入用户数据
         writeData();
         rltlChooseSex.setOnClickListener(new View.OnClickListener() {

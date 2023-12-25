@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:layout_margin="15dp"
     tools:context=".fragments.PersonalInformationFragment"
+
     >
     <ImageView
         android:layout_width="match_parent"
@@ -17,10 +18,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <RelativeLayout
+            android:id="@+id/personal_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:paddingTop="35dp"
             android:paddingRight="15dp">
             <LinearLayout
                 android:id="@+id/linear_customer_service"
@@ -106,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/round"
+            android:background="@drawable/background_frame_1"
             android:orientation="vertical">
 
             <androidx.viewpager2.widget.ViewPager2

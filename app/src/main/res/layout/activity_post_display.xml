@@ -130,6 +130,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="15dp"
+                android:background="@null"
                 android:hint="请友好交流哦" />
         </LinearLayout>
         <LinearLayout

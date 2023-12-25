@@ -4,12 +4,17 @@ import static glue502.software.activities.MainActivity.ip;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import static androidx.constraintlayout.motion.widget.Debug.getLocation;
+
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -21,6 +26,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -61,11 +67,10 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class RecommendFragment extends Fragment {
-    private Button createBtn;
-    private Button reviewBtn;
     private LinearLayout rltlCreate;
     private LinearLayout rltlFootprint;
     private LinearLayout rltlPhoto;
+    private TextView txtLocation;
     private View view;
     private ViewPager2 vp2;
     private LinearLayout dotLinerLayout;
@@ -96,6 +101,7 @@ public class RecommendFragment extends Fragment {
         setlistener();
         date();
         getCarousel();
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
         return view;
     }
 

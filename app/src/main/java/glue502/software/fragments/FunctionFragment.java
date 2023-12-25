@@ -40,6 +40,7 @@ import glue502.software.activities.map.StrategyActivity;
 import glue502.software.models.Comment;
 import glue502.software.models.MarkerInfo;
 
+import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -64,7 +65,7 @@ public class FunctionFragment extends Fragment {
         SDKInitializer.initialize(getActivity().getApplicationContext());
 
         view = inflater.inflate(R.layout.fragment_function, container, false);
-
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.function_top),true);
         initView();
         initData();
         setListener();
@@ -158,6 +159,7 @@ public class FunctionFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.function_top),true);
         mMapView.onResume();
     }
     @Override

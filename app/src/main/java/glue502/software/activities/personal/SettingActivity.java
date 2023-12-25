@@ -30,6 +30,7 @@ public class SettingActivity extends AppCompatActivity {
         btnDestroy=findViewById(R.id.btn_destroy);
         imgBcak=findViewById(R.id.img_back);
         rltlAccount=findViewById(R.id.rltl_account);
+        MyViewUtils.setISBarWithoutView(this,true);
         rltlAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
