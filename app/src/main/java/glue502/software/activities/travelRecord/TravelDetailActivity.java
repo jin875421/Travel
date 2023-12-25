@@ -41,7 +41,7 @@ public class TravelDetailActivity extends AppCompatActivity {
     private List<travelRecord> travelRecords;
     private ListView travelRecordList;
     private ImageView back;
-    private String url = "http://"+ip+"/travel/travel/showATravel";
+    private String url = "http://"+ip+"/travel";
     private int checkedItemId = R.id.edit;
     private ImageView menuBtn;
     @Override
@@ -65,7 +65,7 @@ public class TravelDetailActivity extends AppCompatActivity {
     public void initData(){
         //获取数据
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(url+"?travelId="+travelId).build();
+        Request request = new Request.Builder().url(url+"/travel/showATravel?travelId="+travelId).build();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -126,13 +126,14 @@ public class TravelDetailActivity extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(TravelDetailActivity.this);
                         builder.setTitle("删除")
                                 .setMessage("是否删除该记录？")
+                                .setCancelable(true)
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         // 点击“确定”按钮后的操作
                                         // 发送请求
                                         OkHttpClient client = new OkHttpClient();
                                         Request request = new Request.Builder()
-                                                .url(url+"travel/deleteTravel?travelId="+travelId)
+                                                .url(url+"/travel/deleteTravel?travelId="+travelId)
                                                 .build();
                                         //开启线程发送请求
                                         new Thread(new Runnable() {
@@ -150,6 +151,12 @@ public class TravelDetailActivity extends AppCompatActivity {
                                                 }
                                             }
                                         }).start();
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // 点击“取消”按钮后的操作
+                                        dialog.dismiss();
                                     }
                                 }).show();
                         break;
