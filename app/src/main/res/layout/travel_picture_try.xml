@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<!--    &lt;!&ndash;在这里添加一张照片&ndash;&gt;-->
+<!--    <ImageView-->
+<!--        android:id="@+id/iv_item"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:layout_width="100dp"-->
+<!--        tools:ignore="MissingConstraints" />-->
+
+
+
+    <!-- item_image.xml -->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

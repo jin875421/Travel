@@ -72,6 +72,7 @@ public class PersonalInformationFragment extends Fragment {
     private LinearLayout linearTitle;
     private LinearLayout linearCustomerService;
     private ImageView imgAvatar;
+    private View view;
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
     private String urlLoadImage="http://"+ip+"/travel/";
     private Handler mHandler = new Handler() {
@@ -102,7 +103,7 @@ public class PersonalInformationFragment extends Fragment {
     };
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_personal_information, container, false);
+         view=inflater.inflate(R.layout.fragment_personal_information, container, false);
         txtName=view.findViewById(R.id.txt_name);
         txtUserId=view.findViewById(R.id.txt_userId);
         linearSetting=view.findViewById(R.id.linear_setting);
@@ -116,6 +117,7 @@ public class PersonalInformationFragment extends Fragment {
         fragments.add(new StarFragment());
         fragments.add(new MyPostFragment());
         PageAdapter adapter = new PageAdapter(fragments,getActivity());
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
         //绑定监听器
         viewPager2.setAdapter(adapter);
         TabLayoutMediator mediator = new TabLayoutMediator(
@@ -142,7 +144,7 @@ public class PersonalInformationFragment extends Fragment {
         SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String status=sharedPreferences.getString("status","");
         //沉浸式状态栏
-        MyViewUtils.setISBarWithoutView(getActivity(),false);
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
         if("".equals(status)){
             txtName.setText("请登录");
             txtUserId.setText("");
@@ -465,6 +467,6 @@ public class PersonalInformationFragment extends Fragment {
     public void onResume() {
         super.onResume();
         //沉浸式状态栏
-        MyViewUtils.setISBarWithoutView(getActivity(),false);
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
     }
 }

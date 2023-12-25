@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+ <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,10 +12,13 @@
         android:layout_width="110dp"
         tools:ignore="MissingConstraints" />
     <TextView
-        android:id="@+id/tv_place"
+        android:id="@+id/tv_picture"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="照片地点"
-        android:textSize="20dp"/>
+        android:text="这是照片的地点"
+        android:textColor="@color/white"
+        android:layout_alignBottom="@+id/iv_album"
+        />
+
 
 </RelativeLayout>

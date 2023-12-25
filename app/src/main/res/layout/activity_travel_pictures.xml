@@ -8,16 +8,29 @@
 
 
     <!--在这里布局所有的照片，同时最好设置放大功能-->
-    <GridView
-        android:id="@+id/gv_pictures"
+<!--    <GridView-->
+<!--        android:id="@+id/gv_pictures"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:columnWidth="90dp"-->
+<!--        android:gravity="center"-->
+<!--        android:horizontalSpacing="10dp"-->
+<!--        android:numColumns="4"-->
+<!--        android:stretchMode="columnWidth"-->
+<!--        android:verticalSpacing="10dp" />-->
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="90dp"
-        android:gravity="center"
-        android:horizontalSpacing="10dp"
-        android:numColumns="4"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" />
+        android:id="@+id/picture_rcv"/>
+
+
+<!--    <androidx.viewpager.widget.ViewPager-->
+<!--        android:id="@+id/viewPager"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"/>-->
+
+
+
 
 
 </LinearLayout>
