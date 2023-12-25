@@ -196,7 +196,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             //Carousel为自定义轮播图工具类
-                            Carousel carousel = new Carousel(PostDisplayActivity.this, dotLinerLayout, postImage);
+                            Carousel carousel = new Carousel(PostDisplayActivity.this, dotLinerLayout, postImage,"");
                             carousel.initViews(post.getPost().getPicturePath());
                             content.setText(post.getPost().getPostContent());
                             title.setText(post.getPost().getPostTitle());
