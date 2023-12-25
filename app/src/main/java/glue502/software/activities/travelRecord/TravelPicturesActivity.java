@@ -95,8 +95,8 @@ public class TravelPicturesActivity extends AppCompatActivity {
         public TravelPicturesActivity.RvAdapter.MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view;
             //设置布局
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.travel_album, parent, false);
-            return new TravelPicturesActivity.RvAdapter.MyHolder(view);
+//            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_item, parent, false);
+            return null;
         }
 
         @Override

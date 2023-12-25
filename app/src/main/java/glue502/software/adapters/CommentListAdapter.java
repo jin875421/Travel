@@ -96,14 +96,17 @@ public class CommentListAdapter extends BaseAdapter {
         time.setText(comment.getUploadTime());
         text.setText(comment.getComment());
         if(comment.getReturnCommentResponds().size() != 0){
+            respond.setVisibility(View.VISIBLE);
             first_respond.setText(comment.getReturnCommentResponds().get(0).getUserName()
                     + " 回复 "
                     + comment.getUsername()
                     + ":"
                     + comment.getReturnCommentResponds().get(0).getText());
             respond_num.setText(comment.getReturnCommentResponds().size() + "条回复");
+
         }else {
-            first_respond.setText("暂无回复");
+            //隐藏控件
+            respond.setVisibility(View.GONE);
         }
 
         //绑定评论回复点击事件

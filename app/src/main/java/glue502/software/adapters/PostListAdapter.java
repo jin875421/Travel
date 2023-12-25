@@ -94,8 +94,10 @@ public class PostListAdapter extends BaseAdapter {
         for (String path : post1.getPicturePath()) {
             ImageView imageView = new ImageView(context);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPixel(117), convertDpToPixel(117));
-            layoutParams.setMargins(convertDpToPixel(4), 0, 0, 0); // 左边距为4dp
+            //设定宽度为屏幕大小的1/3
+            int width = (int) ((context.getResources().getDisplayMetrics().widthPixels - convertDpToPixel(32) - convertDpToPixel(12)) / 3);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, width);
+            layoutParams.setMargins(0, 0, convertDpToPixel(4), 0); // 右边距为4dp
             RequestOptions requestOption = new RequestOptions();
             requestOption.placeholder(R.mipmap.loading);
             requestOption.circleCropTransform();

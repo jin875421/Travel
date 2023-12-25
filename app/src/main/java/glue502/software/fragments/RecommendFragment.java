@@ -18,17 +18,35 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TextView;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import glue502.software.R;
 import glue502.software.activities.login.LoginActivity;
@@ -36,14 +54,17 @@ import glue502.software.activities.posts.PostDisplayActivity;
 import glue502.software.activities.travelRecord.TravelAlbumActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
+import glue502.software.adapters.PostListAdapter;
+import glue502.software.models.Post;
+import glue502.software.models.PostWithUserInfo;
 import glue502.software.models.UserInfo;
-import glue502.software.utils.Carousel;
 import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class RecommendFragment extends Fragment {
     private LinearLayout rltlCreate;
@@ -54,6 +75,14 @@ public class RecommendFragment extends Fragment {
     private ViewPager2 vp2;
     private LinearLayout dotLinerLayout;
     private String status;
+    private String city;
+    private ListView localPost;
+    private TextView localCity;
+    private List<Post> posts;
+    private List<UserInfo> userInfos;
+    private ListView listView;
+    private String searchUrl="http://"+ip+"/travel/posts/search";
+    public LocationClient mLocationClient = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,9 +92,12 @@ public class RecommendFragment extends Fragment {
         rltlCreate = view.findViewById(R.id.lrlt_create);
         rltlFootprint = view.findViewById(R.id.lrlt_footprint);
         rltlPhoto=view.findViewById(R.id.lrlt_photo);
+        localPost = view.findViewById(R.id.local_post);
         vp2 = view.findViewById(R.id.reco_vp2);
         dotLinerLayout = view.findViewById(R.id.index_dot);
-        txtLocation=view.findViewById(R.id.txt_location);
+        localCity = view.findViewById(R.id.local_city);
+        listView = view.findViewById(R.id.local_post);
+        getCity();
         setlistener();
         date();
         getCarousel();
@@ -73,7 +105,111 @@ public class RecommendFragment extends Fragment {
         return view;
     }
 
+    private void getCity(){
+        //初始化了mLocationClient
+        try {
+            mLocationClient.setAgreePrivacy(true);
+            mLocationClient = new LocationClient(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // 设置定位监听器
+        BDAbstractLocationListener myLocationListener = new BDAbstractLocationListener() {
+            @Override
+            public void onReceiveLocation(BDLocation location) {
+                if (location != null) {
+                    // 获取经纬度信息
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
 
+                    // 逆地理编码获取城市信息
+                    GeoCoder geoCoder = GeoCoder.newInstance();
+                    geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+                        @Override
+                        public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+                            if (reverseGeoCodeResult != null && reverseGeoCodeResult.getAddressDetail() != null) {
+                                city = reverseGeoCodeResult.getAddressDetail().city;
+                                // 城市信息
+                                localCity.setText(city);
+                                //删除city中的“市”字
+                                if (city.contains("市")) {
+                                    city = city.substring(0, city.indexOf("市"));
+                                }
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        OkHttpClient client = new OkHttpClient();
+                                        //创建请求获取Post类
+                                        Request request = new Request.Builder()
+                                                .url(searchUrl+"?searchText="+city)
+                                                .build();
+                                        try {
+                                            //发起请求并获取响应
+                                            Response response = client.newCall(request).execute();
+                                            //检测响应是否成功
+                                            if (response.isSuccessful()){
+                                                //获取响应数据
+                                                ResponseBody responseBody = response.body();
+                                                if (responseBody!=null){
+                                                    //处理数据
+                                                    String responseData = responseBody.string();
+                                                    Gson gson = new Gson();
+                                                    List<PostWithUserInfo> postWithUserInfoList = gson.fromJson(responseData,new TypeToken<List<PostWithUserInfo>>(){}.getType());
+                                                    posts = new ArrayList<>();
+                                                    userInfos = new ArrayList<>();
+                                                    for (PostWithUserInfo postWithUserInfo: postWithUserInfoList){
+                                                        posts.add(postWithUserInfo.getPost());
+                                                        userInfos.add(postWithUserInfo.getUserInfo());
+                                                        getActivity().runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                if (posts!=null&&userInfos!=null){
+                                                                    PostListAdapter postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
+                                                                    listView.setAdapter(postAdapter);
+                                                                    setListViewHeightBasedOnChildren(listView);
+                                                                }else {
+
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }).start();
+                            }
+                            // 释放资源
+                            geoCoder.destroy();
+                        }
+
+                        @Override
+                        public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+                            // 这里一般不需要实现
+                        }
+                    });
+
+                    // 发起逆地理编码请求
+                    LatLng latLng = new LatLng(latitude, longitude);
+                    geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
+                }
+            }
+        };
+
+        // 注册监听器
+        mLocationClient.registerLocationListener(myLocationListener);
+
+        // 设置定位选项
+        LocationClientOption option = new LocationClientOption();
+        // 设置需要获取详细地址信息
+        option.setIsNeedAddress(true);
+        mLocationClient.setLocOption(option);
+
+        // 启动定位
+        mLocationClient.start();
+    }
     private void getCarousel(){
 //        http://localhost:8080/travel/recoAttraction/getRecoAttractionList
         // 创建 OkHttp 客户端
@@ -96,10 +232,10 @@ public class RecommendFragment extends Fragment {
                 requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.i("Reco",responseData);
-                        //Carousel为自定义轮播图工具类
-                        Carousel carousel = new Carousel(getActivity(), dotLinerLayout, vp2,"ruoyi/uploadPath/");
-                        carousel.initViews1(responseData);
+//                        Log.i("Reco",responseData);
+//                        //Carousel为自定义轮播图工具类
+//                        Carousel carousel = new Carousel(getActivity(), dotLinerLayout, vp2,"ruoyi/uploadPath/");
+//                        carousel.initViews1(responseData);
                     }
                 });
             }
@@ -114,6 +250,17 @@ public class RecommendFragment extends Fragment {
     }
 
     public void setlistener(){
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
+                PostListAdapter postListAdapter = (PostListAdapter) parent.getAdapter();
+                //获取点击项数据对象
+                PostWithUserInfo clickItem = (PostWithUserInfo) postListAdapter.getItem(i);
+                Intent intent = new Intent(getActivity(), PostDisplayActivity.class);
+                intent.putExtra("postwithuserinfo", clickItem);
+                startActivityForResult(intent,1);
+            }
+        });
         rltlCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -220,4 +367,27 @@ public class RecommendFragment extends Fragment {
         //沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
     }
+    private void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+
 }

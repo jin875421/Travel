@@ -3,6 +3,7 @@ package glue502.software.activities.posts;
 
 import static glue502.software.activities.MainActivity.ip;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuPopupHelper;
@@ -829,7 +830,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         //进行编辑操作
                         Intent intent = new Intent(PostDisplayActivity.this, PostEditActivity.class);
                                     intent.putExtra("postwithuserinfo",post);
-                                    startActivity(intent);
+                        startActivityForResult(intent,1);
                         break;
                     case R.id.cancel:
 
@@ -870,6 +871,19 @@ public class PostDisplayActivity extends AppCompatActivity {
         View v = getWindow().peekDecorView();
         if (null != v) {
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) { // 检查请求码是否与上传页面的请求码一致
+            if (resultCode == Activity.RESULT_OK) {
+                // 检查是否上传完成
+                // 进行刷新操作，重新加载数据
+                getCommentData();
+                displayPost();
+            }
         }
     }
 }

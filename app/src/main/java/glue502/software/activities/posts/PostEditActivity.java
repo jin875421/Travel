@@ -177,7 +177,12 @@ public class PostEditActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         //启用按钮
-                        upload.setEnabled(true);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                upload.setEnabled(true);
+                            }
+                        });
                         uploadComplete();
                     }
                 }).start();
