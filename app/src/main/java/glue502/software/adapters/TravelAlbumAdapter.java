@@ -2,6 +2,7 @@ package glue502.software.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,9 +71,14 @@ public class TravelAlbumAdapter extends BaseAdapter {
 
         //将地点写上去
         TextView tvPlace = view.findViewById(R.id.tv_picture);
+        //在这里用于改变字体格式
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/幼圆.TTF");
+        tvPlace.setTypeface(typeface);
+
+        //在这里用于改变字体背景，让字体背景变透明
+        tvPlace.getBackground().setAlpha(10);
         tvPlace.setText(sp.getPlaceName());
         System.out.println(picturePath);
-
         //显示图片
         Glide.with(context)
                 .load(picturePath)

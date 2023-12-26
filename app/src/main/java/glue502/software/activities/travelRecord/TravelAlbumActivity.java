@@ -5,9 +5,12 @@ import static glue502.software.activities.MainActivity.ip;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -45,6 +48,9 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
     private GridView gridView1,gridView2,gridView3,gridView4;
 
+    //这里要添加文字的控件对象，用于修改文本的字体格式
+    private TextView text1,text2,text3,text4;
+
     TravelAlbumAdapter t1,t2,t3,t4;
 
     //这是一个用于测试的数据源，只有图片，看能不能在相册页面中显示出来
@@ -57,6 +63,11 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
         //在这个页面显示很多组照片
         //首先准备数据源,然后将数据源放到适配器当中
+
+        //实现全屏，去掉页面上面蓝色标题栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         findViews();
 
@@ -270,5 +281,16 @@ public class TravelAlbumActivity extends AppCompatActivity {
         gridView2 = findViewById(R.id.gv_view2);
         gridView3 = findViewById(R.id.gv_view3);
         gridView4 = findViewById(R.id.gv_view4);
+
+        text1 = findViewById(R.id.tv_t1);
+        text2 = findViewById(R.id.tv_t2);
+        text3 = findViewById(R.id.tv_t3);
+        text4 = findViewById(R.id.tv_t4);
+
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/幼圆.TTF");
+        text1.setTypeface(typeface);
+        text2.setTypeface(typeface);
+        text3.setTypeface(typeface);
+        text4.setTypeface(typeface);
     }
 }
