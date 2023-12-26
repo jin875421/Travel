@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -198,6 +199,26 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
                 }
 
+                //在这里要将文本先隐藏，在文本下有数据的时候才将文本显现出来
+                text1.setVisibility(View.GONE);
+                text2.setVisibility(View.GONE);
+                text3.setVisibility(View.GONE);
+                text4.setVisibility(View.GONE);
+
+                //如果有数据就显现出来
+                if(list1.size() != 0){
+                    text1.setVisibility(View.VISIBLE);
+                }
+                if(list2.size() != 0){
+                    text2.setVisibility(View.VISIBLE);
+                }
+                if(list3.size() != 0){
+                    text3.setVisibility(View.VISIBLE);
+                }
+                if(list4.size() != 0){
+                    text4.setVisibility(View.VISIBLE);
+                }
+
 
                 t1 = new TravelAlbumAdapter(list1,TravelAlbumActivity.this,R.layout.travel_album);
                 t2 = new TravelAlbumAdapter(list2,TravelAlbumActivity.this,R.layout.travel_album);
@@ -292,5 +313,12 @@ public class TravelAlbumActivity extends AppCompatActivity {
         text2.setTypeface(typeface);
         text3.setTypeface(typeface);
         text4.setTypeface(typeface);
+
+
+//        //在这里要将文本先隐藏，在文本下有数据的时候才将文本显现出来
+//        text1.setVisibility(View.GONE);
+//        text2.setVisibility(View.GONE);
+//        text3.setVisibility(View.GONE);
+//        text4.setVisibility(View.GONE);
     }
 }
