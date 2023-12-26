@@ -129,6 +129,7 @@ public class travelRecordActivity extends Activity {
     //添加点击按钮
     private EditText etContent1,etTravelName;
     private Button btnReturn,btnSubmit;
+    boolean submitClicked = false;
     // “+”按钮控件List
     private LinkedList<ImageButton> listIBTNAdd;
     // “+”按钮ID索引
@@ -138,6 +139,7 @@ public class travelRecordActivity extends Activity {
     private LinkedList<ImageButton> listPhotoAdd;
     private LinkedList<ImageButton> listPhotoAlbum;
     private SuggestionSearch mSuggestionSearch = null;
+    private SuggestionSearch search = null;
     //路径
     private String mCurrentPhotoPath;
     private int iETContentHeight = 0;   // EditText控件高度
@@ -271,7 +273,7 @@ public class travelRecordActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //TODO 提交的代码 逻辑如下 通过sharp得到总数 依次上传
-                {
+                {finish();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -362,17 +364,27 @@ public class travelRecordActivity extends Activity {
                                 }
                                 uploadComplete();
                             }
+                            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                            SharedPreferences.Editor aaa = sharedPreferences.edit();
+//        editor.putInt("numberOfControls", 0);
+                            aaa.putInt("numberOfControls", 1);
+                            aaa.remove( "userTitle" + 0);
+                            aaa.remove("userContent" + 0);
+                            aaa.remove("myList");
+                            aaa.apply();
                         }
                     }).start();
                 }
+
             }
             //TODO 在这里要删除页面的content和照片
+
         });
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(travelRecordActivity.this, travelRecordEdit.class);
-
+                startActivity(intent);
             }
         });
     }
@@ -887,10 +899,47 @@ public class travelRecordActivity extends Activity {
         layout.addView(scrollView);
 
 // 创建 EditText1
-        EditText etContent1 = new EditText(this);
+        ListView listView = new ListView(this);
+
+// 创建 EditText1
+        AutoCompleteTextView etContent1 = new AutoCompleteTextView(this);
         LinearLayout.LayoutParams etParams1 = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 dpToPx(25));
+        ListView view = PoiSugSearch(etContent1,listView);
+        etContent1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                if (cs.length() <= 0) {
+                    return;
+                }
+                // 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
+                search.requestSuggestion((new SuggestionSearchOption())
+                        .keyword(cs.toString()) // 关键字
+                        .city(city)); // 城市
+            }
+        });
+        etContent1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    Toast.makeText(getApplicationContext(), "focus", Toast.LENGTH_LONG).show();
+                    view.setVisibility(View.VISIBLE);
+                } else {
+                    view.setVisibility(View.GONE);
+                }
+            }
+        });
         etContent1.setLayoutParams(etParams1);
         etContent1.setId(View.generateViewId());
         etContent1.setGravity(Gravity.LEFT);
@@ -901,6 +950,16 @@ public class travelRecordActivity extends Activity {
         etContent1.setTag(i);
         layout.addView(etContent1);
 
+// 设置 ListView 的布局参数
+        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                getResources().getDimensionPixelSize(R.dimen.list_height) // 这里的 R.dimen.list_height 是在 dimens.xml 文件中定义的高度，可以根据实际需求进行修改
+        );
+        view.setLayoutParams(layoutParam);
+        view.setVisibility(View.GONE); // 设置初始可见性为 GONE
+// 给 ListView 设置 ID
+        view.setId(View.generateViewId()); // 为了确保唯一性，可以使用 generateViewId() 为 ListView 生成一个唯一的 ID
+        layout.addView(view);
 // 创建 EditText2
         EditText etContent2 = new EditText(this);
         LinearLayout.LayoutParams etParams2 = new LinearLayout.LayoutParams(
@@ -1189,7 +1248,9 @@ public class travelRecordActivity extends Activity {
             LinearLayout.LayoutParams etParams1 = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     dpToPx(25));
-            PoiSugSearch(etContent1,listView);
+
+            ListView view = PoiSugSearch(etContent1,listView);
+
             etContent1.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void afterTextChanged(Editable arg0) {
@@ -1207,7 +1268,7 @@ public class travelRecordActivity extends Activity {
                         return;
                     }
                     // 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
-                    mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
+                    search.requestSuggestion((new SuggestionSearchOption())
                             .keyword(cs.toString()) // 关键字
                             .city(city)); // 城市
                 }
@@ -1217,9 +1278,9 @@ public class travelRecordActivity extends Activity {
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (hasFocus) {
                         Toast.makeText(getApplicationContext(), "focus", Toast.LENGTH_LONG).show();
-                        listView.setVisibility(View.VISIBLE);
+                        view.setVisibility(View.VISIBLE);
                     } else {
-                        listView.setVisibility(View.GONE);
+                        view.setVisibility(View.GONE);
                     }
                 }
             });
@@ -1238,11 +1299,11 @@ public class travelRecordActivity extends Activity {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     getResources().getDimensionPixelSize(R.dimen.list_height) // 这里的 R.dimen.list_height 是在 dimens.xml 文件中定义的高度，可以根据实际需求进行修改
             );
-            listView.setLayoutParams(layoutParam);
-            listView.setVisibility(View.GONE); // 设置初始可见性为 GONE
+            view.setLayoutParams(layoutParam);
+            view.setVisibility(View.GONE); // 设置初始可见性为 GONE
 // 给 ListView 设置 ID
-            listView.setId(View.generateViewId()); // 为了确保唯一性，可以使用 generateViewId() 为 ListView 生成一个唯一的 ID
-            layout.addView(listView);
+            view.setId(View.generateViewId()); // 为了确保唯一性，可以使用 generateViewId() 为 ListView 生成一个唯一的 ID
+            layout.addView(view);
 
 // 创建 EditText2
             EditText etContent2 = new EditText(this);
@@ -1542,13 +1603,27 @@ public class travelRecordActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("PostActivity", "onPause() called");
-        saveContentToSharedPreferences();
-        // 保存已添加的控件数量到 SharedPreferences
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if(submitClicked){
+//            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+////        editor.putInt("numberOfControls", 0);
+//            editor.putInt("numberOfControls", 1);
+//            editor.remove( "userTitle" + 0);
+//            editor.remove("userContent" + 0);
+//            editor.remove("myList");
+//            editor.apply();
+            Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_LONG).show();
+        }else {
+            System.out.println("@@@@@@@@@@@@@");
+            Log.d("PostActivity", "onPause() called");
+            saveContentToSharedPreferences();
+            // 保存已添加的控件数量到 SharedPreferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
 //        editor.putInt("numberOfControls", 0);
-        editor.putInt("numberOfControls", llContentView.getChildCount());
-        editor.apply();
+            editor.putInt("numberOfControls", llContentView.getChildCount());
+            editor.apply();
+        }
+
     }
     //下面是按钮删除的操作在储存里也删除了
     //TODO 不知图片是否要再删除
@@ -1612,7 +1687,7 @@ public class travelRecordActivity extends Activity {
     private String generateUUID() {
         return UUID.randomUUID().toString();
     }
-    private void PoiSugSearch(final AutoCompleteTextView autoCompleteTextView,final ListView listView){
+    private  ListView    PoiSugSearch(final AutoCompleteTextView autoCompleteTextView,final ListView listView){
         OnGetSuggestionResultListener listener = new OnGetSuggestionResultListener() {
             /**
              * 获取在线建议搜索结果，得到requestSuggestion返回的搜索结果
@@ -1626,13 +1701,14 @@ public class travelRecordActivity extends Activity {
                 }
 
                 List<HashMap<String, String>> suggest = new ArrayList<>();
+
                 for (SuggestionResult.SuggestionInfo info : suggestionResult.getAllSuggestions()) {
                     if (info.getKey() != null && info.getDistrict() != null && info.getCity() != null) {
                         HashMap<String, String> map = new HashMap<>();
                         map.put("key", info.getKey());
                         map.put("city", info.getCity());
                         map.put("dis", info.getDistrict());
-                        System.out.println(map);
+                        suggest.add(map);
                     }
                 }
 
@@ -1644,7 +1720,7 @@ public class travelRecordActivity extends Activity {
                 );
                 listView.setVisibility(View.VISIBLE);
                 listView.setAdapter(simpleAdapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         // 获取点击的建议项的数据
@@ -1722,9 +1798,9 @@ public class travelRecordActivity extends Activity {
 
         };
         // 初始化建议搜索模块，注册建议搜索事件监听
-        mSuggestionSearch = SuggestionSearch.newInstance();
-        mSuggestionSearch.setOnGetSuggestionResultListener(listener);
-
+        search = SuggestionSearch.newInstance();
+        search.setOnGetSuggestionResultListener(listener);
+        return listView;
     }
     private void  PoiSugSearch(){
         OnGetSuggestionResultListener listener = new OnGetSuggestionResultListener() {
@@ -1835,7 +1911,6 @@ public class travelRecordActivity extends Activity {
                 });
                 simpleAdapter.notifyDataSetChanged();
             }
-
         };
         // 初始化建议搜索模块，注册建议搜索事件监听
         mSuggestionSearch = SuggestionSearch.newInstance();

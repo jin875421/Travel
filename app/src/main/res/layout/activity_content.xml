@@ -55,10 +55,11 @@
                 <EditText
                     android:id="@+id/et_content1"
                     android:layout_width="match_parent"
-                    android:layout_height="25dip"
-                    android:background="#00FFFFFF"
+                    android:layout_height="35dip"
+                    android:background="@drawable/border_backgrounddjpjp"
                     android:gravity="left"
                     android:hint="标题"
+
                     android:inputType="textMultiLine"
                     android:paddingLeft="5dip"
                     android:textSize="20sp"
