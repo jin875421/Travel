@@ -1,5 +1,7 @@
 package glue502.software.activities.travelRecord;
 
+import static glue502.software.activities.MainActivity.ip;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +44,8 @@ public class TravelPicturesActivity extends AppCompatActivity {
     //数据源
     private List<String> list1;
     private RecyclerView recyclerView;
+    private String url = "http://"+ip+"/travel/";
+
 //    private GridView gvPictures;
 
     private TravelPicturesAdapter travelPicturesAdapter;
@@ -56,9 +60,9 @@ public class TravelPicturesActivity extends AppCompatActivity {
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);//报错，不知道怎么回事，但是这里代码用处不大
 
         //实现全屏，去掉页面上面蓝色标题栏
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
         //获取传递过来的参数
@@ -84,7 +88,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
 //        viewPager.setAdapter(adapter);
         List<ImageEntity> datas = new ArrayList<>();
         for(String s:list1){
-            datas.add(new ImageEntity(s,s,null,null,null,0));
+            datas.add(new ImageEntity(url+s,url+s,null,null,null,0));
         }
         recyclerView = findViewById(R.id.picture_rcv);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
@@ -106,7 +110,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
         public TravelPicturesActivity.RvAdapter.MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view;
             //设置布局
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_item, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.travel_picture_try, parent, false);
             return new MyHolder(view);
         }
 
@@ -142,7 +146,6 @@ public class TravelPicturesActivity extends AppCompatActivity {
 
         class MyHolder extends RecyclerView.ViewHolder {
             ImageView ivImage;
-
             public MyHolder(@NonNull View itemView) {
                 super(itemView);
                 ivImage = (ImageView) itemView.findViewById(R.id.imageView);

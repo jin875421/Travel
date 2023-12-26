@@ -113,11 +113,9 @@ public class TravelAlbumActivity extends AppCompatActivity {
                 // 创建一个OkHttpClient对象
                 OkHttpClient client = new OkHttpClient();
 
-
                 //这里当不了全局变量，就在这里做一个试验
                 SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId",MODE_PRIVATE);
                 String userId = sharedPreferences.getString("userId","");
-
 
                 RequestBody requestBody = new FormBody.Builder()
                         .add("userId", userId)
