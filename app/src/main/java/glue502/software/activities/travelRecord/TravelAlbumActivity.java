@@ -36,7 +36,7 @@ public class TravelAlbumActivity extends AppCompatActivity {
 //
 //    SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId",MODE_PRIVATE);
 //    String userId = sharedPreferences.getString("userId","");
-    String userId = "111111";
+//    String userId = "111111";
 
     private String url = "http://"+ip+"/travel/travel";
 
@@ -100,6 +100,11 @@ public class TravelAlbumActivity extends AppCompatActivity {
             try {
                 // 创建一个OkHttpClient对象
                 OkHttpClient client = new OkHttpClient();
+
+
+                //这里当不了全局变量，就在这里做一个试验
+                SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId",MODE_PRIVATE);
+                String userId = sharedPreferences.getString("userId","");
 
 
                 RequestBody requestBody = new FormBody.Builder()

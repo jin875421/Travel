@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -49,6 +51,15 @@ public class TravelPicturesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_pictures);
+
+        //实现无标题栏（但有系统自带的任务栏）
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);//报错，不知道怎么回事，但是这里代码用处不大
+
+        //实现全屏，去掉页面上面蓝色标题栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 
         //获取传递过来的参数
         Bundle extras = getIntent().getExtras();
@@ -95,8 +106,8 @@ public class TravelPicturesActivity extends AppCompatActivity {
         public TravelPicturesActivity.RvAdapter.MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view;
             //设置布局
-//            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_item, parent, false);
-            return null;
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_item, parent, false);
+            return new MyHolder(view);
         }
 
         @Override
