@@ -73,6 +73,7 @@ public class PersonalInformationFragment extends Fragment {
     private LinearLayout linearCustomerService;
     private ImageView imgAvatar;
     private View view;
+    private PageAdapter adapter;
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
     private String urlLoadImage="http://"+ip+"/travel/";
     private Handler mHandler = new Handler() {
@@ -116,7 +117,7 @@ public class PersonalInformationFragment extends Fragment {
         fragments = new ArrayList<>();
         fragments.add(new StarFragment());
         fragments.add(new MyPostFragment());
-        PageAdapter adapter = new PageAdapter(fragments,getActivity());
+        adapter = new PageAdapter(fragments,getActivity());
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
         //绑定监听器
         viewPager2.setAdapter(adapter);
@@ -380,6 +381,30 @@ public class PersonalInformationFragment extends Fragment {
                             .load(R.drawable.headimg )
                             .apply(requestOptions)// 设置签名
                             .into(imgAvatar);
+                    //清空star和likefragment
+                    viewPager2.setAdapter(adapter);
+                    TabLayoutMediator mediator = new TabLayoutMediator(
+                            tabLayout,
+                            viewPager2,
+                            new TabLayoutMediator.TabConfigurationStrategy() {
+
+                                @Override
+                                public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                                    switch (position){
+                                        case 0:
+                                            tab.setText("我的收藏");
+                                            break;
+                                        case 1:
+                                            tab.setText("我的发布");
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }
+                    );
+                    mediator.attach();
+
                 }else{
                     String userName=sharedPreferences.getString("userName","");
                     String userId=sharedPreferences.getString("userId","");
