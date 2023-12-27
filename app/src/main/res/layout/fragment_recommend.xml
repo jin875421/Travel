@@ -9,6 +9,7 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/gray"
@@ -40,7 +41,7 @@
         android:orientation="vertical"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
-        android:padding="6dp"
+
         android:background="@drawable/background_frame_1">
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/reco_vp2"
