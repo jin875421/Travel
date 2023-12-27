@@ -868,7 +868,7 @@ public class travelRecordEdit extends Activity {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 dpToPx(150)); // 150dp高度
         scrollView.setLayoutParams(scrollParams);
-
+        scrollView.setHorizontalScrollBarEnabled(false);
 // 创建内部 LinearLayout
         LinearLayout innerLayout = new LinearLayout(this);
         LinearLayout.LayoutParams innerParams = new LinearLayout.LayoutParams(
@@ -907,6 +907,7 @@ public class travelRecordEdit extends Activity {
         etContent1.setLayoutParams(etParams1);
         etContent1.setText(travelRecord.getPlaceName());
         etContent1.setId(View.generateViewId());
+        etContent1.setBackgroundResource(R.drawable.border_backgrounddjpjp);
         etContent1.setText(travelRecord.getPlaceName());
         etContent1.setGravity(Gravity.LEFT);
         etContent1.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
@@ -923,6 +924,7 @@ public class travelRecordEdit extends Activity {
                 dpToPx(50));
         etContent2.setText(travelRecord.getContent());
         etContent2.setLayoutParams(etParams2);
+        etContent2.setBackgroundResource(R.drawable.border_backgrounddjpjp);
         etContent2.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
         etContent2.setGravity(Gravity.LEFT);
         etContent2.setPadding(dpToPx(5), 0, 0, 0);
@@ -1091,7 +1093,7 @@ public class travelRecordEdit extends Activity {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     dpToPx(150)); // 150dp高度
             scrollView.setLayoutParams(scrollParams);
-
+            scrollView.setHorizontalScrollBarEnabled(false);
 // 创建内部 LinearLayout 这是一个很小的点，没有任何用
             LinearLayout innerLayout = new LinearLayout(this);
             LinearLayout.LayoutParams innerParams = new LinearLayout.LayoutParams(
@@ -1127,6 +1129,7 @@ public class travelRecordEdit extends Activity {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     dpToPx(25));
             etContent1.setLayoutParams(etParams1);
+            etContent1.setBackgroundResource(R.drawable.border_backgrounddjpjp);
             etContent1.setId(View.generateViewId());
             etContent1.setGravity(Gravity.LEFT);
             etContent1.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
@@ -1143,6 +1146,7 @@ public class travelRecordEdit extends Activity {
                     LinearLayout.LayoutParams.WRAP_CONTENT,// 将高度设置为 WRAP_CONTENT
                     dpToPx(50));
             etContent2.setLayoutParams(etParams2);
+            etContent2.setBackgroundResource(R.drawable.border_backgrounddjpjp);
             etContent2.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
             etContent2.setGravity(Gravity.LEFT);
             etContent2.setPadding(dpToPx(5), 0, 0, 0);
