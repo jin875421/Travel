@@ -80,7 +80,7 @@ public class TravelDetailActivity extends AppCompatActivity {
                         travelRecordList.setAdapter(travelRecordAdapter);
                     });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();

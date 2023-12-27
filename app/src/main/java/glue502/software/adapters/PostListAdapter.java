@@ -16,7 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
@@ -28,6 +30,7 @@ import glue502.software.R;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
 import glue502.software.models.UserInfo;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -63,7 +66,6 @@ public class PostListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        System.out.println("getView");
         View v = LayoutInflater.from(context).inflate(layoutId,null);
         ImageView useravatar = v.findViewById(R.id.imageViewUserAvatar);
         TextView username = v.findViewById(R.id.textViewUsername);
@@ -102,10 +104,15 @@ public class PostListAdapter extends BaseAdapter {
             requestOption.placeholder(R.mipmap.loading);
             requestOption.circleCropTransform();
             requestOption.transform(new RoundedCorners(30));
+            MultiTransformation mation5 = new MultiTransformation(
+                    new CenterCrop(),
+                    new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
+            );
             imageView.setLayoutParams(layoutParams);
             Glide.with(context)
                     .load(url + path)
                     .apply(requestOption)
+                    .apply(RequestOptions.bitmapTransform(mation5))
                     .into(imageView);
             images.addView(imageView);
             x++;

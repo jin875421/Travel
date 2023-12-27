@@ -76,7 +76,7 @@ public class travelRecordEdit extends Activity {
     private String travelId;
     private String url = "http://" + ip + "/travel/travel/showATravel";
     private String url2 = "http://" + ip + "/travel/";
-    private String url3 = "http://" + ip + "/travel/EditTravelRecord";
+    private String url3 = "http://" + ip + "/travel/travel/EditTravelRecord";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
     private UserInfo userInfo = new UserInfo();
     private String userId;
@@ -324,7 +324,7 @@ public class travelRecordEdit extends Activity {
 
                                 travelRecord travelrecord = travelRecords.get(j);
 //                                travelrecord.setPlaceName(
-//                                        travelRecords.get(j).getPlaceName();
+//                                travelRecords.get(j).getPlaceName();
 //                                travelrecord.setContent(j);
 //                                travelrecord.setUserId(userId);
 //                                travelrecord.setTravelName(etTravelName.getText().toString());
@@ -367,7 +367,6 @@ public class travelRecordEdit extends Activity {
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
-
                                     } else {
                                     }
                                 }

@@ -80,7 +80,6 @@ public class CommunityFragment extends Fragment {
         initData();
         //添加沉浸式
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.community_top),true);
-
         return view;
 
     }

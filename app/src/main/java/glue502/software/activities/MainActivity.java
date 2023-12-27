@@ -19,9 +19,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -55,7 +57,7 @@ import glue502.software.utils.MyViewUtils;
 public class MainActivity extends AppCompatActivity {
     public static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
-    public static final String ip = "10.7.89.69:8080";
+    public static final String ip = "10.7.89.91:8080";
 //    public static final String ip = "172.29.61.81:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
@@ -161,8 +163,39 @@ public class MainActivity extends AppCompatActivity {
                     dialog.show();
 
                 }else{
-                    Intent intent = new Intent(MainActivity.this, travelRecordActivity.class);
-                    startActivity(intent);
+                    SharedPreferences Preferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                    String travelName = Preferences.getString("TravelName","");
+                    if (travelName.equals("")){
+                        // 弹出输入框
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.input_dialog, null);
+                        builder.setTitle("为你的旅行命个名吧")
+                                .setView(view1)
+                                .setNegativeButton("暂时不了", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // 点击“取消”按钮后的操作
+                                        dialog.dismiss(); // 关闭对话框
+                                    }
+                                })
+                                .setPositiveButton("开始旅程", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // 点击“确定”按钮后的操作
+                                        // 获取输入框中的内容
+                                        EditText editText = view1.findViewById(R.id.editText);
+                                        //将travelName存入sharedPreferences
+                                        String travelName = editText.getText().toString();
+                                        SharedPreferences.Editor editor = Preferences.edit();
+                                        editor.putString("TravelName",travelName);
+                                        editor.apply();
+                                        Intent intent = new Intent(MainActivity.this, travelRecordActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
+                        builder.show();
+                    }else {
+                        Intent intent = new Intent(MainActivity.this, travelRecordActivity.class);
+                        startActivity(intent);
+                    }
                 }
 
             }

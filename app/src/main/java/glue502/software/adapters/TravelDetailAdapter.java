@@ -16,6 +16,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,6 +27,7 @@ import glue502.software.R;
 import glue502.software.activities.travelRecord.PlaceDetailActivity;
 import glue502.software.activities.travelRecord.TravelDetailActivity;
 import glue502.software.models.travelRecord;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TravelDetailAdapter extends BaseAdapter {
     private Context context;
@@ -112,6 +116,26 @@ public class TravelDetailAdapter extends BaseAdapter {
             }
         });
         TextView content = v.findViewById(R.id.content);
+        content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 执行跳转至详情页面
+                Intent intent = new Intent(context, PlaceDetailActivity .class);
+                //传递travelRecord
+                intent.putExtra("travelRecord", travelRecords.get(i));
+                context.startActivity(intent);
+            }
+        });
+        travelName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 执行跳转至详情页面
+                Intent intent = new Intent(context, PlaceDetailActivity.class);
+                //传递travelRecord
+                intent.putExtra("travelRecord", travelRecords.get(i));
+                context.startActivity(intent);
+            }
+        });
         travelName.setText(travelRecords.get(i).getPlaceName());
         content.setText(travelRecords.get(i).getContent());
         for(String path:travelRecords.get(i).getImage()){
@@ -121,8 +145,13 @@ public class TravelDetailAdapter extends BaseAdapter {
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPixel(120), convertDpToPixel(120));
                 layoutParams.setMargins(convertDpToPixel(4), 0, 0, 0); // 左边距为4dp
                 imageView.setLayoutParams(layoutParams);
+                MultiTransformation mation5 = new MultiTransformation(
+                        new CenterCrop(),
+                        new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
+                );
                 Glide.with(context)
                         .load(url + path)
+                        .apply(RequestOptions.bitmapTransform(mation5))
                         .into(imageView);
                 imageContainer.addView(imageView);
             }

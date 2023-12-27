@@ -111,7 +111,7 @@ public class RecommendFragment extends Fragment {
         getCity();
         setlistener();
         date();
-       //getCarousel();
+        getCarousel();
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
         return view;
     }
@@ -122,7 +122,7 @@ public class RecommendFragment extends Fragment {
             mLocationClient.setAgreePrivacy(true);
             mLocationClient = new LocationClient(getActivity().getApplicationContext());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         // 设置定位监听器
         BDAbstractLocationListener myLocationListener = new BDAbstractLocationListener() {
@@ -194,9 +194,16 @@ public class RecommendFragment extends Fragment {
                                                                                      @Override
                                                                                      public void run() {
                                                                                          if (posts!=null&&userInfos!=null){
-                                                                                             PostListAdapter postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
-                                                                                             listView.setAdapter(postAdapter);
-                                                                                             setListViewHeightBasedOnChildren(listView);
+                                                                                             if (getActivity() != null) {
+                                                                                                 // 在这里使用 getActivity() 获取上下文进行操作
+                                                                                                 PostListAdapter postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
+                                                                                                 listView.setAdapter(postAdapter);
+                                                                                                 setListViewHeightBasedOnChildren(listView);
+                                                                                             } else {
+                                                                                                 // 处理上下文为 null 的情况，可以考虑给出提示或者其他处理方式
+                                                                                             }
+
+
                                                                                          }else {
 
                                                                                          }

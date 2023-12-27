@@ -211,7 +211,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         }
                     });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -246,7 +246,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         }
                     });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();
