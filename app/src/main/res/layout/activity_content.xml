@@ -3,13 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
-    android:paddingTop="35dp"
     tools:context=".activities.travelRecord.travelRecordActivity" >
 
     <ScrollView
+        android:layout_below="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="50dp"
         android:scrollbars="none">
 
         <LinearLayout
@@ -130,6 +129,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"></RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <Button
         android:id="@+id/btn_return"
         android:layout_width="wrap_content"
@@ -145,7 +148,7 @@
         android:layout_marginTop="-50dp"
         android:layout_below="@id/btn_return"
         android:gravity="center"
-        android:text="Your Text" />
+        android:hint="请输入" />
 
     <Button
         android:id="@+id/btn_submit"
@@ -154,4 +157,5 @@
         android:background="@drawable/border_backgrounddjp"
         android:layout_alignParentRight="true"
         android:text="提交" />
+    </RelativeLayout>
 </RelativeLayout>

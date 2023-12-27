@@ -18,6 +18,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +85,8 @@ public class RecommendFragment extends Fragment {
     private ListView listView;
     private String searchUrl="http://"+ip+"/travel/posts/search";
     public LocationClient mLocationClient = null;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -155,12 +159,16 @@ public class RecommendFragment extends Fragment {
                                                     String responseData = responseBody.string();
                                                     Gson gson = new Gson();
                                                     List<PostWithUserInfo> postWithUserInfoList = gson.fromJson(responseData,new TypeToken<List<PostWithUserInfo>>(){}.getType());
+                                                    if (postWithUserInfoList==null){
+                                                        //TODO 加载官方的帖子
+
+                                                    }
                                                     posts = new ArrayList<>();
                                                     userInfos = new ArrayList<>();
                                                     for (PostWithUserInfo postWithUserInfo: postWithUserInfoList){
                                                         posts.add(postWithUserInfo.getPost());
                                                         userInfos.add(postWithUserInfo.getUserInfo());
-                                                        getActivity().runOnUiThread(new Runnable() {
+                                                        handler.post(new Runnable() {
                                                             @Override
                                                             public void run() {
                                                                 if (posts!=null&&userInfos!=null){

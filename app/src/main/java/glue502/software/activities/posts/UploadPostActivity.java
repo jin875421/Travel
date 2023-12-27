@@ -1,10 +1,14 @@
 package glue502.software.activities.posts;
 
+import static glue502.software.activities.MainActivity.PERMISSION_REQUEST_CODE;
 import static glue502.software.activities.MainActivity.ip;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
@@ -12,6 +16,7 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -279,7 +284,20 @@ public class UploadPostActivity extends AppCompatActivity {
         bt_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takeCamera(RESULT_CAMERA_IMAGE);
+                if (ContextCompat.checkSelfPermission(UploadPostActivity.this,
+                        Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+
+                    // 如果权限尚未授予，则请求权限
+                    ActivityCompat.requestPermissions(UploadPostActivity.this,
+                            new String[]{Manifest.permission.CAMERA},
+                            PERMISSION_REQUEST_CODE);
+                }
+                //如果权限已经授予
+                if (ContextCompat.checkSelfPermission(UploadPostActivity.this,
+                        Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    takeCamera(RESULT_CAMERA_IMAGE);
+                        }
+
                 popupWindow.dismiss();
             }
         });

@@ -53,9 +53,9 @@ import glue502.software.utils.MyViewUtils;
 
 
 public class MainActivity extends AppCompatActivity {
-    private static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
+    public static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
-    public static final String ip = "172.29.61.81:8080";
+    public static final String ip = "10.7.89.69:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
@@ -79,6 +79,40 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     PERMISSION_REQUEST_CODE);
         }
+        //动态申请定位权限，拍照权限，读写权限
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+
+            // 如果权限尚未授予，则请求权限
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_REQUEST_CODE);
+        }
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+
+            // 如果权限尚未授予，则请求权限
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    PERMISSION_REQUEST_CODE);
+        }
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+
+            // 如果权限尚未授予，则请求权限
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_CODE);
+        }
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE)!= PackageManager.PERMISSION_GRANTED) {
+
+            // 如果权限尚未授予，则请求权限
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_PHONE_STATE},
+                    PERMISSION_REQUEST_CODE);
+        }
+
         //每次启动软件，先清空glide中缓存的数据
         new ClearGlideCacheTask().execute();
         tabLayout = findViewById(R.id.tbl);
