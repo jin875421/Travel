@@ -18,6 +18,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +87,8 @@ public class RecommendFragment extends Fragment {
     private ListView listView;
     private String searchUrl="http://"+ip+"/travel/posts/search";
     public LocationClient mLocationClient = null;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -101,7 +106,7 @@ public class RecommendFragment extends Fragment {
         getCity();
         setlistener();
         date();
-        getCarousel();
+//        getCarousel();
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
         return view;
     }
@@ -156,12 +161,16 @@ public class RecommendFragment extends Fragment {
                                                     String responseData = responseBody.string();
                                                     Gson gson = new Gson();
                                                     List<PostWithUserInfo> postWithUserInfoList = gson.fromJson(responseData,new TypeToken<List<PostWithUserInfo>>(){}.getType());
+                                                    if (postWithUserInfoList==null){
+                                                        //TODO 加载官方的帖子
+
+                                                    }
                                                     posts = new ArrayList<>();
                                                     userInfos = new ArrayList<>();
                                                     for (PostWithUserInfo postWithUserInfo: postWithUserInfoList){
                                                         posts.add(postWithUserInfo.getPost());
                                                         userInfos.add(postWithUserInfo.getUserInfo());
-                                                        getActivity().runOnUiThread(new Runnable() {
+                                                        handler.post(new Runnable() {
                                                             @Override
                                                             public void run() {
                                                                 if (posts!=null&&userInfos!=null){
@@ -229,15 +238,18 @@ public class RecommendFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String responseData = response.body().string();
-                // 在 UI 线程中更新
-                requireActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        //Carousel为自定义轮播图工具类
-//                        Carousel carousel = new Carousel(getActivity(), dotLinerLayout, vp2,"ruoyi/uploadPath/");
-//                        carousel.initViews1(responseData);
-                    }
-                });
+                if (!responseData.equals("[]")){
+                    // 在 UI 线程中更新
+                    requireActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i("Reco",responseData);
+                            //Carousel为自定义轮播图工具类
+                            Carousel carousel = new Carousel(getActivity(), dotLinerLayout, vp2,"");
+                            carousel.initViews1(responseData);
+                        }
+                    });
+                }
             }
         });
 

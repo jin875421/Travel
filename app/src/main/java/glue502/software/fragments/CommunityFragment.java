@@ -16,6 +16,8 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,13 +69,16 @@ public class CommunityFragment extends Fragment {
     private AppBarLayout appBarLayout;
     private LinearLayout lsda;
     private Button uploadBtn;
-    private List<Post> posts;
-    private List<UserInfo> userInfos;
+    private List<Post> posts = new ArrayList<>();
+    private List<UserInfo> userInfos = new ArrayList<>();
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private String status;
     private RefreshLayout refreshLayout;
     private EditText searchText;
     private View view;
+    private int page = 0;
+    private PostListAdapter postAdapter;
+    private final Handler handler = new Handler(Looper.getMainLooper());
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,6 +88,7 @@ public class CommunityFragment extends Fragment {
         searchText = view.findViewById(R.id.et_searchtext);
         uploadBtn = view.findViewById(R.id.floating_button);
         refreshLayout = (RefreshLayout) view.findViewById(R.id.refreshLayout);
+        postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
         toolbar = view.findViewById(R.id.toolbar);
         lsda=view.findViewById(R.id.community_top);
         appBarLayout=view.findViewById(R.id.appbar);
@@ -129,8 +135,6 @@ public class CommunityFragment extends Fragment {
         return Color.argb(alpha, red, green, blue);
     }
     public void initData(){
-        posts = new ArrayList<>();
-        userInfos = new ArrayList<>();
         //开启线程接收帖子数据
         new Thread(new Runnable() {
             @Override
@@ -138,7 +142,7 @@ public class CommunityFragment extends Fragment {
                 OkHttpClient client = new OkHttpClient();
                 //创建请求获取Post类
                 Request request = new Request.Builder()
-                        .url(url)
+                        .url(url+"?page="+ page)
                         .build();
                 try {
                     //发起请求并获取响应
@@ -152,17 +156,15 @@ public class CommunityFragment extends Fragment {
                             String responseData = responseBody.string();
                             Gson gson = new Gson();
                             List<PostWithUserInfo> postWithUserInfoList = gson.fromJson(responseData,new TypeToken<List<PostWithUserInfo>>(){}.getType());
-                            posts = new ArrayList<>();
-                            userInfos = new ArrayList<>();
                             for (PostWithUserInfo postWithUserInfo: postWithUserInfoList){
                                 posts.add(postWithUserInfo.getPost());
                                 userInfos.add(postWithUserInfo.getUserInfo());
                             }
-                            getActivity().runOnUiThread(new Runnable() {
+                            handler.post(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (posts !=null&&userInfos!=null){
-                                        PostListAdapter postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
+                                        postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
                                         listView.setAdapter(postAdapter);
                                     }else {
 
@@ -191,6 +193,10 @@ public class CommunityFragment extends Fragment {
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
                 if (s.toString().length()>0){
                     //开启线程接收帖子数据
                     new Thread(new Runnable() {
@@ -199,8 +205,8 @@ public class CommunityFragment extends Fragment {
                             OkHttpClient client = new OkHttpClient();
                             //创建请求获取Post类
                             Request request = new Request.Builder()
-                                   .url(searchUrl+"?searchText="+s)
-                                   .build();
+                                    .url(searchUrl+"?searchText="+s)
+                                    .build();
                             try {
                                 //发起请求并获取响应
                                 Response response = client.newCall(request).execute();
@@ -218,7 +224,7 @@ public class CommunityFragment extends Fragment {
                                         for (PostWithUserInfo postWithUserInfo: postWithUserInfoList){
                                             posts.add(postWithUserInfo.getPost());
                                             userInfos.add(postWithUserInfo.getUserInfo());
-                                            getActivity().runOnUiThread(new Runnable() {
+                                            handler.post(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     if (posts!=null&&userInfos!=null){
@@ -240,17 +246,15 @@ public class CommunityFragment extends Fragment {
 
                 }
             }
-
-            @Override
-            public void afterTextChanged(android.text.Editable s) {
-
-            }
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
         refreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
+                page = 0;
+                posts = new ArrayList<>();
+                userInfos = new ArrayList<>();
                 initData();
                 searchText.setText("");
                 refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
@@ -259,6 +263,52 @@ public class CommunityFragment extends Fragment {
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(RefreshLayout refreshlayout) {
+                page++;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        OkHttpClient client = new OkHttpClient();
+                        //创建请求获取Post类
+                        Request request = new Request.Builder()
+                                .url(url+"?page="+ page)
+                                .build();
+                        try {
+                            //发起请求并获取响应
+                            Response response = client.newCall(request).execute();
+                            //检测响应是否成功
+                            if (response.isSuccessful()){
+                                //获取响应数据
+                                ResponseBody responseBody = response.body();
+                                if (responseBody!=null){
+                                    //处理数据
+                                    String responseData = responseBody.string();
+                                    Gson gson = new Gson();
+                                    List<PostWithUserInfo> postWithUserInfoList = gson.fromJson(responseData,new TypeToken<List<PostWithUserInfo>>(){}.getType());
+                                    for (PostWithUserInfo postWithUserInfo: postWithUserInfoList){
+                                        posts.add(postWithUserInfo.getPost());
+                                        userInfos.add(postWithUserInfo.getUserInfo());
+                                    }
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (posts !=null&&userInfos!=null){
+                                                postAdapter.notifyDataSetChanged();
+                                            }else {
+
+                                            }
+
+                                        }
+                                    });
+
+                                }else {
+                                    //处理空数据
+                                }
+                            }
+                        }catch (IOException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
                 refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
             }
         });

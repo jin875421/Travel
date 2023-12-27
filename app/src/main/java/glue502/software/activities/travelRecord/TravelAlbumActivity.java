@@ -5,9 +5,13 @@ import static glue502.software.activities.MainActivity.ip;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -36,7 +40,7 @@ public class TravelAlbumActivity extends AppCompatActivity {
 //
 //    SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId",MODE_PRIVATE);
 //    String userId = sharedPreferences.getString("userId","");
-    String userId = "111111";
+//    String userId = "111111";
 
     private String url = "http://"+ip+"/travel/travel";
 
@@ -44,6 +48,9 @@ public class TravelAlbumActivity extends AppCompatActivity {
     private List<ShowPicture> list1,list2,list3,list4;
 
     private GridView gridView1,gridView2,gridView3,gridView4;
+
+    //这里要添加文字的控件对象，用于修改文本的字体格式
+    private TextView text1,text2,text3,text4;
 
     TravelAlbumAdapter t1,t2,t3,t4;
 
@@ -57,6 +64,11 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
         //在这个页面显示很多组照片
         //首先准备数据源,然后将数据源放到适配器当中
+
+        //实现全屏，去掉页面上面蓝色标题栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         findViews();
 
@@ -101,6 +113,9 @@ public class TravelAlbumActivity extends AppCompatActivity {
                 // 创建一个OkHttpClient对象
                 OkHttpClient client = new OkHttpClient();
 
+                //这里当不了全局变量，就在这里做一个试验
+                SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId",MODE_PRIVATE);
+                String userId = sharedPreferences.getString("userId","");
 
                 RequestBody requestBody = new FormBody.Builder()
                         .add("userId", userId)
@@ -180,6 +195,26 @@ public class TravelAlbumActivity extends AppCompatActivity {
                     }
 
 
+                }
+
+                //在这里要将文本先隐藏，在文本下有数据的时候才将文本显现出来
+                text1.setVisibility(View.GONE);
+                text2.setVisibility(View.GONE);
+                text3.setVisibility(View.GONE);
+                text4.setVisibility(View.GONE);
+
+                //如果有数据就显现出来
+                if(list1.size() != 0){
+                    text1.setVisibility(View.VISIBLE);
+                }
+                if(list2.size() != 0){
+                    text2.setVisibility(View.VISIBLE);
+                }
+                if(list3.size() != 0){
+                    text3.setVisibility(View.VISIBLE);
+                }
+                if(list4.size() != 0){
+                    text4.setVisibility(View.VISIBLE);
                 }
 
 
@@ -265,5 +300,23 @@ public class TravelAlbumActivity extends AppCompatActivity {
         gridView2 = findViewById(R.id.gv_view2);
         gridView3 = findViewById(R.id.gv_view3);
         gridView4 = findViewById(R.id.gv_view4);
+
+        text1 = findViewById(R.id.tv_t1);
+        text2 = findViewById(R.id.tv_t2);
+        text3 = findViewById(R.id.tv_t3);
+        text4 = findViewById(R.id.tv_t4);
+
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/幼圆.TTF");
+        text1.setTypeface(typeface);
+        text2.setTypeface(typeface);
+        text3.setTypeface(typeface);
+        text4.setTypeface(typeface);
+
+
+//        //在这里要将文本先隐藏，在文本下有数据的时候才将文本显现出来
+//        text1.setVisibility(View.GONE);
+//        text2.setVisibility(View.GONE);
+//        text3.setVisibility(View.GONE);
+//        text4.setVisibility(View.GONE);
     }
 }

@@ -6,6 +6,7 @@ import static glue502.software.activities.MainActivity.ip;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.flyjingfish.openimagelib.BaseInnerFragment;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.beans.OpenImageUrl;
@@ -38,6 +45,7 @@ import glue502.software.activities.recoAttraction.AttractionDetailActivity;
 import glue502.software.models.ImageEntity;
 import glue502.software.models.RecoAttraction;
 import glue502.software.utils.bigImgUtils.MyImageLoader;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.ImageViewHolder> {
     private Context context;
@@ -55,12 +63,20 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
         this.recoAttractions = recoAttractions;
         this.recoAttractionsStr = recoAttractionsStr;
         for (RecoAttraction r : recoAttractions) {
-            String imageUrl = url + "ruoyi/uploadPath/" + r.getImgUrls().get(0);
+            String imageUrl = url + r.getImgUrls().get(0);
 //            http://localhost:8080/travel/ruoyi/uploadPath/upload/2023/12/22/%E3%80%90%E5%AE%A1%E7%BE%8E%E7%A7%AF%E7%B4%AF%E3%80%91%E5%90%91%E5%B1%B1%E8%80%8C%E5%8E%BB%EF%BD%9CJustin%20Wirtalla_8_%E5%AE%89%E7%9A%84%E8%A7%86%E8%A7%89%E5%AE%B6_%E6%9D%A5%E8%87%AA%E5%B0%8F%E7%BA%A2%E4%B9%A6%E7%BD%91%E9%A1%B5%E7%89%88_20231222170753A004.jpg
             datas.add(new ImageEntity(imageUrl, imageUrl, null, null, null, 0));
         }
     }
 
+    private int getHeightInPixels(int heightInDp){
+        int heightInPixels = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                heightInDp,
+                context.getResources().getDisplayMetrics()
+        );
+        return heightInPixels;
+    }
     public BannerPagerAdapter(List<String> imagepath, ViewPager2 viewPager2, String extraPath) {
         this.imagepath = imagepath;
         this.viewPager2 = viewPager2;
@@ -74,8 +90,12 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
     public BannerPagerAdapter.ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
 
-        View view = LayoutInflater.from(context).inflate(R.layout.image_item, parent, false);
-
+        View view;
+        if(type == 1){
+            view = LayoutInflater.from(context).inflate(R.layout.image_item_type1, parent, false);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.image_item, parent, false);
+        }
         return new ImageViewHolder(view);
     }
 
@@ -119,7 +139,20 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
         if (type == 1) {
             //TODO
 
-            MyImageLoader.getInstance().load(holder.imageView, datas.get(position % recoAttractions.size()).getCoverImageUrl(), R.mipmap.loading, R.mipmap.blank);
+//            MyImageLoader.getInstance().load(holder.imageView, datas.get(position % recoAttractions.size()).getCoverImageUrl(), R.mipmap.loading, R.mipmap.blank);
+
+            RequestOptions options = new RequestOptions();
+            options.placeholder(R.mipmap.loading)
+                    .error(R.mipmap.blank);
+            MultiTransformation mation5 = new MultiTransformation(
+                    new CenterCrop(),
+                    new RoundedCornersTransformation(50,0,RoundedCornersTransformation.CornerType.ALL)
+            );
+            Glide.with(context)
+                    .load(datas.get(position % recoAttractions.size()).getCoverImageUrl())
+                    .apply(options)
+                    .apply(RequestOptions.bitmapTransform(mation5))
+                    .into(holder.imageView);
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
