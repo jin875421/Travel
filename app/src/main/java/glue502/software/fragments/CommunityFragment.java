@@ -9,8 +9,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
@@ -18,11 +21,17 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
@@ -54,9 +63,15 @@ public class CommunityFragment extends Fragment {
     private String url="http://"+ip+"/travel/posts/getpostlist";
     private String searchUrl="http://"+ip+"/travel/posts/search";
     private ListView listView;
+    private Toolbar toolbar;
+    private ImageView img;
+    private TextView txtSs;
+    private AppBarLayout appBarLayout;
+    private LinearLayout lsda;
     private Button uploadBtn;
     private List<Post> posts = new ArrayList<>();
     private List<UserInfo> userInfos = new ArrayList<>();
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     private String status;
     private RefreshLayout refreshLayout;
     private EditText searchText;
@@ -74,14 +89,58 @@ public class CommunityFragment extends Fragment {
         uploadBtn = view.findViewById(R.id.floating_button);
         refreshLayout = (RefreshLayout) view.findViewById(R.id.refreshLayout);
         postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
+        toolbar = view.findViewById(R.id.toolbar);
+        lsda=view.findViewById(R.id.community_top);
+        appBarLayout=view.findViewById(R.id.appbar);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         status = sharedPreferences.getString("status","");
         setListener();
         initData();
         //添加沉浸式
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.community_top),true);
+        // 获取状态栏高度
+        int statusBarHeight = getStatusBarHeight();
+
+        // 获取 Toolbar 实例
+
+        // 动态设置 Toolbar 的高度
+        ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+        params.height = statusBarHeight + getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+        toolbar.setLayoutParams(params);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                toolbar.setBackgroundColor(changeAlpha(getResources().getColor(R.color.communitytitle),Math.abs(verticalOffset*1.0f)/appBarLayout.getTotalScrollRange()));
+
+                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                    // 完全折叠，显示ImageView
+//                    lsda.setVisibility(View.VISIBLE);
+
+                } else {
+                    // 非完全折叠，隐藏ImageView
+//                    lsda.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
         return view;
 
+    }
+    // 获取状态栏高度
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+    public int changeAlpha(int color, float fraction) {
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        int alpha = (int) (Color.alpha(color) * fraction);
+        return Color.argb(alpha, red, green, blue);
     }
     public void initData(){
         //开启线程接收帖子数据
@@ -324,10 +383,11 @@ public class CommunityFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        //添加沉浸式
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.community_top),true);
-    }
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//        //添加沉浸式
+//        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.appbar),true);
+//    }
+
 }

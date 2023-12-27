@@ -297,16 +297,18 @@ public class RecommendFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String responseData = response.body().string();
-                // 在 UI 线程中更新
-                requireActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.i("Reco",responseData);
-                        //Carousel为自定义轮播图工具类
-                        Carousel carousel = new Carousel(getActivity(), dotLinerLayout, vp2,"");
-                        carousel.initViews1(responseData);
-                    }
-                });
+                if (!responseData.equals("[]")){
+                    // 在 UI 线程中更新
+                    requireActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i("Reco",responseData);
+                            //Carousel为自定义轮播图工具类
+                            Carousel carousel = new Carousel(getActivity(), dotLinerLayout, vp2,"");
+                            carousel.initViews1(responseData);
+                        }
+                    });
+                }
             }
         });
 
