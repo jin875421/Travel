@@ -84,6 +84,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLOutput;
@@ -174,7 +175,8 @@ public class travelRecordActivity extends Activity {
         initCtrl();
         // 获取 SharedPreferences 实例
         sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId","");
+//        userId = sharedPreferences.getString("userId","1");
+        userId = "1";
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         String TravelName = sharedPreferences.getString("TravelName", "请输入");
         etTravelName.setText(TravelName);
@@ -394,8 +396,7 @@ public class travelRecordActivity extends Activity {
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(travelRecordActivity.this, travelRecordEdit.class);
-                startActivity(intent);
+                finish();
             }
         });
     }
@@ -593,6 +594,18 @@ public class travelRecordActivity extends Activity {
                     }
                 }
             } else if (requestCode == RESULT_CAMERA_IMAGE) {
+                File file = new File(mCurrentPhotoPath);
+                Uri uri = Uri.fromFile(file);
+                if(getWhich()==10000){
+                    savePicture(uri,10000,10000);
+// 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
+                    putPicture(uri,10000,null,10000);
+                }
+                else {
+                    savePicture(uri,10000,getWhich());
+// 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
+                    putPicture(uri,10000,null,getWhich());
+                }
             }
         }
     }
@@ -1075,7 +1088,11 @@ public class travelRecordActivity extends Activity {
         photoAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteContent(v);
+                int a = (int)etContent2.getTag(); // 索引值从已有子控件的数量开始
+                setValue(a);
+                //TODO 执行点击操作
+                setWhich(10000);
+                takeCamera(RESULT_CAMERA_IMAGE);
             }
         });
         photoAdd.setId(View.generateViewId());
@@ -1095,12 +1112,12 @@ public class travelRecordActivity extends Activity {
             @Override
             public void onClick(View v) {
                 int a = (int)etContent2.getTag(); // 索引值从已有子控件的数量开始
-                int index = innerLayout.indexOfChild(v);
                 setValue(a);
                 setWhich(10000);
                 openFilePicker();
             }
         });
+        listPhotoAdd.add(1,photoAdd);
         listPhotoAlbum.add(1,photoAlbum);
         rlBtn.addView(photoAlbum);
         layout.addView(rlBtn);
@@ -1136,7 +1153,7 @@ public class travelRecordActivity extends Activity {
         // “+”按钮（第一个）
         ImageButton ibtnAdd1 = (ImageButton) this.findViewById(R.id.ibn_add1);
         ImageButton ibtnDelete = (ImageButton) this.findViewById(R.id.ibn_delete);
-        ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_add1);
+        ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_photoAdd);
         ImageButton ibtnPhotoAlbum = (ImageButton) this.findViewById(R.id.ibn_PhotoAlbum);
         ibtnPhotoAdd.setOnClickListener(new View.OnClickListener() {
 
@@ -1200,6 +1217,7 @@ public class travelRecordActivity extends Activity {
             }
         });
         listIBTNAdd.add(ibtnAdd1);
+        listPhotoAdd.add(ibtnPhotoAdd);
         listPhotoAlbum.add(ibtnPhotoAlbum);
         listIBTNDel.add(null);  // 第一组隐藏了“-”按钮，所以为null
     }
@@ -1435,7 +1453,11 @@ public class travelRecordActivity extends Activity {
             photoAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteContent(v);
+                    int a = (int)etContent2.getTag(); // 索引值从已有子控件的数量开始
+                    setValue(a);
+                    //TODO 执行点击操作
+                    setWhich(10000);
+                    takeCamera(RESULT_CAMERA_IMAGE);
                 }
             });
             photoAdd.setId(View.generateViewId());
@@ -1456,12 +1478,12 @@ public class travelRecordActivity extends Activity {
                 public void onClick(View v) {
                     int a = (int)etContent2.getTag(); // 索引值从已有子控件的数量开始
                     setValue(a);
-                    int index = innerLayout.indexOfChild(v);
                     //TODO 执行点击操作
                     setWhich(10000);
                     openFilePicker();
                 }
             });
+            listPhotoAdd.add(iIndex,photoAdd);
             listPhotoAlbum.add(iIndex,photoAlbum);
             rlBtn.addView(photoAlbum);
             layout.addView(rlBtn);

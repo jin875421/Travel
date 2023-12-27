@@ -83,7 +83,7 @@ public class travelRecordEdit extends Activity {
     private int value = 0;
     private int which = 10000;
     // 外围的LinearLayout容器
-    private LinearLayout llContentView, ImageContainer;
+    private LinearLayout llContentView, ImageContainer,linearLayout;
     //添加点击按钮
     private EditText etContent1, etTravelName, etContent2;
     private Button btnReturn, btnSubmit;
@@ -105,7 +105,7 @@ public class travelRecordEdit extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_content);
+        setContentView(R.layout.activity_contentdjp);
         MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), false);
         initCtrl();
         //获取上页面传过来的travelId
@@ -125,6 +125,7 @@ public class travelRecordEdit extends Activity {
 
     private void initCtrl() {
         llContentView = (LinearLayout) this.findViewById(R.id.content_view);
+        linearLayout = (LinearLayout) this.findViewById(R.id.imageContainer);
         etContent1 = (EditText) this.findViewById(R.id.et_content1);
         etContent2 = (EditText) this.findViewById(R.id.et_content2);
         etTravelName = (EditText) this.findViewById(R.id.Ed_place);
@@ -133,15 +134,24 @@ public class travelRecordEdit extends Activity {
         ImageContainer = findViewById(R.id.imageContainer);
         listIBTNAdd = new LinkedList<ImageButton>();
         listIBTNDel = new LinkedList<ImageButton>();
-//        listPhotoAdd = new LinkedList<ImageButton>();
+        listPhotoAdd = new LinkedList<ImageButton>();
         listPhotoAlbum = new LinkedList<ImageButton>();
 
 
         // “+”按钮（第一个）
         ImageButton ibtnAdd1 = (ImageButton) this.findViewById(R.id.ibn_add1);
         ImageButton ibtnDelete = (ImageButton) this.findViewById(R.id.ibn_delete);
-//        ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_add1);
+        ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_add1);
         ImageButton ibtnPhotoAlbum = (ImageButton) this.findViewById(R.id.ibn_PhotoAlbum);
+        ibtnPhotoAdd.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                setValue(0);
+                //TODO 从相册选择
+                takeCamera(RESULT_CAMERA_IMAGE);
+            }
+        });
         ibtnAdd1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,6 +194,7 @@ public class travelRecordEdit extends Activity {
 
             }
         });
+        listPhotoAdd.add(ibtnPhotoAdd);
         listIBTNAdd.add(ibtnAdd1);
         listPhotoAlbum.add(ibtnPhotoAlbum);
         listIBTNDel.add(null);  // 第一组隐藏了“-”按钮，所以为null
@@ -235,6 +246,38 @@ public class travelRecordEdit extends Activity {
                                     300);
                             images.setLayoutParams(imagesParams);
                             images.setTag(0);
+                            images.setOnClickListener(new View.OnClickListener() {
+
+                                @Override
+                                public void onClick(View v) {
+                                    loadSave();
+                                    int index = ImageContainer.indexOfChild(v);
+                                    setValue(0);
+                                    setWhich(index);
+                                    showPopupWindow();
+                                }
+                            });
+                            images.setOnLongClickListener(new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    showDeleteDialog(new DeleteConfirmationListener() {
+                                        @Override
+                                        public void onConfirmDelete() {
+                                            loadSave();
+                                            int index = ImageContainer.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
+                                            List<String> path = travelRecords.get(0).getImage();
+                                            path.remove(index - 1);
+                                            // 用户确认删除的处理逻辑，可以在这里执行删除操作
+                                            ImageContainer.removeView(v);
+                                        }
+
+                                        @Override
+                                        public void onCancelDelete() {
+                                        }
+                                    });
+                                    return true;
+                                }
+                            });
 //// 将 ImageView 添加到内部 LinearLayout
                             Glide.with(travelRecordEdit.this)
                                     .load(url2 + path)
@@ -251,46 +294,6 @@ public class travelRecordEdit extends Activity {
             }
         }).start();
     }
-
-    //
-//    //TODO 保存List到SharedPreferences,通过tag区分
-//    private void saveListToSharedPreferences(List<String> nestedList, int tag) {
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        Gson gson = new Gson();
-//        List<List<String>> list =getListFromSharedPreferences();
-//        if (tag >= 0 && tag < list.size()) {
-//            list.remove(tag);
-//            list.add(tag,nestedList);
-//            String json = gson.toJson(list);
-//            editor.putString("myList", json);
-//            editor.apply();
-//        }else {
-//            list.add(tag,nestedList);
-//            String json = gson.toJson(list);
-//            editor.putString("myList", json);
-//            editor.apply();
-//        }
-//
-//    }
-//    private void saveListStringToSharedPreferences(List<List<String>> nestedList) {
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        Gson gson = new Gson();
-//        String json = gson.toJson(nestedList);
-//        editor.putString("myList", json);
-//        editor.apply();
-//    }
-//
-//    // 从SharedPreferences中获取List
-//    private List<List<String>> getListFromSharedPreferences() {
-//        String json = sharedPreferences.getString("myList", "");
-//        if (json.equals("")) {
-//            return new ArrayList<>();
-//        } else {
-//            Gson gson = new Gson();
-//            Type type = new TypeToken<List<List<String>>>() {}.getType();
-//            return gson.fromJson(json, type);
-//        }
-//    }
     private void setListener() {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -303,6 +306,7 @@ public class travelRecordEdit extends Activity {
                             //TODO travel id我来传 时间不变
                             int numberOfControls = llContentView.getChildCount();
                             for (int j = numberOfControls - 1; j >= 0; j--) {
+                                loadSave();
                                 List<File> fileList = new ArrayList<>();
                                 List<String> path = travelRecords.get(j).getImage();
                                 for (String URI : path) {
@@ -596,6 +600,18 @@ public class travelRecordEdit extends Activity {
                     }
                 }
             } else if (requestCode == RESULT_CAMERA_IMAGE) {
+                File file = new File(mCurrentPhotoPath);
+                Uri uri = Uri.fromFile(file);
+                if(getWhich()==10000){
+                    savePicture(uri,10000,10000);
+// 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
+                    putPicture(uri,10000,null,10000);
+                }
+                else {
+                    savePicture(uri,10000,getWhich());
+// 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
+                    putPicture(uri,10000,null,getWhich());
+                }
             }
         }
     }
@@ -606,12 +622,17 @@ public class travelRecordEdit extends Activity {
             tag = getValue();
             if (tag >= 0 && tag < travelRecords.size()) { // 确保 i 在列表范围内
                 List<String> path = travelRecords.get(tag).getImage();
-                if (path != null && !path.isEmpty()) {
+                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA");
                     String URI = uri.toString();
+                if (path == null) {
+                    path = new ArrayList<>(); // 在使用之前确保 path 不为空，进行初始化
+                }
                     if (n == 10000) {
                         path.add(URI);
+                        travelRecords.get(tag).setImage(path);
                     } else {
                         path.add(n, URI);
+                        travelRecords.get(tag).setImage(path);
                     }
                     try {
                         // 通过 URI 获取 Bitmap 对象
@@ -623,14 +644,17 @@ public class travelRecordEdit extends Activity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
+
             } else {
+                System.out.println("BBBBBBBBBBBBBBBBB");
                 List<String> path = new ArrayList<>();
                 String URI = uri.toString();
                 if (n == 10000) {
                     path.add(URI);
+                    travelRecords.get(tag).setImage(path);
                 } else {
                     path.add(n, URI);
+                    travelRecords.get(tag).setImage(path);
                 }
 
                 try {
@@ -646,12 +670,15 @@ public class travelRecordEdit extends Activity {
             }
 
         } else {
+            System.out.println("ccccccccccccccc");
             List<String> path = travelRecords.get(tag).getImage();
             String URI = uri.toString();
             if (n == 10000) {
                 path.add(URI);
+                travelRecords.get(tag).setImage(path);
             } else {
                 path.add(n - 2, URI);
+                travelRecords.get(tag).setImage(path);
             }
             try {
 
@@ -694,7 +721,6 @@ public class travelRecordEdit extends Activity {
                         int index = innerLayout.indexOfChild(v);
                         int c = (int) innerLayout.getTag();
                         setValue(c);
-                        System.out.println(c + "ccccccccccccc");
                         setWhich(index);
                         showPopupWindow();
                     }
@@ -710,6 +736,7 @@ public class travelRecordEdit extends Activity {
                                 int c = (int) innerLayout.getTag();
                                 List<String> path = travelRecords.get(c).getImage();
                                 path.remove(index - 1);
+                                travelRecords.get(c).setImage(path);
                                 // 用户确认删除的处理逻辑，可以在这里执行删除操作
                                 innerLayout.removeView(v);
                             }
@@ -748,7 +775,6 @@ public class travelRecordEdit extends Activity {
                         loadSave();
                         int index = innerLayout.indexOfChild(v);
                         int a = (int) innerLayout.getTag();
-                        System.out.println(a + "11111111111AAAAAAAAAAAAAAA");
                         setWhich(index);
                         setValue(a);
                         showPopupWindow();
@@ -765,6 +791,7 @@ public class travelRecordEdit extends Activity {
                                 int c = (int) innerLayout.getTag();
                                 List<String> path = travelRecords.get(c).getImage();
                                 path.remove(index - 1);
+                                travelRecords.get(c).setImage(path);
                                 // 用户确认删除的处理逻辑，可以在这里执行删除操作
                                 innerLayout.removeView(v);
                             }
@@ -822,6 +849,7 @@ public class travelRecordEdit extends Activity {
                             int a = (int) innerLayout.getTag();
                             List<String> path = travelRecords.get(a).getImage();
                             path.remove(index - 1);
+                            travelRecords.get(a).setImage(path);
                             innerLayout.removeView(v);
                         }
 
@@ -885,8 +913,44 @@ public class travelRecordEdit extends Activity {
             LinearLayout.LayoutParams imagesParams = new LinearLayout.LayoutParams(
                     300,
                     300);
+
             images.setLayoutParams(imagesParams);
             images.setTag(i);
+
+            images.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    loadSave();
+                    int index = llContentView.indexOfChild(v);
+                    setValue(i);
+                    setWhich(index);
+                    showPopupWindow();
+                }
+            });
+            images.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    showDeleteDialog(new DeleteConfirmationListener() {
+                        @Override
+                        public void onConfirmDelete() {
+                            loadSave();
+                            int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
+                            List<String> path = travelRecords.get(i).getImage();
+                            path.remove(index - 1);
+                            travelRecords.get(i).setImage(path);
+                            // 用户确认删除的处理逻辑，可以在这里执行删除操作
+                            innerLayout.removeView(v);
+                        }
+
+                        @Override
+                        public void onCancelDelete() {
+                        }
+                    });
+                    return true;
+                }
+            });
+
 //// 将 ImageView 添加到内部 LinearLayout
             Glide.with(this)
                     .load(url2 + path)
@@ -1012,7 +1076,11 @@ public class travelRecordEdit extends Activity {
         photoAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteContent(v);
+                int a = (int)etContent2.getTag(); // 索引值从已有子控件的数量开始
+                setValue(a);
+                //TODO 执行点击操作
+                setWhich(10000);
+                takeCamera(RESULT_CAMERA_IMAGE);
             }
         });
         photoAdd.setId(View.generateViewId());
@@ -1038,6 +1106,7 @@ public class travelRecordEdit extends Activity {
                 openFilePicker();
             }
         });
+        listPhotoAdd.add(1,photoAdd);
         listPhotoAlbum.add(1, photoAlbum);
         rlBtn.addView(photoAlbum);
         layout.addView(rlBtn);
@@ -1058,10 +1127,31 @@ public class travelRecordEdit extends Activity {
             HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
             LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
             innerLayout.setTag(i);
+            View view = llContentView.getChildAt(i);
+            if (view instanceof LinearLayout) {
+                LinearLayout linearLayout = (LinearLayout) view;
+                int editTextCount = 0;
+                for (int j = 0; j < linearLayout.getChildCount(); j++) {
+                    View childView = linearLayout.getChildAt(j);
+                    // Ensure childView is an instance of EditText
+                    if (childView instanceof EditText) {
+                        EditText editText = (EditText) childView;
+                        if (j == 1) { // Assuming the first EditText is for the title
+                            String title = editText.getText().toString();
+                            travelRecords.get(i).setPlaceName(title);
+                        } else if (j == 2) { // Assuming the second EditText is for the content
+                            String content = editText.getText().toString();
+                            travelRecords.get(i).setContent(content);
+                        }
+                    }
+                }
+
+            }
         }
     }
 
     private void addContent(View v) {
+
         if (v == null) {
             return;
         }
@@ -1075,6 +1165,8 @@ public class travelRecordEdit extends Activity {
         if (iIndex >= 0) {
 // 控件实际添加位置为当前触发位置点下一位
             iIndex += 1;
+            travelRecord travelRecord = new travelRecord();
+            travelRecords.add(iIndex,travelRecord);
 // 1.创建外围LinearLayout控件
             LinearLayout layout = new LinearLayout(travelRecordEdit.this);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -1237,7 +1329,11 @@ public class travelRecordEdit extends Activity {
             photoAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteContent(v);
+                    int a = (int)etContent2.getTag(); // 索引值从已有子控件的数量开始
+                    setValue(a);
+                    //TODO 执行点击操作
+                    setWhich(10000);
+                    takeCamera(RESULT_CAMERA_IMAGE);
                 }
             });
             photoAdd.setId(View.generateViewId());
@@ -1264,6 +1360,7 @@ public class travelRecordEdit extends Activity {
                     openFilePicker();
                 }
             });
+            listPhotoAdd.add(iIndex,photoAdd);
             listPhotoAlbum.add(iIndex, photoAlbum);
             rlBtn.addView(photoAlbum);
             layout.addView(rlBtn);
@@ -1289,6 +1386,7 @@ public class travelRecordEdit extends Activity {
             }
         }
         if (iIndex >= 0) {
+            loadSave();
             listIBTNAdd.remove(iIndex);
             listIBTNDel.remove(iIndex);
             // 从外围llContentView容器里删除第iIndex控件
