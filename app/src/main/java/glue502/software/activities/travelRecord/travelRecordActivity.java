@@ -130,7 +130,7 @@ public class travelRecordActivity extends Activity {
     // 外围的LinearLayout容器
     private LinearLayout llContentView;
     //添加点击按钮
-    private EditText etContent1,etTravelName;
+    private EditText etContent1,etTravelName,etContent2;
     private Button btnReturn,btnSubmit;
     boolean submitClicked = false;
     // “+”按钮控件List
@@ -1139,13 +1139,14 @@ public class travelRecordActivity extends Activity {
     private void initCtrl() {
         llContentView = (LinearLayout) this.findViewById(R.id.content_view);
         etContent1 = (EditText) this.findViewById(R.id.et_content1);
+        etContent2 = (EditText) this.findViewById(R.id.et_content2);
         etTravelName = (EditText) this.findViewById(R.id.Ed_place);
         btnReturn =findViewById(R.id.btn_return);
         btnSubmit =findViewById(R.id.btn_submit);
         mSugListView = findViewById(R.id.sug_list);
         listIBTNAdd = new LinkedList<ImageButton>();
-        listIBTNDel = new LinkedList<   ImageButton>();
-//        listPhotoAdd = new LinkedList<ImageButton>();
+        listIBTNDel = new LinkedList<ImageButton>();
+        listPhotoAdd = new LinkedList<ImageButton>();
         listPhotoAlbum = new LinkedList<ImageButton>();
 
 
@@ -1178,16 +1179,7 @@ public class travelRecordActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
                     addContent(v);
                 }
-                // 检查输入框内容是否为空
-//                if (etContent1.getText().toString().isEmpty()) {
-//                    // 如果输入框内容为空，显示提示或者打印消息
-//                    Toast.makeText(travelRecordActivity.this, "请输入内容", Toast.LENGTH_SHORT).show();
-//                    // 或者打印消息到控制台
-//                    Log.d("PostActivity", "输入框内容为空");
-//                } else {
-//                    // 如果输入框不为空，则执行添加控件的操作
-//                    addContent(v);
-//                }
+
             }
         });
         ibtnDelete.setOnClickListener(new View.OnClickListener(){
@@ -1200,8 +1192,15 @@ public class travelRecordActivity extends Activity {
                         // 显示短暂的消息提示
                         Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始删除哦", Toast.LENGTH_SHORT).show();
                     }else {
+                        removeFromSharedPreferences(0);
+                        etContent1.setText("");
+                        etContent2.setText("");
                         Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
                     }
+                // 重启当前Activity以重新加载页面
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
             }
         });
 
