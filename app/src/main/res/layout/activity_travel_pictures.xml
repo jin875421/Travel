@@ -4,8 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
+    android:background="#FFFAFA"
+    android:orientation="vertical"
     tools:context=".activities.travelRecord.TravelPicturesActivity">
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <Button
+            android:id="@+id/btn_back2"
+            android:layout_height="35dp"
+            android:layout_width="35dp"
+            android:background="@drawable/back1"
+            android:layout_marginLeft="2dp"/>
+
+        <TextView
+            android:id="@+id/tv_place"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="地点信息"
+            android:textSize="22dp"
+            android:layout_marginTop="5dp"/>
+
+    </LinearLayout>
+
 
 
     <!--在这里布局所有的照片，同时最好设置放大功能-->
@@ -22,7 +45,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/picture_rcv"/>
+        android:id="@+id/picture_rcv"
+        />
 
 
 <!--    <androidx.viewpager.widget.ViewPager-->

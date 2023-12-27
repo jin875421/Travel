@@ -83,8 +83,11 @@ public class TravelAlbumAdapter extends BaseAdapter {
         //显示图片
 //        System.out.println(url+picturePath);
         //设定图片宽高
+        int width = 110;
+        int height = 110;
         Glide.with(context)
                 .load(url+picturePath)
+                .override(convertDpToPixel(width), convertDpToPixel(height))
                 .into(ivAlbum);
         //TODO 设置点击时间监听器
 
@@ -97,6 +100,9 @@ public class TravelAlbumAdapter extends BaseAdapter {
 
                 Bundle extras = new Bundle();
                 extras.putStringArrayList("parameter_list_key", (ArrayList<String>) list.get(i).getPicturePath());
+
+                //将地点信息传递过去
+                extras.putString("place_name",list.get(i).getPlaceName());
                 intent.putExtras(extras);
 
                 context.startActivity(intent);

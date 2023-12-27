@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -48,9 +49,9 @@ public class TravelAlbumActivity extends AppCompatActivity {
     private List<ShowPicture> list1,list2,list3,list4;
 
     private GridView gridView1,gridView2,gridView3,gridView4;
-
     //这里要添加文字的控件对象，用于修改文本的字体格式
     private TextView text1,text2,text3,text4;
+    private Button btnBack1;
 
     TravelAlbumAdapter t1,t2,t3,t4;
 
@@ -67,7 +68,6 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
         //实现全屏，去掉页面上面蓝色标题栏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         findViews();
@@ -78,6 +78,9 @@ public class TravelAlbumActivity extends AppCompatActivity {
         //获取到userId
 
 //        initData(sharedPreferences.getString("userId",""));
+
+        //设置返回的点击事件监听器
+        setListener();
 
         // 发送网络请求
         list1 = new ArrayList<>();
@@ -100,9 +103,14 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
     }
 
-
-
-
+    private void setListener() {
+        btnBack1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); //返回首页页面
+            }
+        });
+    }
 
 
     private class RequestAsyncTask extends AsyncTask<Void, Void, String> {
@@ -300,6 +308,8 @@ public class TravelAlbumActivity extends AppCompatActivity {
         gridView2 = findViewById(R.id.gv_view2);
         gridView3 = findViewById(R.id.gv_view3);
         gridView4 = findViewById(R.id.gv_view4);
+
+        btnBack1 = findViewById(R.id.btn_back1);
 
         text1 = findViewById(R.id.tv_t1);
         text2 = findViewById(R.id.tv_t2);
