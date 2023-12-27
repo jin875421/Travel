@@ -51,7 +51,7 @@ public class TravelReviewActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId",MODE_PRIVATE);
         initview();
         setlistener();
-        initData(sharedPreferences.getString("userId",""));
+        initData("1");
     }
     private void initview(){
         travelReviewList = findViewById(R.id.travel_review);

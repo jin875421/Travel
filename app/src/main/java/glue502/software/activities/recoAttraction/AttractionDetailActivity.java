@@ -45,7 +45,7 @@ public class AttractionDetailActivity extends AppCompatActivity implements View.
     }
 
     private void initData() {
-        Carousel carousel = new Carousel(AttractionDetailActivity.this, dotLinerLayout, vp2, "ruoyi/uploadPath/");
+        Carousel carousel = new Carousel(AttractionDetailActivity.this, dotLinerLayout, vp2, "");
         carousel.initViews(attraction.getImgUrls());
         txAttractionName.setText(attraction.getAttractionName());
         txAttractionAddress.setText(attraction.getCountry() + " " + attraction.getProvince() + " " + attraction.getCity() + " " + attraction.getAddress());

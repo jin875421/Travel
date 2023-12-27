@@ -20,10 +20,11 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/tv_picture"
         android:layout_height="wrap_content"
-        android:layout_width="110dp"
+        android:layout_width="wrap_content"
         android:background="#1Affffff"
         android:text="这是照片的地点"
         android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
         android:layout_alignBottom="@+id/iv_album"
         />
     </RelativeLayout>

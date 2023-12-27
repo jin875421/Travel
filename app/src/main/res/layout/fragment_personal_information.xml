@@ -119,6 +119,7 @@
                 android:layout_alignParentTop="true" />
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tbl"
+                android:layout_marginLeft="20dp"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 app:tabTextAppearance="@style/CustomTabLayout"

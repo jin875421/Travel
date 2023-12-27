@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,9 +8,9 @@
     tools:context=".activities.travelRecord.travelRecordActivity" >
 
     <ScrollView
-        android:layout_below="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="50dp"
         android:scrollbars="none">
 
         <LinearLayout
@@ -68,12 +67,6 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <ListView
-                    android:id="@+id/sug_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:visibility="gone" />
-
 
                 <EditText
                     android:id="@+id/et_content2"
@@ -128,14 +121,6 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"></RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
     <Button
         android:id="@+id/btn_return"
         android:layout_width="wrap_content"
@@ -160,5 +145,4 @@
         android:background="@drawable/border_backgrounddjp"
         android:layout_alignParentRight="true"
         android:text="提交" />
-    </RelativeLayout>
 </RelativeLayout>
