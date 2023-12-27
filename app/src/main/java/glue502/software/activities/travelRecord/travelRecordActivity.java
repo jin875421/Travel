@@ -84,6 +84,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLOutput;
@@ -129,7 +130,7 @@ public class travelRecordActivity extends Activity {
     // 外围的LinearLayout容器
     private LinearLayout llContentView;
     //添加点击按钮
-    private EditText etContent1,etTravelName;
+    private EditText etContent1,etTravelName,etContent2;
     private Button btnReturn,btnSubmit;
     boolean submitClicked = false;
     // “+”按钮控件List
@@ -161,7 +162,6 @@ public class travelRecordActivity extends Activity {
         Random random = new Random();
         int index = random.nextInt(backgrounds.length);
         int resourceId = getResources().getIdentifier(backgrounds[index], "mipmap", getPackageName());
-        System.out.println(resourceId);
 // 将选定的图片设置为背景
         layout.setBackgroundResource(resourceId);
         //初始百度地图
@@ -175,7 +175,7 @@ public class travelRecordActivity extends Activity {
         initCtrl();
         // 获取 SharedPreferences 实例
         sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId","");
+        userId = sharedPreferences.getString("userId","jin875421");
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         String TravelName = sharedPreferences.getString("TravelName", "");
         etTravelName.setText(TravelName);
@@ -378,12 +378,12 @@ public class travelRecordActivity extends Activity {
                             }
                             System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             SharedPreferences.Editor aaa = sharedPreferences.edit();
-//        editor.putInt("numberOfControls", 0);
                             aaa.putInt("numberOfControls", 1);
                             aaa.remove( "userTitle" + 0);
                             aaa.remove("userContent" + 0);
                             aaa.remove("myList");
                             aaa.apply();
+                            etTravelName.setText("旅行者，你要去哪里");
                         }
                     }).start();
                 }
@@ -593,6 +593,18 @@ public class travelRecordActivity extends Activity {
                     }
                 }
             } else if (requestCode == RESULT_CAMERA_IMAGE) {
+                File file = new File(mCurrentPhotoPath);
+                Uri uri = Uri.fromFile(file);
+                if(getWhich()==10000){
+                    savePicture(uri,10000,10000);
+// 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
+                    putPicture(uri,10000,null,10000);
+                }
+                else {
+                    savePicture(uri,10000,getWhich());
+// 假设您想获取第一个LinearLayout中的ImageView，可以通过以下代码获取
+                    putPicture(uri,10000,null,getWhich());
+                }
             }
         }
     }
@@ -1075,7 +1087,11 @@ public class travelRecordActivity extends Activity {
         photoAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteContent(v);
+                int a = (int)etContent2.getTag(); // 索引值从已有子控件的数量开始
+                setValue(a);
+                //TODO 执行点击操作
+                setWhich(10000);
+                takeCamera(RESULT_CAMERA_IMAGE);
             }
         });
         photoAdd.setId(View.generateViewId());
@@ -1095,12 +1111,12 @@ public class travelRecordActivity extends Activity {
             @Override
             public void onClick(View v) {
                 int a = (int)etContent2.getTag(); // 索引值从已有子控件的数量开始
-                int index = innerLayout.indexOfChild(v);
                 setValue(a);
                 setWhich(10000);
                 openFilePicker();
             }
         });
+        listPhotoAdd.add(1,photoAdd);
         listPhotoAlbum.add(1,photoAlbum);
         rlBtn.addView(photoAlbum);
         layout.addView(rlBtn);
@@ -1123,20 +1139,21 @@ public class travelRecordActivity extends Activity {
     private void initCtrl() {
         llContentView = (LinearLayout) this.findViewById(R.id.content_view);
         etContent1 = (EditText) this.findViewById(R.id.et_content1);
+        etContent2 = (EditText) this.findViewById(R.id.et_content2);
         etTravelName = (EditText) this.findViewById(R.id.Ed_place);
         btnReturn =findViewById(R.id.btn_return);
         btnSubmit =findViewById(R.id.btn_submit);
         mSugListView = findViewById(R.id.sug_list);
         listIBTNAdd = new LinkedList<ImageButton>();
-        listIBTNDel = new LinkedList<   ImageButton>();
-//        listPhotoAdd = new LinkedList<ImageButton>();
+        listIBTNDel = new LinkedList<ImageButton>();
+        listPhotoAdd = new LinkedList<ImageButton>();
         listPhotoAlbum = new LinkedList<ImageButton>();
 
 
         // “+”按钮（第一个）
         ImageButton ibtnAdd1 = (ImageButton) this.findViewById(R.id.ibn_add1);
         ImageButton ibtnDelete = (ImageButton) this.findViewById(R.id.ibn_delete);
-        ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_add1);
+        ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_photoAdd);
         ImageButton ibtnPhotoAlbum = (ImageButton) this.findViewById(R.id.ibn_PhotoAlbum);
         ibtnPhotoAdd.setOnClickListener(new View.OnClickListener() {
 
@@ -1162,16 +1179,7 @@ public class travelRecordActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
                     addContent(v);
                 }
-                // 检查输入框内容是否为空
-//                if (etContent1.getText().toString().isEmpty()) {
-//                    // 如果输入框内容为空，显示提示或者打印消息
-//                    Toast.makeText(travelRecordActivity.this, "请输入内容", Toast.LENGTH_SHORT).show();
-//                    // 或者打印消息到控制台
-//                    Log.d("PostActivity", "输入框内容为空");
-//                } else {
-//                    // 如果输入框不为空，则执行添加控件的操作
-//                    addContent(v);
-//                }
+
             }
         });
         ibtnDelete.setOnClickListener(new View.OnClickListener(){
@@ -1184,8 +1192,15 @@ public class travelRecordActivity extends Activity {
                         // 显示短暂的消息提示
                         Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始删除哦", Toast.LENGTH_SHORT).show();
                     }else {
+                        removeFromSharedPreferences(0);
+                        etContent1.setText("");
+                        etContent2.setText("");
                         Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
                     }
+                // 重启当前Activity以重新加载页面
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
             }
         });
 
@@ -1200,6 +1215,7 @@ public class travelRecordActivity extends Activity {
             }
         });
         listIBTNAdd.add(ibtnAdd1);
+        listPhotoAdd.add(ibtnPhotoAdd);
         listPhotoAlbum.add(ibtnPhotoAlbum);
         listIBTNDel.add(null);  // 第一组隐藏了“-”按钮，所以为null
     }
@@ -1435,7 +1451,11 @@ public class travelRecordActivity extends Activity {
             photoAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteContent(v);
+                    int a = (int)etContent2.getTag(); // 索引值从已有子控件的数量开始
+                    setValue(a);
+                    //TODO 执行点击操作
+                    setWhich(10000);
+                    takeCamera(RESULT_CAMERA_IMAGE);
                 }
             });
             photoAdd.setId(View.generateViewId());
@@ -1456,12 +1476,12 @@ public class travelRecordActivity extends Activity {
                 public void onClick(View v) {
                     int a = (int)etContent2.getTag(); // 索引值从已有子控件的数量开始
                     setValue(a);
-                    int index = innerLayout.indexOfChild(v);
                     //TODO 执行点击操作
                     setWhich(10000);
                     openFilePicker();
                 }
             });
+            listPhotoAdd.add(iIndex,photoAdd);
             listPhotoAlbum.add(iIndex,photoAlbum);
             rlBtn.addView(photoAlbum);
             layout.addView(rlBtn);
