@@ -168,8 +168,7 @@ public class travelRecordActivity extends Activity {
         SDKInitializer.setAgreePrivacy(this.getApplicationContext(), true);
         SDKInitializer.initialize(this.getApplicationContext());
         mSuggestionSearch = SuggestionSearch.newInstance();
-
-        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(),false);
+        MyViewUtils.setImmersiveStatusBar(this, findViewById(R.id.top),true);
         // 检查是否已经授予了所需的权限
         Log.d("PostActivity", "onCreate() called");
         initCtrl();
@@ -178,7 +177,7 @@ public class travelRecordActivity extends Activity {
 //        userId = sharedPreferences.getString("userId","1");
         userId = "1";
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        String TravelName = sharedPreferences.getString("TravelName", "请输入");
+        String TravelName = sharedPreferences.getString("TravelName", "");
         etTravelName.setText(TravelName);
         int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
         // 如果之前有保存的控件数量，则重新创建控件
@@ -1146,7 +1145,7 @@ public class travelRecordActivity extends Activity {
         mSugListView = findViewById(R.id.sug_list);
         listIBTNAdd = new LinkedList<ImageButton>();
         listIBTNDel = new LinkedList<   ImageButton>();
-        listPhotoAdd = new LinkedList<ImageButton>();
+//        listPhotoAdd = new LinkedList<ImageButton>();
         listPhotoAlbum = new LinkedList<ImageButton>();
 
 
