@@ -154,6 +154,8 @@ public class travelRecordActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);// 获取LinearLayout或其他容器的引用，作为背景
         setContentView(R.layout.activity_content);
+        SharedPreferences preferences = getSharedPreferences("local", MODE_PRIVATE);
+        city = preferences.getString("city", "北京市");
         RelativeLayout layout = findViewById(R.id.layout);
         // 随机选择背景图片
         Random random = new Random();

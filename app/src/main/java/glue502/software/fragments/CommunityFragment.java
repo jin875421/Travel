@@ -317,6 +317,9 @@ public class CommunityFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 // 检查是否上传完成
                 // 进行刷新操作，重新加载数据
+                page = 0;
+                posts = new ArrayList<>();
+                userInfos = new ArrayList<>();
                 initData();
             }
         }

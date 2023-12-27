@@ -118,7 +118,7 @@ public class TravelDetailAdapter extends BaseAdapter {
             if(path!=null){
                 ImageView imageView = new ImageView(context);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPixel(110), convertDpToPixel(110));
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPixel(120), convertDpToPixel(120));
                 layoutParams.setMargins(convertDpToPixel(4), 0, 0, 0); // 左边距为4dp
                 imageView.setLayoutParams(layoutParams);
                 Glide.with(context)
