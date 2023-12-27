@@ -1,13 +1,17 @@
 package glue502.software.adapters;
 
+import static glue502.software.activities.MainActivity.ip;
+
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -29,7 +33,7 @@ public class TravelAlbumAdapter extends BaseAdapter {
 //    private List<String> list;
     private Context context;//上下文环境
     private int layout;//要填充的页面布局
-
+    private String url = "http://"+ip+"/travel/";
     public TravelAlbumAdapter() {
     }
 
@@ -65,17 +69,22 @@ public class TravelAlbumAdapter extends BaseAdapter {
 
         ShowPicture sp = list.get(i);
         String picturePath = sp.getPicturePath().get(0);
-
 //        String picturePath = list.get(i);
-
         //将地点写上去
         TextView tvPlace = view.findViewById(R.id.tv_picture);
-        tvPlace.setText(sp.getPlaceName());
-        System.out.println(picturePath);
+        //在这里用于改变字体格式
+//        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/幼圆.TTF");
+//        tvPlace.setTypeface(typeface);
 
+        //在这里用于改变字体背景，让字体背景变透明
+//        tvPlace.getBackground().setAlpha(10);
+        tvPlace.setText(sp.getPlaceName());
+//        System.out.println(picturePath);
         //显示图片
+//        System.out.println(url+picturePath);
+        //设定图片宽高
         Glide.with(context)
-                .load(picturePath)
+                .load(url+picturePath)
                 .into(ivAlbum);
         //TODO 设置点击时间监听器
 
@@ -94,6 +103,10 @@ public class TravelAlbumAdapter extends BaseAdapter {
             }
         });
         return view;
+    }
+    private int convertDpToPixel(int dp) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
     }
 }
 

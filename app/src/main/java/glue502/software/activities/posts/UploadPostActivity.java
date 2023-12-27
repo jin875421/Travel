@@ -185,8 +185,13 @@ public class UploadPostActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             //上传完成，重新启用
-                            upload.setEnabled(true);
-                            uploadComplete();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    upload.setEnabled(true);
+                                    uploadComplete();
+                                }
+                            });
                         }
                     }
                 }).start();
