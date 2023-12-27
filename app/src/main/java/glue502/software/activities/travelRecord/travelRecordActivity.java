@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -95,6 +96,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import glue502.software.R;
@@ -111,7 +113,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class travelRecordActivity extends Activity {
-
+    private static final String[] backgrounds = {"djpa", "djpb", "djpjp","djpd","djpe","djpf","djpg","djph","djpi","djpj","djpk","djpl"};
     private String url = "http://"+ip+"/travel/travel/createTravelRecoed";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
     private UserInfo  userInfo= new UserInfo();
@@ -150,13 +152,22 @@ public class travelRecordActivity extends Activity {
     private String selectedDistrict;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);// 获取LinearLayout或其他容器的引用，作为背景
+        setContentView(R.layout.activity_content);
+        RelativeLayout layout = findViewById(R.id.layout);
+        // 随机选择背景图片
+        Random random = new Random();
+        int index = random.nextInt(backgrounds.length);
+        int resourceId = getResources().getIdentifier(backgrounds[index], "mipmap", getPackageName());
+        System.out.println(resourceId);
+// 将选定的图片设置为背景
+        layout.setBackgroundResource(resourceId);
         //初始百度地图
         LocationClient.setAgreePrivacy(true);
         SDKInitializer.setAgreePrivacy(this.getApplicationContext(), true);
         SDKInitializer.initialize(this.getApplicationContext());
         mSuggestionSearch = SuggestionSearch.newInstance();
-        setContentView(R.layout.activity_content);
+
         MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(),false);
         // 检查是否已经授予了所需的权限
         Log.d("PostActivity", "onCreate() called");
@@ -197,7 +208,7 @@ public class travelRecordActivity extends Activity {
     private int getWhich() {
         return this.which;
     }
-    //TODO 保存List到SharedPreferences,通过tag区分
+    // 保存List到SharedPreferences,通过tag区分
     private void saveListToSharedPreferences(List<String> nestedList, int tag) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
@@ -377,7 +388,7 @@ public class travelRecordActivity extends Activity {
                 }
 
             }
-            //TODO 在这里要删除页面的content和照片
+            //在这里要删除页面的content和照片
 
         });
         btnReturn.setOnClickListener(new View.OnClickListener() {
@@ -673,6 +684,8 @@ public class travelRecordActivity extends Activity {
                 LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
                 innerLayout.setTag(getValue());
                 ImageView imageView1 = new ImageView(this);
+                imageView1.setBackgroundResource(R.drawable.border_backgrounddjpjp);
+                imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
                 Glide.with(this)
                         .load(selectedImage)
                         .into(imageView1);
@@ -717,7 +730,7 @@ public class travelRecordActivity extends Activity {
                         return true;
                     }
                 });
-                layoutParams.setMargins(0, 0, 0, 16);
+                layoutParams.setMargins(7, 0, 7, 16);
                 imageView1.setLayoutParams(layoutParams);
 // 添加新的imageView1 到 innerLayout
                 if(n==10000){
@@ -736,6 +749,8 @@ public class travelRecordActivity extends Activity {
                 LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
                 innerLayout.setTag(a);
                 ImageView imageView1 = new ImageView(this);
+                imageView1.setBackgroundResource(R.drawable.border_backgrounddjpjp);
+                imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
                 Glide.with(this)
                         .load(selectedImage)
                         .into(imageView1);
@@ -780,7 +795,7 @@ public class travelRecordActivity extends Activity {
                         convertDpToPixel(150), // 宽度 150dp 转换为像素
                         convertDpToPixel(150) // 高度 150dp 转换为像素
                 );
-                layoutParams.setMargins(0, 0, 0, 16);
+                layoutParams.setMargins(7, 0, 7, 16);
                 imageView1.setLayoutParams(layoutParams);
 // 添加新的imageView1 到 innerLayout
                 if(n==10000){
@@ -797,6 +812,8 @@ public class travelRecordActivity extends Activity {
             LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
             innerLayout.setTag(a);
             ImageView imageView1 = new ImageView(this);
+            imageView1.setBackgroundResource(R.drawable.border_backgrounddjpjp);
+            imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
             Glide.with(this)
                     .load(bitmap)
                     .into(imageView1);
@@ -839,7 +856,7 @@ public class travelRecordActivity extends Activity {
                     convertDpToPixel(150), // 宽度 150dp 转换为像素
                     convertDpToPixel(150) // 高度 150dp 转换为像素
             );
-            layoutParams.setMargins(0, 0, 0, 16);
+            layoutParams.setMargins(7, 0, 7, 16);
             imageView1.setLayoutParams(layoutParams);
 // 添加新的imageView1 到 innerLayout
             if(n==10000){
@@ -850,7 +867,7 @@ public class travelRecordActivity extends Activity {
             }
         }
     }
-    // TODO 下面是新建的控件
+    // 下面是新建的控件
     private void addContentWithTag(int i) {
         // 1.创建外围LinearLayout控件
         LinearLayout layout = new LinearLayout(travelRecordActivity.this);
@@ -864,15 +881,16 @@ public class travelRecordActivity extends Activity {
         layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
         layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
 
-//TODO 以下是图片的新加
+//以下是图片的新加
 
 // 1. 创建外围 HorizontalScrollView 控件
         HorizontalScrollView scrollView = new HorizontalScrollView(this);
         LinearLayout.LayoutParams scrollParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 dpToPx(150)); // 150dp高度
-        scrollView.setLayoutParams(scrollParams);
 
+        scrollView.setLayoutParams(scrollParams);
+        scrollView.setHorizontalScrollBarEnabled(false);
 // 创建内部 LinearLayout
         LinearLayout innerLayout = new LinearLayout(this);
         LinearLayout.LayoutParams innerParams = new LinearLayout.LayoutParams(
@@ -940,6 +958,7 @@ public class travelRecordActivity extends Activity {
                 }
             }
         });
+        etContent1.setBackgroundResource(R.drawable.border_backgrounddjpjp);
         etContent1.setLayoutParams(etParams1);
         etContent1.setId(View.generateViewId());
         etContent1.setGravity(Gravity.LEFT);
@@ -967,6 +986,7 @@ public class travelRecordActivity extends Activity {
                 LinearLayout.LayoutParams.WRAP_CONTENT,// 将高度设置为 WRAP_CONTENT
                 dpToPx(50));
         etContent2.setLayoutParams(etParams2);
+        etContent2.setBackgroundResource(R.drawable.border_backgrounddjpjp);
         etContent2.setInputType(InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
         etContent2.setGravity(Gravity.LEFT);
         etContent2.setPadding(dpToPx(5), 0, 0, 0);
@@ -975,6 +995,7 @@ public class travelRecordActivity extends Activity {
         etContent2.setSingleLine(false);
         etContent2.setLines(25); // 设置初始行数为5行
         etContent2.setMinLines(12); // 设置最大行数为5行
+        etContent2.setPaintFlags(etContent2.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
         etContent2.setTag(i);
         layout.addView(etContent2);
 
@@ -1108,15 +1129,24 @@ public class travelRecordActivity extends Activity {
         mSugListView = findViewById(R.id.sug_list);
         listIBTNAdd = new LinkedList<ImageButton>();
         listIBTNDel = new LinkedList<   ImageButton>();
-//        listPhotoAdd = new LinkedList<ImageButton>();
+        listPhotoAdd = new LinkedList<ImageButton>();
         listPhotoAlbum = new LinkedList<ImageButton>();
 
 
         // “+”按钮（第一个）
         ImageButton ibtnAdd1 = (ImageButton) this.findViewById(R.id.ibn_add1);
         ImageButton ibtnDelete = (ImageButton) this.findViewById(R.id.ibn_delete);
-//        ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_add1);
+        ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_add1);
         ImageButton ibtnPhotoAlbum = (ImageButton) this.findViewById(R.id.ibn_PhotoAlbum);
+        ibtnPhotoAdd.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                setValue(0);
+                //TODO 从相册选择
+                takeCamera(RESULT_CAMERA_IMAGE);
+            }
+        });
         ibtnAdd1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1212,7 +1242,7 @@ public class travelRecordActivity extends Activity {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     dpToPx(150)); // 150dp高度
             scrollView.setLayoutParams(scrollParams);
-
+            scrollView.setHorizontalScrollBarEnabled(false);
 // 创建内部 LinearLayout 这是一个很小的点，没有任何用
             LinearLayout innerLayout = new LinearLayout(this);
             LinearLayout.LayoutParams innerParams = new LinearLayout.LayoutParams(
@@ -1248,7 +1278,8 @@ public class travelRecordActivity extends Activity {
             LinearLayout.LayoutParams etParams1 = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     dpToPx(25));
-
+            etContent1.setBackgroundResource(R.drawable.border_backgrounddjpjp);
+            etContent1.setPaintFlags(etContent1.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
             ListView view = PoiSugSearch(etContent1,listView);
 
             etContent1.addTextChangedListener(new TextWatcher() {
@@ -1319,8 +1350,10 @@ public class travelRecordActivity extends Activity {
             etContent2.setSingleLine(false);
             etContent2.setLines(25); // 设置初始行数为5行
             etContent2.setMinLines(12); // 设置最大行数为5行
+            etContent2.setBackgroundResource(R.drawable.border_backgrounddjpjp);
             etContent2.setHint("输入你的内容");
             etContent2.setTag(newIndex);
+            etContent2.setPaintFlags(etContent2.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
             layout.addView(etContent2);
 
 // 将动态生成的 LinearLayout 添加到 llContentView 容器中

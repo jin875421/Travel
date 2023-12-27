@@ -2,8 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
-    android:paddingTop="35dp"
+    android:background="@mipmap/djpa"
+    android:paddingTop="0dp"
+    android:id="@+id/layout"
     tools:context=".activities.travelRecord.travelRecordActivity" >
 
     <ScrollView
@@ -31,7 +32,8 @@
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="150dp">
+                    android:layout_height="150dp"
+                    android:scrollbars="none">
 
                     <LinearLayout
                         android:id="@+id/imageContainer"
@@ -55,7 +57,7 @@
                 <EditText
                     android:id="@+id/et_content1"
                     android:layout_width="match_parent"
-                    android:layout_height="35dip"
+                    android:layout_height="30dip"
                     android:background="@drawable/border_backgrounddjpjp"
                     android:gravity="left"
                     android:hint="标题"
@@ -76,7 +78,7 @@
                     android:id="@+id/et_content2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#00FFFFFF"
+                    android:background="@drawable/border_backgrounddjpjp"
                     android:gravity="left"
                     android:hint="输入你的内容"
                     android:inputType="textMultiLine"
@@ -110,26 +112,21 @@
                         android:id="@+id/ibn_photoAdd"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_toEndOf="@id/ibn_delete"
+                        android:layout_alignParentEnd="true"
                         android:background="@drawable/cameraline" />
 
                     <ImageButton
                         android:id="@+id/ibn_PhotoAlbum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
                         android:layout_toEndOf="@id/ibn_photoAdd"
-                        android:background="@drawable/imageadd" />
+                        android:layout_marginStart="-65dp"
+                    android:background="@drawable/imageadd" />
 
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"></RelativeLayout>
     <Button
         android:id="@+id/btn_return"
         android:layout_width="wrap_content"
