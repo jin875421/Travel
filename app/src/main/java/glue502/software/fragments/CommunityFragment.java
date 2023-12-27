@@ -97,16 +97,21 @@ public class CommunityFragment extends Fragment {
         setListener();
         initData();
         //添加沉浸式
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.appbar),true);
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.community_top),true);
+        // 获取状态栏高度
+        int statusBarHeight = getStatusBarHeight();
+
+        // 获取 Toolbar 实例
+
+        // 动态设置 Toolbar 的高度
+        ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+        params.height = statusBarHeight + getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+        toolbar.setLayoutParams(params);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 toolbar.setBackgroundColor(changeAlpha(getResources().getColor(R.color.communitytitle),Math.abs(verticalOffset*1.0f)/appBarLayout.getTotalScrollRange()));
-//                int totalScrollRange = appBarLayout.getTotalScrollRange();
-//                float alpha = Math.abs((float) verticalOffset / (float) totalScrollRange);
-//
-//                updateStatusBarAlpha(alpha);
-                // 根据垂直偏移量来判断折叠状态
+
                 if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
                     // 完全折叠，显示ImageView
 //                    lsda.setVisibility(View.VISIBLE);
@@ -121,12 +126,15 @@ public class CommunityFragment extends Fragment {
         return view;
 
     }
-//    private void updateStatusBarAlpha(float alpha) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            Window window = getActivity().getWindow();
-//            window.setStatusBarColor(changeAlpha(getResources().getColor(R.color.communitytitle), alpha));
-//        }
-//    }
+    // 获取状态栏高度
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
     public int changeAlpha(int color, float fraction) {
         int red = Color.red(color);
         int green = Color.green(color);
@@ -372,11 +380,11 @@ public class CommunityFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        //添加沉浸式
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.appbar),true);
-    }
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//        //添加沉浸式
+//        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.appbar),true);
+//    }
 
 }
