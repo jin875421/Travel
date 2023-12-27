@@ -120,11 +120,10 @@ public class TravelReviewAdapter extends BaseAdapter {
             for (String path : travelReview.get(i).getImages()) {
                 ImageView imageView = new ImageView(context);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPixel(110), convertDpToPixel(110));
-                layoutParams.setMargins(convertDpToPixel(4), 0, 0, 0); // 左边距为4dp
                 // 通过服务器地址设置图片
                 Glide.with(context).load(url + path).into(imageView);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(convertDpToPixel(130), convertDpToPixel(130));
+                params.setMargins(0, 0, convertDpToPixel(4), 0);
                 imageView.setLayoutParams(params);
                 imagecontainer.addView(imageView);
             }

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -150,7 +151,7 @@
         android:layout_marginTop="-50dp"
         android:layout_below="@id/btn_return"
         android:gravity="center"
-        android:hint="请输入" />
+        android:text="Your Text" />
 
     <Button
         android:id="@+id/btn_submit"

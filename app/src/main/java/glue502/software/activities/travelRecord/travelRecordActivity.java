@@ -174,7 +174,6 @@ public class travelRecordActivity extends Activity {
         // 获取 SharedPreferences 实例
         sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         userId = sharedPreferences.getString("userId","");
-
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         String TravelName = sharedPreferences.getString("TravelName", "");
         etTravelName.setText(TravelName);
@@ -394,8 +393,7 @@ public class travelRecordActivity extends Activity {
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(travelRecordActivity.this, travelRecordEdit.class);
-                startActivity(intent);
+                finish();
             }
         });
     }
@@ -1129,7 +1127,7 @@ public class travelRecordActivity extends Activity {
         mSugListView = findViewById(R.id.sug_list);
         listIBTNAdd = new LinkedList<ImageButton>();
         listIBTNDel = new LinkedList<   ImageButton>();
-        listPhotoAdd = new LinkedList<ImageButton>();
+//        listPhotoAdd = new LinkedList<ImageButton>();
         listPhotoAlbum = new LinkedList<ImageButton>();
 
 
