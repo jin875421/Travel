@@ -58,6 +58,7 @@ import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
 import glue502.software.models.UserInfo;
+import glue502.software.utils.Carousel;
 import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -111,7 +112,7 @@ public class RecommendFragment extends Fragment {
             mLocationClient.setAgreePrivacy(true);
             mLocationClient = new LocationClient(getActivity().getApplicationContext());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         // 设置定位监听器
         BDAbstractLocationListener myLocationListener = new BDAbstractLocationListener() {
@@ -232,7 +233,6 @@ public class RecommendFragment extends Fragment {
                 requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        Log.i("Reco",responseData);
 //                        //Carousel为自定义轮播图工具类
 //                        Carousel carousel = new Carousel(getActivity(), dotLinerLayout, vp2,"ruoyi/uploadPath/");
 //                        carousel.initViews1(responseData);

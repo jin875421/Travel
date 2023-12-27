@@ -184,12 +184,20 @@ public class UploadPostActivity extends AppCompatActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            //上传完成，重新启用
-                            upload.setEnabled(true);
-                            uploadComplete();
+
                         }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //上传完成，重新启用
+                                upload.setEnabled(true);
+                                uploadComplete();
+                            }
+                        });
+
                     }
                 }).start();
+
             }
         });
         // 循环遍历控件列表
