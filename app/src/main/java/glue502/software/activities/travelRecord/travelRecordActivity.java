@@ -160,7 +160,6 @@ public class travelRecordActivity extends Activity {
         Random random = new Random();
         int index = random.nextInt(backgrounds.length);
         int resourceId = getResources().getIdentifier(backgrounds[index], "mipmap", getPackageName());
-        System.out.println(resourceId);
 // 将选定的图片设置为背景
         layout.setBackgroundResource(resourceId);
         //初始百度地图
@@ -174,8 +173,7 @@ public class travelRecordActivity extends Activity {
         initCtrl();
         // 获取 SharedPreferences 实例
         sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
-//        userId = sharedPreferences.getString("userId","1");
-        userId = "1";
+        userId = sharedPreferences.getString("userId","jin875421");
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         String TravelName = sharedPreferences.getString("TravelName", "");
         etTravelName.setText(TravelName);
@@ -378,12 +376,12 @@ public class travelRecordActivity extends Activity {
                             }
                             System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             SharedPreferences.Editor aaa = sharedPreferences.edit();
-//        editor.putInt("numberOfControls", 0);
                             aaa.putInt("numberOfControls", 1);
                             aaa.remove( "userTitle" + 0);
                             aaa.remove("userContent" + 0);
                             aaa.remove("myList");
                             aaa.apply();
+                            etTravelName.setText("旅行者，你要去哪里");
                         }
                     }).start();
                 }

@@ -106,7 +106,7 @@ public class RecommendFragment extends Fragment {
         getCity();
         setlistener();
         date();
-        getCarousel();
+//        getCarousel();
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
         return view;
     }

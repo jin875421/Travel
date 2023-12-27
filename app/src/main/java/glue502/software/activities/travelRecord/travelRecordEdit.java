@@ -76,6 +76,7 @@ public class travelRecordEdit extends Activity {
     private String travelId;
     private String url = "http://" + ip + "/travel/travel/showATravel";
     private String url2 = "http://" + ip + "/travel/";
+    private String url3 = "http://" + ip + "/travel/EditTravelRecord";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
     private UserInfo userInfo = new UserInfo();
     private String userId;
@@ -241,9 +242,10 @@ public class travelRecordEdit extends Activity {
                             String path = travelRecords.get(0).getImage().get(j);
                             System.out.println(url2 + path);
                             ImageView images = new ImageView(travelRecordEdit.this);
+                            images.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
                             LinearLayout.LayoutParams imagesParams = new LinearLayout.LayoutParams(
-                                    300,
-                                    300);
+                                    400,
+                                    400);
                             images.setLayoutParams(imagesParams);
                             images.setTag(0);
                             images.setOnClickListener(new View.OnClickListener() {
@@ -284,7 +286,7 @@ public class travelRecordEdit extends Activity {
                                     .into(images);
                             ImageContainer.addView(images, j);
                         }
-                        for (int i = 1; i < travelRecords.size(); i++) {
+                        for (int i = travelRecords.size()-1; i >=1; i--) {
                             addContentWithTag(i, travelRecords.get(i));
                         }
                     });
@@ -371,7 +373,7 @@ public class travelRecordEdit extends Activity {
                                 }
                                 RequestBody requestBody = builder.build();
                                 Request request = new Request.Builder()
-                                        .url(url)
+                                        .url(url3)
                                         .post(requestBody)
                                         .build();
                                 try {
@@ -706,6 +708,7 @@ public class travelRecordEdit extends Activity {
                 LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
                 innerLayout.setTag(getValue());
                 ImageView imageView1 = new ImageView(this);
+                imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 Glide.with(this)
                         .load(selectedImage)
                         .into(imageView1);
@@ -765,6 +768,7 @@ public class travelRecordEdit extends Activity {
                 LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
                 innerLayout.setTag(a);
                 ImageView imageView1 = new ImageView(this);
+                imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 Glide.with(this)
                         .load(selectedImage)
                         .into(imageView1);
@@ -823,6 +827,7 @@ public class travelRecordEdit extends Activity {
             LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
             innerLayout.setTag(a);
             ImageView imageView1 = new ImageView(this);
+            imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP);
             Glide.with(this)
                     .load(bitmap)
                     .into(imageView1);
@@ -910,9 +915,10 @@ public class travelRecordEdit extends Activity {
         for (int j = 0; j < travelRecord.getImage().size(); j++) {
             String path = travelRecords.get(i).getImage().get(j);
             ImageView images = new ImageView(this);
+            images.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
             LinearLayout.LayoutParams imagesParams = new LinearLayout.LayoutParams(
-                    300,
-                    300);
+                    400,
+                    400);
 
             images.setLayoutParams(imagesParams);
             images.setTag(i);
@@ -922,7 +928,8 @@ public class travelRecordEdit extends Activity {
                 @Override
                 public void onClick(View v) {
                     loadSave();
-                    int index = llContentView.indexOfChild(v);
+                    int index = innerLayout.indexOfChild(v);
+                    System.out.println("index" + index);
                     setValue(i);
                     setWhich(index);
                     showPopupWindow();
