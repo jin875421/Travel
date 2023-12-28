@@ -126,8 +126,7 @@ public class travelRecordEdit extends Activity {
         initCtrl();
         //获取上页面传过来的travelId
         sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
-//        userId = sharedPreferences.getString("userId","");
-        userId = "jin875421";
+        userId = sharedPreferences.getString("userId","");
         travelId = getIntent().getStringExtra("travelId");
         initData();
         setListener();
@@ -996,7 +995,7 @@ public class travelRecordEdit extends Activity {
                             loadSave();
                             int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
                             List<String> path = travelRecords.get(i).getImage();
-                            path.remove(index - 1);
+                            path.remove(index);
                             travelRecords.get(i).setImage(path);
                             // 用户确认删除的处理逻辑，可以在这里执行删除操作
                             innerLayout.removeView(v);

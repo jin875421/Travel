@@ -182,7 +182,6 @@ public class travelRecordActivity extends Activity {
         int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
         // 如果之前有保存的控件数量，则重新创建控件
         if (numberOfControls > 0) {
-
             for (int i = numberOfControls-1; i > 0; i--) {
                 addContentWithTag(i);
             }
