@@ -115,7 +115,7 @@ import okhttp3.Response;
 
 public class travelRecordActivity extends Activity {
     private static final String[] backgrounds = {"djpa", "djpb", "djpjp","djpd","djpe","djpf","djpg","djph","djpi","djpj","djpk","djpl"};
-    private String url = "http://"+ip+"/travel/travel/createTravelRecoed";
+    private String url = "http://"+ip+"/travel/travel/createTravelRecord";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
     private UserInfo  userInfo= new UserInfo();
     private String travelId = generateUUID();
@@ -325,11 +325,13 @@ public class travelRecordActivity extends Activity {
                                         .setType(MultipartBody.FORM)
                                         .addFormDataPart("travelrecord", json, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json));
                                 //循环处理图片
+                                System.out.println(travelrecord.toString());
                                 for (int i = 0; i < fileList.size(); i++){
                                     File file = fileList.get(i);
                                     if (file != null && file.exists()) {
                                         int totalChunks = calculateTotalChunks(file);//计算分片数
                                         String identifier = generateUniqueIdentifier();//生成唯一标识符
+
                                         int sequenceNumber = 0;
 
                                         try(InputStream inputStream = new FileInputStream(file)) {
@@ -381,7 +383,7 @@ public class travelRecordActivity extends Activity {
                             aaa.remove("userContent" + 0);
                             aaa.remove("myList");
                             aaa.apply();
-                            etTravelName.setText("旅行者，你要去哪里");
+//                            etTravelName.setText("旅行者，你要去哪里");
                         }
                     }).start();
                 }
