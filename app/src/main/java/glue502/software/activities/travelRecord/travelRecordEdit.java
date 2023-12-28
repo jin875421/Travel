@@ -36,6 +36,9 @@ import android.widget.Toast;
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -71,6 +74,7 @@ import glue502.software.adapters.TravelDetailAdapter;
 import glue502.software.models.UserInfo;
 import glue502.software.models.travelRecord;
 import glue502.software.utils.MyViewUtils;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -264,8 +268,8 @@ public class travelRecordEdit extends Activity {
                             ImageView images = new ImageView(travelRecordEdit.this);
                             images.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
                             LinearLayout.LayoutParams imagesParams = new LinearLayout.LayoutParams(
-                                    300,
-                                    300);
+                                    200,
+                                    200 );
                             images.setLayoutParams(imagesParams);
                             images.setTag(0);
                             images.setOnClickListener(new View.OnClickListener() {
@@ -302,9 +306,14 @@ public class travelRecordEdit extends Activity {
                                     return true;
                                 }
                             });
+                            MultiTransformation mation5 = new MultiTransformation(
+                                    new CenterCrop(),
+                                    new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
+                            );
 //// 将 ImageView 添加到内部 LinearLayout
                             Glide.with(travelRecordEdit.this)
                                     .load(url2 + path)
+                                    .apply(RequestOptions.bitmapTransform(mation5))
                                     .into(images);
                             linearLayout.addView(images, j);
                         }
@@ -333,7 +342,6 @@ public class travelRecordEdit extends Activity {
                             for (int j = numberOfControls - 1; j >= 0; j--) {
                                 loadSave();
                                 List<File> fileList = new ArrayList<>();
-
                                 List<String> path = travelRecords.get(j).getImage();
                                 for (String URI : path) {
                                     boolean isBitmapLoaded = false; // 标志变量，用于追踪下面的代码是否执行
@@ -362,13 +370,6 @@ public class travelRecordEdit extends Activity {
                                 travelRecord travelrecord = travelRecords.get(j);
                                 travelrecord.setUserId(userId);
                                 travelrecord.setTravelId(travelIdnew);
-                                System.out.println(travelrecord.toString());
-                                Date currentTime = new Date();
-                                // 定义日期时间格式
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                // 格式化当前时间
-                                String formattedTime = sdf.format(currentTime);
-                                travelrecord.setCreateTime(formattedTime);
                                 travelrecord.setPictureNumber(fileList.size());
                                 OkHttpClient client = new OkHttpClient();
                                 Gson gson = new Gson();
@@ -759,8 +760,13 @@ public class travelRecordEdit extends Activity {
                 innerLayout.setTag(getValue());
                 ImageView imageView1 = new ImageView(this);
                 imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                MultiTransformation mation5 = new MultiTransformation(
+                        new CenterCrop(),
+                        new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
+                );
                 Glide.with(this)
                         .load(selectedImage)
+                        .apply(RequestOptions.bitmapTransform(mation5))
                         .into(imageView1);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                         convertDpToPixel(150), // 宽度 150dp 转换为像素
@@ -819,8 +825,13 @@ public class travelRecordEdit extends Activity {
                 innerLayout.setTag(a);
                 ImageView imageView1 = new ImageView(this);
                 imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                MultiTransformation mation5 = new MultiTransformation(
+                        new CenterCrop(),
+                        new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
+                );
                 Glide.with(this)
                         .load(selectedImage)
+                        .apply(RequestOptions.bitmapTransform(mation5))
                         .into(imageView1);
                 imageView1.setOnClickListener(new View.OnClickListener() {
 
@@ -878,8 +889,13 @@ public class travelRecordEdit extends Activity {
             innerLayout.setTag(a);
             ImageView imageView1 = new ImageView(this);
             imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            MultiTransformation mation5 = new MultiTransformation(
+                    new CenterCrop(),
+                    new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
+            );
             Glide.with(this)
                     .load(bitmap)
+                    .apply(RequestOptions.bitmapTransform(mation5))
                     .into(imageView1);
             imageView1.setOnClickListener(new View.OnClickListener() {
 
@@ -955,7 +971,7 @@ public class travelRecordEdit extends Activity {
 // 创建内部 LinearLayout
         LinearLayout innerLayout = new LinearLayout(this);
         LinearLayout.LayoutParams innerParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         innerLayout.setLayoutParams(innerParams);
         innerLayout.setTag(i);
@@ -970,7 +986,18 @@ public class travelRecordEdit extends Activity {
                     convertDpToPixel(150), // 宽度 150dp 转换为像素
                     convertDpToPixel(150) // 高度 150dp 转换为像素
             );
-
+            MultiTransformation mation5 = new MultiTransformation(
+                    new CenterCrop(),
+                    new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
+            );
+//// 将 ImageView 添加到内部 LinearLayout
+            Glide.with(this)
+                    .load(url2 + path)
+                    .apply(RequestOptions.bitmapTransform(mation5))
+                    .into(images);
+            layoutParams.setMargins(7, 0, 7, 16);
+            images.setLayoutParams(layoutParams);
+            innerLayout.addView(images, j);
             images.setLayoutParams(imagesParams);
             images.setTag(i);
 
@@ -1009,13 +1036,6 @@ public class travelRecordEdit extends Activity {
                 }
             });
 
-//// 将 ImageView 添加到内部 LinearLayout
-            Glide.with(this)
-                    .load(url2 + path)
-                    .into(images);
-            layoutParams.setMargins(7, 0, 7, 16);
-            images.setLayoutParams(layoutParams);
-            innerLayout.addView(images, j);
         }
 // 将内部 LinearLayout 添加到 HorizontalScrollView
         scrollView.addView(innerLayout);

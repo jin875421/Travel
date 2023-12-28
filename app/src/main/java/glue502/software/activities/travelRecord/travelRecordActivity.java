@@ -315,12 +315,6 @@ public class travelRecordActivity extends Activity {
                                 travelrecord.setUserId(userId);
                                 travelrecord.setTravelName(etTravelName.getText().toString());
                                 travelrecord.setTravelId(travelId);
-                                Date currentTime = new Date();
-                                // 定义日期时间格式
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                // 格式化当前时间
-                                String formattedTime = sdf.format(currentTime);
-                                travelrecord.setCreateTime(formattedTime);
                                 travelrecord.setPictureNumber(fileList.size());
                                 OkHttpClient client = new OkHttpClient();
                                 Gson gson = new Gson();
@@ -329,7 +323,6 @@ public class travelRecordActivity extends Activity {
                                         .setType(MultipartBody.FORM)
                                         .addFormDataPart("travelrecord", json, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json));
                                 //循环处理图片
-                                System.out.println(travelrecord.toString());
                                 for (int i = 0; i < fileList.size(); i++){
                                     File file = fileList.get(i);
                                     if (file != null && file.exists()) {
@@ -627,7 +620,6 @@ public class travelRecordActivity extends Activity {
                     }else{
                         path.add(n,URI);
                     }
-
                     saveListToSharedPreferences(path,tag);
                     try {
                         // 通过 URI 获取 Bitmap 对象
@@ -717,7 +709,6 @@ public class travelRecordActivity extends Activity {
                         int index = innerLayout.indexOfChild(v);
                         int c = (int)innerLayout.getTag();
                         setValue(c);
-                        System.out.println(c+"ccccccccccccc");
                         setWhich(index);
                         showPopupWindow();
                     }
@@ -777,7 +768,6 @@ public class travelRecordActivity extends Activity {
                         loadSave();
                         int index = innerLayout.indexOfChild(v);
                         int a = (int)innerLayout.getTag();
-                        System.out.println(a+"11111111111AAAAAAAAAAAAAAA");
                         setWhich(index);
                         setValue(a);
                         showPopupWindow();
@@ -840,7 +830,6 @@ public class travelRecordActivity extends Activity {
                     loadSave();
                     int index = innerLayout.indexOfChild(v);
                     int a = (int)innerLayout.getTag();
-                    System.out.println(a+"2222222222AAAAAAAAAAAAAAA");
                     setWhich(index);
                     setValue(a);
                     showPopupWindow();
@@ -1032,21 +1021,24 @@ public class travelRecordActivity extends Activity {
         btnAdd.setLayoutParams(btnAddParam);
         btnAdd.setBackgroundResource(R.drawable.ic_add);
         btnAdd.setId(View.generateViewId());
+        btnAdd.setVisibility(View.GONE);
+        int b = sharedPreferences.getInt("numberOfControls", 0);
+        System.out.println("b"+b);
+        System.out.println("i"+i);
+        if(b-1==i){
+            btnAdd.setVisibility(View.VISIBLE);
+        }
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadSave();
-                int a = (int)innerLayout.getTag()+1; // 索引值从已有子控件的数量开始
-                int b =llContentView.getChildCount();
-//                if(a!=b){
-//                    // 显示短暂的消息提示
-//                    Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
-//                }else {
-//                    addContent(v);
-//                    Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
-//                }
-                                    addContent(v);
+                if(a!=b){
+                    // 显示短暂的消息提示
+                    Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
+                }else {
+                    addContent(v);
                     Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         listIBTNAdd.add(1,btnAdd);
@@ -1178,7 +1170,14 @@ public class travelRecordActivity extends Activity {
                 iETContentHeight = etContent1.getHeight();
                 fDimRatio = iETContentHeight / 80;
                 loadSave();
-                addContent(v);
+                int b =llContentView.getChildCount();
+                if(b!=1){
+                    // 显示短暂的消息提示
+                    Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
+                    addContent(v);
+                }
 
             }
         });
@@ -1238,6 +1237,16 @@ public class travelRecordActivity extends Activity {
         }
         if (iIndex >= 0) {
 // 控件实际添加位置为当前触发位置点下一位
+//            List<travelRecord> travelRecords = getListFromSharedPreferences();
+//            travelRecord travelRecorda = new travelRecord();
+//            Date currentTime = new Date();
+//            // 定义日期时间格式
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            // 格式化当前时间
+//            String formattedTime = sdf.format(currentTime);
+//            travelRecorda.setCreateTime(formattedTime);
+//            travelRecords.add(iIndex, travelRecorda);
+//            saveListStringToSharedPreferences(travelRecords);
             iIndex += 1;
 // 1.创建外围LinearLayout控件
             LinearLayout layout = new LinearLayout(travelRecordActivity.this);
@@ -1397,15 +1406,14 @@ public class travelRecordActivity extends Activity {
                         loadSave();
                         int a = (int)innerLayout.getTag()+1; // 索引值从已有子控件的数量开始
                         int b =llContentView.getChildCount();
-//                        if(a!=b){
-//                            // 显示短暂的消息提示
-//                            Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
-//                        }else {
-//                            addContent(v);
-//                            Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
-//                        }
-                    addContent(v);
-                    Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
+                        if(a!=b){
+                            // 显示短暂的消息提示
+                            Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
+                        }else {
+                            addContent(v);
+                            btnAdd.setVisibility(View.GONE);
+                            Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
+                        }
                 }
             });
             listIBTNAdd.add(iIndex,btnAdd);
@@ -1513,6 +1521,20 @@ public class travelRecordActivity extends Activity {
             llContentView.removeViewAt(iIndex);
             removeFromSharedPreferences(iIndex);
         }
+        //TODO 111
+            if(iIndex==llContentView.getChildCount()){
+                LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(iIndex-1); // 获取第一个LinearLayout
+                int childCount = firstLayout.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    View childView = firstLayout.getChildAt(i);
+                    if (childView instanceof RelativeLayout) {
+                        RelativeLayout rlBtn = (RelativeLayout) childView;
+                        // 在 rlBtn 中找到 btnAdd
+                        ImageButton btnAdd = (ImageButton)rlBtn.getChildAt(0);
+                            btnAdd.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
     }
     // 保存内容到 SharedPreferences
     private void saveContentToSharedPreferences() {
@@ -1525,6 +1547,8 @@ public class travelRecordActivity extends Activity {
             if (i >= 0 && i < list.size()) { // 确保 i 在列表范围内
                 List<String> path = list.get(i).getImage();
                 if (path != null && !path.isEmpty()) {
+                    System.out.println(i);
+                    System.out.println(path);
                     // 这里是当 path 不为空时执行的操作
                     // 例如，可以遍历 path 中的元素或者执行其他操作
                     saveListToSharedPreferences(path,i);
@@ -1568,6 +1592,14 @@ public class travelRecordActivity extends Activity {
 
                             if ( index>= 0 && index < travelRecord.size()) {
                                 travelRecord.get(index).setContent(content);
+                                if(travelRecord.get(index).getCreateTime()==null){
+                                    Date currentTime = new Date();
+                                    // 定义日期时间格式
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    // 格式化当前时间
+                                    String formattedTime = sdf.format(currentTime);
+                                    travelRecord.get(index).setCreateTime(formattedTime);
+                                }
                                 saveListStringToSharedPreferences(travelRecord);
                             }
 //                            editor.putString("userContent" + index, content);
@@ -1645,8 +1677,6 @@ public class travelRecordActivity extends Activity {
                     } else {
                         savedIndex = 0; // 如果标签不是 Integer 类型或为空，则使用默认索引
                     }
-//                    String savedTitle = sharedPreferences.getString("userTitle" + savedIndex, "");
-//                    String savedContent = sharedPreferences.getString("userContent" + savedIndex, "");
                     if (i >= 0 && i < list.size()) { // 确保 i 在列表范围内
                         List<travelRecord> travelRecord = getListFromSharedPreferences();
                         etTitle.setText(travelRecord.get(savedIndex).getPlaceName());
@@ -1672,14 +1702,6 @@ public class travelRecordActivity extends Activity {
     protected void onPause() {
         super.onPause();
         if(submitClicked){
-//            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//            SharedPreferences.Editor editor = sharedPreferences.edit();
-////        editor.putInt("numberOfControls", 0);
-//            editor.putInt("numberOfControls", 1);
-//            editor.remove( "userTitle" + 0);
-//            editor.remove("userContent" + 0);
-//            editor.remove("myList");
-//            editor.apply();
             Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_LONG).show();
         }else {
             System.out.println("@@@@@@@@@@@@@");
@@ -1799,8 +1821,6 @@ public class travelRecordActivity extends Activity {
                         Log.v("AddLabelActivity", "lzx key"+selectedKey);
                         Log.v("AddLabelActivity", "lzx city"+selectedCity);
                         Log.v("AddLabelActivity", "lzx dis"+selectedDistrict);
-                        System.out.println("===key" +  selectedKey + "city" + selectedCity + "dis" + selectedDistrict + "===");
-
                         // 使用地理编码服务获取经纬度坐标
                         GeoCoder geoCoder = GeoCoder.newInstance();
                         geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
@@ -1891,7 +1911,6 @@ public class travelRecordActivity extends Activity {
                         map.put("city", info.getCity());
                         map.put("dis", info.getDistrict());
                         suggest.add(map);
-                        System.out.println(map);
                     }
                 }
 
@@ -1915,8 +1934,6 @@ public class travelRecordActivity extends Activity {
                         Log.v("AddLabelActivity", "lzx key"+selectedKey);
                         Log.v("AddLabelActivity", "lzx city"+selectedCity);
                         Log.v("AddLabelActivity", "lzx dis"+selectedDistrict);
-                        System.out.println("===key" +  selectedKey + "city" + selectedCity + "dis" + selectedDistrict + "===");
-
                         // 使用地理编码服务获取经纬度坐标
                         GeoCoder geoCoder = GeoCoder.newInstance();
                         geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
@@ -1985,5 +2002,4 @@ public class travelRecordActivity extends Activity {
         mSuggestionSearch.setOnGetSuggestionResultListener(listener);
 
     }
-    //TODO 上古遗留bugcontent和title并不是List<list<String>>保存删除中间后面的会消失 以后再改 ,要求用户按顺序添加
 }
