@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import glue502.software.R;
+import glue502.software.activities.MainActivity;
+import glue502.software.fragments.FunctionFragment;
 import glue502.software.models.MarkerIntentInfo;
 import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
@@ -445,7 +447,11 @@ public class AddStrategyActivity extends AppCompatActivity {
                         }
                     }).start();
                 }
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("id", 2);
+                startActivity(intent);
             }
+
         });
         //页面返回
         back.setOnClickListener(new View.OnClickListener() {

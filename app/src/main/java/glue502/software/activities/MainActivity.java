@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -57,7 +59,8 @@ import glue502.software.utils.MyViewUtils;
 public class MainActivity extends AppCompatActivity {
     public static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
-    public static final String ip = "10.7.89.94:8080";
+    public static final String ip = "192.168.183.92:8080";
+//    public static final String ip = "172.29.61.81:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
@@ -136,6 +139,18 @@ public class MainActivity extends AppCompatActivity {
         layoutParams.height = screenWidth/7;
         start.setLayoutParams(layoutParams);
 
+        //从activity中跳转到Fragment
+        int id = getIntent().getIntExtra("id", 0);
+        if (id == 2) {
+            if (id == 2) {
+                Fragment fragmen = new FunctionFragment();
+                FragmentManager fmanger = getSupportFragmentManager();
+                FragmentTransaction transaction = fmanger.beginTransaction();
+                transaction.replace(R.id.viewPager2, fragmen);
+                transaction.commit();
+                viewPager2.setCurrentItem(2);
+            }
+        }
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
