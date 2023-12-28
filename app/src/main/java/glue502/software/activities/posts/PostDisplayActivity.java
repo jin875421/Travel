@@ -115,7 +115,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         initData();
         initView();
         setListener();
-        getCommentData();
         //添加沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
         displayPost();
@@ -148,7 +147,7 @@ public class PostDisplayActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                        commentList = new ArrayList<>();
+                        commentList.clear();
                         //获取响应的数据
                         String result = response.body().string();
                         //反序列化消息
@@ -162,6 +161,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                Log.v("PostDisplayActivity", "lzx getComment执行，获取的评论列表"+commentList);
                                 commentListAdapter = new CommentListAdapter(
                                         PostDisplayActivity.this,
                                         R.layout.activity_comment_list_adapter,
@@ -621,8 +621,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                                             @Override
                                             public void run() {
                                                 getCommentData();
-                                                commentListAdapter.notifyDataSetChanged();
-                                                setListViewHeightBasedOnChildren(listView);
                                             }
                                         });
                                     }
@@ -842,19 +840,20 @@ public class PostDisplayActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.v("PostDisplayActivity", "lzx onResume执行");
         super.onResume();
         getCommentData();
-        commentListAdapter = new CommentListAdapter(
-                PostDisplayActivity.this,
-                R.layout.activity_comment_list_adapter,
-                commentList
-        );
-        listView.setAdapter(commentListAdapter);
-        setListViewHeightBasedOnChildren(listView);
-        //绑定adapter点击事件监听器
-        setAdapterListener();
-        commentListAdapter.notifyDataSetChanged();
-        setListViewHeightBasedOnChildren(listView);
+//        commentListAdapter = new CommentListAdapter(
+//                PostDisplayActivity.this,
+//                R.layout.activity_comment_list_adapter,
+//                commentList
+//        );
+//        listView.setAdapter(commentListAdapter);
+//        setListViewHeightBasedOnChildren(listView);
+//        //绑定adapter点击事件监听器
+//        setAdapterListener();
+//        commentListAdapter.notifyDataSetChanged();
+//        setListViewHeightBasedOnChildren(listView);
     }
 
     public void showInput(final EditText et) {
@@ -863,9 +862,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         imm.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
     }
 
-    /**
-     * 隐藏键盘
-     */
     protected void hideInput() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         View v = getWindow().peekDecorView();
