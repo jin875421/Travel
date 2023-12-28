@@ -79,8 +79,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:gravity="end"
             android:background="@null"
-            android:text=""/>
+            android:hint="请输入昵称"/>
     </RelativeLayout>
     <RelativeLayout
         android:padding="10dp"

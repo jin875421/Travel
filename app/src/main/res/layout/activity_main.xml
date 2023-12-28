@@ -25,7 +25,8 @@
             app:tabTextAppearance="@style/CustomTabLayout"
             android:background="#ffffff"
             app:tabIndicator="@null"
-            app:tabRippleColor="@android:color/white"
+            app:tabUnboundedRipple="true"
+            app:tabBackground="@color/gray"
             android:layout_alignParentBottom="true"
             />
         <RelativeLayout

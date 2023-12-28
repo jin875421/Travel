@@ -318,17 +318,17 @@ public class MainActivity extends AppCompatActivity {
         // 例如，你可以在这里根据位置返回不同的图标
         switch (position) {
             case 0:
-                return R.drawable.tab_home1;
+                return R.drawable.tab_home2;
             case 1:
-                return R.drawable.tab_community1;
+                return R.drawable.tab_community2;
             case 2:
                 return R.drawable.ic_add;
             case 3:
-                return R.drawable.tab_map1;
+                return R.drawable.tab_map2;
             case 4:
-                return R.drawable.tab_user1;
+                return R.drawable.tab_user2;
             default:
-                return R.drawable.tab_home1;
+                return R.drawable.tab_home2;
         }
     }
     private int getUnselectedIcon(int position) {
