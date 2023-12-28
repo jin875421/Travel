@@ -126,8 +126,7 @@ public class travelRecordEdit extends Activity {
         initCtrl();
         //获取上页面传过来的travelId
         sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
-//        userId = sharedPreferences.getString("userId","");
-        userId = "jin875421";
+        userId = sharedPreferences.getString("userId","");
         travelId = getIntent().getStringExtra("travelId");
         initData();
         setListener();
@@ -256,7 +255,7 @@ public class travelRecordEdit extends Activity {
                         if(travelRecords.get(0).getTravelName()!=null){
                             etTravelName.setText(travelRecords.get(0).getTravelName());
                         }
-//                        etTravelName.setText(travelRecords.get(0).getTravelName());
+                        etTravelName.setText(travelRecords.get(0).getTravelName());
                         etContent1.setText(travelRecords.get(0).getPlaceName());
                         etContent2.setText(travelRecords.get(0).getContent());
                         for (int j = 0; j < travelRecords.get(0).getImage().size(); j++) {
@@ -329,118 +328,115 @@ public class travelRecordEdit extends Activity {
 
                         @Override
                         public void run() {
-                            //TODO travel id我来传 时间不变
-                            int numberOfControls = llContentView.getChildCount();
-                            for (int j = numberOfControls - 1; j >= 0; j--) {
-                                loadSave();
-                                List<File> fileList = new ArrayList<>();
-
-                                List<String> path = travelRecords.get(j).getImage();
-                                for (String URI : path) {
-                                    boolean isBitmapLoaded = false; // 标志变量，用于追踪下面的代码是否执行
-                                    Bitmap bitmap=null;
-                                    try {
-                                        FileInputStream localStream =openFileInput(generateIdentifierFromUri(URI));
-                                        bitmap = BitmapFactory.decodeStream(localStream);
-                                        isBitmapLoaded = true; // 标记为已加载 // 标志变量，用于追踪下面的代码是否执行
-                                    } catch (FileNotFoundException e) {
-                                        e.printStackTrace();
-                                    }
-                                    if (!isBitmapLoaded) {
-                                        // 下面的代码块没有执行，执行上面的代码
-                                        String b = url2 + URI;
-                                        Uri a = Uri.parse(b);
-                                        String uriString = a.toString();
-                                        bitmap = getBitmap(uriString);
-                                    }
-                                    if (bitmap != null) {
-                                        // 保存 Bitmap
-                                        savefile(fileList, bitmap);
-                                    } else {
-                                        // 处理 bitmap 为空的情况
-                                    }
-                                }
-                                travelRecord travelrecord = travelRecords.get(j);
-                                travelrecord.setUserId(userId);
-                                travelrecord.setTravelId(travelIdnew);
-                                System.out.println(travelrecord.toString());
-                                Date currentTime = new Date();
-                                // 定义日期时间格式
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                // 格式化当前时间
-                                String formattedTime = sdf.format(currentTime);
-                                travelrecord.setCreateTime(formattedTime);
-                                travelrecord.setPictureNumber(fileList.size());
-                                OkHttpClient client = new OkHttpClient();
-                                Gson gson = new Gson();
-                                String json = gson.toJson(travelrecord);
-                                MultipartBody.Builder builder = new MultipartBody.Builder()
-                                        .setType(MultipartBody.FORM)
-                                        .addFormDataPart("travelrecord", json, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json));
-                                //循环处理图片
-                                System.out.println(fileList.size()+"!!!!!!!!!!");
-                                for (int i = 0; i < fileList.size(); i++) {
-                                    File file = fileList.get(i);
-                                    if (file != null && file.exists()) {
-                                        int totalChunks = calculateTotalChunks(file);//计算分片数
-                                        String identifier = generateUniqueIdentifier();//生成唯一标识符
-                                        int sequenceNumber = 0;
-
-                                        try (InputStream inputStream = new FileInputStream(file)) {
-                                            byte[] buffer = new byte[1024 * 1024];//设定分片大小
-                                            int bytesRead;
-
-                                            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                                                byte[] actualBuffer = Arrays.copyOfRange(buffer, 0, bytesRead);
-                                                builder.addFormDataPart("identifiers", identifier);
-                                                builder.addFormDataPart("sequenceNumbers", String.valueOf(sequenceNumber));
-                                                builder.addFormDataPart("totalChunks", String.valueOf(totalChunks));
-                                                builder.addFormDataPart("images", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), actualBuffer));
-                                                sequenceNumber++;
-                                            }
-
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    } else {
-                                    }
-                                }
-                                RequestBody requestBody = builder.build();
-                                Request request = new Request.Builder()
-                                        .url(url4)
-                                        .post(requestBody)
-                                        .build();
-                                try {
-                                    //发送请求
-                                    Response response = client.newCall(request).execute();
-
-                                    if (response.isSuccessful()) {
-                                        String responseData = response.body().string();
-                                        // 处理响应数据
-                                    } else {
-                                        // 请求失败处理错误
-                                    }
-                                } catch (Exception e) {
-
-                                    e.printStackTrace();
-                                }
-                                uploadComplete();
-                            }
+                            //执行删除代码
                             OkHttpClient client1 = new OkHttpClient();
-                            System.out.println("travelId"+travelId);
                             Request request1 = new Request.Builder()
                                     .url(url2+"/travel/deleteTravel?travelId="+travelId)
                                     .build();
                             try {
-                                //开启线程
                                 Response response = client1.newCall(request1).execute();
-                                //关闭帖子
-                                Intent resultIntent = new Intent();
-                                setResult(Activity.RESULT_OK, resultIntent); // 设置删除完成的结果码
-                                finish(); // 关闭页面
+                                //确保删除成功后再进行下一步操作
+                                if (response.isSuccessful()) {
+                                    //创建新的请求
+                                    int numberOfControls = llContentView.getChildCount();
+                                    for (int j = numberOfControls - 1; j >= 0; j--) {
+                                        loadSave();
+                                        List<File> fileList = new ArrayList<>();
+
+                                        List<String> path = travelRecords.get(j).getImage();
+                                        for (String URI : path) {
+                                            boolean isBitmapLoaded = false; // 标志变量，用于追踪下面的代码是否执行
+                                            Bitmap bitmap=null;
+                                            try {
+                                                FileInputStream localStream =openFileInput(generateIdentifierFromUri(URI));
+                                                bitmap = BitmapFactory.decodeStream(localStream);
+                                                isBitmapLoaded = true; // 标记为已加载 // 标志变量，用于追踪下面的代码是否执行
+                                            } catch (FileNotFoundException e) {
+                                                e.printStackTrace();
+                                            }
+                                            if (!isBitmapLoaded) {
+                                                // 下面的代码块没有执行，执行上面的代码
+                                                String b = url2 + URI;
+                                                Uri a = Uri.parse(b);
+                                                String uriString = a.toString();
+                                                bitmap = getBitmap(uriString);
+                                            }
+                                            if (bitmap != null) {
+                                                // 保存 Bitmap
+                                                savefile(fileList, bitmap);
+                                            } else {
+                                                // 处理 bitmap 为空的情况
+                                            }
+                                        }
+                                        travelRecord travelrecord = travelRecords.get(j);
+                                        travelrecord.setTravelId(travelId);
+                                        travelrecord.setPictureNumber(fileList.size());
+                                        if(travelrecord.getCreateTime()==null){
+                                            travelrecord.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                                        }
+
+                                        OkHttpClient client = new OkHttpClient();
+                                        Gson gson = new Gson();
+                                        String json = gson.toJson(travelrecord);
+                                        MultipartBody.Builder builder = new MultipartBody.Builder()
+                                                .setType(MultipartBody.FORM)
+                                                .addFormDataPart("travelrecord", json, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json));
+                                        //循环处理图片
+                                        for (int i = 0; i < fileList.size(); i++) {
+                                            File file = fileList.get(i);
+                                            if (file != null && file.exists()) {
+                                                int totalChunks = calculateTotalChunks(file);//计算分片数
+                                                String identifier = generateUniqueIdentifier();//生成唯一标识符
+                                                int sequenceNumber = 0;
+
+                                                try (InputStream inputStream = new FileInputStream(file)) {
+                                                    byte[] buffer = new byte[1024 * 1024];//设定分片大小
+                                                    int bytesRead;
+
+                                                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                                                        byte[] actualBuffer = Arrays.copyOfRange(buffer, 0, bytesRead);
+                                                        builder.addFormDataPart("identifiers", identifier);
+                                                        builder.addFormDataPart("sequenceNumbers", String.valueOf(sequenceNumber));
+                                                        builder.addFormDataPart("totalChunks", String.valueOf(totalChunks));
+                                                        builder.addFormDataPart("images", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), actualBuffer));
+                                                        sequenceNumber++;
+                                                    }
+
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else {
+                                            }
+                                        }
+                                        RequestBody requestBody = builder.build();
+                                        Request request = new Request.Builder()
+                                                .url(url4)
+                                                .post(requestBody)
+                                                .build();
+                                        try {
+                                            //发送请求
+                                            Response response1 = client.newCall(request).execute();
+
+                                            if (response.isSuccessful()) {
+                                                String responseData = response1.body().string();
+                                                if(responseData.equals("success")&&j==0){
+                                                    uploadComplete();
+                                                }
+                                                // 处理响应数据
+                                            } else {
+                                                // 请求失败处理错误
+                                            }
+                                        } catch (Exception e) {
+
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                }
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+
                         }
                     }).start();
                 }

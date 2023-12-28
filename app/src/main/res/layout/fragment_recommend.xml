@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ct_layout"
@@ -26,6 +26,10 @@
                 android:textSize="24dp" />
         </LinearLayout>
     </FrameLayout>
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <ScrollView
         android:layout_below="@+id/top"
         android:layout_width="match_parent"
@@ -140,10 +144,13 @@
                 android:id="@+id/local_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
         </LinearLayout>
+
 
     </LinearLayout>
     </RelativeLayout>
     </ScrollView>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
-</RelativeLayout>
+</LinearLayout>
