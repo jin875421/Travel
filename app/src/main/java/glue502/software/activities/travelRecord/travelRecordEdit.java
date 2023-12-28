@@ -370,6 +370,14 @@ public class travelRecordEdit extends Activity {
                                 travelRecord travelrecord = travelRecords.get(j);
                                 travelrecord.setUserId(userId);
                                 travelrecord.setTravelId(travelIdnew);
+                                if(travelrecord.getCreateTime()==null){
+                                    Date currentTime = new Date();
+                                    // 定义日期时间格式
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    // 格式化当前时间
+                                    String formattedTime = sdf.format(currentTime);
+                                    travelrecord.setCreateTime(formattedTime);
+                                }
                                 travelrecord.setPictureNumber(fileList.size());
                                 OkHttpClient client = new OkHttpClient();
                                 Gson gson = new Gson();
