@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -136,6 +138,18 @@ public class MainActivity extends AppCompatActivity {
         layoutParams.height = screenWidth/7;
         start.setLayoutParams(layoutParams);
 
+        //从activity中跳转到Fragment
+        int id = getIntent().getIntExtra("id", 0);
+        if (id == 2) {
+            if (id == 2) {
+                Fragment fragmen = new FunctionFragment();
+                FragmentManager fmanger = getSupportFragmentManager();
+                FragmentTransaction transaction = fmanger.beginTransaction();
+                transaction.replace(R.id.viewPager2, fragmen);
+                transaction.commit();
+                viewPager2.setCurrentItem(2);
+            }
+        }
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

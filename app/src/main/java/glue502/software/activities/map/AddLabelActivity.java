@@ -32,6 +32,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
@@ -67,7 +68,6 @@ public class AddLabelActivity extends AppCompatActivity {
     private LocationClient mLocationClient;
     double latitude, longitude;
     private String city = "北京市";
-    private String TruthCity;
     private String selectedKey;
     private String selectedCity;
     private String selectedDistrict;
@@ -133,9 +133,15 @@ public class AddLabelActivity extends AppCompatActivity {
                     latitude = bdLocation.getLatitude();
                     longitude = bdLocation.getLongitude();
                     city = bdLocation.getCity(); // 获取详细地址信息
+                    editText1.setText(city);
 
                     Toast.makeText(getApplicationContext(), "Latitude: " + latitude + ", Longitude: " + longitude + ", city: " + city,Toast.LENGTH_LONG).show();
                     // 在这里处理获取到的经纬度信息
+                    MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLng(new LatLng(latitude, longitude));
+                    mBaiduMap.animateMapStatus(mapStatusUpdate);
+                    // 设置合适的缩放级别
+                    MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16.0f);
+                    mBaiduMap.animateMapStatus(u);
                 }
             });
             // 开始定位
@@ -171,7 +177,7 @@ public class AddLabelActivity extends AppCompatActivity {
         });
 
         // 设置触摸事件监听器
-        findViewById(R.id.main_content).setOnTouchListener(new View.OnTouchListener() {
+        findViewById(R.id.add_label_main_content).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 // 判断点击的位置是否在输入框外
@@ -184,6 +190,27 @@ public class AddLabelActivity extends AppCompatActivity {
                 return false;
             }
         });
+        BaiduMap.OnMapTouchListener listener = new BaiduMap.OnMapTouchListener() {
+
+            /**
+             * 当用户触摸地图时回调函数
+             *
+             * @param motionEvent 触摸事件
+             */
+            @Override
+            public void onTouch(MotionEvent motionEvent) {
+                // 判断点击的位置是否在输入框外
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (!isPointInsideView(motionEvent.getRawX(), motionEvent.getRawY(), editText2)) {
+                        // 输入框外部被点击，让输入框失去焦点
+                        editText2.clearFocus();
+                    }
+                }
+            }
+        };
+        //设置触摸地图事件监听者
+        mBaiduMap.setOnMapTouchListener(listener);
+
 
         editText2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -277,6 +304,7 @@ public class AddLabelActivity extends AppCompatActivity {
                 mSugListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mBaiduMap.clear();
                         // 获取点击的建议项的数据
                         HashMap<String, String> selectedItem = suggest.get(position);
 
