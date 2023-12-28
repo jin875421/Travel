@@ -108,6 +108,8 @@ public class PostDisplayActivity extends AppCompatActivity {
     private CommentListAdapter commentListAdapter;
     //记录用户收藏和点赞状态
     private int likeStatus, starStatus;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +160,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                             commentList.add(comment);
                         }
                         // 更新UI线程中的ListView
-                        runOnUiThread(new Runnable() {
+                        handler.post(new Runnable() {
                             @Override
                             public void run() {
                                 Log.v("PostDisplayActivity", "lzx getComment执行，获取的评论列表"+commentList);
@@ -193,7 +195,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                     String result = response.body().string();
                     JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
                     post = new Gson().fromJson(jsonObject, PostWithUserInfo.class);
-                    runOnUiThread(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             //Carousel为自定义轮播图工具类
@@ -230,7 +232,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                     LikeAndStarStatus likeAndStarStatus = new Gson().fromJson(result, LikeAndStarStatus.class);
                     likeStatus = likeAndStarStatus.getLikeStatus();
                     starStatus = likeAndStarStatus.getStarStatus();
-                    runOnUiThread(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             if(likeStatus == 1){

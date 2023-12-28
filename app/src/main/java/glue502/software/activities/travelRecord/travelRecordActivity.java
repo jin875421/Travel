@@ -305,8 +305,7 @@ public class travelRecordActivity extends Activity {
                                 }
 
                                 travelRecord travelrecord = new travelRecord();
-                                travelrecord.setPlaceName(
-                                        sharedPreferences.getString("userTitle" + j,""));
+                                travelrecord.setPlaceName(sharedPreferences.getString("userTitle" + j,""));
                                 travelrecord.setContent(sharedPreferences.getString("userContent" + j,""));
                                 travelrecord.setUserId(userId);
                                 travelrecord.setTravelName(etTravelName.getText().toString());
@@ -1193,14 +1192,19 @@ public class travelRecordActivity extends Activity {
                         Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始删除哦", Toast.LENGTH_SHORT).show();
                     }else {
                         removeFromSharedPreferences(0);
+                        //移除llContentView中的所有控件
+                        LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(getValue()); // 获取第一个LinearLayout
+                        // 获取第一个LinearLayout}
+                        HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
+                        LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
+                        //移除innerLayout中的图片控件
+                        innerLayout.removeAllViews();
                         etContent1.setText("");
                         etContent2.setText("");
                         Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
                     }
                 // 重启当前Activity以重新加载页面
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
+
             }
         });
 
