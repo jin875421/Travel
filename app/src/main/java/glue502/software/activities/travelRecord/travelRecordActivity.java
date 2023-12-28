@@ -115,7 +115,7 @@ import okhttp3.Response;
 
 public class travelRecordActivity extends Activity {
     private static final String[] backgrounds = {"djpa", "djpb", "djpjp","djpd","djpe","djpf","djpg","djph","djpi","djpj","djpk","djpl"};
-    private String url = "http://"+ip+"/travel/travel/createTravelRecoed";
+    private String url = "http://"+ip+"/travel/travel/createTravelRecord";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
     private UserInfo  userInfo= new UserInfo();
     private String travelId = generateUUID();
@@ -155,6 +155,8 @@ public class travelRecordActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);// 获取LinearLayout或其他容器的引用，作为背景
         setContentView(R.layout.activity_content);
+        SharedPreferences preferences = getSharedPreferences("local", MODE_PRIVATE);
+        city = preferences.getString("city", "北京市");
         RelativeLayout layout = findViewById(R.id.layout);
         // 随机选择背景图片
         Random random = new Random();
@@ -173,7 +175,7 @@ public class travelRecordActivity extends Activity {
         initCtrl();
         // 获取 SharedPreferences 实例
         sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId","jin875421");
+        userId = sharedPreferences.getString("userId","");
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         String TravelName = sharedPreferences.getString("TravelName", "");
         etTravelName.setText(TravelName);
@@ -297,7 +299,6 @@ public class travelRecordActivity extends Activity {
                                     try {
                                         FileInputStream localStream =openFileInput(generateIdentifierFromUri(URI));
                                         Bitmap bitmap = BitmapFactory.decodeStream(localStream);
-                                        System.out.println(bitmap);
                                         savefile(fileList,bitmap);
                                     } catch (FileNotFoundException e) {
                                         e.printStackTrace();
@@ -305,8 +306,7 @@ public class travelRecordActivity extends Activity {
                                 }
 
                                 travelRecord travelrecord = new travelRecord();
-                                travelrecord.setPlaceName(
-                                        sharedPreferences.getString("userTitle" + j,""));
+                                travelrecord.setPlaceName(sharedPreferences.getString("userTitle" + j,""));
                                 travelrecord.setContent(sharedPreferences.getString("userContent" + j,""));
                                 travelrecord.setUserId(userId);
                                 travelrecord.setTravelName(etTravelName.getText().toString());
@@ -325,11 +325,13 @@ public class travelRecordActivity extends Activity {
                                         .setType(MultipartBody.FORM)
                                         .addFormDataPart("travelrecord", json, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json));
                                 //循环处理图片
+                                System.out.println(travelrecord.toString());
                                 for (int i = 0; i < fileList.size(); i++){
                                     File file = fileList.get(i);
                                     if (file != null && file.exists()) {
                                         int totalChunks = calculateTotalChunks(file);//计算分片数
                                         String identifier = generateUniqueIdentifier();//生成唯一标识符
+
                                         int sequenceNumber = 0;
 
                                         try(InputStream inputStream = new FileInputStream(file)) {
@@ -381,7 +383,7 @@ public class travelRecordActivity extends Activity {
                             aaa.remove("userContent" + 0);
                             aaa.remove("myList");
                             aaa.apply();
-                            etTravelName.setText("旅行者，你要去哪里");
+//                            etTravelName.setText("旅行者，你要去哪里");
                         }
                     }).start();
                 }
@@ -1191,14 +1193,19 @@ public class travelRecordActivity extends Activity {
                         Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始删除哦", Toast.LENGTH_SHORT).show();
                     }else {
                         removeFromSharedPreferences(0);
+                        //移除llContentView中的所有控件
+                        LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(getValue()); // 获取第一个LinearLayout
+                        // 获取第一个LinearLayout}
+                        HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
+                        LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
+                        //移除innerLayout中的图片控件
+                        innerLayout.removeAllViews();
                         etContent1.setText("");
                         etContent2.setText("");
                         Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
                     }
                 // 重启当前Activity以重新加载页面
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
+
             }
         });
 

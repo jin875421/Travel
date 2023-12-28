@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -36,6 +37,7 @@ import glue502.software.R;
 import glue502.software.activities.posts.PostDisplayActivity;
 import glue502.software.models.Comment;
 import glue502.software.models.CommentRespond;
+import glue502.software.models.StrategyComment;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -44,16 +46,16 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class CommentListAdapter extends BaseAdapter {
+public class StrategyCommentListAdapter extends BaseAdapter {
     private Context context;//上下文环境
     private int comment_layout_id;
-    private List<Comment> commentList;
+    private List<StrategyComment> commentList;
     private String url = "http://"+ip+"/travel/";
 
-    public CommentListAdapter(Context context, int comment_layout_id, List<Comment> commentList){
+    public StrategyCommentListAdapter(Context context, int comment_layout_id, List<StrategyComment> strategyComments){
         this.context = context;
         this.comment_layout_id = comment_layout_id;
-        this.commentList = commentList;
+        this.commentList = strategyComments;
     }
 
     @Override
@@ -83,35 +85,34 @@ public class CommentListAdapter extends BaseAdapter {
         TextView first_respond = commentView.findViewById(R.id.first_respond);
         TextView respond_num = commentView.findViewById(R.id.respond_num);
         LinearLayout respond = commentView.findViewById(R.id.respond);
-        Log.v("CommentListAdapter", "lzx adapter中的数组的长度: " + commentList.size());
         //获取当前要显示的对象
-        Comment comment = commentList.get(position);
-        Log.v("CommentListAdapter", "lzx adapter中要绑定的comment" + comment);
+        StrategyComment strategyComment = commentList.get(position);
+        Log.v("StrategyCommentListAdapter", "lzx 要显示的StrategyComment" + strategyComment.toString());
         //显示头像
         Glide.with(context)
-                .load(url + comment.getAvatar())
+                .load(url + strategyComment.getAvatar())
                 .placeholder(R.mipmap.loading)
                 .error(R.mipmap.error)
                 .fallback(R.mipmap.blank)
                 .circleCrop()
                 .into(avatar);
-        username.setText(comment.getUsername());
-        time.setText(comment.getUploadTime());
-        text.setText(comment.getComment());
-        if(comment.getReturnCommentResponds().size() != 0){
-            respond.setVisibility(View.VISIBLE);
-            first_respond.setText(comment.getReturnCommentResponds().get(0).getUserName()
-                    + " 回复 "
-                    + comment.getUsername()
-                    + ":"
-                    + comment.getReturnCommentResponds().get(0).getText());
-            respond_num.setText(comment.getReturnCommentResponds().size() + "条回复");
-
-        }else {
-            //隐藏控件
+        username.setText(strategyComment.getUsername());
+        time.setText(strategyComment.getUploadTime());
+        text.setText(strategyComment.getComment());
+        if(strategyComment.getReturnStrategyCommentResponds()!= null){
+            if(strategyComment.getReturnStrategyCommentResponds().size() != 0){
+                first_respond.setText(strategyComment.getReturnStrategyCommentResponds().get(0).getUserName()
+                        + " 回复 "
+                        + strategyComment.getUsername()
+                        + ":"
+                        + strategyComment.getReturnStrategyCommentResponds().get(0).getText());
+                respond_num.setText(strategyComment.getReturnStrategyCommentResponds().size() + "条回复");
+            }else {
+                respond.setVisibility(View.GONE);
+            }
+        }else{
             respond.setVisibility(View.GONE);
         }
-
         //绑定评论回复点击事件
         respond.setOnClickListener(new View.OnClickListener() {
             @Override

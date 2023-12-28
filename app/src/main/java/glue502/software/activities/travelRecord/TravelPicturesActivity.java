@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.app.backup.BackupManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.flyjingfish.openimagelib.BaseInnerFragment;
 import com.flyjingfish.openimagelib.OpenImage;
@@ -35,6 +37,7 @@ import glue502.software.R;
 import glue502.software.adapters.ImagePagerAdapter;
 import glue502.software.adapters.TravelPicturesAdapter;
 import glue502.software.models.ImageEntity;
+import glue502.software.utils.MyViewUtils;
 import glue502.software.utils.bigImgUtils.MyImageLoader;
 
 
@@ -45,7 +48,9 @@ public class TravelPicturesActivity extends AppCompatActivity {
     private List<String> list1;
     private RecyclerView recyclerView;
     private String url = "http://"+ip+"/travel/";
-
+    private String placeName ;
+    private TextView name;
+    private ImageView back;
 //    private GridView gvPictures;
 
     private TravelPicturesAdapter travelPicturesAdapter;
@@ -55,6 +60,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_pictures);
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
 
         //实现无标题栏（但有系统自带的任务栏）
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);//报错，不知道怎么回事，但是这里代码用处不大
@@ -69,6 +75,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
              list1 = extras.getStringArrayList("parameter_list_key");
+             placeName = extras.getString("placeName");
         }
 
         //获取控件对象
@@ -86,6 +93,15 @@ public class TravelPicturesActivity extends AppCompatActivity {
 //        ViewPager viewPager = findViewById(R.id.viewPager);
 //        ImagePagerAdapter adapter = new ImagePagerAdapter(this, list1);
 //        viewPager.setAdapter(adapter);
+        name = findViewById(R.id.place_name);
+        name.setText(placeName);
+        back = findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         List<ImageEntity> datas = new ArrayList<>();
         for(String s:list1){
             datas.add(new ImageEntity(url+s,url+s,null,null,null,0));

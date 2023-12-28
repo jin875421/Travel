@@ -5,6 +5,7 @@ import static glue502.software.activities.MainActivity.ip;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +39,9 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -45,6 +49,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -63,6 +71,8 @@ import glue502.software.adapters.TravelDetailAdapter;
 import glue502.software.models.UserInfo;
 import glue502.software.models.travelRecord;
 import glue502.software.utils.MyViewUtils;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -74,9 +84,13 @@ public class travelRecordEdit extends Activity {
     private TextView travelName;
     private List<travelRecord> travelRecords;
     private String travelId;
+
+    private String travelIdnew = generateUUID();
     private String url = "http://" + ip + "/travel/travel/showATravel";
     private String url2 = "http://" + ip + "/travel/";
-    private String url3 = "http://" + ip + "/travel/EditTravelRecord";
+    private String url3 = "http://" + ip + "/travel/travel/deleteTravel";
+
+    private String url4 = "http://"+ip+"/travel/travel/createTravelRecord";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
     private UserInfo userInfo = new UserInfo();
     private String userId;
@@ -84,7 +98,7 @@ public class travelRecordEdit extends Activity {
     private int value = 0;
     private int which = 10000;
     // 外围的LinearLayout容器
-    private LinearLayout llContentView, ImageContainer,linearLayout;
+    private LinearLayout llContentView, linearLayout;
     //添加点击按钮
     private EditText etContent1, etTravelName, etContent2;
     private Button btnReturn, btnSubmit;
@@ -96,6 +110,7 @@ public class travelRecordEdit extends Activity {
     private LinkedList<ImageButton> listIBTNDel;
     private LinkedList<ImageButton> listPhotoAdd;
     private LinkedList<ImageButton> listPhotoAlbum;
+    private SharedPreferences sharedPreferences;
     //路径
     private String mCurrentPhotoPath;
     private int iETContentHeight = 0;   // EditText控件高度
@@ -110,6 +125,9 @@ public class travelRecordEdit extends Activity {
         MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), false);
         initCtrl();
         //获取上页面传过来的travelId
+        sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+//        userId = sharedPreferences.getString("userId","");
+        userId = "jin875421";
         travelId = getIntent().getStringExtra("travelId");
         initData();
         setListener();
@@ -132,7 +150,6 @@ public class travelRecordEdit extends Activity {
         etTravelName = (EditText) this.findViewById(R.id.Ed_place);
         btnReturn = findViewById(R.id.btn_return);
         btnSubmit = findViewById(R.id.btn_submit);
-        ImageContainer = findViewById(R.id.imageContainer);
         listIBTNAdd = new LinkedList<ImageButton>();
         listIBTNDel = new LinkedList<ImageButton>();
         listPhotoAdd = new LinkedList<ImageButton>();
@@ -233,8 +250,12 @@ public class travelRecordEdit extends Activity {
                     travelRecords = new Gson().fromJson(responseData, new TypeToken<List<travelRecord>>() {
                     }.getType());
                     setTravelRecords(travelRecords);
+
                     //打开ui线程
                     runOnUiThread(() -> {
+                        if(travelRecords.get(0).getTravelName()!=null){
+                            etTravelName.setText(travelRecords.get(0).getTravelName());
+                        }
 //                        etTravelName.setText(travelRecords.get(0).getTravelName());
                         etContent1.setText(travelRecords.get(0).getPlaceName());
                         etContent2.setText(travelRecords.get(0).getContent());
@@ -244,8 +265,8 @@ public class travelRecordEdit extends Activity {
                             ImageView images = new ImageView(travelRecordEdit.this);
                             images.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
                             LinearLayout.LayoutParams imagesParams = new LinearLayout.LayoutParams(
-                                    400,
-                                    400);
+                                    300,
+                                    300);
                             images.setLayoutParams(imagesParams);
                             images.setTag(0);
                             images.setOnClickListener(new View.OnClickListener() {
@@ -253,7 +274,7 @@ public class travelRecordEdit extends Activity {
                                 @Override
                                 public void onClick(View v) {
                                     loadSave();
-                                    int index = ImageContainer.indexOfChild(v);
+                                    int index = linearLayout.indexOfChild(v);
                                     setValue(0);
                                     setWhich(index);
                                     showPopupWindow();
@@ -266,11 +287,13 @@ public class travelRecordEdit extends Activity {
                                         @Override
                                         public void onConfirmDelete() {
                                             loadSave();
-                                            int index = ImageContainer.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
+                                            int index = linearLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
+                                            System.out.println("index"+index);
                                             List<String> path = travelRecords.get(0).getImage();
-                                            path.remove(index - 1);
+                                            path.remove(index);
+                                            travelRecords.get(0).setImage(path);
                                             // 用户确认删除的处理逻辑，可以在这里执行删除操作
-                                            ImageContainer.removeView(v);
+                                            linearLayout.removeView(v);
                                         }
 
                                         @Override
@@ -284,7 +307,7 @@ public class travelRecordEdit extends Activity {
                             Glide.with(travelRecordEdit.this)
                                     .load(url2 + path)
                                     .into(images);
-                            ImageContainer.addView(images, j);
+                            linearLayout.addView(images, j);
                         }
                         for (int i = travelRecords.size()-1; i >=1; i--) {
                             addContentWithTag(i, travelRecords.get(i));
@@ -303,6 +326,7 @@ public class travelRecordEdit extends Activity {
                 //TODO 提交的代码 逻辑如下 通过sharp得到总数 依次上传
                 {
                     new Thread(new Runnable() {
+
                         @Override
                         public void run() {
                             //TODO travel id我来传 时间不变
@@ -310,25 +334,36 @@ public class travelRecordEdit extends Activity {
                             for (int j = numberOfControls - 1; j >= 0; j--) {
                                 loadSave();
                                 List<File> fileList = new ArrayList<>();
+
                                 List<String> path = travelRecords.get(j).getImage();
                                 for (String URI : path) {
+                                    boolean isBitmapLoaded = false; // 标志变量，用于追踪下面的代码是否执行
+                                    Bitmap bitmap=null;
                                     try {
-                                        FileInputStream localStream = openFileInput(generateIdentifierFromUri(URI));
-                                        Bitmap bitmap = BitmapFactory.decodeStream(localStream);
-                                        System.out.println(bitmap);
-                                        savefile(fileList, bitmap);
+                                        FileInputStream localStream =openFileInput(generateIdentifierFromUri(URI));
+                                        bitmap = BitmapFactory.decodeStream(localStream);
+                                        isBitmapLoaded = true; // 标记为已加载 // 标志变量，用于追踪下面的代码是否执行
                                     } catch (FileNotFoundException e) {
                                         e.printStackTrace();
                                     }
+                                    if (!isBitmapLoaded) {
+                                        // 下面的代码块没有执行，执行上面的代码
+                                        String b = url2 + URI;
+                                        Uri a = Uri.parse(b);
+                                        String uriString = a.toString();
+                                        bitmap = getBitmap(uriString);
+                                    }
+                                    if (bitmap != null) {
+                                        // 保存 Bitmap
+                                        savefile(fileList, bitmap);
+                                    } else {
+                                        // 处理 bitmap 为空的情况
+                                    }
                                 }
-
                                 travelRecord travelrecord = travelRecords.get(j);
-//                                travelrecord.setPlaceName(
-//                                        travelRecords.get(j).getPlaceName();
-//                                travelrecord.setContent(j);
-//                                travelrecord.setUserId(userId);
-//                                travelrecord.setTravelName(etTravelName.getText().toString());
-//                                travelrecord.setTravelId(generateUUID());
+                                travelrecord.setUserId(userId);
+                                travelrecord.setTravelId(travelIdnew);
+                                System.out.println(travelrecord.toString());
                                 Date currentTime = new Date();
                                 // 定义日期时间格式
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -343,6 +378,7 @@ public class travelRecordEdit extends Activity {
                                         .setType(MultipartBody.FORM)
                                         .addFormDataPart("travelrecord", json, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json));
                                 //循环处理图片
+                                System.out.println(fileList.size()+"!!!!!!!!!!");
                                 for (int i = 0; i < fileList.size(); i++) {
                                     File file = fileList.get(i);
                                     if (file != null && file.exists()) {
@@ -356,7 +392,6 @@ public class travelRecordEdit extends Activity {
 
                                             while ((bytesRead = inputStream.read(buffer)) != -1) {
                                                 byte[] actualBuffer = Arrays.copyOfRange(buffer, 0, bytesRead);
-
                                                 builder.addFormDataPart("identifiers", identifier);
                                                 builder.addFormDataPart("sequenceNumbers", String.valueOf(sequenceNumber));
                                                 builder.addFormDataPart("totalChunks", String.valueOf(totalChunks));
@@ -367,13 +402,12 @@ public class travelRecordEdit extends Activity {
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
-
                                     } else {
                                     }
                                 }
                                 RequestBody requestBody = builder.build();
                                 Request request = new Request.Builder()
-                                        .url(url3)
+                                        .url(url4)
                                         .post(requestBody)
                                         .build();
                                 try {
@@ -391,6 +425,21 @@ public class travelRecordEdit extends Activity {
                                     e.printStackTrace();
                                 }
                                 uploadComplete();
+                            }
+                            OkHttpClient client1 = new OkHttpClient();
+                            System.out.println("travelId"+travelId);
+                            Request request1 = new Request.Builder()
+                                    .url(url2+"/travel/deleteTravel?travelId="+travelId)
+                                    .build();
+                            try {
+                                //开启线程
+                                Response response = client1.newCall(request1).execute();
+                                //关闭帖子
+                                Intent resultIntent = new Intent();
+                                setResult(Activity.RESULT_OK, resultIntent); // 设置删除完成的结果码
+                                finish(); // 关闭页面
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
                     }).start();
@@ -485,6 +534,8 @@ public class travelRecordEdit extends Activity {
                 }
                 hexString.append(hex);
             }
+
+            // 输出生成的唯一标识符（十六进制字符串）
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -556,9 +607,9 @@ public class travelRecordEdit extends Activity {
         return null;
     }
 
-    private void savefile(List<File> file, Bitmap bitmap) {
-        file.add(getFileFromBitmap(bitmap));
-    }
+        private void savefile(List<File> file, Bitmap bitmap) {
+            file.add(getFileFromBitmap(bitmap));
+        }
 
     private int convertDpToPixel(int dp) {
         float scale = getResources().getDisplayMetrics().density;
@@ -917,8 +968,9 @@ public class travelRecordEdit extends Activity {
             ImageView images = new ImageView(this);
             images.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
             LinearLayout.LayoutParams imagesParams = new LinearLayout.LayoutParams(
-                    400,
-                    400);
+                    convertDpToPixel(150), // 宽度 150dp 转换为像素
+                    convertDpToPixel(150) // 高度 150dp 转换为像素
+            );
 
             images.setLayoutParams(imagesParams);
             images.setTag(i);
@@ -962,6 +1014,8 @@ public class travelRecordEdit extends Activity {
             Glide.with(this)
                     .load(url2 + path)
                     .into(images);
+            layoutParams.setMargins(7, 0, 7, 16);
+            images.setLayoutParams(layoutParams);
             innerLayout.addView(images, j);
         }
 // 将内部 LinearLayout 添加到 HorizontalScrollView
@@ -1451,4 +1505,30 @@ public class travelRecordEdit extends Activity {
                     )
                     .show();
         }
+
+    public Bitmap getBitmap(String url) {
+        Bitmap bm = null;
+        try {
+            URL iconUrl = new URL(url);
+            URLConnection conn = iconUrl.openConnection();
+            HttpURLConnection http = (HttpURLConnection) conn;
+
+            int length = http.getContentLength();
+
+            conn.connect();
+            // 获得图像的字符流
+            InputStream is = conn.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is, length);
+            bm = BitmapFactory.decodeStream(bis);
+            bis.close();
+            is.close();// 关闭流
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bm;
+    }
+    private String generateUUID() {
+        return UUID.randomUUID().toString();
+    }
     }

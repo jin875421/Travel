@@ -89,4 +89,16 @@ public class travelRecord implements Serializable {
     public String getContent() {
         return content;
     }
+    public String toString(){
+        return "travelRecord{" +
+                "userId='" + userId + '\'' +
+                ", placeId='" + placeId + '\'' +
+                ", travelId='" + travelId + '\'' +
+                ", placeName='" + placeName + '\'' +
+                ", travelName='" + travelName + '\'' +
+                ", image=" + image +
+                ", content='" + content + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", pictureNumber=" + pictureNumber ;
+            }
 }

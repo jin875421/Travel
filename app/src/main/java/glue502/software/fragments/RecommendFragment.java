@@ -8,6 +8,7 @@ import static androidx.constraintlayout.motion.widget.Debug.getLocation;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -86,7 +88,9 @@ public class RecommendFragment extends Fragment {
     private List<UserInfo> userInfos;
     private ListView listView;
     private String searchUrl="http://"+ip+"/travel/posts/search";
+    private String officialUrl="http://"+ip+"/travel/posts/getMypostlist?userId=wanlilu";
     public LocationClient mLocationClient = null;
+    SharedPreferences preferences ;
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
@@ -94,6 +98,7 @@ public class RecommendFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_recommend,container,false);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences("local", MODE_PRIVATE);
         status = sharedPreferences.getString("status","");
         rltlCreate = view.findViewById(R.id.lrlt_create);
         rltlFootprint = view.findViewById(R.id.lrlt_footprint);
@@ -102,7 +107,7 @@ public class RecommendFragment extends Fragment {
         vp2 = view.findViewById(R.id.reco_vp2);
         dotLinerLayout = view.findViewById(R.id.index_dot);
         localCity = view.findViewById(R.id.local_city);
-        listView = view.findViewById(R.id.local_post);
+//        listView = view.findViewById(R.id.local_post);
         getCity();
         setlistener();
         date();
@@ -135,6 +140,9 @@ public class RecommendFragment extends Fragment {
                         public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
                             if (reverseGeoCodeResult != null && reverseGeoCodeResult.getAddressDetail() != null) {
                                 city = reverseGeoCodeResult.getAddressDetail().city;
+                                // 存储城市信息
+
+                                preferences.edit().putString("city", city).apply();
                                 // 城市信息
                                 localCity.setText(city);
                                 //删除city中的“市”字
@@ -161,28 +169,79 @@ public class RecommendFragment extends Fragment {
                                                     String responseData = responseBody.string();
                                                     Gson gson = new Gson();
                                                     List<PostWithUserInfo> postWithUserInfoList = gson.fromJson(responseData,new TypeToken<List<PostWithUserInfo>>(){}.getType());
-                                                    if (postWithUserInfoList==null){
+                                                    if (postWithUserInfoList.size()<=0){
                                                         //TODO 加载官方的帖子
+                                                         new Thread(new Runnable() {
+                                                             @Override
+                                                             public void run() {
+                                                                 Request request1 = new Request.Builder()
+                                                                         .url(officialUrl)
+                                                                         .build();
+                                                                 try {
+                                                                     Response response1 = client.newCall(request1).execute();
+                                                                     if (response1.isSuccessful()){
+                                                                         ResponseBody responseBody1 = response1.body();
+                                                                         if (responseBody1!=null){
+                                                                             String responseData1 = responseBody1.string();
+                                                                             Gson gson1 = new Gson();
+                                                                             List<PostWithUserInfo> postList = gson1.fromJson(responseData1,new TypeToken<List<PostWithUserInfo>>(){}.getType());
+                                                                             posts = new ArrayList<>();
+                                                                             userInfos = new ArrayList<>();
+                                                                             for (PostWithUserInfo postWithUserInfo: postList){
+                                                                                 posts.add(postWithUserInfo.getPost());
+                                                                                 userInfos.add(postWithUserInfo.getUserInfo());
+                                                                                 handler.post(new Runnable() {
+                                                                                     @Override
+                                                                                     public void run() {
+                                                                                         if (posts!=null&&userInfos!=null){
+                                                                                             if (getActivity() != null) {
+                                                                                                 // 在这里使用 getActivity() 获取上下文进行操作
+                                                                                                 PostListAdapter postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
+                                                                                                 listView.setAdapter(postAdapter);
+                                                                                                 setListViewHeightBasedOnChildren(listView);
+                                                                                             } else {
+                                                                                                 // 处理上下文为 null 的情况，可以考虑给出提示或者其他处理方式
+                                                                                             }
 
-                                                    }
-                                                    posts = new ArrayList<>();
-                                                    userInfos = new ArrayList<>();
-                                                    for (PostWithUserInfo postWithUserInfo: postWithUserInfoList){
-                                                        posts.add(postWithUserInfo.getPost());
-                                                        userInfos.add(postWithUserInfo.getUserInfo());
-                                                        handler.post(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                if (posts!=null&&userInfos!=null){
-                                                                    PostListAdapter postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
-                                                                    listView.setAdapter(postAdapter);
-                                                                    setListViewHeightBasedOnChildren(listView);
-                                                                }else {
 
+                                                                                         }else {
+
+                                                                                         }
+                                                                                     }
+                                                                                 });
+                                                                             }
+                                                                         }
+                                                                     }
+                                                                 }catch (Exception e){
+                                                                     e.printStackTrace();
+                                                                 }
+                                                             }
+                                                         }).start();}else {
+                                                        posts = new ArrayList<>();
+                                                        userInfos = new ArrayList<>();
+                                                        for (PostWithUserInfo postWithUserInfo: postWithUserInfoList){
+                                                            posts.add(postWithUserInfo.getPost());
+                                                            userInfos.add(postWithUserInfo.getUserInfo());
+                                                            handler.post(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    if (posts!=null&&userInfos!=null){
+                                                                        if (getActivity() != null) {
+                                                                            // 在这里使用 getActivity() 获取上下文进行操作
+                                                                            PostListAdapter postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
+//                                                                            listView.setAdapter(postAdapter);
+//                                                                            setListViewHeightBasedOnChildren(listView);
+                                                                        } else {
+                                                                            // 处理上下文为 null 的情况，可以考虑给出提示或者其他处理方式
+                                                                        }
+                                                                    }else {
+
+                                                                    }
                                                                 }
-                                                            }
-                                                        });
+                                                            });
+                                                        }
                                                     }
+
                                                 }
                                             }
                                         } catch (IOException e) {
@@ -262,17 +321,17 @@ public class RecommendFragment extends Fragment {
     }
 
     public void setlistener(){
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                PostListAdapter postListAdapter = (PostListAdapter) parent.getAdapter();
-                //获取点击项数据对象
-                PostWithUserInfo clickItem = (PostWithUserInfo) postListAdapter.getItem(i);
-                Intent intent = new Intent(getActivity(), PostDisplayActivity.class);
-                intent.putExtra("postwithuserinfo", clickItem);
-                startActivityForResult(intent,1);
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
+//                PostListAdapter postListAdapter = (PostListAdapter) parent.getAdapter();
+//                //获取点击项数据对象
+//                PostWithUserInfo clickItem = (PostWithUserInfo) postListAdapter.getItem(i);
+//                Intent intent = new Intent(getActivity(), PostDisplayActivity.class);
+//                intent.putExtra("postwithuserinfo", clickItem);
+//                startActivityForResult(intent,1);
+//            }
+//        });
         rltlCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -300,8 +359,39 @@ public class RecommendFragment extends Fragment {
                     dialog.show();
 
                 }else{
-                    Intent intent = new Intent(getActivity(), travelRecordActivity.class);
-                    startActivity(intent);
+                    SharedPreferences Preferences = getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                    String travelName = Preferences.getString("TravelName","");
+                    if (travelName.equals("")){
+                        // 弹出输入框
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View view1 = LayoutInflater.from(getActivity()).inflate(R.layout.input_dialog, null);
+                        builder.setTitle("为你的旅行命个名吧")
+                               .setView(view1)
+                                .setNegativeButton("暂时不了", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // 点击“取消”按钮后的操作
+                                        dialog.dismiss(); // 关闭对话框
+                                    }
+                                })
+                               .setPositiveButton("开始旅程", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // 点击“确定”按钮后的操作
+                                        // 获取输入框中的内容
+                                        EditText editText = view1.findViewById(R.id.editText);
+                                        //将travelName存入sharedPreferences
+                                        String travelName = editText.getText().toString();
+                                        SharedPreferences.Editor editor = Preferences.edit();
+                                        editor.putString("TravelName",travelName);
+                                        editor.apply();
+                                        Intent intent = new Intent(getActivity(), travelRecordActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
+                        builder.show();
+                    }else {
+                        Intent intent = new Intent(getActivity(), travelRecordActivity.class);
+                        startActivity(intent);
+                    }
                 }
             }
         });

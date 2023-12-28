@@ -108,6 +108,8 @@ public class PostDisplayActivity extends AppCompatActivity {
     private CommentListAdapter commentListAdapter;
     //记录用户收藏和点赞状态
     private int likeStatus, starStatus;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +117,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         initData();
         initView();
         setListener();
-        getCommentData();
         //添加沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
         displayPost();
@@ -148,7 +149,7 @@ public class PostDisplayActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                        commentList = new ArrayList<>();
+                        commentList.clear();
                         //获取响应的数据
                         String result = response.body().string();
                         //反序列化消息
@@ -159,9 +160,10 @@ public class PostDisplayActivity extends AppCompatActivity {
                             commentList.add(comment);
                         }
                         // 更新UI线程中的ListView
-                        runOnUiThread(new Runnable() {
+                        handler.post(new Runnable() {
                             @Override
                             public void run() {
+                                Log.v("PostDisplayActivity", "lzx getComment执行，获取的评论列表"+commentList);
                                 commentListAdapter = new CommentListAdapter(
                                         PostDisplayActivity.this,
                                         R.layout.activity_comment_list_adapter,
@@ -193,7 +195,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                     String result = response.body().string();
                     JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
                     post = new Gson().fromJson(jsonObject, PostWithUserInfo.class);
-                    runOnUiThread(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             //Carousel为自定义轮播图工具类
@@ -211,7 +213,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         }
                     });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -230,7 +232,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                     LikeAndStarStatus likeAndStarStatus = new Gson().fromJson(result, LikeAndStarStatus.class);
                     likeStatus = likeAndStarStatus.getLikeStatus();
                     starStatus = likeAndStarStatus.getStarStatus();
-                    runOnUiThread(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             if(likeStatus == 1){
@@ -246,7 +248,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         }
                     });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -621,8 +623,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                                             @Override
                                             public void run() {
                                                 getCommentData();
-                                                commentListAdapter.notifyDataSetChanged();
-                                                setListViewHeightBasedOnChildren(listView);
                                             }
                                         });
                                     }
@@ -842,19 +842,20 @@ public class PostDisplayActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.v("PostDisplayActivity", "lzx onResume执行");
         super.onResume();
         getCommentData();
-        commentListAdapter = new CommentListAdapter(
-                PostDisplayActivity.this,
-                R.layout.activity_comment_list_adapter,
-                commentList
-        );
-        listView.setAdapter(commentListAdapter);
-        setListViewHeightBasedOnChildren(listView);
-        //绑定adapter点击事件监听器
-        setAdapterListener();
-        commentListAdapter.notifyDataSetChanged();
-        setListViewHeightBasedOnChildren(listView);
+//        commentListAdapter = new CommentListAdapter(
+//                PostDisplayActivity.this,
+//                R.layout.activity_comment_list_adapter,
+//                commentList
+//        );
+//        listView.setAdapter(commentListAdapter);
+//        setListViewHeightBasedOnChildren(listView);
+//        //绑定adapter点击事件监听器
+//        setAdapterListener();
+//        commentListAdapter.notifyDataSetChanged();
+//        setListViewHeightBasedOnChildren(listView);
     }
 
     public void showInput(final EditText et) {
@@ -863,9 +864,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         imm.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
     }
 
-    /**
-     * 隐藏键盘
-     */
     protected void hideInput() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         View v = getWindow().peekDecorView();

@@ -14,13 +14,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.travelRecord.PlaceDetailActivity;
 import glue502.software.activities.travelRecord.TravelDetailActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
 import glue502.software.models.TravelReview;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TravelReviewAdapter extends BaseAdapter {
     private Context context;
@@ -113,15 +118,27 @@ public class TravelReviewAdapter extends BaseAdapter {
                 return true; // 返回true以消费触摸事件
             }
         });
-
+        travelName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 执行跳转至详情页面
+                Intent intent = new Intent(context, TravelDetailActivity.class);
+                intent.putExtra("travelId",travelReview.get(i).getTravelId());
+                context.startActivity(intent);
+            }
+        });
         //给滚动图添加图片
         if (travelReview.get(i).getImages().size() > 0) {
             LinearLayout imagecontainer = v.findViewById(R.id.image_container);
             for (String path : travelReview.get(i).getImages()) {
                 ImageView imageView = new ImageView(context);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                MultiTransformation mation5 = new MultiTransformation(
+                        new CenterCrop(),
+                        new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
+                );
                 // 通过服务器地址设置图片
-                Glide.with(context).load(url + path).into(imageView);
+                Glide.with(context).load(url + path).apply(RequestOptions.bitmapTransform(mation5)).into(imageView);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(convertDpToPixel(130), convertDpToPixel(130));
                 params.setMargins(0, 0, convertDpToPixel(4), 0);
                 imageView.setLayoutParams(params);

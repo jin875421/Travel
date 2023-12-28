@@ -5,10 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.travelRecord.TravelAlbumActivity"
-    android:orientation="vertical"
-    android:background="@drawable/gradient_background"
-    android:paddingTop="35dp">
+    android:orientation="vertical">
 
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/back"
+            android:src="@drawable/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textSize="20sp"
+            android:text="我的相册"/>
+    </RelativeLayout>
     <com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
@@ -16,10 +31,10 @@
             android:id="@+id/tv_t1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#1Affffff"
+            android:visibility="gone"
             android:padding="10dp"
             android:text="最近"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="18sp"
             app:layout_isSticky="true" />
 
@@ -38,10 +53,10 @@
             android:id="@+id/tv_t2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#1Affffff"
+            android:visibility="gone"
             android:padding="10dp"
             android:text="一个月前"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="18sp"
             app:layout_isSticky="true" />
 
@@ -60,10 +75,10 @@
             android:id="@+id/tv_t3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#1Affffff"
+            android:visibility="gone"
             android:padding="10dp"
             android:text="半年前"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="18sp"
             app:layout_isSticky="true" />
 
@@ -82,10 +97,10 @@
             android:id="@+id/tv_t4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#1Affffff"
             android:padding="10dp"
+            android:visibility="gone"
             android:text="一年前"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="18sp"
             app:layout_isSticky="true" />
 
