@@ -117,6 +117,8 @@ public class travelRecordActivity extends Activity {
     private static final String[] backgrounds = {"djpa", "djpb", "djpjp","djpd","djpe","djpf","djpg","djph","djpi","djpj","djpk","djpl"};
     private String url = "http://"+ip+"/travel/travel/createTravelRecord";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
+
+    private List<travelRecord> travelRecordList;
     private UserInfo  userInfo= new UserInfo();
     private String travelId = generateUUID();
     private String userId ;
@@ -212,37 +214,40 @@ public class travelRecordActivity extends Activity {
     private void saveListToSharedPreferences(List<String> nestedList, int tag) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
-        List<List<String>> list =getListFromSharedPreferences();
-        if (tag >= 0 && tag < list.size()) {
-            list.remove(tag);
-            list.add(tag,nestedList);
-            String json = gson.toJson(list);
+        travelRecordList =getListFromSharedPreferences();
+        if (tag >= 0 && tag < travelRecordList.size()) {
+            travelRecordList.get(tag).removeAllImages();
+            travelRecordList.get(tag).setImage(nestedList);
+            String json = gson.toJson(travelRecordList);
             editor.putString("myList", json);
             editor.apply();
         }else {
-            list.add(tag,nestedList);
-            String json = gson.toJson(list);
+            travelRecord travelRecords = new travelRecord();
+            travelRecords.setImage(nestedList);
+            travelRecordList.add(travelRecords);
+            String json = gson.toJson(travelRecordList);
             editor.putString("myList", json);
             editor.apply();
         }
 
     }
-    private void saveListStringToSharedPreferences(List<List<String>> nestedList) {
+    private void saveListStringToSharedPreferences(List<travelRecord> travelRecord) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(nestedList);
+        String json = gson.toJson(travelRecord);
         editor.putString("myList", json);
         editor.apply();
     }
 
     // 从SharedPreferences中获取List
-    private List<List<String>> getListFromSharedPreferences() {
+    private List<travelRecord> getListFromSharedPreferences() {
         String json = sharedPreferences.getString("myList", "");
         if (json.equals("")) {
-            return new ArrayList<>();
+            List<travelRecord> travelRecordLists = new ArrayList<>();
+            return travelRecordLists;
         } else {
             Gson gson = new Gson();
-            Type type = new TypeToken<List<List<String>>>() {}.getType();
+            Type type = new TypeToken<List<travelRecord>>() {}.getType();
             return gson.fromJson(json, type);
         }
     }
@@ -292,8 +297,8 @@ public class travelRecordActivity extends Activity {
                             int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
                             for (int j = numberOfControls-1; j >= 0; j--) {
                                  List<File> fileList = new ArrayList<>();
-                               List<List<String>> list = getListFromSharedPreferences();
-                               List<String> path  = list.get(j);
+                               List<travelRecord> list = getListFromSharedPreferences();
+                               List<String> path  = list.get(j).getImage();
                                 for (String URI : path) {
                                     try {
                                         FileInputStream localStream =openFileInput(generateIdentifierFromUri(URI));
@@ -612,9 +617,9 @@ public class travelRecordActivity extends Activity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if(tag==10000){
             tag = getValue();
-            List<List<String>>  lujing=  getListFromSharedPreferences();
+            List<travelRecord>  lujing=  getListFromSharedPreferences();
             if (tag >= 0 && tag < lujing.size()) { // 确保 i 在列表范围内
-                List<String> path = lujing.get(tag);
+                List<String> path = lujing.get(tag).getImage();
                 if (path != null && !path.isEmpty()) {
                     String URI =  uri.toString();
                     if(n==10000){
@@ -658,8 +663,8 @@ public class travelRecordActivity extends Activity {
                 }
 
         } else {
-            List<List<String>>  lujing=  getListFromSharedPreferences();
-            List<String> path = lujing.get(tag);
+            List<travelRecord>  lujing=  getListFromSharedPreferences();
+            List<String> path = lujing.get(tag).getImage();
             String URI =  uri.toString();
             if(n==10000){
                 path.add(URI);
@@ -726,8 +731,8 @@ public class travelRecordActivity extends Activity {
                                 loadSave();
                                 int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
                                 int c = (int)innerLayout.getTag();
-                                List<List<String>> list = getListFromSharedPreferences();
-                                List<String> path= list.get(c);
+                                List<travelRecord> list = getListFromSharedPreferences();
+                                List<String> path= list.get(c).getImage();
                                 path.remove(index-1);
                                 saveListToSharedPreferences(path, c);
                                 // 用户确认删除的处理逻辑，可以在这里执行删除操作
@@ -787,8 +792,8 @@ public class travelRecordActivity extends Activity {
                                 loadSave();
                                 int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
                                 int c = (int)innerLayout.getTag();
-                                List<List<String>> list = getListFromSharedPreferences();
-                                List<String> path= list.get(c);
+                                List<travelRecord> list = getListFromSharedPreferences();
+                                List<String> path= list.get(c).getImage();
                                 path.remove(index-1);
                                 saveListToSharedPreferences(path, c);
                                 // 用户确认删除的处理逻辑，可以在这里执行删除操作
@@ -850,8 +855,8 @@ public class travelRecordActivity extends Activity {
                             // 用户确认删除的处理逻辑，可以在这里执行删除操作
                             int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
                             int a = (int)innerLayout.getTag();
-                            List<List<String>> list = getListFromSharedPreferences();
-                            List<String> path = list.get(a);
+                            List<travelRecord> list = getListFromSharedPreferences();
+                            List<String> path = list.get(a).getImage();
                             path.remove(index-1);
                             saveListToSharedPreferences(path, a);
                             innerLayout.removeView(v);
@@ -1033,13 +1038,15 @@ public class travelRecordActivity extends Activity {
                 loadSave();
                 int a = (int)innerLayout.getTag()+1; // 索引值从已有子控件的数量开始
                 int b =llContentView.getChildCount();
-                if(a!=b){
-                    // 显示短暂的消息提示
-                    Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
-                }else {
-                    addContent(v);
+//                if(a!=b){
+//                    // 显示短暂的消息提示
+//                    Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
+//                }else {
+//                    addContent(v);
+//                    Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
+//                }
+                                    addContent(v);
                     Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
-                }
             }
         });
         listIBTNAdd.add(1,btnAdd);
@@ -1062,14 +1069,15 @@ public class travelRecordActivity extends Activity {
                 loadSave();
                 int a = (int)innerLayout.getTag()+1; // 索引值从已有子控件的数量开始
                 int b =llContentView.getChildCount();
-                if(a!=b){
-                    // 显示短暂的消息提示
-                    Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始删除哦", Toast.LENGTH_SHORT).show();
-                }else {
-                    deleteContent(v);
+//                if(a!=b){
+//                    // 显示短暂的消息提示
+//                    Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始删除哦", Toast.LENGTH_SHORT).show();
+//                }else {
+//                    deleteContent(v);
+//                    Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
+//                }
+                deleteContent(v);
                     Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
-                }
-
             }
         });
         listIBTNDel.add(1,btnDelete);
@@ -1170,14 +1178,7 @@ public class travelRecordActivity extends Activity {
                 iETContentHeight = etContent1.getHeight();
                 fDimRatio = iETContentHeight / 80;
                 loadSave();
-                int b =llContentView.getChildCount();
-                if(b!=1){
-                    // 显示短暂的消息提示
-                    Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
-                    addContent(v);
-                }
+                addContent(v);
 
             }
         });
@@ -1186,11 +1187,6 @@ public class travelRecordActivity extends Activity {
             public void onClick(View view) {
                 //TODO 清空操作
                     loadSave();
-                    int b =llContentView.getChildCount();
-                    if(b!=1){
-                        // 显示短暂的消息提示
-                        Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始删除哦", Toast.LENGTH_SHORT).show();
-                    }else {
                         removeFromSharedPreferences(0);
                         //移除llContentView中的所有控件
                         LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(getValue()); // 获取第一个LinearLayout
@@ -1202,7 +1198,6 @@ public class travelRecordActivity extends Activity {
                         etContent1.setText("");
                         etContent2.setText("");
                         Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
-                    }
                 // 重启当前Activity以重新加载页面
 
             }
@@ -1402,13 +1397,15 @@ public class travelRecordActivity extends Activity {
                         loadSave();
                         int a = (int)innerLayout.getTag()+1; // 索引值从已有子控件的数量开始
                         int b =llContentView.getChildCount();
-                        if(a!=b){
-                            // 显示短暂的消息提示
-                            Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
-                        }else {
-                            addContent(v);
-                            Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
-                        }
+//                        if(a!=b){
+//                            // 显示短暂的消息提示
+//                            Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
+//                        }else {
+//                            addContent(v);
+//                            Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
+//                        }
+                    addContent(v);
+                    Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
                 }
             });
             listIBTNAdd.add(iIndex,btnAdd);
@@ -1429,15 +1426,10 @@ public class travelRecordActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     loadSave();
-                    int a = (int)innerLayout.getTag()+1; // 索引值从已有子控件的数量开始
-                    int b =llContentView.getChildCount();
-                    if(a!=b){
-                        // 显示短暂的消息提示
-                        Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始删除哦", Toast.LENGTH_SHORT).show();
-                    }else {
+//                    int a = (int)innerLayout.getTag()+1; // 索引值从已有子控件的数量开始
+//                    int b =llContentView.getChildCount();
                         deleteContent(v);
                         Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_SHORT).show();
-                    }
 
                 }
             });
@@ -1529,9 +1521,9 @@ public class travelRecordActivity extends Activity {
         editor.putString("TravelName", TravelName);
         for (int i = 0; i < llContentView.getChildCount(); i++) {
             //TODO 在这里执行关闭保存 通过i先读取，读取出总数，得到总数，清空总数，循环count保存，读取出uri再保存
-            List<List<String>> list = getListFromSharedPreferences();
+            List<travelRecord> list = getListFromSharedPreferences();
             if (i >= 0 && i < list.size()) { // 确保 i 在列表范围内
-                List<String> path = list.get(i);
+                List<String> path = list.get(i).getImage();
                 if (path != null && !path.isEmpty()) {
                     // 这里是当 path 不为空时执行的操作
                     // 例如，可以遍历 path 中的元素或者执行其他操作
@@ -1563,10 +1555,22 @@ public class travelRecordActivity extends Activity {
                         String content = editText.getText().toString();
                         if (editTextCount == 0) {
                             // First EditText - Assume it as title EditText
-                            editor.putString("userTitle" + index, title);
+                            List<travelRecord> travelRecord = getListFromSharedPreferences();
+                            if ( index>= 0 && index < travelRecord.size()) {
+                                travelRecord.get(index).setPlaceName(title);
+                                saveListStringToSharedPreferences(travelRecord);
+                            }
+
+//                            editor.putString("userTitle" + index, title);
                         } else if (editTextCount == 1) {
                             // Second EditText - Assume it as content EditText
-                            editor.putString("userContent" + index, content);
+                            List<travelRecord> travelRecord = getListFromSharedPreferences();
+
+                            if ( index>= 0 && index < travelRecord.size()) {
+                                travelRecord.get(index).setContent(content);
+                                saveListStringToSharedPreferences(travelRecord);
+                            }
+//                            editor.putString("userContent" + index, content);
                         }
                         editTextCount++; // Increment EditText counter
                     }
@@ -1591,9 +1595,9 @@ public class travelRecordActivity extends Activity {
     private void loadSavedContent() {
         for (int i = 0; i < llContentView.getChildCount(); i++) {
             View view = llContentView.getChildAt(i);
-            List<List<String>> list = getListFromSharedPreferences();
+            List<travelRecord> list = getListFromSharedPreferences();
             if (i >= 0 && i < list.size()) { // 确保 i 在列表范围内
-                List<String> path = list.get(i);
+                List<String> path = list.get(i).getImage();
                 if (path != null && !path.isEmpty()) {
                     // 如果列表不为空，则执行操作
                     // 在这里执行您想要执行的操作，例如遍历列表、获取列表的大小等
@@ -1641,10 +1645,17 @@ public class travelRecordActivity extends Activity {
                     } else {
                         savedIndex = 0; // 如果标签不是 Integer 类型或为空，则使用默认索引
                     }
-                    String savedTitle = sharedPreferences.getString("userTitle" + savedIndex, "");
-                    String savedContent = sharedPreferences.getString("userContent" + savedIndex, "");
-                    etTitle.setText(savedTitle);
-                    etContent.setText(savedContent);
+//                    String savedTitle = sharedPreferences.getString("userTitle" + savedIndex, "");
+//                    String savedContent = sharedPreferences.getString("userContent" + savedIndex, "");
+                    if (i >= 0 && i < list.size()) { // 确保 i 在列表范围内
+                        List<travelRecord> travelRecord = getListFromSharedPreferences();
+                        etTitle.setText(travelRecord.get(savedIndex).getPlaceName());
+                        etContent.setText(travelRecord.get(savedIndex).getContent());
+                    }
+                     else {
+                        // 处理索引超出范围的情况
+                    }
+
                 }
             }
         }
@@ -1686,16 +1697,16 @@ public class travelRecordActivity extends Activity {
     //TODO 不知图片是否要再删除
     private void removeFromSharedPreferences(int index) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove("userContent" + index);
-        editor.remove("userTitle" + index);
+        List<travelRecord> list = getListFromSharedPreferences();
+//        editor.remove("userContent" + index);
+//        editor.remove("userTitle" + index);
         String a =String.valueOf(index);
-        List<List<String>> list = getListFromSharedPreferences();
         if (index >= 0 && index < list.size()) {
             list.remove(index);
         }else {
         }
         saveListStringToSharedPreferences(list);
-        editor.remove(a);
+//        editor.remove(a);
         editor.apply();
         //TODO 循环所有的控件去重新给
     }

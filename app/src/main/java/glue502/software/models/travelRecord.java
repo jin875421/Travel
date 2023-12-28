@@ -1,6 +1,8 @@
 package glue502.software.models;
 
 import java.io.Serializable;
+import java.lang.invoke.CallSite;
+import java.util.ArrayList;
 import java.util.List;
 
 public class travelRecord implements Serializable {
@@ -101,4 +103,30 @@ public class travelRecord implements Serializable {
                 ", createTime='" + createTime + '\'' +
                 ", pictureNumber=" + pictureNumber ;
             }
+    public void addImage(String imageUrl) {
+        if (image == null) {
+            image = new ArrayList<>();
+        }
+        image.add(imageUrl);
+        // Update pictureNumber to reflect the new number of images
+    }
+    public void addImage(int tag, String newImageUrl) {
+        if (image != null && tag >= 0 && tag < image.size()) {
+            image.set(tag, newImageUrl);
+        }
+    }
+
+    // Method to remove an image from the image list
+    public void removeImage(String imageUrl) {
+        if (image != null) {
+            image.remove(imageUrl);
+            // Update pictureNumber to reflect the new number of images
+        }
+    }
+    public void removeAllImages() {
+        if (image != null) {
+            image.clear();
+        }
+    }
+
 }
