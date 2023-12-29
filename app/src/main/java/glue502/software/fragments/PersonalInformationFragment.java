@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +77,8 @@ public class PersonalInformationFragment extends Fragment {
     private PageAdapter adapter;
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
     private String urlLoadImage="http://"+ip+"/travel/";
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

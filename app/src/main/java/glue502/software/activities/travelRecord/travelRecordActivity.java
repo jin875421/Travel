@@ -1147,15 +1147,12 @@ public class travelRecordActivity extends Activity {
         listIBTNDel = new LinkedList<ImageButton>();
         listPhotoAdd = new LinkedList<ImageButton>();
         listPhotoAlbum = new LinkedList<ImageButton>();
-
-
         // “+”按钮（第一个）
         ImageButton ibtnAdd1 = (ImageButton) this.findViewById(R.id.ibn_add1);
         ImageButton ibtnDelete = (ImageButton) this.findViewById(R.id.ibn_delete);
         ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_photoAdd);
         ImageButton ibtnPhotoAlbum = (ImageButton) this.findViewById(R.id.ibn_PhotoAlbum);
         ibtnPhotoAdd.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 setValue(0);

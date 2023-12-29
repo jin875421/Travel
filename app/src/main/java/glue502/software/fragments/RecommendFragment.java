@@ -46,6 +46,10 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smart.refresh.header.ClassicsHeader;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -87,6 +91,7 @@ public class RecommendFragment extends Fragment {
     private List<Post> posts;
     private List<UserInfo> userInfos;
     private ListView listView;
+    private SmartRefreshLayout refreshLayout;
     private String searchUrl="http://"+ip+"/travel/posts/search";
     private String officialUrl="http://"+ip+"/travel/posts/getMypostlist?userId=wanlilu";
     public LocationClient mLocationClient = null;
@@ -107,7 +112,16 @@ public class RecommendFragment extends Fragment {
         vp2 = view.findViewById(R.id.reco_vp2);
         dotLinerLayout = view.findViewById(R.id.index_dot);
         localCity = view.findViewById(R.id.local_city);
-//        listView = view.findViewById(R.id.local_post);
+        listView = view.findViewById(R.id.local_post);
+        refreshLayout = view.findViewById(R.id.refreshLayout);
+        refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                getCity();
+                refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+            }
+        });
         getCity();
         setlistener();
         date();
@@ -229,8 +243,8 @@ public class RecommendFragment extends Fragment {
                                                                         if (getActivity() != null) {
                                                                             // 在这里使用 getActivity() 获取上下文进行操作
                                                                             PostListAdapter postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
-//                                                                            listView.setAdapter(postAdapter);
-//                                                                            setListViewHeightBasedOnChildren(listView);
+                                                                            listView.setAdapter(postAdapter);
+                                                                            setListViewHeightBasedOnChildren(listView);
                                                                         } else {
                                                                             // 处理上下文为 null 的情况，可以考虑给出提示或者其他处理方式
                                                                         }
@@ -321,17 +335,17 @@ public class RecommendFragment extends Fragment {
     }
 
     public void setlistener(){
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-//                PostListAdapter postListAdapter = (PostListAdapter) parent.getAdapter();
-//                //获取点击项数据对象
-//                PostWithUserInfo clickItem = (PostWithUserInfo) postListAdapter.getItem(i);
-//                Intent intent = new Intent(getActivity(), PostDisplayActivity.class);
-//                intent.putExtra("postwithuserinfo", clickItem);
-//                startActivityForResult(intent,1);
-//            }
-//        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
+                PostListAdapter postListAdapter = (PostListAdapter) parent.getAdapter();
+                //获取点击项数据对象
+                PostWithUserInfo clickItem = (PostWithUserInfo) postListAdapter.getItem(i);
+                Intent intent = new Intent(getActivity(), PostDisplayActivity.class);
+                intent.putExtra("postwithuserinfo", clickItem);
+                startActivityForResult(intent,1);
+            }
+        });
         rltlCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

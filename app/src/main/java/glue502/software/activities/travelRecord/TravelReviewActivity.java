@@ -93,5 +93,9 @@ public class TravelReviewActivity extends AppCompatActivity {
 
 
     }
-
+    public void onClick(String travelId){
+        Intent intent = new Intent(this, TravelDetailActivity.class);
+        intent.putExtra("travelId",travelId);
+        startActivityForResult(intent,1);
+    }
 }

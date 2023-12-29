@@ -13,8 +13,15 @@
         android:title="删除"/>
 
     <item
+        android:id="@+id/report"
+        android:icon="@mipmap/ic_launcher"
+        android:title="举报"/>
+
+
+    <item
         android:id="@+id/cancel"
         android:icon="@mipmap/ic_launcher"
         android:title="取消"/>
+
 
 </menu>
