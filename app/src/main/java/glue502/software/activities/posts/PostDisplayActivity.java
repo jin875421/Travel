@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.core.widget.NestedScrollView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -44,6 +45,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -311,6 +314,9 @@ public class PostDisplayActivity extends AppCompatActivity {
                         }
                     }).start();
                     likeStatus=1;
+                    YoYo.with(Techniques.RubberBand)
+                            .duration(700)
+                            .playOn(like_btn);
                     like_btn.setImageResource(R.mipmap.like);
                 } else if (likeStatus==1) {
                     //取消点赞
@@ -337,6 +343,9 @@ public class PostDisplayActivity extends AppCompatActivity {
                         }
                     }).start();
                     likeStatus=0;
+                    YoYo.with(Techniques.RubberBand)
+                            .duration(700)
+                            .playOn(like_btn);
                     like_btn.setImageResource(R.mipmap.like1);
                 }
             }
@@ -372,6 +381,9 @@ public class PostDisplayActivity extends AppCompatActivity {
                     }).start();
                     star_btn.setImageResource(R.mipmap.star);
                     starStatus = 1;
+                    YoYo.with(Techniques.RubberBand)
+                            .duration(700)
+                            .playOn(star_btn);
                 } else if (starStatus == 1) {
                     new Thread(new Runnable() {
                         @Override
@@ -394,8 +406,11 @@ public class PostDisplayActivity extends AppCompatActivity {
                             }
                         }
                     }).start();
-                    star_btn.setImageResource(R.mipmap.star1);
                     starStatus = 0;
+                    YoYo.with(Techniques.RubberBand)
+                            .duration(700)
+                            .playOn(star_btn);
+                    star_btn.setImageResource(R.mipmap.star1);
                 }
             }
         });

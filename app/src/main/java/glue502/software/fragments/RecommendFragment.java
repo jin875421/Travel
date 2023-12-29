@@ -87,7 +87,7 @@ public class RecommendFragment extends Fragment {
     private String status;
     private String city;
     private ListView localPost;
-    private TextView localCity;
+    private TextView localCity,attractionName;
     private List<Post> posts;
     private List<UserInfo> userInfos;
     private ListView listView;
@@ -96,6 +96,7 @@ public class RecommendFragment extends Fragment {
     private String officialUrl="http://"+ip+"/travel/posts/getMypostlist?userId=wanlilu";
     public LocationClient mLocationClient = null;
     SharedPreferences preferences ;
+    private Carousel carousel;
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
@@ -113,6 +114,7 @@ public class RecommendFragment extends Fragment {
         dotLinerLayout = view.findViewById(R.id.index_dot);
         localCity = view.findViewById(R.id.local_city);
         listView = view.findViewById(R.id.local_post);
+        attractionName = view.findViewById(R.id.attraction_name);
         refreshLayout = view.findViewById(R.id.refreshLayout);
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -125,7 +127,7 @@ public class RecommendFragment extends Fragment {
         getCity();
         setlistener();
         date();
-//        getCarousel();
+        getCarousel();
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
         return view;
     }
@@ -318,14 +320,13 @@ public class RecommendFragment extends Fragment {
                         public void run() {
                             Log.i("Reco",responseData);
                             //Carousel为自定义轮播图工具类
-                            Carousel carousel = new Carousel(getActivity(), dotLinerLayout, vp2,"");
+                            carousel = new Carousel(getActivity(), dotLinerLayout, vp2,"",attractionName);
                             carousel.initViews1(responseData);
                         }
                     });
                 }
             }
         });
-
     }
 
     private void date() {
@@ -473,15 +474,46 @@ public class RecommendFragment extends Fragment {
                 }
             }
         });
+        //注册轮播图的滚动事件监听器
+        vp2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                //当页面空闲状态被改变的时候
+                if (state == vp2.SCROLL_STATE_IDLE) {
+                    carousel.mHandler.postDelayed(carousel.runnable, 3000);//延时3秒，自动轮播图片
+                } else {
+                    carousel.mHandler.removeCallbacks(carousel.runnable);//用户手指触摸页面，停止自动轮播图片
+                }
+            }
+        });
     }
 
     //生命周期管理
     @Override
     public void onResume() {
         super.onResume();
+        if(carousel!=null){
+            carousel.mHandler.postDelayed(carousel.runnable,2000);//延时2秒，自动轮播图片
+        }
         //沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
+    }
+
+    /* 当应用被暂停时，让轮播图停止轮播 */
+    @Override
+    public void onPause() {
+        super.onPause();
+        carousel.mHandler.removeCallbacks(carousel.runnable);
     }
     private void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();

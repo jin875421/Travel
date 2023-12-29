@@ -7,13 +7,12 @@
     android:layout_height="match_parent"
     android:background="#EFF3F4"
     android:orientation="vertical">
-
     <FrameLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/gray"
-        android:layout_marginBottom="6dp">
+        android:layout_marginBottom="6dp"
+        android:background="@color/gray">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -22,137 +21,140 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:textColor="#0f0f0f"
+                android:textColor="#0c0c0c"
+                android:textStyle="bold"
                 android:text="首页"
-                android:textSize="24dp" />
+                android:textSize="18dp" />
         </LinearLayout>
     </FrameLayout>
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <ScrollView
-        android:layout_below="@+id/top"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <LinearLayout
-
-        android:id="@+id/pictures"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-
-        android:background="@drawable/background_frame_1">
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/reco_vp2"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="205dp"
-            android:background="@color/white"></androidx.viewpager2.widget.ViewPager2>
-
-        <LinearLayout
-            android:id="@+id/index_dot"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:paddingTop="5dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@+id/pictures"
-        android:id="@+id/lrlt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="3dp"
-        android:background="@drawable/background_frame_0"
-        android:orientation="horizontal">
-        <LinearLayout
-            android:id="@+id/lrlt_create"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@drawable/travel_begin"/>
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="20dp"
-                android:src="@drawable/homepage_mytravel"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/lrlt_footprint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@drawable/travel_itinerary"/>
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="20dp"
-                android:src="@drawable/homepage_myfootprint"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/lrlt_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@drawable/travel_photo"/>
-            <ImageView
-                android:layout_width="70dp"
-                android:layout_height="20dp"
-                android:src="@drawable/homepage_myphoto"/>
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_below="@+id/lrlt"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        android:background="@drawable/background_frame_1"
-        >
-            <TextView
-                android:id="@+id/local_city"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:paddingBottom="2dp"
-                android:layout_marginLeft="4dp"
-                android:drawableLeft="@drawable/homepage_gps"
-                android:text="当前城市"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ListView
-                android:id="@+id/local_post"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/top">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-    </RelativeLayout>
-    </ScrollView>
+                android:layout_height="match_parent">
+                <RelativeLayout
+                    android:id="@+id/pictures"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:background="@drawable/background_frame_1"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/reco_vp2"
+                        android:layout_width="match_parent"
+                        android:layout_height="205dp"
+                        android:background="@color/white"/>
+                    <TextView
+                        android:id="@+id/attraction_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:text="景点名称"
+                        android:background="@drawable/background_frame_2"
+                        android:gravity="center"
+                        android:textColor="#FAFAFA"
+                        android:textSize="16dp" />
+                    <LinearLayout
+                        android:id="@+id/index_dot"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:orientation="horizontal"
+                        android:layout_alignParentBottom="true"
+                        android:paddingTop="5dp" />
+                </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/lrlt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/pictures"
+                    android:layout_margin="3dp"
+                    android:background="@drawable/background_frame_0"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/lrlt_create"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:src="@drawable/travel_begin" />
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/homepage_mytravel" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/lrlt_footprint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:src="@drawable/travel_itinerary" />
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/homepage_myfootprint" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/lrlt_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:src="@drawable/travel_photo" />
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/homepage_myphoto" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/lrlt"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:background="@drawable/background_frame_1"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:id="@+id/local_city"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:drawableLeft="@drawable/homepage_gps"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="2dp"
+                        android:text="当前城市" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ListView
+                            android:id="@+id/local_post"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </ScrollView>
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
-
 </LinearLayout>
