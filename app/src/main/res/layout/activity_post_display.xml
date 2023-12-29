@@ -25,7 +25,8 @@
             android:layout_marginLeft="10dp"
             android:textColor="#0F0F0F"
             android:text="正文"
-            android:textSize="20sp" />
+            android:textStyle="bold"
+            android:textSize="18sp" />
         <ImageView
             android:id="@+id/popupmenu"
             android:layout_alignParentRight="true"
@@ -44,6 +45,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <LinearLayout
+                android:paddingLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"/>
+                <TextView
+                    android:paddingLeft="5dp"
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"/>
+            </LinearLayout>
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/post_image"
@@ -59,20 +74,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/viewPager2"
                 app:layout_constraintEnd_toEndOf="@+id/viewPager2"
                 app:layout_constraintStart_toStartOf="parent"/>
-            <LinearLayout
-                android:paddingLeft="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"/>
-                <TextView
-                    android:paddingLeft="5dp"
-                    android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"/>
-            </LinearLayout>
+
             <TextView
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -80,6 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
+                android:layout_marginBottom="10dp"
                 android:textStyle="bold"
                 android:textSize="20dp"/>
             <TextView
@@ -90,14 +93,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="17dp"
                 android:background="@drawable/background_frame_underline"
                 android:paddingBottom="20dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="  评论："
-                android:textSize="20sp"
+                android:textSize="16sp"
                 />
 
             <LinearLayout
@@ -109,7 +112,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
     <RelativeLayout

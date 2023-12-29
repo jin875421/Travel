@@ -146,7 +146,7 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
                     .error(R.mipmap.blank);
             MultiTransformation mation5 = new MultiTransformation(
                     new CenterCrop(),
-                    new RoundedCornersTransformation(50,0,RoundedCornersTransformation.CornerType.ALL)
+                    new RoundedCornersTransformation(30,0,RoundedCornersTransformation.CornerType.ALL)
             );
             Glide.with(context)
                     .load(datas.get(position % recoAttractions.size()).getCoverImageUrl())
