@@ -20,7 +20,10 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,7 +62,7 @@ public class TravelAlbumActivity extends AppCompatActivity {
     //这是一个用于测试的数据源，只有图片，看能不能在相册页面中显示出来
     private List<String> list10 = new ArrayList<>();
     private ImageView back;
-
+    private LocalDate localDate2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,8 +174,20 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
 
                 for(ShowPicture showPicture:showPictures){
-                    Date date1 = showPicture.getTravelDate();
-                    LocalDate localDate2 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    String date1 = showPicture.getTravelDate();
+
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+                    try {
+                        LocalDateTime dateTime = LocalDateTime.parse(date1, formatter);
+                        localDate2 = dateTime.toLocalDate();
+
+                        // 在这里使用 localDate2，执行你需要的操作
+                    } catch (DateTimeParseException e) {
+                        e.printStackTrace();
+                        // 处理日期解析错误
+                    }
+
                     //判断这个时间是否在当前时间的一个月之内，ture则代表是
                     boolean isAtLeastOneMonthBefore = localDate2.isAfter(localDate1.minusMonths(1));
                     if(isAtLeastOneMonthBefore){
