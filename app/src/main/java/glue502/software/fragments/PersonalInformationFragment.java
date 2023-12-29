@@ -78,6 +78,9 @@ public class PersonalInformationFragment extends Fragment {
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
     private String urlLoadImage="http://"+ip+"/travel/";
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private StarFragment starFragment = new StarFragment();
+    private MyPostFragment myPostFragment = new MyPostFragment();
+    private boolean firstLoad = true;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -117,10 +120,9 @@ public class PersonalInformationFragment extends Fragment {
         //收藏和发布
         tabLayout = view.findViewById(R.id.tbl);
         viewPager2 = view.findViewById(R.id.vp2);
-        fragments = new ArrayList<>();
-        fragments.add(new StarFragment());
-        fragments.add(new MyPostFragment());
-        adapter = new PageAdapter(fragments,getActivity());
+
+
+        initFragment();
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
         //绑定监听器
         viewPager2.setAdapter(adapter);
@@ -224,6 +226,12 @@ public class PersonalInformationFragment extends Fragment {
 
     }
 
+    private void initFragment() {
+        fragments = new ArrayList<>();
+        fragments.add(starFragment);
+        fragments.add(myPostFragment);
+        adapter = new PageAdapter(fragments,getActivity());
+    }
 
 
     private void checkLoginStatus() {
@@ -483,10 +491,14 @@ public class PersonalInformationFragment extends Fragment {
     }
 
     //生命周期管理
-    @Override
-    public void onResume() {
-        super.onResume();
-        //沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
-    }
+//    @Override
+//    public void onResume() {
+//        if (!firstLoad) {
+//            starFragment.initData();
+//            myPostFragment.initData();
+//        } else {
+//            firstLoad = false;
+//        }
+//        super.onResume();
+//    }
 }

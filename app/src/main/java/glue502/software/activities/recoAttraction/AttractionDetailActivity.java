@@ -3,6 +3,7 @@ package glue502.software.activities.recoAttraction;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.MainActivity;
 import glue502.software.activities.posts.PostDisplayActivity;
 import glue502.software.models.RecoAttraction;
 import glue502.software.utils.Carousel;
@@ -63,6 +65,7 @@ public class AttractionDetailActivity extends AppCompatActivity implements View.
 
     private void setListener() {
         back.setOnClickListener(this);
+        txAttractionAddress.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
@@ -70,6 +73,12 @@ public class AttractionDetailActivity extends AppCompatActivity implements View.
             case R.id.ad_back:
                 finish();
                 break;
+            case R.id.attraction_address:
+                Intent toMap = new Intent(AttractionDetailActivity.this, MainActivity.class);
+                toMap.putExtra("lat", attraction.getLatitude());
+                toMap.putExtra("lng", attraction.getLongitude());
+                toMap.putExtra("id",2);
+                startActivity(toMap);
         }
     }
 }
