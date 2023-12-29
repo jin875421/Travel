@@ -324,17 +324,9 @@ public class PersonalInformationFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
         if(forceRefresh==false){
-            // 如果需要强制刷新缓存，生成一个动态签名
-            Glide.get(requireContext()).clearMemory();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Glide.get(requireContext()).clearDiskCache();
-                }
-            }).start();
             Glide.with(requireContext())
                     .load(urlLoadImage + avatarUrl)
-                    .skipMemoryCache(false)  //允许内存缓存
+                    .skipMemoryCache(true)  //允许内存缓存
                     .diskCacheStrategy(DiskCacheStrategy.ALL)  // 使用磁盘缓存
                     .placeholder(R.drawable.headimg)  // 设置占位图
                     .apply(requestOptions)
@@ -351,7 +343,7 @@ public class PersonalInformationFragment extends Fragment {
             Glide.with(requireContext())
                     .load(urlLoadImage + avatarUrl)
                     .skipMemoryCache(true)  //允许内存缓存
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)  // 不使用磁盘缓存
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)  // 使用磁盘缓存
                     .placeholder(R.drawable.headimg)  // 设置占位图
                     .apply(requestOptions)
                     .signature(new ObjectKey(userId))  // 设置签名
