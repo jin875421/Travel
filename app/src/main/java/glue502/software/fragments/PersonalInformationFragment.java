@@ -490,15 +490,4 @@ public class PersonalInformationFragment extends Fragment {
         builder.show();
     }
 
-    //生命周期管理
-//    @Override
-//    public void onResume() {
-//        if (!firstLoad) {
-//            starFragment.initData();
-//            myPostFragment.initData();
-//        } else {
-//            firstLoad = false;
-//        }
-//        super.onResume();
-//    }
 }

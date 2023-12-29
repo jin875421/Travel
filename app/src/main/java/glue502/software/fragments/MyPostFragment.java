@@ -50,7 +50,7 @@ public class MyPostFragment extends Fragment {
     private String userId;
     private RefreshLayout refreshLayout;
     private final Handler handler = new Handler(Looper.getMainLooper());
-
+    private boolean firstLoad = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,6 +149,15 @@ public class MyPostFragment extends Fragment {
                 refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
             }
         });
+    }
+    @Override
+    public void onResume() {
+        if (!firstLoad) {
+            initData();
+        } else {
+            firstLoad = false;
+        }
+        super.onResume();
     }
 
 }
