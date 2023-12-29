@@ -1044,11 +1044,14 @@ public class travelRecordActivity extends Activity {
             @Override
             public void onClick(View v) {
                 loadSave();
-                if(a!=b){
+                if(b-1!=i){
+                    System.out.println("A"+a);
+                    System.out.println("B"+b);
                     // 显示短暂的消息提示
                     Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
                 }else {
                     addContent(v);
+                    btnAdd.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -1404,6 +1407,8 @@ public class travelRecordActivity extends Activity {
                         loadSave();
                         int a = (int)innerLayout.getTag()+1; // 索引值从已有子控件的数量开始
                         int b =llContentView.getChildCount();
+                    System.out.println("a"+a);
+                    System.out.println("b"+b);
                         if(a!=b){
                             // 显示短暂的消息提示
                             Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
@@ -1545,8 +1550,7 @@ public class travelRecordActivity extends Activity {
             if (i >= 0 && i < list.size()) { // 确保 i 在列表范围内
                 List<String> path = list.get(i).getImage();
                 if (path != null && !path.isEmpty()) {
-                    System.out.println(i);
-                    System.out.println(path);
+
                     // 这里是当 path 不为空时执行的操作
                     // 例如，可以遍历 path 中的元素或者执行其他操作
                     saveListToSharedPreferences(path,i);
