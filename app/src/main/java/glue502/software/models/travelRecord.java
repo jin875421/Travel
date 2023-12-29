@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.invoke.CallSite;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 public class travelRecord implements Serializable {
     private String userId;//用户id

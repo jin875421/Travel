@@ -109,9 +109,9 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
 
                 if (userName.isEmpty()&&yourImageBytes==null) {
                     Toast.makeText(UpdatePersonalInformationActivity.this, "输入的昵称和选择的图片都为空", Toast.LENGTH_LONG).show();
-                } else if (!userPhoneNumber.matches("^1[3-9]\\d{9}$")) {
+                } else if (!userPhoneNumber.isEmpty()&&!userPhoneNumber.matches("^1[3-9]\\d{9}$")) {
                     Toast.makeText(UpdatePersonalInformationActivity.this, "手机号格式不正确", Toast.LENGTH_LONG).show();
-                } else if (!email.contains("@")) {
+                } else if (!email.isEmpty()&&!email.contains("@")) {
                     Toast.makeText(UpdatePersonalInformationActivity.this, "邮箱格式不正确", Toast.LENGTH_LONG).show();
                 } else if (yourImageBytes == null) {
 
