@@ -135,7 +135,9 @@
         android:layout_marginTop="-50dp"
         android:layout_below="@id/btn_return"
         android:gravity="center"
-        android:text="Your Text" />
+        android:textSize="24dp"
+        android:textColor="#0f0f0f"
+        android:text="" />
 
     <Button
         android:id="@+id/btn_submit"
