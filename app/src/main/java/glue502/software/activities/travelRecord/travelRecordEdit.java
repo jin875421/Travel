@@ -1105,6 +1105,13 @@ public class travelRecordEdit extends Activity {
         btnAdd.setLayoutParams(btnAddParam);
         btnAdd.setBackgroundResource(R.drawable.ic_add);
         btnAdd.setId(View.generateViewId());
+        btnAdd.setVisibility(View.GONE);
+        int b = sharedPreferences.getInt("numberOfControls", 0);
+        System.out.println("b"+b);
+        System.out.println("i"+i);
+        if(b-1==i){
+            btnAdd.setVisibility(View.VISIBLE);
+        }
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1369,6 +1376,7 @@ public class travelRecordEdit extends Activity {
                         Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
                     } else {
                         addContent(v);
+                        btnAdd.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -1483,6 +1491,19 @@ public class travelRecordEdit extends Activity {
             if (iIndex >= 0 && iIndex < travelRecords.size()) {
                 travelRecords.remove(iIndex);
             } else {
+            }
+        }
+        if(iIndex==llContentView.getChildCount()){
+            LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(iIndex-1); // 获取第一个LinearLayout
+            int childCount = firstLayout.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View childView = firstLayout.getChildAt(i);
+                if (childView instanceof RelativeLayout) {
+                    RelativeLayout rlBtn = (RelativeLayout) childView;
+                    // 在 rlBtn 中找到 btnAdd
+                    ImageButton btnAdd = (ImageButton)rlBtn.getChildAt(0);
+                    btnAdd.setVisibility(View.VISIBLE);
+                }
             }
         }
     }

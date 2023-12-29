@@ -1720,15 +1720,12 @@ public class travelRecordActivity extends Activity {
     private void removeFromSharedPreferences(int index) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         List<travelRecord> list = getListFromSharedPreferences();
-//        editor.remove("userContent" + index);
-//        editor.remove("userTitle" + index);
         String a =String.valueOf(index);
         if (index >= 0 && index < list.size()) {
             list.remove(index);
         }else {
         }
         saveListStringToSharedPreferences(list);
-//        editor.remove(a);
         editor.apply();
         //TODO 循环所有的控件去重新给
     }
