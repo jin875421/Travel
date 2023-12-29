@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/djp"
     tools:context=".activities.travelRecord.TravelDetailActivity">
     <RelativeLayout
         android:id="@+id/travel_detail_layout"

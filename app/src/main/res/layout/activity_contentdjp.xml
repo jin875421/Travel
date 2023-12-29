@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/djpa"
+    android:background="@color/djp"
     android:paddingTop="0dp"
     android:id="@+id/layout"
     tools:context=".activities.travelRecord.travelRecordActivity" >
@@ -114,16 +114,20 @@
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/ibn_photoAdd"
                         android:layout_marginStart="-65dp"
-                    android:background="@drawable/imageadd" />
+                        android:background="@drawable/imageadd" />
 
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <Button
         android:id="@+id/btn_return"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:background="@drawable/border_backgrounddjp"
         android:text="返回" />
 
@@ -140,8 +144,9 @@
     <Button
         android:id="@+id/btn_submit"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:background="@drawable/border_backgrounddjp"
         android:layout_alignParentRight="true"
         android:text="提交" />
+    </RelativeLayout>
 </RelativeLayout>

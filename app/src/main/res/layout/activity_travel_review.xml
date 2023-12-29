@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/djp"
     tools:context=".activities.travelRecord.TravelReviewActivity">
     <RelativeLayout
         android:layout_alignParentTop="true"
