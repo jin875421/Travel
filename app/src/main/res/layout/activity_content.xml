@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/djp"
     android:paddingTop="0dp"
     android:id="@+id/layout"
     tools:context=".activities.travelRecord.travelRecordActivity" >
@@ -59,7 +59,7 @@
                     android:id="@+id/et_content1"
                     android:layout_width="match_parent"
                     android:layout_height="30dip"
-                    android:background="@drawable/border_backgrounddjpjp"
+                    android:background="@drawable/border_backgrounddjpjpjp"
                     android:gravity="left"
                     android:hint="标题"
 
@@ -79,7 +79,7 @@
                     android:id="@+id/et_content2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border_backgrounddjpjp"
+                    android:background="@drawable/border_backgrounddjpjpjp"
                     android:gravity="left"
                     android:hint="输入你的内容"
                     android:inputType="textMultiLine"
@@ -125,7 +125,9 @@
                     android:background="@drawable/imageadd" />
 
                 </RelativeLayout>
+
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
     <RelativeLayout
@@ -139,8 +141,8 @@
     <Button
         android:id="@+id/btn_return"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:background="@drawable/border_backgrounddjp"
+        android:layout_height="36dp"
+        android:background="@drawable/border_backgrounddjpjpjp"
         android:text="返回" />
 
     <EditText
@@ -148,16 +150,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-50dp"
+        android:layout_marginTop="-40dp"
         android:layout_below="@id/btn_return"
         android:gravity="center"
         android:text="旅行地" />
-
     <Button
         android:id="@+id/btn_submit"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:background="@drawable/border_backgrounddjp"
+        android:layout_height="36dp"
+        android:background="@drawable/border_backgrounddjpjpjp"
         android:layout_alignParentRight="true"
         android:text="提交" />
     </RelativeLayout>

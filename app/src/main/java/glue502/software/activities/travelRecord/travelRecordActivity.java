@@ -70,7 +70,10 @@ import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -106,6 +109,7 @@ import glue502.software.fragments.RecommendFragment;
 import glue502.software.models.UserInfo;
 import glue502.software.models.travelRecord;
 import glue502.software.utils.MyViewUtils;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -114,7 +118,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class travelRecordActivity extends Activity {
-    private static final String[] backgrounds = {"djpa", "djpb", "djpjp","djpd","djpe","djpf","djpg","djph","djpi","djpj","djpk","djpl"};
+//    private static final String[] backgrounds = {"djpa", "djpb", "djpjp","djpd","djpe","djpf","djpg","djph","djpi","djpj","djpk","djpl"};
     private String url = "http://"+ip+"/travel/travel/createTravelRecord";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
 
@@ -159,14 +163,6 @@ public class travelRecordActivity extends Activity {
         setContentView(R.layout.activity_content);
         SharedPreferences preferences = getSharedPreferences("local", MODE_PRIVATE);
         city = preferences.getString("city", "北京市");
-        RelativeLayout layout = findViewById(R.id.layout);
-        // 随机选择背景图片
-        Random random = new Random();
-        int index = random.nextInt(backgrounds.length);
-        int resourceId = getResources().getIdentifier(backgrounds[index], "mipmap", getPackageName());
-// 将选定的图片设置为背景
-        layout.setBackgroundResource(resourceId);
-        //初始百度地图
         LocationClient.setAgreePrivacy(true);
         SDKInitializer.setAgreePrivacy(this.getApplicationContext(), true);
         SDKInitializer.initialize(this.getApplicationContext());
@@ -295,6 +291,7 @@ public class travelRecordActivity extends Activity {
                         public void run() {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
+                            saveContentToSharedPreferences();
                             for (int j = numberOfControls-1; j >= 0; j--) {
                                  List<File> fileList = new ArrayList<>();
                                List<travelRecord> list = getListFromSharedPreferences();
@@ -309,9 +306,7 @@ public class travelRecordActivity extends Activity {
                                     }
                                 }
 
-                                travelRecord travelrecord = new travelRecord();
-                                travelrecord.setPlaceName(sharedPreferences.getString("userTitle" + j,""));
-                                travelrecord.setContent(sharedPreferences.getString("userContent" + j,""));
+                                travelRecord travelrecord = list.get(j);
                                 travelrecord.setUserId(userId);
                                 travelrecord.setTravelName(etTravelName.getText().toString());
                                 travelrecord.setTravelId(travelId);
@@ -323,6 +318,7 @@ public class travelRecordActivity extends Activity {
                                         .setType(MultipartBody.FORM)
                                         .addFormDataPart("travelrecord", json, RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json));
                                 //循环处理图片
+                                System.out.println(travelrecord.toString());
                                 for (int i = 0; i < fileList.size(); i++){
                                     File file = fileList.get(i);
                                     if (file != null && file.exists()) {
@@ -693,13 +689,18 @@ public class travelRecordActivity extends Activity {
                 innerLayout.setTag(getValue());
                 ImageView imageView1 = new ImageView(this);
                 imageView1.setBackgroundResource(R.drawable.border_backgrounddjpjp);
-                imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
+//                imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
+                MultiTransformation mation5 = new MultiTransformation(
+                        new CenterCrop(),
+                        new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
+                );
                 Glide.with(this)
                         .load(selectedImage)
+                        .apply(RequestOptions.bitmapTransform(mation5))
                         .into(imageView1);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        convertDpToPixel(150), // 宽度 150dp 转换为像素
-                        convertDpToPixel(150) // 高度 150dp 转换为像素
+                        convertDpToPixel(145), // 宽度 150dp 转换为像素
+                        convertDpToPixel(135) // 高度 150dp 转换为像素
                 );
                 imageView1.setOnClickListener(new View.OnClickListener() {
 
@@ -757,9 +758,14 @@ public class travelRecordActivity extends Activity {
                 innerLayout.setTag(a);
                 ImageView imageView1 = new ImageView(this);
                 imageView1.setBackgroundResource(R.drawable.border_backgrounddjpjp);
-                imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
+//                imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
+                MultiTransformation mation5 = new MultiTransformation(
+                        new CenterCrop(),
+                        new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
+                );
                 Glide.with(this)
                         .load(selectedImage)
+                        .apply(RequestOptions.bitmapTransform(mation5))
                         .into(imageView1);
                 imageView1.setOnClickListener(new View.OnClickListener() {
 
@@ -798,8 +804,8 @@ public class travelRecordActivity extends Activity {
                     }
                 });
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        convertDpToPixel(150), // 宽度 150dp 转换为像素
-                        convertDpToPixel(150) // 高度 150dp 转换为像素
+                        convertDpToPixel(145), // 宽度 150dp 转换为像素
+                        convertDpToPixel(135) // 高度 150dp 转换为像素
                 );
                 layoutParams.setMargins(7, 0, 7, 16);
                 imageView1.setLayoutParams(layoutParams);
@@ -819,9 +825,14 @@ public class travelRecordActivity extends Activity {
             innerLayout.setTag(a);
             ImageView imageView1 = new ImageView(this);
             imageView1.setBackgroundResource(R.drawable.border_backgrounddjpjp);
-            imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
+//            imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
+            MultiTransformation mation5 = new MultiTransformation(
+                    new CenterCrop(),
+                    new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
+            );
             Glide.with(this)
                     .load(bitmap)
+                    .apply(RequestOptions.bitmapTransform(mation5))
                     .into(imageView1);
             imageView1.setOnClickListener(new View.OnClickListener() {
 
@@ -858,8 +869,8 @@ public class travelRecordActivity extends Activity {
                 }
             });
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    convertDpToPixel(150), // 宽度 150dp 转换为像素
-                    convertDpToPixel(150) // 高度 150dp 转换为像素
+                    convertDpToPixel(145), // 宽度 150dp 转换为像素
+                    convertDpToPixel(135) // 高度 150dp 转换为像素
             );
             layoutParams.setMargins(7, 0, 7, 16);
             imageView1.setLayoutParams(layoutParams);
@@ -884,7 +895,8 @@ public class travelRecordActivity extends Activity {
         layout.setLayoutParams(layoutParams);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
-        layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
+        layoutParams.setMargins(0, dpToPx(16), 0, 0); // 设置上边距为16dp，根据需要调整间距
+
 
 //以下是图片的新加
 
@@ -1233,17 +1245,6 @@ public class travelRecordActivity extends Activity {
             }
         }
         if (iIndex >= 0) {
-// 控件实际添加位置为当前触发位置点下一位
-//            List<travelRecord> travelRecords = getListFromSharedPreferences();
-//            travelRecord travelRecorda = new travelRecord();
-//            Date currentTime = new Date();
-//            // 定义日期时间格式
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            // 格式化当前时间
-//            String formattedTime = sdf.format(currentTime);
-//            travelRecorda.setCreateTime(formattedTime);
-//            travelRecords.add(iIndex, travelRecorda);
-//            saveListStringToSharedPreferences(travelRecords);
             iIndex += 1;
 // 1.创建外围LinearLayout控件
             LinearLayout layout = new LinearLayout(travelRecordActivity.this);
@@ -1254,7 +1255,7 @@ public class travelRecordActivity extends Activity {
             layout.setOrientation(LinearLayout.VERTICAL);
             layout.setBackgroundResource(R.drawable.border_backgrounddjp);
             layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
-            layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
+            layoutParams.setMargins(0, dpToPx(16), 0, 0); // 设置上边距为16dp，根据需要调整间距
 //TODO 以下是图片的新加
 
 // 1. 创建外围 HorizontalScrollView 控件
@@ -1717,7 +1718,7 @@ public class travelRecordActivity extends Activity {
     private void removeFromSharedPreferences(int index) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         List<travelRecord> list = getListFromSharedPreferences();
-        String a =String.valueOf(index);
+//        String a =String.valueOf(index);
         if (index >= 0 && index < list.size()) {
             list.remove(index);
         }else {
@@ -1754,20 +1755,20 @@ public class travelRecordActivity extends Activity {
                 )
                 .show();
     }
-    private static String convertFileToBinaryString(File file) throws IOException {
-        StringBuilder binaryContent = new StringBuilder();
-        FileInputStream fileInputStream = new FileInputStream(file);
-        int byteRead;
-
-        while ((byteRead = fileInputStream.read()) != -1) {
-            // 将字节转换为8位二进制字符串并追加到StringBuilder中
-            String binary = String.format("%8s", Integer.toBinaryString(byteRead)).replace(' ', '0');
-            binaryContent.append(binary);
-        }
-
-        fileInputStream.close();
-        return binaryContent.toString();
-    }
+//    private static String convertFileToBinaryString(File file) throws IOException {
+//        StringBuilder binaryContent = new StringBuilder();
+//        FileInputStream fileInputStream = new FileInputStream(file);
+//        int byteRead;
+//
+//        while ((byteRead = fileInputStream.read()) != -1) {
+//            // 将字节转换为8位二进制字符串并追加到StringBuilder中
+//            String binary = String.format("%8s", Integer.toBinaryString(byteRead)).replace(' ', '0');
+//            binaryContent.append(binary);
+//        }
+//
+//        fileInputStream.close();
+//        return binaryContent.toString();
+//    }
     private String generateUUID() {
         return UUID.randomUUID().toString();
     }

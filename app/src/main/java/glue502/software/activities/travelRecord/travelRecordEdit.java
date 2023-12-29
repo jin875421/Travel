@@ -381,6 +381,7 @@ public class travelRecordEdit extends Activity {
                                         travelrecord.setTravelId(travelId);
                                         travelrecord.setPictureNumber(fileList.size());
                                         if(travelrecord.getCreateTime()==null){
+                                            Date currentTime = new Date();
                                             travelrecord.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
                                         }
 
