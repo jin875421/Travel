@@ -6,6 +6,7 @@ import static glue502.software.activities.MainActivity.ip;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,14 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
         }
     }
 
+    private int getHeightInPixels(int heightInDp){
+        int heightInPixels = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                heightInDp,
+                context.getResources().getDisplayMetrics()
+        );
+        return heightInPixels;
+    }
     public BannerPagerAdapter(List<String> imagepath, ViewPager2 viewPager2, String extraPath) {
         this.imagepath = imagepath;
         this.viewPager2 = viewPager2;
@@ -130,19 +139,20 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
         if (type == 1) {
             //TODO
 
-            MyImageLoader.getInstance().load(holder.imageView, datas.get(position % recoAttractions.size()).getCoverImageUrl(),R.mipmap.loading, R.mipmap.blank);
-//            RequestOptions options = new RequestOptions();
-//            options.placeholder(R.mipmap.loading)
-//                    .error(R.mipmap.blank);
-//            MultiTransformation mation5 = new MultiTransformation(
-//                    new RoundedCornersTransformation(50,0,RoundedCornersTransformation.CornerType.ALL));
-//            MultiTransformation mation2 = new MultiTransformation(new CenterCrop());
-//            Glide.with(context)
-//                    .load(datas.get(position % recoAttractions.size()).getCoverImageUrl())
-//                    .apply(options)
-//                    .apply(RequestOptions.bitmapTransform(mation2))
-//                    .apply(RequestOptions.bitmapTransform(mation5))
-//                    .into(holder.imageView);
+//            MyImageLoader.getInstance().load(holder.imageView, datas.get(position % recoAttractions.size()).getCoverImageUrl(), R.mipmap.loading, R.mipmap.blank);
+
+            RequestOptions options = new RequestOptions();
+            options.placeholder(R.mipmap.loading)
+                    .error(R.mipmap.blank);
+            MultiTransformation mation5 = new MultiTransformation(
+                    new CenterCrop(),
+                    new RoundedCornersTransformation(50,0,RoundedCornersTransformation.CornerType.ALL)
+            );
+            Glide.with(context)
+                    .load(datas.get(position % recoAttractions.size()).getCoverImageUrl())
+                    .apply(options)
+                    .apply(RequestOptions.bitmapTransform(mation5))
+                    .into(holder.imageView);
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

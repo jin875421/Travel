@@ -4,51 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFAFA"
-    android:orientation="vertical"
-    tools:context=".activities.travelRecord.TravelPicturesActivity">
-
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-
-        <Button
-            android:id="@+id/btn_back2"
-            android:layout_height="35dp"
-            android:layout_width="35dp"
-            android:background="@drawable/back1"
-            android:layout_marginLeft="2dp"/>
-
-        <TextView
-            android:id="@+id/tv_place"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="地点信息"
-            android:textSize="22dp"
-            android:layout_marginTop="5dp"/>
-
-    </LinearLayout>
-
-
+    tools:context=".activities.travelRecord.TravelPicturesActivity"
+    android:orientation="vertical">
     <RelativeLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-
-
-<!--        <ProgressBar-->
-<!--            android:id="@+id/pb_loading2"-->
-<!--            android:layout_height="50dp"-->
-<!--            android:layout_width="50dp"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_centerVertical="true" />-->
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/picture_rcv"
-            />
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/back"
+            android:src="@drawable/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+        <TextView
+            android:id="@+id/place_name"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
+
     <!--在这里布局所有的照片，同时最好设置放大功能-->
 <!--    <GridView-->
 <!--        android:id="@+id/gv_pictures"-->
@@ -60,7 +34,10 @@
 <!--        android:numColumns="4"-->
 <!--        android:stretchMode="columnWidth"-->
 <!--        android:verticalSpacing="10dp" />-->
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/picture_rcv"/>
 
 
 <!--    <androidx.viewpager.widget.ViewPager-->

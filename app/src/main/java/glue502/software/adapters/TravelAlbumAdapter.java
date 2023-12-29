@@ -75,7 +75,6 @@ public class TravelAlbumAdapter extends BaseAdapter {
         //在这里用于改变字体格式
 //        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/幼圆.TTF");
 //        tvPlace.setTypeface(typeface);
-
         //在这里用于改变字体背景，让字体背景变透明
 //        tvPlace.getBackground().setAlpha(10);
         tvPlace.setText(sp.getPlaceName());
@@ -100,9 +99,7 @@ public class TravelAlbumAdapter extends BaseAdapter {
 
                 Bundle extras = new Bundle();
                 extras.putStringArrayList("parameter_list_key", (ArrayList<String>) list.get(i).getPicturePath());
-
-                //将地点信息传递过去
-                extras.putString("place_name",list.get(i).getPlaceName());
+                extras.putString("placeName",list.get(i).getPlaceName());
                 intent.putExtras(extras);
 
                 context.startActivity(intent);

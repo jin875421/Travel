@@ -3,6 +3,7 @@ package glue502.software.activities.personal;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import glue502.software.R;
+import glue502.software.activities.login.CodeLoginActivity;
 import glue502.software.utils.MyViewUtils;
 
 public class SettingActivity extends AppCompatActivity {
@@ -41,8 +43,13 @@ public class SettingActivity extends AppCompatActivity {
         btnDestroy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showLogoutConfirmationDialog();
-
+                SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+                String status = sharedPreferences.getString("status", "");
+                if(!status.equals("1")&&status.isEmpty()){
+                    showLoginAlertDialog();
+                }else {
+                    showLogoutConfirmationDialog();
+                }
             }
         });
         imgBcak.setOnClickListener(new View.OnClickListener() {
@@ -74,15 +81,35 @@ public class SettingActivity extends AppCompatActivity {
 
 
     private void clearSharedPreferences() {
-        SharedPreferences sharedPreferences =
-                getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
-
-        // 清除SharedPreferences中的用户信息
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.apply();
-        Intent resultIntent = new Intent();
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
+        SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+            // 清除SharedPreferences中的用户信息
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.apply();
+            Intent resultIntent = new Intent();
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+    }
+    private void showLoginAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提示");
+        builder.setMessage("您未登录，是否登录？");
+        builder.setPositiveButton("登录", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 跳转到登录页面
+                Intent intent = new Intent(SettingActivity.this, CodeLoginActivity.class);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 取消操作
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

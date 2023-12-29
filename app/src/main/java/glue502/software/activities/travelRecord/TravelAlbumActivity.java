@@ -10,9 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -32,6 +31,7 @@ import glue502.software.adapters.TravelReviewAdapter;
 import glue502.software.models.Result;
 import glue502.software.models.ShowPicture;
 import glue502.software.models.TravelReview;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -50,17 +50,15 @@ public class TravelAlbumActivity extends AppCompatActivity {
     private List<ShowPicture> list1,list2,list3,list4;
 
     private GridView gridView1,gridView2,gridView3,gridView4;
+
     //这里要添加文字的控件对象，用于修改文本的字体格式
     private TextView text1,text2,text3,text4;
-    private Button btnBack1;
-
-    //这里是加载中的图像控件
-    private ProgressBar progressBar;
 
     TravelAlbumAdapter t1,t2,t3,t4;
 
     //这是一个用于测试的数据源，只有图片，看能不能在相册页面中显示出来
     private List<String> list10 = new ArrayList<>();
+    private ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,21 +68,18 @@ public class TravelAlbumActivity extends AppCompatActivity {
         //在这个页面显示很多组照片
         //首先准备数据源,然后将数据源放到适配器当中
 
-        //实现全屏，去掉页面上面蓝色标题栏
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //沉浸式状态栏
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
+
 
         findViews();
-
+        setlistener();
         //初始化数据源
 //        initData();
 
         //获取到userId
 
 //        initData(sharedPreferences.getString("userId",""));
-
-        //设置返回的点击事件监听器
-        setListener();
 
         // 发送网络请求
         list1 = new ArrayList<>();
@@ -107,22 +102,17 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
     }
 
-    private void setListener() {
-        btnBack1.setOnClickListener(new View.OnClickListener() {
+    private void setlistener() {
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish(); //返回首页页面
+                finish();
             }
         });
     }
 
 
     private class RequestAsyncTask extends AsyncTask<Void, Void, String> {
-
-        protected void onPreExecute() {
-            // 在加载数据之前显示加载动画
-            progressBar.setVisibility(View.VISIBLE);
-        }
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -137,7 +127,6 @@ public class TravelAlbumActivity extends AppCompatActivity {
                 RequestBody requestBody = new FormBody.Builder()
                         .add("userId", userId)
                         .build();
-
 
                 // 构建请求
                 Request request = new Request.Builder()
@@ -215,10 +204,6 @@ public class TravelAlbumActivity extends AppCompatActivity {
                 }
 
                 //在这里要将文本先隐藏，在文本下有数据的时候才将文本显现出来
-                text1.setVisibility(View.GONE);
-                text2.setVisibility(View.GONE);
-                text3.setVisibility(View.GONE);
-                text4.setVisibility(View.GONE);
 
                 //如果有数据就显现出来
                 if(list1.size() != 0){
@@ -245,10 +230,6 @@ public class TravelAlbumActivity extends AppCompatActivity {
                 gridView3.setAdapter(t3);
                 gridView4.setAdapter(t4);
 
-
-                //在加载完资源之后取消显示加载动画
-                // 数据加载完成后隐藏加载动画
-                progressBar.setVisibility(View.GONE);
 
             } else {
                 // 处理请求失败的情况
@@ -321,10 +302,7 @@ public class TravelAlbumActivity extends AppCompatActivity {
         gridView2 = findViewById(R.id.gv_view2);
         gridView3 = findViewById(R.id.gv_view3);
         gridView4 = findViewById(R.id.gv_view4);
-
-        btnBack1 = findViewById(R.id.btn_back1);
-        progressBar = findViewById(R.id.pb_loading1);
-
+        back = findViewById(R.id.back);
         text1 = findViewById(R.id.tv_t1);
         text2 = findViewById(R.id.tv_t2);
         text3 = findViewById(R.id.tv_t3);

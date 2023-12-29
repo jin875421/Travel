@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,8 +83,10 @@ public class CommentListAdapter extends BaseAdapter {
         TextView first_respond = commentView.findViewById(R.id.first_respond);
         TextView respond_num = commentView.findViewById(R.id.respond_num);
         LinearLayout respond = commentView.findViewById(R.id.respond);
+        Log.v("CommentListAdapter", "lzx adapter中的数组的长度: " + commentList.size());
         //获取当前要显示的对象
         Comment comment = commentList.get(position);
+        Log.v("CommentListAdapter", "lzx adapter中要绑定的comment" + comment);
         //显示头像
         Glide.with(context)
                 .load(url + comment.getAvatar())

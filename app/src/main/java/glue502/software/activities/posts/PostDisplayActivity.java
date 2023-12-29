@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,9 @@ import java.util.List;
 import java.util.UUID;
 
 import glue502.software.R;
+import glue502.software.activities.MainActivity;
 import glue502.software.activities.login.LoginActivity;
+import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.adapters.CommentListAdapter;
 import glue502.software.models.Comment;
 import glue502.software.models.CommentRespond;
@@ -108,6 +111,8 @@ public class PostDisplayActivity extends AppCompatActivity {
     private CommentListAdapter commentListAdapter;
     //记录用户收藏和点赞状态
     private int likeStatus, starStatus;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +120,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         initData();
         initView();
         setListener();
-        getCommentData();
         //添加沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
         displayPost();
@@ -148,7 +152,7 @@ public class PostDisplayActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                        commentList = new ArrayList<>();
+                        commentList.clear();
                         //获取响应的数据
                         String result = response.body().string();
                         //反序列化消息
@@ -159,9 +163,10 @@ public class PostDisplayActivity extends AppCompatActivity {
                             commentList.add(comment);
                         }
                         // 更新UI线程中的ListView
-                        runOnUiThread(new Runnable() {
+                        handler.post(new Runnable() {
                             @Override
                             public void run() {
+                                Log.v("PostDisplayActivity", "lzx getComment执行，获取的评论列表"+commentList);
                                 commentListAdapter = new CommentListAdapter(
                                         PostDisplayActivity.this,
                                         R.layout.activity_comment_list_adapter,
@@ -193,7 +198,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                     String result = response.body().string();
                     JsonObject jsonObject = JsonParser.parseString(result).getAsJsonObject();
                     post = new Gson().fromJson(jsonObject, PostWithUserInfo.class);
-                    runOnUiThread(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             //Carousel为自定义轮播图工具类
@@ -211,7 +216,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         }
                     });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -230,7 +235,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                     LikeAndStarStatus likeAndStarStatus = new Gson().fromJson(result, LikeAndStarStatus.class);
                     likeStatus = likeAndStarStatus.getLikeStatus();
                     starStatus = likeAndStarStatus.getStarStatus();
-                    runOnUiThread(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             if(likeStatus == 1){
@@ -246,7 +251,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         }
                     });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -269,46 +274,19 @@ public class PostDisplayActivity extends AppCompatActivity {
         view = findViewById(R.id.view);
     }
     public void setListener(){
-        //如果为作者，提供修改和删除功能
-        if (userId.equals(postWithUserInfo.getUserInfo().getUserId())){
-            //弹出选择框，修改，删除，取消
-            menuBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showPopupMenu(view);
-                }
-            });
 
-        }else {
-            //设置隐藏
-            menuBtn.setVisibility(View.GONE);
-        }
+        menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupMenu(view);
+            }
+        });
         like_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 执行收藏代码
                 if (status==""){
-                    // 创建AlertDialog构建器
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
-                    builder.setTitle("账号未登录！")
-                            .setMessage("是否前往登录账号")
-                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 点击“确定”按钮后的操作
-                                    Intent intent = new Intent(PostDisplayActivity.this, LoginActivity.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 点击“取消”按钮后的操作
-                                    dialog.dismiss(); // 关闭对话框
-                                }
-                            });
-
-                    // 创建并显示对话框
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                   showLoginDialog();
                 }else if (likeStatus==0){
                     new Thread(new Runnable() {
                         @Override
@@ -368,28 +346,7 @@ public class PostDisplayActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // 执行收藏代码
                 if (status == "") {
-                    // 创建AlertDialog构建器
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
-                    builder.setTitle("账号未登录！")
-                            .setMessage("是否前往登录账号")
-                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 点击“确定”按钮后的操作
-                                    Intent intent = new Intent(PostDisplayActivity.this, LoginActivity.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 点击“取消”按钮后的操作
-                                    dialog.dismiss(); // 关闭对话框
-                                }
-                            });
-
-                    // 创建并显示对话框
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
+                    showLoginDialog();
                 } else if (starStatus == 0) {
                     new Thread(new Runnable() {
                         @Override
@@ -455,28 +412,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         if (status==""){
-                            // 创建AlertDialog构建器
-                            AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
-                            builder.setTitle("账号未登录！")
-                                    .setMessage("是否前往登录账号")
-                                    .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // 点击“确定”按钮后的操作
-                                            Intent intent = new Intent(PostDisplayActivity.this, LoginActivity.class);
-                                            startActivity(intent);
-                                        }
-                                    })
-                                    .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // 点击“取消”按钮后的操作
-                                            dialog.dismiss(); // 关闭对话框
-                                        }
-                                    });
-
-                            // 创建并显示对话框
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
-
+                            showLoginDialog();
                         } else {
                             new Thread(new Runnable() {
                                 @Override
@@ -544,28 +480,7 @@ public class PostDisplayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (status==""){
-                    // 创建AlertDialog构建器
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
-                    builder.setTitle("账号未登录！")
-                            .setMessage("是否前往登录账号")
-                            .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 点击“确定”按钮后的操作
-                                    Intent intent = new Intent(PostDisplayActivity.this, LoginActivity.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // 点击“取消”按钮后的操作
-                                    dialog.dismiss(); // 关闭对话框
-                                }
-                            });
-
-                    // 创建并显示对话框
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
+                    showLoginDialog();
                 } else if(chatInputEt.getText().toString().equals("")){
                     View toastView = getLayoutInflater().inflate(R.layout.toast_layout, null);
 
@@ -621,8 +536,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                                             @Override
                                             public void run() {
                                                 getCommentData();
-                                                commentListAdapter.notifyDataSetChanged();
-                                                setListViewHeightBasedOnChildren(listView);
                                             }
                                         });
                                     }
@@ -735,7 +648,6 @@ public class PostDisplayActivity extends AppCompatActivity {
             public void onRespondClick(int i) {
                 Intent intent = new Intent(PostDisplayActivity.this, RespondDetail.class);
                 Comment comment = commentList.get(i);
-                System.out.println(comment);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("comment", (Serializable) comment);
                 //把bundle对象添加到intent对象中
@@ -775,6 +687,15 @@ public class PostDisplayActivity extends AppCompatActivity {
         PopupMenu popupMenu = new PopupMenu(PostDisplayActivity.this, view);
         // 获取布局文件
         popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
+        //如果为作者，提供修改和删除功能
+        if (userId.equals(postWithUserInfo.getUserInfo().getUserId())){
+            popupMenu.getMenu().getItem(2).setVisible(false);
+        }else {
+            //设置隐藏
+            popupMenu.getMenu().getItem(0).setVisible(false);
+            popupMenu.getMenu().getItem(1).setVisible(false);
+
+        }
         //设置选中
         popupMenu.getMenu().findItem(checkedItemId).setChecked(true);
         //使用反射。强制显示菜单图标
@@ -799,6 +720,13 @@ public class PostDisplayActivity extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
                             builder.setTitle("删除")
                                    .setMessage("是否删除该帖子？")
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // 点击“取消”按钮后的操作
+                                            // 关闭对话框
+                                            dialog.dismiss();
+                                        }
+                                    })
                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             // 点击“确定”按钮后的操作
@@ -832,6 +760,63 @@ public class PostDisplayActivity extends AppCompatActivity {
                                     intent.putExtra("postwithuserinfo",post);
                         startActivityForResult(intent,1);
                         break;
+                    case R.id.report:
+                            if (status.equals("")){
+                                showLoginDialog();
+                            }else {
+                                // 弹出输入框
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(PostDisplayActivity.this);
+                                View view1 = LayoutInflater.from(PostDisplayActivity.this).inflate(R.layout.input_dialog, null);
+                                builder1.setTitle("请输入举报理由")
+                                        .setView(view1)
+                                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // 点击“取消”按钮后的操作
+                                                dialog.dismiss(); // 关闭对话框
+                                            }
+                                        })
+                                        .setPositiveButton("举报", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // 点击“确定”按钮后的操作
+                                                // 获取输入框中的内容
+                                                EditText editText = view1.findViewById(R.id.editText);
+                                                String reason = editText.getText().toString();
+                                                //获取当前时间
+                                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                String time = sdf.format(new Date());
+                                                OkHttpClient client1 = new OkHttpClient();
+                                                Request request1 = new Request.Builder()
+                                                       .url(url+"posts/reportPost?postId="+postId+"&reason="+reason+"&userId="+userId+"&time="+time)
+                                                       .build();
+                                                new Thread(new Runnable() {
+                                                    @SuppressLint("SuspiciousIndentation")
+                                                    @Override
+                                                    public void run() {
+                                                        try {
+                                                            //开启线程
+                                                            Response response1 = client1.newCall(request1).execute();
+                                                            if (response1.isSuccessful()){
+                                                                //运行ui线程
+                                                                handler.post(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        Toast.makeText(PostDisplayActivity.this, "感谢你的举报，我们将会核实！", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                });
+                                                            }else
+                                                            //关闭对话框
+                                                            dialog.dismiss();
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }).start();
+
+                                            }
+                                        }).show();
+                            }
+
+
                     case R.id.cancel:
 
                 }
@@ -842,19 +827,9 @@ public class PostDisplayActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.v("PostDisplayActivity", "lzx onResume执行");
         super.onResume();
         getCommentData();
-        commentListAdapter = new CommentListAdapter(
-                PostDisplayActivity.this,
-                R.layout.activity_comment_list_adapter,
-                commentList
-        );
-        listView.setAdapter(commentListAdapter);
-        setListViewHeightBasedOnChildren(listView);
-        //绑定adapter点击事件监听器
-        setAdapterListener();
-        commentListAdapter.notifyDataSetChanged();
-        setListViewHeightBasedOnChildren(listView);
     }
 
     public void showInput(final EditText et) {
@@ -863,9 +838,6 @@ public class PostDisplayActivity extends AppCompatActivity {
         imm.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
     }
 
-    /**
-     * 隐藏键盘
-     */
     protected void hideInput() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         View v = getWindow().peekDecorView();
@@ -885,5 +857,30 @@ public class PostDisplayActivity extends AppCompatActivity {
                 displayPost();
             }
         }
+    }
+    //未登录提示
+
+    public void showLoginDialog() {
+        // 创建AlertDialog构建器
+        AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
+        builder.setTitle("账号未登录！")
+                .setMessage("是否前往登录账号")
+                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 点击“确定”按钮后的操作
+                        Intent intent = new Intent(PostDisplayActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 点击“取消”按钮后的操作
+                        dialog.dismiss(); // 关闭对话框
+                    }
+                });
+
+        // 创建并显示对话框
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

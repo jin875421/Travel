@@ -11,6 +11,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
@@ -44,6 +47,7 @@ public class TravelDetailActivity extends AppCompatActivity {
     private String url = "http://"+ip+"/travel";
     private int checkedItemId = R.id.edit;
     private ImageView menuBtn;
+    private final Handler handler = new Handler(Looper.getMainLooper());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,25 +74,28 @@ public class TravelDetailActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
+
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
                     travelRecords = new Gson().fromJson(responseData,new TypeToken<List<travelRecord>>(){}.getType());
+                    System.out.println(travelRecords.size());
                     //打开ui线程
-                    runOnUiThread(()->{
-                        travelName.setText(travelRecords.get(0).getTravelName());
-                        TravelDetailAdapter travelRecordAdapter = new TravelDetailAdapter(TravelDetailActivity.this,travelRecords,R.layout.review_item);
-                        travelRecordList.setAdapter(travelRecordAdapter);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            travelName.setText(travelRecords.get(0).getTravelName());
+                            TravelDetailAdapter travelRecordAdapter = new TravelDetailAdapter(TravelDetailActivity.this, travelRecords, R.layout.review_item);
+                            travelRecordList.setAdapter(travelRecordAdapter);
+                        }
                     });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();
     }
     public void setlistener(){
         back.setOnClickListener(v -> finish());
-        //如果为作者，提供修改和删除功能
-        //弹出选择框，修改，删除，取消
         menuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,7 +123,8 @@ public class TravelDetailActivity extends AppCompatActivity {
 
         //显示PopupMenu
         popupMenu.show();
-
+        //设置按钮隐藏
+        popupMenu.getMenu().getItem(2).setVisible(false);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -164,7 +172,7 @@ public class TravelDetailActivity extends AppCompatActivity {
                         //TODO 调整编辑页面
                         Intent intent = new Intent(TravelDetailActivity.this, travelRecordEdit.class);
                         intent.putExtra("travelId",travelId);
-                        startActivity(intent);
+                        startActivityForResult(intent,1);
                         break;
                     case R.id.cancel:
 
@@ -172,5 +180,24 @@ public class TravelDetailActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+    //获取下一个页面的返回值
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1){
+            //上一个页面进行了编辑
+            if(resultCode==Activity.RESULT_OK){
+                //刷新页面
+                //设定延时
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                          travelRecords.clear();
+                          initData();
+                    }
+                }).start();
+            }
+        }
     }
 }

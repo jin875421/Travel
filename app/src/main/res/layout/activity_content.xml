@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/djpa"
+    android:background="@color/white"
     android:paddingTop="0dp"
     android:id="@+id/layout"
     tools:context=".activities.travelRecord.travelRecordActivity" >
@@ -139,7 +139,7 @@
     <Button
         android:id="@+id/btn_return"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:background="@drawable/border_backgrounddjp"
         android:text="返回" />
 
@@ -151,12 +151,12 @@
         android:layout_marginTop="-50dp"
         android:layout_below="@id/btn_return"
         android:gravity="center"
-        android:text="Your Text" />
+        android:text="旅行地" />
 
     <Button
         android:id="@+id/btn_submit"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:background="@drawable/border_backgrounddjp"
         android:layout_alignParentRight="true"
         android:text="提交" />
