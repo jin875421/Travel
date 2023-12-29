@@ -30,7 +30,25 @@
     </LinearLayout>
 
 
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
 
+
+<!--        <ProgressBar-->
+<!--            android:id="@+id/pb_loading2"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_centerVertical="true" />-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/picture_rcv"
+            />
+
+    </RelativeLayout>
     <!--在这里布局所有的照片，同时最好设置放大功能-->
 <!--    <GridView-->
 <!--        android:id="@+id/gv_pictures"-->
@@ -42,11 +60,7 @@
 <!--        android:numColumns="4"-->
 <!--        android:stretchMode="columnWidth"-->
 <!--        android:verticalSpacing="10dp" />-->
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/picture_rcv"
-        />
+
 
 
 <!--    <androidx.viewpager.widget.ViewPager-->

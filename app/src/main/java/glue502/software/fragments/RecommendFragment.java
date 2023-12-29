@@ -106,7 +106,8 @@ public class RecommendFragment extends Fragment {
         getCity();
         setlistener();
         date();
-        getCarousel();
+        //这里是轮播图，因为报错，所以注释掉
+//        getCarousel();
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
         return view;
     }

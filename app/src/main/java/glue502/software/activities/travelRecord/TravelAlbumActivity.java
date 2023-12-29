@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -52,6 +53,9 @@ public class TravelAlbumActivity extends AppCompatActivity {
     //这里要添加文字的控件对象，用于修改文本的字体格式
     private TextView text1,text2,text3,text4;
     private Button btnBack1;
+
+    //这里是加载中的图像控件
+    private ProgressBar progressBar;
 
     TravelAlbumAdapter t1,t2,t3,t4;
 
@@ -114,6 +118,11 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
 
     private class RequestAsyncTask extends AsyncTask<Void, Void, String> {
+
+        protected void onPreExecute() {
+            // 在加载数据之前显示加载动画
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -237,6 +246,10 @@ public class TravelAlbumActivity extends AppCompatActivity {
                 gridView4.setAdapter(t4);
 
 
+                //在加载完资源之后取消显示加载动画
+                // 数据加载完成后隐藏加载动画
+                progressBar.setVisibility(View.GONE);
+
             } else {
                 // 处理请求失败的情况
             }
@@ -310,6 +323,7 @@ public class TravelAlbumActivity extends AppCompatActivity {
         gridView4 = findViewById(R.id.gv_view4);
 
         btnBack1 = findViewById(R.id.btn_back1);
+        progressBar = findViewById(R.id.pb_loading1);
 
         text1 = findViewById(R.id.tv_t1);
         text2 = findViewById(R.id.tv_t2);

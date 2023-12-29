@@ -89,8 +89,8 @@ public class TravelPicturesActivity extends AppCompatActivity {
              String placeName = extras.getString("place_name");
              //将地点名称显示在控件中
              tvPlace = findViewById(R.id.tv_place);
-             Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/幼圆.TTF");
-             tvPlace.setTypeface(typeface);
+//             Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/幼圆.TTF");
+//             tvPlace.setTypeface(typeface);
              tvPlace.setText(placeName);
         }
 
