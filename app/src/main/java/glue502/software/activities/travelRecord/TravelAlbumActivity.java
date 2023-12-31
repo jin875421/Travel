@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -59,6 +60,9 @@ public class TravelAlbumActivity extends AppCompatActivity {
     //这是一个用于测试的数据源，只有图片，看能不能在相册页面中显示出来
     private List<String> list10 = new ArrayList<>();
     private ImageView back;
+
+    //这是加载动画的控件
+    private ProgressBar pbPicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +117,17 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
 
     private class RequestAsyncTask extends AsyncTask<Void, Void, String> {
+
+
+        protected void onPreExecute() {
+            // 在加载数据之前显示加载动画
+            //如果需要加载数据，就显示加载动画，否则不显示
+//            if(list1 != null || list2 != null || list3 != null || list4 != null){
+//                pbPicture.setVisibility(View.GONE);
+//            }
+            pbPicture.setVisibility(View.VISIBLE);
+        }
+
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -230,6 +245,9 @@ public class TravelAlbumActivity extends AppCompatActivity {
                 gridView3.setAdapter(t3);
                 gridView4.setAdapter(t4);
 
+                // 数据加载完成后隐藏加载动画
+                pbPicture.setVisibility(View.GONE);
+
 
             } else {
                 // 处理请求失败的情况
@@ -303,6 +321,7 @@ public class TravelAlbumActivity extends AppCompatActivity {
         gridView3 = findViewById(R.id.gv_view3);
         gridView4 = findViewById(R.id.gv_view4);
         back = findViewById(R.id.back);
+        pbPicture = findViewById(R.id.pb_picture);
         text1 = findViewById(R.id.tv_t1);
         text2 = findViewById(R.id.tv_t2);
         text3 = findViewById(R.id.tv_t3);
