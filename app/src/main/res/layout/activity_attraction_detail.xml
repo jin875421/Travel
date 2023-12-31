@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="#0C0C0C"
                 android:text="景点推荐"
-                android:textSize="18dp"/>
+                android:textSize="24dp"/>
         </LinearLayout>
     </FrameLayout>
     <ScrollView

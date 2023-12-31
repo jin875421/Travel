@@ -9,6 +9,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
 import glue502.software.models.UserInfo;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -46,6 +49,8 @@ public class StarFragment extends Fragment {
     private List<UserInfo> userInfos;
     private String userId;
     private RefreshLayout refreshLayout;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private boolean firstLoad = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,8 +60,8 @@ public class StarFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         userId = sharedPreferences.getString("userId","");
         initView(view);
-        setlistener();
         initData();
+        setlistener();
         return view;
     }
     public void initView(View view){
@@ -94,7 +99,7 @@ public class StarFragment extends Fragment {
                                 posts.add(postWithUserInfo.getPost());
                                 userInfos.add(postWithUserInfo.getUserInfo());
                             }
-                            getActivity().runOnUiThread(new Runnable() {
+                            handler.post(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (posts !=null&&userInfos!=null){
@@ -144,5 +149,15 @@ public class StarFragment extends Fragment {
                 refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        if (!firstLoad) {
+            initData();
+        } else {
+            firstLoad = false;
+        }
+        super.onResume();
     }
 }

@@ -39,9 +39,9 @@ import okhttp3.Response;
 public class TravelReviewActivity extends AppCompatActivity {
     private ListView travelReviewList;
     private ImageView back;
-
     private String url = "http://"+ip+"/travel/travel";
-
+    private String userId;
+    private boolean firstLoad = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +51,8 @@ public class TravelReviewActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId",MODE_PRIVATE);
         initview();
         setlistener();
-        initData(sharedPreferences.getString("userId",""));
+        userId = sharedPreferences.getString("userId","");
+        initData(userId);
     }
     private void initview(){
         travelReviewList = findViewById(R.id.travel_review);
@@ -97,5 +98,15 @@ public class TravelReviewActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TravelDetailActivity.class);
         intent.putExtra("travelId",travelId);
         startActivityForResult(intent,1);
+    }
+
+    @Override
+    public void onResume() {
+        if (!firstLoad) {
+            initData(userId);
+        } else {
+            firstLoad = false;
+        }
+        super.onResume();
     }
 }

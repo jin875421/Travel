@@ -78,6 +78,9 @@ public class PersonalInformationFragment extends Fragment {
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
     private String urlLoadImage="http://"+ip+"/travel/";
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private StarFragment starFragment = new StarFragment();
+    private MyPostFragment myPostFragment = new MyPostFragment();
+    private boolean firstLoad = true;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -117,10 +120,9 @@ public class PersonalInformationFragment extends Fragment {
         //收藏和发布
         tabLayout = view.findViewById(R.id.tbl);
         viewPager2 = view.findViewById(R.id.vp2);
-        fragments = new ArrayList<>();
-        fragments.add(new StarFragment());
-        fragments.add(new MyPostFragment());
-        adapter = new PageAdapter(fragments,getActivity());
+
+
+        initFragment();
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
         //绑定监听器
         viewPager2.setAdapter(adapter);
@@ -224,6 +226,12 @@ public class PersonalInformationFragment extends Fragment {
 
     }
 
+    private void initFragment() {
+        fragments = new ArrayList<>();
+        fragments.add(starFragment);
+        fragments.add(myPostFragment);
+        adapter = new PageAdapter(fragments,getActivity());
+    }
 
 
     private void checkLoginStatus() {
@@ -324,17 +332,9 @@ public class PersonalInformationFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
         if(forceRefresh==false){
-            // 如果需要强制刷新缓存，生成一个动态签名
-            Glide.get(requireContext()).clearMemory();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Glide.get(requireContext()).clearDiskCache();
-                }
-            }).start();
             Glide.with(requireContext())
                     .load(urlLoadImage + avatarUrl)
-                    .skipMemoryCache(false)  //允许内存缓存
+                    .skipMemoryCache(true)  //允许内存缓存
                     .diskCacheStrategy(DiskCacheStrategy.ALL)  // 使用磁盘缓存
                     .placeholder(R.drawable.headimg)  // 设置占位图
                     .apply(requestOptions)
@@ -351,7 +351,7 @@ public class PersonalInformationFragment extends Fragment {
             Glide.with(requireContext())
                     .load(urlLoadImage + avatarUrl)
                     .skipMemoryCache(true)  //允许内存缓存
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)  // 不使用磁盘缓存
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)  // 使用磁盘缓存
                     .placeholder(R.drawable.headimg)  // 设置占位图
                     .apply(requestOptions)
                     .signature(new ObjectKey(userId))  // 设置签名
@@ -490,11 +490,4 @@ public class PersonalInformationFragment extends Fragment {
         builder.show();
     }
 
-    //生命周期管理
-    @Override
-    public void onResume() {
-        super.onResume();
-        //沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
-    }
 }

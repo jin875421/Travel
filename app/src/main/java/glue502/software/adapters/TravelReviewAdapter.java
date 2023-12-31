@@ -70,6 +70,7 @@ public class TravelReviewAdapter extends BaseAdapter {
         TextView travelName = v.findViewById(R.id.travel_name);
 //        LinearLayout llReview = v.findViewById(R.id.ll_review);
         travelName.setText(travelReview.get(i).getTravelName());
+        v.setBackgroundResource(R.drawable.border_backgrounddjpjp);
         // 在getView方法中的适配器中
         HorizontalScrollView horizontalScrollView = v.findViewById(R.id.image_scroll);
         // 记录按下的位置和时间戳
