@@ -60,7 +60,7 @@ public class TravelDetailAdapter extends BaseAdapter {
         TextView travelName = v.findViewById(R.id.travel_place);
         LinearLayout imageContainer = v.findViewById(R.id.image_container);
         HorizontalScrollView horizontalScrollView = v.findViewById(R.id.scrollView);
-        v.setBackgroundResource(R.drawable.border_backgrounddjpjp);
+        v.setBackgroundResource(R.drawable.border_backgrounddjpjpjp);
         horizontalScrollView.setOnTouchListener(new View.OnTouchListener() {
             // 记录按下的位置和时间戳
             float startX, startY;
