@@ -7,15 +7,10 @@
     android:orientation="vertical"
     android:background="@color/white"
     tools:context=".activities.travelRecord.TravelReviewActivity">
-
-
-
     <RelativeLayout
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:alpha="0.5">
+        android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/back"
             android:layout_centerVertical="true"
@@ -33,8 +28,6 @@
             />
 
     </RelativeLayout>
-
-
     <ListView
         android:id="@+id/travel_review"
         android:layout_width="match_parent"
