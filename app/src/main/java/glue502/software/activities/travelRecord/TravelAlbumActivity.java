@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -20,6 +21,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -66,6 +69,8 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
     //这是加载动画的控件
     private ProgressBar pbPicture;
+    //这是加载动画的背景
+    private RelativeLayout rlBackground;
 
     private LocalDate localDate2;
     @Override
@@ -79,6 +84,9 @@ public class TravelAlbumActivity extends AppCompatActivity {
         //沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
 
+        //实现全屏，去掉页面上面蓝色标题栏
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         findViews();
         setlistener();
@@ -192,17 +200,29 @@ public class TravelAlbumActivity extends AppCompatActivity {
                 for(ShowPicture showPicture:showPictures){
                     String date1 = showPicture.getTravelDate();
 
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//
+//                    try {
+//                        LocalDateTime dateTime = LocalDateTime.parse(date1, formatter);
+//                        localDate2 = dateTime.toLocalDate();
+//
+//                        // 在这里使用 localDate2，执行你需要的操作
+//                    } catch (DateTimeParseException e) {
+//                        e.printStackTrace();
+//                        // 处理日期解析错误
+//                    }
 
+                    //这里尝试改善，用其他方式来将字符串类型转化成Date类型
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     try {
-                        LocalDateTime dateTime = LocalDateTime.parse(date1, formatter);
-                        localDate2 = dateTime.toLocalDate();
-
-                        // 在这里使用 localDate2，执行你需要的操作
-                    } catch (DateTimeParseException e) {
+                        Date date2 = sdf.parse(date1);
+                        System.out.println(date2);
+                        localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    } catch (ParseException e) {
                         e.printStackTrace();
-                        // 处理日期解析错误
                     }
+
+
 
                     //判断这个时间是否在当前时间的一个月之内，ture则代表是
                     boolean isAtLeastOneMonthBefore = localDate2.isAfter(localDate1.minusMonths(1));
@@ -235,6 +255,10 @@ public class TravelAlbumActivity extends AppCompatActivity {
                 }
 
                 //在这里要将文本先隐藏，在文本下有数据的时候才将文本显现出来
+                text1.setVisibility(View.GONE);
+                text2.setVisibility(View.GONE);
+                text3.setVisibility(View.GONE);
+                text4.setVisibility(View.GONE);
 
                 //如果有数据就显现出来
                 if(list1.size() != 0){
@@ -263,6 +287,7 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
                 // 数据加载完成后隐藏加载动画
                 pbPicture.setVisibility(View.GONE);
+                rlBackground.setVisibility(View.GONE);
 
 
             } else {
@@ -338,6 +363,7 @@ public class TravelAlbumActivity extends AppCompatActivity {
         gridView4 = findViewById(R.id.gv_view4);
         back = findViewById(R.id.back);
         pbPicture = findViewById(R.id.pb_picture);
+        rlBackground = findViewById(R.id.rl_background);
         text1 = findViewById(R.id.tv_t1);
         text2 = findViewById(R.id.tv_t2);
         text3 = findViewById(R.id.tv_t3);

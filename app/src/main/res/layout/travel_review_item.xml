@@ -10,9 +10,10 @@
         android:id="@+id/ll_review"
         android:layout_width="match_parent"
         android:layout_height="170dp"
-        android:layout_margin="5dp"
-        android:background="@drawable/round_corner"
+        android:layout_margin="3dp"
+        android:background="@color/white"
         android:radius="8dp">
+<!--        android:background="@drawable/round_corner"-->
 
 
         <HorizontalScrollView
@@ -44,11 +45,23 @@
             android:layout_height="30dp"
             android:textColor="@color/white"
             android:textSize="20sp"
-
             android:shadowColor="#FFFAFA"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="1"/>
+        <TextView
+            android:id="@+id/travel_time"
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textColor="@color/white"
+            android:text="20202020"
+            android:textSize="16sp"
+            android:shadowColor="#FFFAFA"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:layout_below="@+id/travel_name"/>
 
 
     </RelativeLayout>

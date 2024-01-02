@@ -25,6 +25,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import glue502.software.R;
@@ -69,13 +71,30 @@ public class TravelReviewAdapter extends BaseAdapter {
 
         TextView travelName = v.findViewById(R.id.travel_name);
 //        LinearLayout llReview = v.findViewById(R.id.ll_review);
+        TextView travelTime = v.findViewById(R.id.travel_time);
         travelName.setText(travelReview.get(i).getTravelName());
-        v.setBackgroundResource(R.drawable.border_backgrounddjpjp);
-        // 在getView方法中的适配器中
-        HorizontalScrollView horizontalScrollView = v.findViewById(R.id.image_scroll);
-        // 记录按下的位置和时间戳
-        float startX, startY;
-        long downTime;
+
+        //这里将年月日改成时分秒
+        String date1 = travelReview.get(i).getDate();
+
+        //先将String类型转化成Date类型
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date myDate = null;
+        try {
+            myDate = sdf1.parse(date1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //再将Date类型转化成String类型
+        String strDate1 = sdf1.format(myDate);
+
+        travelTime.setText(strDate1);
+//        v.setBackgroundResource(R.drawable.border_backgrounddjpjp);
+//        // 在getView方法中的适配器中
+//        HorizontalScrollView horizontalScrollView = v.findViewById(R.id.image_scroll);
+//        // 记录按下的位置和时间戳
+//        float startX, startY;
+//        long downTime;
 
 //        horizontalScrollView.setOnTouchListener(new View.OnTouchListener() {
 //            // 记录按下的位置和时间戳
