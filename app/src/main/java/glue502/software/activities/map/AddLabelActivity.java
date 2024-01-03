@@ -672,7 +672,7 @@ public class AddLabelActivity extends AppCompatActivity {
                 convertDpToPixel(150), // 宽度 150dp 转换为像素
                 convertDpToPixel(150) // 高度 150dp 转换为像素
         );
-        layoutParams.setMargins(0, 0, 0, 16);
+        layoutParams.setMargins(0, 0, 5, 16);
         imageView.setLayoutParams(layoutParams);
         imageView.setTag(file.getName());
         imgLinerLayout.addView(imageView);
@@ -692,7 +692,7 @@ public class AddLabelActivity extends AppCompatActivity {
                 convertDpToPixel(150), // 宽度 150dp 转换为像素
                 convertDpToPixel(150) // 高度 150dp 转换为像素
         );
-        layoutParams.setMargins(0, 0, 0, 16);
+        layoutParams.setMargins(0, 0, 5, 16);
         imageView.setLayoutParams(layoutParams);
         //设置Tag
         imageView.setTag(fileName);
