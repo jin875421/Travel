@@ -21,8 +21,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:textStyle="bold"
                 android:text="首页"
+                android:textStyle="bold"
                 android:textColor="#0c0c0c"
                 android:textSize="18dp" />
         </LinearLayout>
@@ -30,12 +30,11 @@
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:scrollbars="none"
         android:layout_height="wrap_content">
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
+            android:overScrollMode="never"
             android:layout_below="@+id/top">
             <RelativeLayout
                 android:layout_width="match_parent"
