@@ -251,7 +251,7 @@ public class RespondDetail extends AppCompatActivity {
 
     public void setView(){
         listView = findViewById(R.id.respond_list);
-        submit = findViewById(R.id.respond_submit);
+        submit = findViewById(R.id.submit);
         chatInputEt = findViewById(R.id.chatInputEt);
         username = findViewById(R.id.username);
         avatar = findViewById(R.id.avatar);
