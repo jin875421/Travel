@@ -378,7 +378,7 @@ public class RecommendFragment extends Fragment {
                     String travelName = Preferences.getString("TravelName","");
                     if (travelName.equals("")){
                         // 弹出输入框
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.AlertDialogStyle);
                         View view1 = LayoutInflater.from(getActivity()).inflate(R.layout.input_dialog, null);
                         builder.setTitle("为你的旅行命个名吧")
                                .setView(view1)

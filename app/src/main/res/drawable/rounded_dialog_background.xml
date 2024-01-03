@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/white" /> <!-- Dialog的背景颜色 -->
+    <corners android:radius="16dp" /> <!-- 这里的16dp可以根据你想要的圆角程度进行调整 -->
+</shape>

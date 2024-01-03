@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                     String travelName = Preferences.getString("TravelName","");
                     if (travelName.equals("")){
                         // 弹出输入框
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this,R.style.AlertDialogStyle);
                         View view1 = LayoutInflater.from(MainActivity.this).inflate(R.layout.input_dialog, null);
                         builder.setTitle("为你的旅行命个名吧")
                                 .setView(view1)
