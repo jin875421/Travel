@@ -106,7 +106,7 @@ public class StrategyCommentListAdapter extends BaseAdapter {
                         + strategyComment.getUsername()
                         + ":"
                         + strategyComment.getReturnStrategyCommentResponds().get(0).getText());
-                respond_num.setText(strategyComment.getReturnStrategyCommentResponds().size() + "条回复");
+                respond_num.setText("共计" + strategyComment.getReturnStrategyCommentResponds().size() + "条回复>");
             }else {
                 respond.setVisibility(View.GONE);
             }

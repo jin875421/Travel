@@ -447,11 +447,7 @@ public class AddStrategyActivity extends AppCompatActivity {
                         }
                     }).start();
                 }
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("id", 2);
-                startActivity(intent);
             }
-
         });
         //页面返回
         back.setOnClickListener(new View.OnClickListener() {
@@ -505,33 +501,6 @@ public class AddStrategyActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-//        if (requestCode == PICK_IMAGE_REQUEST) {
-//            if (resultCode == Activity.RESULT_OK && data != null) {
-//                // 获取选定的图片的 URI
-//                Uri selectedImageUri = data.getData();
-//
-//                // 根据 URI 获取 Bitmap 对象
-//                try {
-//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
-//
-//                    // 将 Bitmap 转换为字节数组
-//                    yourImageBytes = bitmapToBytes(bitmap);
-//
-//                    // 将 Bitmap 显示在 ImageView 中
-//                    Glide.with(this)
-//                            .load(selectedImageUri)
-//                            .apply(RequestOptions.bitmapTransform(new CenterCrop()))
-//                            .into(addCoverImage);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                // 用户取消了选择图片操作，可以在这里添加相应的逻辑
-//                Toast.makeText(this, "取消选择图片", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-
         if (resultCode == RESULT_OK) {
             if (requestCode == RESULT_LOAD_IMAGES && data != null) {
                 if (data.getClipData() != null) {
@@ -561,12 +530,6 @@ public class AddStrategyActivity extends AppCompatActivity {
                 displayCapturedPhoto();
             }
         }
-    }
-    //将Bitmap转换为字节数组
-    private byte[] bitmapToBytes(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        return stream.toByteArray();
     }
 
     private void initView() {

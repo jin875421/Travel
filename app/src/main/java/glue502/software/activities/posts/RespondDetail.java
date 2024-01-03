@@ -4,6 +4,8 @@ import static glue502.software.activities.MainActivity.ip;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -253,6 +255,7 @@ public class RespondDetail extends AppCompatActivity {
         avatar = findViewById(R.id.avatar);
         time = findViewById(R.id.time);
         text = findViewById(R.id.text);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false); // 使用水平方向
     }
 
     private void initData() {
@@ -277,12 +280,14 @@ public class RespondDetail extends AppCompatActivity {
         time.setText(comment.getUploadTime());
         text.setText(comment.getComment());
         returnCommentResponds = comment.getReturnCommentResponds();
+        Log.v("PespondDetail", "lzx 所要展示的回复们"+returnCommentResponds);
         //绑定adapter
         adapter = new RespondDetailAdapter(
                 RespondDetail.this,
                 R.layout.activity_respond_detail_adapter,
                 returnCommentResponds);
         listView.setAdapter(adapter);
+        setListViewHeightBasedOnChildren(listView);
     }
 
     public void showInput(final EditText et) {
