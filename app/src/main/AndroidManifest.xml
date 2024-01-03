@@ -47,12 +47,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".MarkerIconActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ItemAdapter"
-            android:exported="false" />
-        <activity
             android:name=".activities.map.StrategyRespondDetailActivity"
             android:exported="false" />
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
@@ -65,9 +59,6 @@
             android:exported="false" />
         <activity
             android:name=".activities.travelRecord.travelRecordEdit"
-            android:exported="false" />
-        <activity
-            android:name=".activities.travelRecord.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".activities.travelRecord.TravelPicturesActivity"
