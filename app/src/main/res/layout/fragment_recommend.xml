@@ -30,12 +30,11 @@
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:scrollbars="none"
         android:layout_height="match_parent">
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
+            android:overScrollMode="never"
             android:layout_below="@+id/top">
             <RelativeLayout
                 android:layout_width="match_parent"
