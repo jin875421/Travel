@@ -16,13 +16,15 @@
             android:layout_height="30dp"
             android:src="@drawable/back"
             />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="发布"
-            android:textColor="#0F0F0F"
-            android:textSize="20sp"
             android:layout_centerInParent="true"
+            android:text="发布"
+            android:textColor="#0c0c0c"
+            android:textSize="18dp"
+            android:textStyle="bold"
             />
         <ImageView
             android:id="@+id/post_upload_btn"

@@ -86,69 +86,7 @@ public class TravelReviewAdapter extends BaseAdapter {
         }
         //再将Date类型转化成String类型
         String strDate1 = sdf1.format(myDate);
-
         travelTime.setText(strDate1);
-//        v.setBackgroundResource(R.drawable.border_backgrounddjpjp);
-//        // 在getView方法中的适配器中
-//        HorizontalScrollView horizontalScrollView = v.findViewById(R.id.image_scroll);
-//        // 记录按下的位置和时间戳
-//        float startX, startY;
-//        long downTime;
-
-//        horizontalScrollView.setOnTouchListener(new View.OnTouchListener() {
-//            // 记录按下的位置和时间戳
-//            float startX, startY;
-//            long downTime;
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                int action = event.getAction();
-//                switch (action) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        // 记录按下时的位置和时间戳
-//                        startX = event.getX();
-//                        startY = event.getY();
-//                        downTime = System.currentTimeMillis();
-//                        break;
-//                    case MotionEvent.ACTION_MOVE:
-//                        // 在移动事件中可能进行一些判断，但不做处理
-//                        float moveX = event.getX();
-//                        float moveY = event.getY();
-//                        float deltaX = startX - moveX;
-//                        float deltaY = startY - moveY;
-//
-//                        // 判断是水平滚动还是垂直滚动
-//                        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-//                            // 水平滚动
-//                            horizontalScrollView.smoothScrollBy((int) deltaX, 0);
-//                        } else {
-//                            // 垂直滚动
-//                            // 这里可以根据需要处理垂直滚动的逻辑
-//                        }
-//                        break;
-//                    case MotionEvent.ACTION_UP:
-//                        // 计算时间和位置的差异
-//                        float endX = event.getX();
-//                        float endY = event.getY();
-//                        float distanceX = Math.abs(endX - startX);
-//                        float distanceY = Math.abs(endY - startY);
-//                        long upTime = System.currentTimeMillis();
-//                        long clickDuration = upTime - downTime;
-//
-//                        // 设置阈值来判断点击或滚动
-//                        float touchSlop = 10; // 可以根据实际情况调整阈值
-//                        long clickThreshold = 100; // 点击时间阈值
-//
-//                        if (distanceX < touchSlop && distanceY < touchSlop && clickDuration < clickThreshold) {
-//                            // 执行跳转至详情页面
-//                            Intent intent = new Intent(context, TravelDetailActivity.class);
-//                            intent.putExtra("travelId",travelReview.get(i).getTravelId());
-//                            context.startActivity(intent);
-//                        }
-//                        break;
-//                }
-//                return true; // 返回true以消费触摸事件
-//            }
-//        });
         travelName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

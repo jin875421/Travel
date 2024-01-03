@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -53,7 +54,7 @@ public class StrategyRespondDetailActivity extends AppCompatActivity {
     List<ReturnStrategyCommentRespond> returnCommentResponds;
     private StrategyRespondDetailAdapter StrategyAdapter;
     private ListView listView;
-    private ImageView submit;
+    private Button submit;
     private String status;
     private String postId;
     private EditText chatInputEt;

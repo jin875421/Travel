@@ -36,8 +36,9 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:textSize="16dp"
+            android:paddingEnd="6dp"
             android:textColor="#2196F3"
-            android:text="查看更多" />
+            android:text="更多" />
     </RelativeLayout>
     <ScrollView
         android:layout_width="match_parent"

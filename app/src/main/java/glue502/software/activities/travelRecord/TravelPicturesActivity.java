@@ -61,15 +61,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_pictures);
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
-
-        //实现无标题栏（但有系统自带的任务栏）
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);//报错，不知道怎么回事，但是这里代码用处不大
-
-        //实现全屏，去掉页面上面蓝色标题栏
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        placeName = getIntent().getStringExtra("placeName");
 
         //获取传递过来的参数
         Bundle extras = getIntent().getExtras();
@@ -77,21 +69,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
              list1 = extras.getStringArrayList("parameter_list_key");
         }
 
-        //获取控件对象
-//        gvPictures = findViewById(R.id.gv_pictures);
 
-        //写一个适配器，让照片都填充到页面中
-//        travelPicturesAdapter = new TravelPicturesAdapter(list1,this);
-
-//        gvPictures.setAdapter(travelPicturesAdapter);
-//        gvPictures = findViewById(R.id.gv_pictures);
-        //沉浸式状态栏
-//        MyViewUtils.setISBarWithoutView(this,true);
-
-
-//        ViewPager viewPager = findViewById(R.id.viewPager);
-//        ImagePagerAdapter adapter = new ImagePagerAdapter(this, list1);
-//        viewPager.setAdapter(adapter);
         name = findViewById(R.id.place_name);
         name.setText(placeName);
         back = findViewById(R.id.back);

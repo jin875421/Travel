@@ -42,7 +42,12 @@ public class MoreAttractionMainActivity extends AppCompatActivity implements Vie
         setContentView(R.layout.activity_more_attraction_main);
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
         getViews();
+        setListener();
         getAttractions();
+    }
+
+    private void setListener() {
+        backButton.setOnClickListener(this);
     }
 
     private void getViews() {

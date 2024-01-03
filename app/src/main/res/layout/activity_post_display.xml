@@ -11,6 +11,7 @@
         android:id="@+id/head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingVertical="7dp"
         android:layout_alignParentTop="true">
         <ImageView
             android:id="@+id/btn_back"
@@ -24,10 +25,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
-            android:textColor="#0F0F0F"
+            android:textColor="#0c0c0c"
             android:text="正文"
             android:textStyle="bold"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
         <ImageView
             android:id="@+id/popupmenu"
             android:layout_alignParentRight="true"
@@ -42,6 +43,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/mChatInputPanel"
         android:layout_below="@+id/head"
+        android:overScrollMode="never"
         android:id="@+id/view">
         <LinearLayout
             android:layout_width="match_parent"

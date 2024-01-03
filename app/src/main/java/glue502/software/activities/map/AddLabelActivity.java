@@ -14,10 +14,13 @@ import okhttp3.Response;
 import glue502.software.utils.MyViewUtils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -78,6 +81,7 @@ import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
@@ -113,10 +117,12 @@ public class AddLabelActivity extends AppCompatActivity {
     private ListView mSugListView;
     private LocationClient mLocationClient;
     private double latitude, longitude;
-    private double markerLatitude, markerLongitude;
+    private double mlatitude, mlongitude;
     private String city = "北京市";
+    //逆地理位置编码
+    private GeoCoder mCoder = GeoCoder.newInstance();
     private String selectedKey;
-    private String selectedCity;
+    private String selectedCity = "北京市";
     private String selectedDistrict;
 
     //==========
@@ -191,6 +197,7 @@ public class AddLabelActivity extends AppCompatActivity {
     }
 
     public void startLocation() {
+        mBaiduMap.clear();
         // 初始化定位客户端
         try {
             Log.v("AddLabelActivity", "lzxAddLabelActivity页面开启");
@@ -211,8 +218,6 @@ public class AddLabelActivity extends AppCompatActivity {
                     }
                     latitude = bdLocation.getLatitude();
                     longitude = bdLocation.getLongitude();
-                    markerLatitude = bdLocation.getLatitude();
-                    markerLongitude = bdLocation.getLongitude();
                     city = bdLocation.getCity(); // 获取详细地址信息
                     editText1.setText(city);
 
@@ -229,6 +234,7 @@ public class AddLabelActivity extends AppCompatActivity {
                             .zIndex(1);
 
                     //在地图上添加并显示
+                    Log.v("AddLabelActivity", "lzx 初始定位添加marker");
                     mBaiduMap.addOverlay(option);
 
                     //将地图中心移动到当前位置
@@ -245,12 +251,25 @@ public class AddLabelActivity extends AppCompatActivity {
     }
 
     private void setListener() {
+        //长按删除图片
+        // 循环遍历控件列表
+        for (View control : viewList) {
+            //绑定长按事件
+            control.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    // 长按弹出删除选项
+                    showDeleteDialog(view);
+                    return false;
+                }
+            });
+        }
         //点击百度地图添加marker点
         mBaiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 mBaiduMap.clear();
-                Log.v("AddLabelActivity", "lzx AddLabelActivity页面点击百度地图添加marker点");
+                Log.v("AddLabelActivity", "lzx AddLabelActivity页面点击百度地图添加marker点"+latLng.toString());
                 //构件MarkerOption，用于在地图上添加Marker
                 MarkerOptions option = new MarkerOptions()
                         .position(latLng)
@@ -258,7 +277,12 @@ public class AddLabelActivity extends AppCompatActivity {
                         .animateType(MarkerOptions.MarkerAnimateType.grow)
                         .draggable(true)
                         .zIndex(1);
-
+                mCoder.reverseGeoCode(new ReverseGeoCodeOption()
+                        .location(latLng)
+                        // 设置是否返回新数据 默认值0不返回，1返回
+                        .newVersion(1)
+                        // POI召回半径，允许设置区间为0-1000米，超过1000米按1000米召回。默认值为1000
+                        .radius(500));
                 //在地图上添加并显示
                 mBaiduMap.addOverlay(option);
 
@@ -315,13 +339,8 @@ public class AddLabelActivity extends AppCompatActivity {
                 return false;
             }
         });
+        //触摸事件
         BaiduMap.OnMapTouchListener listener = new BaiduMap.OnMapTouchListener() {
-
-            /**
-             * 当用户触摸地图时回调函数
-             *
-             * @param motionEvent 触摸事件
-             */
             @Override
             public void onTouch(MotionEvent motionEvent) {
                 // 判断点击的位置是否在输入框外
@@ -333,7 +352,6 @@ public class AddLabelActivity extends AppCompatActivity {
                 }
                 //点击地图时收回底部抽屉
                 //如果抽屉全展开，将抽屉调至隐藏状态
-                Log.v("FunctionFragment", "lzx 触摸时抽屉状态"+behavior.getState());
                 if ((behavior.getState() == BottomSheetBehavior.STATE_HALF_EXPANDED) != (behavior.getState() == BottomSheetBehavior.STATE_EXPANDED)) {
                     behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }
@@ -382,10 +400,10 @@ public class AddLabelActivity extends AppCompatActivity {
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Log.v("AddLabelActivity", "lzx点击了marker");
                 //获取marker点的经纬度
-                markerLatitude = marker.getPosition().latitude;
-                markerLongitude = marker.getPosition().longitude;
+                mlatitude = marker.getPosition().latitude;
+                mlongitude = marker.getPosition().longitude;
+                Log.v("AddLabelActivity", "lzx点击了marker"+"mlatitude"+mlatitude+"mlongitude"+mlongitude);
                 //召唤底部抽屉
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
@@ -403,24 +421,25 @@ public class AddLabelActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //获取信息
-                //生成strategy的UUID
-                UUID uuid = UUID.randomUUID();
-                strategyId = uuid.toString();
-                //生成时间
-                Date date = new Date();
-                SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
-                String time = dateFormat.format(date);
                 if(totalEditText.getText().toString().equals("") || disEditText.getText().toString().equals("")){
                     Toast.makeText(AddLabelActivity.this, "请填写完整信息", Toast.LENGTH_SHORT).show();
                 }else if(1==1){
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
+                            //生成strategy的UUID
+                            UUID uuid = UUID.randomUUID();
+                            strategyId = uuid.toString();
+                            //生成时间
+                            Date date = new Date();
+                            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
+                            String uploadTime = dateFormat.format(date);
                             int pictureNum = fileList.size();
                             Gson gson = new Gson();
                             String json = gson.toJson(pictureNum);
                             SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
                             userId = sharedPreferences.getString("userId","");
+                            Log.v("AddLabelActivity", "lzx 要上传的信息"+selectedCity+"mlatitude"+mlatitude+"mlongitude"+mlongitude);
                             //构建Multipart请求体
                             MultipartBody.Builder builder = new MultipartBody.Builder()
                                     .setType(MultipartBody.FORM)
@@ -429,10 +448,10 @@ public class AddLabelActivity extends AppCompatActivity {
                                     .addFormDataPart("userId", userId)
                                     .addFormDataPart("title", totalEditText.getText().toString())
                                     .addFormDataPart("describe", disEditText.getText().toString())
-                                    .addFormDataPart("latitude", String.valueOf(markerLatitude))
-                                    .addFormDataPart("longitude", String.valueOf(markerLongitude))
+                                    .addFormDataPart("latitude", String.valueOf(mlatitude))
+                                    .addFormDataPart("longitude", String.valueOf(mlongitude))
                                     .addFormDataPart("selectedCity", selectedCity)
-                                    .addFormDataPart("time", time);
+                                    .addFormDataPart("time", uploadTime);
                             //循环处理图片
                             for (int i = 0; i < fileList.size(); i++) {
                                 File file = fileList.get(i);
@@ -560,6 +579,42 @@ public class AddLabelActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void showDeleteDialog(View view) {
+        // 弹出对话框
+        new AlertDialog.Builder(this)
+                .setTitle("删除")
+                .setMessage("确定删除吗？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 点击确定按钮
+                        //在页面上删除这个控件
+                        imgLinerLayout.removeView(view);
+                        //在file列表中删除这个控件对应的文件
+                        for(File file : fileList){
+                            if(file.getName().equals(view.getTag().toString())){
+                                file.delete();
+                                break;
+                            }
+                        }
+                        // 关闭对话框
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(
+                        "取消",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // 点击取消按钮
+                                // 关闭对话框
+                                dialogInterface.dismiss();
+                            }
+                        }
+                ).show();
+    }
+
     //图片分片上传，计算文件总分片数
     private int calculateTotalChunks(File file) {
         // 计算分片数的逻辑，根据文件大小和分片大小计算
@@ -819,8 +874,6 @@ public class AddLabelActivity extends AppCompatActivity {
                         Log.v("AddLabelActivity", "lzx key"+selectedKey);
                         Log.v("AddLabelActivity", "lzx city"+selectedCity);
                         Log.v("AddLabelActivity", "lzx dis"+selectedDistrict);
-                        System.out.println("===key" +  selectedKey + "city" + selectedCity + "dis" + selectedDistrict + "===");
-
                         // 使用地理编码服务获取经纬度坐标
                         GeoCoder geoCoder = GeoCoder.newInstance();
                         geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
@@ -922,26 +975,21 @@ public class AddLabelActivity extends AppCompatActivity {
             }
         }
     }
-
-
     @Override
     protected void onResume() {
         mMapView.onResume();
         super.onResume();
     }
-
     @Override
     protected void onPause() {
         mMapView.onPause();
         super.onPause();
     }
-
     @Override
     protected void onDestroy() {
         mMapView.onDestroy();
         super.onDestroy();
     }
-
     @Override
     protected void onStop() {
         super.onStop();

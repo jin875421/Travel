@@ -140,10 +140,10 @@ public class PersonalInformationFragment extends Fragment {
                     public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                         switch (position){
                             case 0:
-                                tab.setText("我的收藏");
+                                tab.setText("收藏");
                                 break;
                             case 1:
-                                tab.setText("我的发布");
+                                tab.setText("发布");
                                 break;
                             default:
                                 break;

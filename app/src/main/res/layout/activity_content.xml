@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/djp"
+    android:background="@color/cwn"
     android:paddingTop="0dp"
     android:id="@+id/layout"
     tools:context=".activities.travelRecord.travelRecordActivity" >
@@ -45,6 +45,7 @@
 
                         <GridView
                             android:id="@+id/gridView"
+
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -61,8 +62,6 @@
                     android:layout_height="30dip"
                     android:background="@drawable/border_backgrounddjpjpjp"
                     android:gravity="left"
-                    android:hint="标题"
-
                     android:inputType="textMultiLine"
                     android:paddingLeft="5dip"
                     android:textSize="20sp"
@@ -81,13 +80,11 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_backgrounddjpjpjp"
                     android:gravity="left"
-                    android:hint="输入你的内容"
                     android:inputType="textMultiLine"
                     android:lines="20"
                     android:minLines="12"
                     android:paddingLeft="5dip"
                     android:textSize="16sp" />
-
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -137,26 +134,27 @@
         android:layout_height="wrap_content">
     <Button
         android:id="@+id/btn_return"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:background="@drawable/border_backgrounddjpjpjp"
-        android:text="返回" />
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:background="@mipmap/back3"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="7dp"/>
+
 
     <EditText
         android:id="@+id/Ed_place"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-40dp"
+        android:layout_marginTop="-35dp"
         android:layout_below="@id/btn_return"
         android:gravity="center"
         android:text="旅行地" />
     <Button
         android:id="@+id/btn_submit"
-        android:layout_width="wrap_content"
+        android:layout_width="43dp"
         android:layout_height="36dp"
-        android:background="@drawable/border_backgrounddjpjpjp"
-        android:layout_alignParentRight="true"
-        android:text="提交" />
+        android:background="@mipmap/submit"
+        android:layout_alignParentRight="true" />
     </RelativeLayout>
 </RelativeLayout>
