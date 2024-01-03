@@ -3,6 +3,7 @@ package glue502.software.activities.map;
 import androidx.appcompat.app.AppCompatActivity;
 import glue502.software.R;
 import glue502.software.models.MarkerIntentInfo;
+import glue502.software.utils.MyViewUtils;
 
 import android.os.Bundle;
 
@@ -81,7 +82,7 @@ public class AddLabelActivity extends AppCompatActivity {
         SDKInitializer.initialize(this.getApplicationContext());
 
         setContentView(R.layout.activity_add_label);
-
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), true);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {

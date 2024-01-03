@@ -25,6 +25,7 @@
             android:text="我的相册"/>
     </RelativeLayout>
     <com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout
+        android:layout_margin="10dp"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
         <TextView
@@ -44,10 +45,10 @@
             android:layout_height="match_parent"
             android:columnWidth="90dp"
             android:gravity="center"
-            android:horizontalSpacing="10dp"
+            android:horizontalSpacing="0dp"
             android:numColumns="3"
             android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp" />
+            android:verticalSpacing="5dp" />
 
         <TextView
             android:id="@+id/tv_t2"

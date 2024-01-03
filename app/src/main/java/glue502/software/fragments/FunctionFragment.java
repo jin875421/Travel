@@ -152,7 +152,7 @@ public class FunctionFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.v("FunctionFragment", "lzx onCreateView");
         view = inflater.inflate(R.layout.fragment_function, container, false);
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.coordinatorLayout),true);
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.bmapView),true);
         initView();
         getIntent();
         PoiSugSearch();
@@ -290,7 +290,6 @@ public class FunctionFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    Toast.makeText(mContext, "focus", Toast.LENGTH_LONG).show();
                     mSugListView.setVisibility(View.VISIBLE);
                 } else {
                     mSugListView.setVisibility(View.GONE);
@@ -542,9 +541,7 @@ public class FunctionFragment extends Fragment {
         mMapView.onResume();
         try {
             Log.v("AddLabelActivity", "lzxAddLabelActivity页面开启");
-            Toast.makeText(getActivity().getApplicationContext(),"开始定位",Toast.LENGTH_LONG).show();
             mLocationClient = new LocationClient(getActivity().getApplicationContext());
-            Toast.makeText(getActivity().getApplicationContext(),"定位至此",Toast.LENGTH_LONG).show();
             // 配置定位选项
             LocationClientOption option = new LocationClientOption();
             option.setOpenGps(true); // 打开gps
@@ -563,8 +560,6 @@ public class FunctionFragment extends Fragment {
                     Double longitude = bdLocation.getLongitude();
                     city = bdLocation.getCity(); // 获取详细地址信息
                     cityView.setText(city);
-
-                    Toast.makeText(getActivity().getApplicationContext(), "Latitude: " + latitude + ", Longitude: " + longitude + ", city: " + city,Toast.LENGTH_LONG).show();
                     // 在这里处理获取到的经纬度信息
                     MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLng(new LatLng(latitude, longitude));
                     mBaiduMap.animateMapStatus(mapStatusUpdate);

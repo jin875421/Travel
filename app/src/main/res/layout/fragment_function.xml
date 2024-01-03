@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/frame_layout"
     tools:context=".fragments.FunctionFragment"
-    android:paddingTop="25dp"
     android:orientation="vertical">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
