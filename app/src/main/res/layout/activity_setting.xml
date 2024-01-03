@@ -25,9 +25,10 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="4dp"
-            android:textColor="#0f0f0f"
             android:text="设置"
-            android:textSize="24dp" />
+            android:textStyle="bold"
+            android:textColor="#0c0c0c"
+            android:textSize="18dp" />
 
     </RelativeLayout>
 
@@ -42,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="账号管理"
-            android:textSize="20dp"/>
+            android:textColor="#0c0c0c"
+            android:textSize="16dp"/>
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -55,8 +57,9 @@
         android:id="@+id/btn_destroy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_margin="6dp"
         android:text="退出登录"
-        android:background="#AFDAE3"/>
+        android:textColor="#0c0c0c"
+        android:background="@drawable/background_frame_0"/>
 
 </LinearLayout>

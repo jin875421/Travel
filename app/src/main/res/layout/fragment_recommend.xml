@@ -21,19 +21,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:textColor="#0c0c0c"
                 android:textStyle="bold"
                 android:text="首页"
+                android:textColor="#0c0c0c"
                 android:textSize="18dp" />
         </LinearLayout>
     </FrameLayout>
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
+        android:scrollbars="none"
         android:layout_height="wrap_content">
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scrollbars="none"
             android:layout_below="@+id/top">
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -42,16 +44,15 @@
                     android:id="@+id/pictures"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
-                    android:background="@drawable/background_frame_1"
                     android:orientation="vertical"
-                    android:padding="5dp">
+                    android:layout_marginVertical="5dp"
+                    android:elevation="3dp"
+                    android:background="@drawable/background_frame_1"
+                    android:layout_marginHorizontal="8dp">
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/reco_vp2"
                         android:layout_width="match_parent"
-                        android:layout_height="205dp"
-                        android:background="@color/white"/>
+                        android:layout_height="205dp" />
                     <TextView
                         android:id="@+id/attraction_name"
                         android:layout_width="match_parent"
@@ -67,6 +68,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="20dp"
                         android:orientation="horizontal"
+                        android:layout_marginHorizontal="12dp"
                         android:layout_alignParentBottom="true"
                         android:paddingTop="5dp" />
                 </RelativeLayout>
@@ -75,8 +77,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/pictures"
-                    android:layout_margin="3dp"
-                    android:background="@drawable/background_frame_0"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_marginVertical="5dp"
+                    android:elevation="3dp"
+                    android:background="@drawable/background_frame_1"
                     android:orientation="horizontal">
                     <LinearLayout
                         android:id="@+id/lrlt_create"

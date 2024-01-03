@@ -510,11 +510,13 @@ public class RecommendFragment extends Fragment {
     }
 
     /* 当应用被暂停时，让轮播图停止轮播 */
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        carousel.mHandler.removeCallbacks(carousel.runnable);
-//    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(carousel!=null){
+            carousel.mHandler.removeCallbacks(carousel.runnable);
+        }
+    }
     private void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
