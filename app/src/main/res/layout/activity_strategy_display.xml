@@ -26,12 +26,6 @@
             android:textColor="#0f0f0f"
             android:text="正文"
             android:textSize="24dp" />
-        <ImageView
-            android:id="@+id/popupmenu"
-            android:layout_alignParentRight="true"
-            android:src="@mipmap/menu"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
     </RelativeLayout>
 
     <ScrollView
@@ -45,39 +39,46 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/post_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <LinearLayout
-                android:layout_marginTop="2dp"
-                android:id="@+id/index_dot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="@+id/viewPager2"
-                app:layout_constraintEnd_toEndOf="@+id/viewPager2"
-                app:layout_constraintStart_toStartOf="parent"/>
             <LinearLayout
                 android:paddingLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
                     android:id="@+id/avatar"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"/>
-                <TextView
-                    android:paddingLeft="5dp"
-                    android:id="@+id/user_name"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@mipmap/ic_launcher_round"/>
+                <LinearLayout
+                    android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:paddingLeft="5dp"
+                        android:id="@+id/user_name"
+                        android:text="这是用户名"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="17sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"/>
+                    <TextView
+                        android:id="@+id/strategy_time"
+                        android:paddingLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2222年2月2日"/>
+                </LinearLayout>
             </LinearLayout>
             <TextView
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
+                android:layout_marginTop="10dp"
                 android:id="@+id/post_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="这是标题"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="20dp"/>
@@ -89,19 +90,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="18dp"
+                android:text="在上述代码中，R.drawable.my_image是资源ID，它是通过编译时生成的。如果您希望从文件路径加载图像，可以使用BitmapFactory来加载"
                 android:background="@drawable/background_frame_underline"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="  评论："
-                android:textSize="20sp"
-                />
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/post_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_marginTop="2dp"
+                android:id="@+id/index_dot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@+id/viewPager2"
+                app:layout_constraintEnd_toEndOf="@+id/viewPager2"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="10dp"
+                    android:text="评论"
+                    android:textSize="20sp"/>
+                <TextView
+                    android:id="@+id/comment_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="20sp"
+                    android:text="123"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="5dp">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:background="@color/light_gray" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
                 <ListView
                     android:id="@+id/comment_list"
                     android:layout_width="match_parent"
@@ -118,13 +159,13 @@
         android:background="@drawable/topdivider"
         android:orientation="horizontal">
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true">
 
             <EditText
                 android:id="@+id/chatInputEt"
-                android:layout_width="279dp"
+                android:layout_width="280dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="15dp"
@@ -133,30 +174,17 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="3dp"
             android:layout_alignParentRight="true">
-            <ImageButton
+            <Button
                 android:id="@+id/submit"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:src="@mipmap/upload"/>
-            <ImageButton
-                android:id="@+id/btn_like"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="4dp"
-                android:background="@color/white"
-                android:src="@mipmap/like1"/>
-            <ImageButton
-                android:id="@+id/btn_star"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="4dp"
-                android:background="@color/white"
-                android:src="@mipmap/star1"/>
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:text="发送"
+                android:textSize="17sp"
+                android:background="@drawable/background_comment_submit_frame"
+                android:textColor="@color/white"/>
         </LinearLayout>
 
     </RelativeLayout>

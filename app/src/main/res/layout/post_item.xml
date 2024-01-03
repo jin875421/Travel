@@ -69,7 +69,7 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@mipmap/like2"/>
+                    android:src="@mipmap/like1"/>
                 <TextView
                     android:paddingRight="10dp"
                     android:id="@+id/like_count"
