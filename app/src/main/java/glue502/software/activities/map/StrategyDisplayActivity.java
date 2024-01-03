@@ -108,7 +108,7 @@ public class StrategyDisplayActivity extends AppCompatActivity {
         initView();
         initData();
         setListener();
-        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.head),true);
 
     }
 
