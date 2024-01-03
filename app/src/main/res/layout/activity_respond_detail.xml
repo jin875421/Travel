@@ -69,11 +69,13 @@
         android:layout_below="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/gray"
         android:text="回复详情"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:layout_below="@+id/theText">
         <ListView
             android:id="@+id/respond_list"

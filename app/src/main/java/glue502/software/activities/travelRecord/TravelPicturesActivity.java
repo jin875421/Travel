@@ -75,7 +75,6 @@ public class TravelPicturesActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
              list1 = extras.getStringArrayList("parameter_list_key");
-             placeName = extras.getString("placeName");
         }
 
         //获取控件对象

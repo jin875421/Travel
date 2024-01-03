@@ -15,6 +15,7 @@
         <ImageView
             android:id="@+id/btn_back"
             android:src="@drawable/back"
+            android:layout_marginStart="6dp"
             android:layout_alignParentLeft="true"
             android:layout_width="30dp"
             android:layout_height="30dp" />
@@ -31,8 +32,9 @@
             android:id="@+id/popupmenu"
             android:layout_alignParentRight="true"
             android:src="@mipmap/menu"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
+            android:layout_marginEnd="6dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
     </RelativeLayout>
 
     <ScrollView
@@ -45,20 +47,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <LinearLayout
-                android:paddingLeft="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"/>
-                <TextView
-                    android:paddingLeft="5dp"
-                    android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"/>
-            </LinearLayout>
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/post_image"
@@ -74,7 +62,20 @@
                 app:layout_constraintBottom_toBottomOf="@+id/viewPager2"
                 app:layout_constraintEnd_toEndOf="@+id/viewPager2"
                 app:layout_constraintStart_toStartOf="parent"/>
-
+            <LinearLayout
+                android:paddingLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"/>
+                <TextView
+                    android:paddingLeft="5dp"
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"/>
+            </LinearLayout>
             <TextView
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -94,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="17dp"
+                android:lineSpacingMultiplier="1.3"
                 android:background="@drawable/background_frame_underline"
                 android:paddingBottom="20dp"/>
             <TextView
@@ -139,13 +141,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true">
-            <ImageButton
+            <Button
                 android:id="@+id/submit"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/white"
-                android:src="@mipmap/upload"/>
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="9dp"
+                android:text="发送"
+                android:textSize="17sp"
+                android:background="@drawable/background_comment_submit_frame"
+                android:textColor="@color/white"/>
             <ImageButton
                 android:id="@+id/btn_like"
                 android:layout_width="40dp"

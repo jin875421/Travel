@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/djp"
+    android:id="@+id/top"
+    android:background="@color/white"
     tools:context=".activities.travelRecord.TravelReviewActivity">
     <RelativeLayout
         android:layout_alignParentTop="true"
@@ -16,7 +17,7 @@
             android:layout_centerVertical="true"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/back2"
+            android:src="@drawable/back1"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -31,7 +32,11 @@
     <ListView
         android:id="@+id/travel_review"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
+
+
 
 
 

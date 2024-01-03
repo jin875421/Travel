@@ -88,14 +88,16 @@
                 android:id="@+id/txt_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="用户名"
+                android:textColor="#000000"
                 android:textSize="20dp"
                 />
             <TextView
                 android:id="@+id/txt_userId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:textColor="#525252"
+                android:text="账号：11111111111"
                 android:layout_marginTop="5dp"
                 />
 
@@ -123,9 +125,9 @@
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 app:tabTextAppearance="@style/CustomTabLayout"
-                android:background="#ffffff"
-                app:tabIndicator="@null"
-                app:tabRippleColor="@android:color/white"
+                android:background="#fafafa"
+                app:tabIndicatorColor="#99CCFF"
+                app:tabRippleColor="#99CCFF"
                 android:layout_alignParentTop="true" />
         </RelativeLayout>
     </LinearLayout>
