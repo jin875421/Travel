@@ -285,7 +285,7 @@ public class travelRecordActivity extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    Toast.makeText(getApplicationContext(), "focus", Toast.LENGTH_LONG).show();
+
                     mSugListView.setVisibility(View.VISIBLE);
                 } else {
                     mSugListView.setVisibility(View.GONE);
@@ -982,7 +982,6 @@ public class travelRecordActivity extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    Toast.makeText(getApplicationContext(), "focus", Toast.LENGTH_LONG).show();
                     view.setVisibility(View.VISIBLE);
                 } else {
                     view.setVisibility(View.GONE);
@@ -1345,7 +1344,6 @@ public class travelRecordActivity extends Activity {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (hasFocus) {
-                        Toast.makeText(getApplicationContext(), "focus", Toast.LENGTH_LONG).show();
                         view.setVisibility(View.VISIBLE);
                     } else {
                         view.setVisibility(View.GONE);
