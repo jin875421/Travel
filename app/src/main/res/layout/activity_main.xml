@@ -26,7 +26,6 @@
             android:background="#ffffff"
             app:tabIndicator="@null"
             app:tabUnboundedRipple="true"
-            app:tabBackground="@color/gray"
             android:layout_alignParentBottom="true"
             />
         <RelativeLayout
