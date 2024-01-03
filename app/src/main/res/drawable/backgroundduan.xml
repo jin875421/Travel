@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--实现应用背景颜色渐变-->
     <gradient
-        android:startColor="#99CCFF"
-        android:endColor="#FFFFFF"
+        android:type="linear"
+        android:startColor="#12085b"
+        android:centerColor="#084d9d"
+        android:endColor="#eef3f3"
         android:angle="270"/>
 </shape>
-<!--    android:endColor="#99CCFF"-->
+

@@ -33,7 +33,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:textStyle="bold"
                 android:text="用户名 "
                 android:textSize="14sp" />
 
@@ -53,7 +52,7 @@
                 android:layout_marginTop="10dp"
                 android:text="dfsafafadsfsdfadfsadfsdasfsadfasdfsadfasdfsadfasdfafd"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
 
         </LinearLayout>
 

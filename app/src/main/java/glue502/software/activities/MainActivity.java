@@ -59,7 +59,7 @@ import glue502.software.utils.MyViewUtils;
 public class MainActivity extends AppCompatActivity {
     public static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
-    //192.168.43.123
+    //192.168.43.123 192.168.142.92
     public static final String ip = "192.168.43.123:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
