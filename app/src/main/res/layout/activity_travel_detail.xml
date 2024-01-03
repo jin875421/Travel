@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/top"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/djp"
     tools:context=".activities.travelRecord.TravelDetailActivity">
     <RelativeLayout
         android:id="@+id/travel_detail_layout"
@@ -11,7 +13,7 @@
         android:layout_height="50dp">
         <ImageView
             android:id="@+id/btn_back"
-            android:src="@drawable/back"
+            android:src="@mipmap/back2"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_width="30dp"

@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.core.widget.NestedScrollView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -44,6 +45,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -88,7 +91,7 @@ public class PostDisplayActivity extends AppCompatActivity {
     private ImageView like_btn;
     private int checkedItemId = R.id.edit;
     private ImageView back_btn;
-    private ImageView submit;
+    private Button submit;
     private LinearLayout dotLinerLayout;
     private ViewPager2 postImage;
     private PostWithUserInfo postWithUserInfo;
@@ -311,6 +314,9 @@ public class PostDisplayActivity extends AppCompatActivity {
                         }
                     }).start();
                     likeStatus=1;
+                    YoYo.with(Techniques.RubberBand)
+                            .duration(700)
+                            .playOn(like_btn);
                     like_btn.setImageResource(R.mipmap.like);
                 } else if (likeStatus==1) {
                     //取消点赞
@@ -337,6 +343,9 @@ public class PostDisplayActivity extends AppCompatActivity {
                         }
                     }).start();
                     likeStatus=0;
+                    YoYo.with(Techniques.RubberBand)
+                            .duration(700)
+                            .playOn(like_btn);
                     like_btn.setImageResource(R.mipmap.like1);
                 }
             }
@@ -372,6 +381,9 @@ public class PostDisplayActivity extends AppCompatActivity {
                     }).start();
                     star_btn.setImageResource(R.mipmap.star);
                     starStatus = 1;
+                    YoYo.with(Techniques.RubberBand)
+                            .duration(700)
+                            .playOn(star_btn);
                 } else if (starStatus == 1) {
                     new Thread(new Runnable() {
                         @Override
@@ -394,8 +406,11 @@ public class PostDisplayActivity extends AppCompatActivity {
                             }
                         }
                     }).start();
-                    star_btn.setImageResource(R.mipmap.star1);
                     starStatus = 0;
+                    YoYo.with(Techniques.RubberBand)
+                            .duration(700)
+                            .playOn(star_btn);
+                    star_btn.setImageResource(R.mipmap.star1);
                 }
             }
         });
@@ -421,7 +436,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                                     String text = chatInputEt.getText().toString();;
                                     String id = UUID.randomUUID().toString();
                                     Date date = new Date();
-                                    SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
+                                    SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :HH:mm:ss");
                                     String time = dateFormat.format(date);
                                     UploadComment uploadComment = new UploadComment(postId,
                                             userId,
@@ -500,7 +515,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                             String text = chatInputEt.getText().toString();;
                             String id = UUID.randomUUID().toString();
                             Date date = new Date();
-                            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
+                            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :HH:mm:ss");
                             String time = dateFormat.format(date);
                             UploadComment uploadComment = new UploadComment(postId,
                                     userId,
@@ -561,8 +576,10 @@ public class PostDisplayActivity extends AppCompatActivity {
                 Comment comment = commentList.get(position);
                 //获取评论的id
                 String commentId = comment.getCommentId();
-                //获取评论者的Id
-                String userId = comment.getUserId();
+                SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+                //获取用户状态和用户名
+                status = sharedPreferences.getString("status","");
+                String commenterId = sharedPreferences.getString("userId","");
                 //弹出软键盘后用户输入文本内容
                 showInput(chatInputEt);
                 //点击submit后获取输入的内容并提交
@@ -573,13 +590,13 @@ public class PostDisplayActivity extends AppCompatActivity {
                         //生成回复实体
                         //获取时间
                         Date date = new Date();
-                        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
+                        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :HH:mm:ss");
                         String time = dateFormat.format(date);
                         //生成UUID
                         String commentRespondId = UUID.randomUUID().toString();
                         if (text.length() > 0) {
                             UploadComment commentRespond = new UploadComment(postId,
-                                    userId,
+                                    commenterId,
                                     text,
                                     commentRespondId,
                                     time,

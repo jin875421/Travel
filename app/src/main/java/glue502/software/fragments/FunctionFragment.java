@@ -26,13 +26,14 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
@@ -79,7 +80,6 @@ import glue502.software.R;
 import glue502.software.activities.map.AddLabelActivity;
 import glue502.software.activities.map.GlideCustomTransformation;
 import glue502.software.activities.map.StrategyDisplayActivity;
-import glue502.software.activities.posts.PostDisplayActivity;
 import glue502.software.adapters.RecyclerViewStrategyAdapter;
 import glue502.software.models.MarkerInfo;
 import glue502.software.models.ReturnStrategy;
@@ -96,7 +96,7 @@ import okhttp3.Response;
 
 public class FunctionFragment extends Fragment {
     private String url="http://"+ip+"/travel/strategy";
-    private ImageView uploadBtn;
+    private Button uploadBtn;
     private List<MarkerInfo> markerList;
     private TextureMapView mMapView;
     private TextView cityView;
@@ -109,9 +109,8 @@ public class FunctionFragment extends Fragment {
     private BottomSheetBehavior<View> behavior;
     private View bottomSheet;
     private Context mContext;
-    private FrameLayout frameLayout;
+    private RelativeLayout frameLayout;
     private LocationClient mLocationClient;
-    EditText editText1;
     AutoCompleteTextView editText2;
     private String city;
     //POI搜索
@@ -152,17 +151,10 @@ public class FunctionFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.v("FunctionFragment", "lzx onCreateView");
         view = inflater.inflate(R.layout.fragment_function, container, false);
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.coordinatorLayout),true);
+        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.bmapView),true);
         initView();
         getIntent();
         PoiSugSearch();
-//        //绑定adapter
-//        strategyAdapter = new StrategyAdapter(
-//                getActivity(),
-//                R.layout.activity_strategy_adapter,
-//                returnStrategyList);
-//        listView.setAdapter(strategyAdapter);
-//        mRelayout.setListViewHeightBasedOnChildren(listView);
 
         recyclerViewStrategyAdapter = new RecyclerViewStrategyAdapter(
                 getActivity(),
@@ -171,11 +163,7 @@ public class FunctionFragment extends Fragment {
         setListener();
         mRecyclerView.setAdapter(recyclerViewStrategyAdapter);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),2);
-//        layoutManager.setOrientation(RecyclerView.HORIZONTAL);  也能设置横向滚动
         mRecyclerView.setLayoutManager(layoutManager);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-//        mRecyclerView.setLayoutManager(layoutManager);
-
 
         return view;
     }
@@ -188,10 +176,14 @@ public class FunctionFragment extends Fragment {
 
     private void getIntent(){
         Intent intent = getActivity().getIntent();
+        Double recommendLatitude = 0.00;
+        Double recommendLongitude = 0.00;
         if(intent!=null){
-            latitude = intent.getStringExtra("latitude");
-            longitude = intent.getStringExtra("longitude");
-            city = intent.getStringExtra("city");
+            recommendLatitude = intent.getDoubleExtra("latitude", 0.00);
+            recommendLongitude = intent.getDoubleExtra("longitude", 0.00);
+            // 在这里处理获取到的经纬度信息
+            MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLng(new LatLng(recommendLatitude, recommendLongitude));
+            mBaiduMap.animateMapStatus(mapStatusUpdate);
         }
     }
 
@@ -271,8 +263,6 @@ public class FunctionFragment extends Fragment {
         coordinatorLayout = view.findViewById(R.id.coordinatorLayout);
         behavior = BottomSheetBehavior.from(bottomSheet);
         frameLayout = view.findViewById(R.id.frame_layout);
-        //搜索栏
-//        editText1 = view.findViewById(R.id.fragment_main_edt_city);
         editText2 = view.findViewById(R.id.fragment_main_edt_poi);
         mSugListView = view.findViewById(R.id.fragment_sug_list);
         editText2.setThreshold(1);
@@ -286,12 +276,33 @@ public class FunctionFragment extends Fragment {
     }
 
     private void setListener() {
+        editText2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (s.length() == 0) {
+                    mSugListView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 0) {
+                    mSugListView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    mSugListView.setVisibility(View.GONE);
+                }
+            }
+        });
         editText2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    Toast.makeText(mContext, "focus", Toast.LENGTH_LONG).show();
-                    mSugListView.setVisibility(View.VISIBLE);
+                    mSugListView.setVisibility(View.GONE);
                 } else {
                     mSugListView.setVisibility(View.GONE);
                 }
@@ -362,13 +373,6 @@ public class FunctionFragment extends Fragment {
                 Log.v("FunctionFragment", "lzx点击marker");
                 Log.v("FunctionFragment", "lzx 上下文环境"+FunctionFragment.this.getActivity());
                 Log.v("FunctionFragment", "lzx 城市"+marker.getExtraInfo()+"经度"+marker.getPosition().longitude+"纬度"+marker.getPosition().latitude);
-//                Intent intent = new Intent(FunctionFragment.this.getActivity(), StrategyActivity.class);
-//                intent.putExtra("city", marker.getExtraInfo().getString("city"));
-//                intent.putExtra("latitude", String.valueOf(marker.getPosition().latitude));
-//                intent.putExtra("longitude", String.valueOf(marker.getPosition().longitude));
-//                startActivity(intent);
-                //查询数据
-//                Handler handler = new Handler(Looper.getMainLooper());
                 //召唤底部抽屉
                 behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 //根据经纬度信息查询数据
@@ -410,14 +414,7 @@ public class FunctionFragment extends Fragment {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-//                                        //绑定adapter
-//                                        StrategyAdapter strategyAdapter = new StrategyAdapter(
-//                                                getActivity(),
-//                                                R.layout.activity_strategy_adapter,
-//                                                returnStrategyList);
-//                                        listView.setAdapter(strategyAdapter);
                                         recyclerViewStrategyAdapter.notifyDataSetChanged();
-//                                        mRelayout.setListViewHeightBasedOnChildren(listView);
                                     }
                                 });
                             }
@@ -428,18 +425,6 @@ public class FunctionFragment extends Fragment {
                 return true;
             }
         });
-
-//        RecyclerViewStrategyAdapter.OnItemClickListener itemClickListener = new RecyclerViewStrategyAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view) {
-//                Log.v("FunctionFragment", "lzx 点击了一下");
-//            }
-//
-//            @Override
-//            public void onItemLongClick(View view) {
-//
-//            }
-//        };
         recyclerViewStrategyAdapter.setOnRespondClickListener(new RecyclerViewStrategyAdapter.onRespondClickListener() {
             @Override
             public void onRespondClick(int i) {
@@ -451,33 +436,9 @@ public class FunctionFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                //获取点击的帖子
-//                ReturnStrategy returnStrategy = returnStrategyList.get(position);
-//                Intent intent = new Intent(mContext, StrategyDisplayActivity.class);
-//                intent.putExtra("strategyId", returnStrategy.getStrategyId());
-//                //跳转页面
-//                startActivity(intent);
-//            }
-//        });
-
-
     }
 
     private void addMarker(Double latitude, Double longitude, Bundle extraInfo) {
-        // 添加Marker
-//        MarkerOptions markerOptions = new MarkerOptions()
-//                .position(new LatLng(latitude, longitude))
-//                .extraInfo(extraInfo)
-//                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker));
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_add));
-//        // 在地图上添加Marker
-//        mBaiduMap.addOverlay(markerOptions);
-
-
         // 创建一个空的MarkerOptions对象
         LatLng point = new LatLng(latitude, longitude);
         String key = latitude+"+"+longitude;
@@ -503,7 +464,7 @@ public class FunctionFragment extends Fragment {
                 .asBitmap()
                 .load("http://"+ip+"/travel/"+path)
                 .centerCrop()
-                .transform(new GlideCustomTransformation(mContext,4,mContext.getResources().getColor(R.color.blue)))
+                .transform(new GlideCustomTransformation(mContext,4,mContext.getResources().getColor(R.color.one)))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .override(widthInPixels, heightInPixels) // 设置加载图片时的大小
                 .into(new SimpleTarget<Bitmap>() {
@@ -515,6 +476,7 @@ public class FunctionFragment extends Fragment {
                         // 设置MarkerOptions的位置和图标
                         markerOptions.position(point)  // 设置位置
                                 .icon(bitmapDescriptor)  // 设置图标
+                                .animateType(MarkerOptions.MarkerAnimateType.grow)
                                 .extraInfo(extraInfo);  // 设置额外信息
 
                         // 在地图上添加Marker
@@ -542,9 +504,7 @@ public class FunctionFragment extends Fragment {
         mMapView.onResume();
         try {
             Log.v("AddLabelActivity", "lzxAddLabelActivity页面开启");
-            Toast.makeText(getActivity().getApplicationContext(),"开始定位",Toast.LENGTH_LONG).show();
             mLocationClient = new LocationClient(getActivity().getApplicationContext());
-            Toast.makeText(getActivity().getApplicationContext(),"定位至此",Toast.LENGTH_LONG).show();
             // 配置定位选项
             LocationClientOption option = new LocationClientOption();
             option.setOpenGps(true); // 打开gps
@@ -564,7 +524,6 @@ public class FunctionFragment extends Fragment {
                     city = bdLocation.getCity(); // 获取详细地址信息
                     cityView.setText(city);
 
-                    Toast.makeText(getActivity().getApplicationContext(), "Latitude: " + latitude + ", Longitude: " + longitude + ", city: " + city,Toast.LENGTH_LONG).show();
                     // 在这里处理获取到的经纬度信息
                     MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLng(new LatLng(latitude, longitude));
                     mBaiduMap.animateMapStatus(mapStatusUpdate);
@@ -712,6 +671,7 @@ public class FunctionFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        mBaiduMap.clear();
         mMapView.onPause();
         if (mLocationClient!= null) {
             mLocationClient.stop();

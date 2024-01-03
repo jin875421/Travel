@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -135,7 +136,7 @@ public class StrategyRespondDetailActivity extends AppCompatActivity {
                             );
                             Request request = new Request.Builder()
                                     .post(body)
-                                    .url(url + "comment/addComment")
+                                    .url(url + "comment/addStrategyComment")
                                     .build();
                             //3.Call对象
                             Call call = client.newCall(request);
@@ -206,7 +207,7 @@ public class StrategyRespondDetailActivity extends AppCompatActivity {
                 );
                 Request request = new Request.Builder()
                         .post(body)
-                        .url(url + "comment/getReturnCommendRespondList")
+                        .url(url + "comment/getReturnStrategyCommendRespondList")
                         .build();
                 Call call = client.newCall(request);
                 call.enqueue(new Callback() {
@@ -236,6 +237,7 @@ public class StrategyRespondDetailActivity extends AppCompatActivity {
                                         R.layout.activity_respond_detail_adapter,
                                         returnCommentResponds
                                 );
+                                Log.v("StrategyRespondDetailActivity", "lzx 攻略评论回复详情页面的数据"+returnCommentResponds);
                                 listView.setAdapter(StrategyAdapter);
                                 setListViewHeightBasedOnChildren(listView);
                             }

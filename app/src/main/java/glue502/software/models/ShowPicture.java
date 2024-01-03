@@ -6,13 +6,13 @@ import java.util.List;
 public class ShowPicture {
 
     private List<String> picturePath;
-    private Date travelDate;
+    private String travelDate;
     private String placeName;
 
     public ShowPicture() {
     }
 
-    public ShowPicture(List<String> picturePath, Date travelDate, String placeName) {
+    public ShowPicture(List<String> picturePath, String travelDate, String placeName) {
         this.picturePath = picturePath;
         this.travelDate = travelDate;
         this.placeName = placeName;
@@ -26,11 +26,11 @@ public class ShowPicture {
         this.picturePath = picturePath;
     }
 
-    public Date getTravelDate() {
+    public String getTravelDate() {
         return travelDate;
     }
 
-    public void setTravelDate(Date travelDate) {
+    public void setTravelDate(String travelDate) {
         this.travelDate = travelDate;
     }
 

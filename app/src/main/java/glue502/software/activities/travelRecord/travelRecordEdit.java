@@ -378,6 +378,7 @@ public class travelRecordEdit extends Activity {
                                             }
                                         }
                                         travelRecord travelrecord = travelRecords.get(j);
+                                        travelrecord.setTravelName(etTravelName.getText().toString());
                                         travelrecord.setTravelId(travelId);
                                         travelrecord.setPictureNumber(fileList.size());
                                         if(travelrecord.getCreateTime()==null){
@@ -961,8 +962,7 @@ public class travelRecordEdit extends Activity {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setBackgroundResource(R.drawable.border_backgrounddjp);
         layout.setLayoutParams(layoutParams);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
+        layoutParams.setMargins(0, dpToPx(16), 0, 0); // 设置上边距为16dp，根据需要调整间距
         layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
 
 //TODO 以下是图片的新加
@@ -1104,7 +1104,7 @@ public class travelRecordEdit extends Activity {
         btnAdd.setBackgroundResource(R.drawable.ic_add);
         btnAdd.setId(View.generateViewId());
         btnAdd.setVisibility(View.GONE);
-        int b = sharedPreferences.getInt("numberOfControls", 0);
+        int b = travelRecords.size();
         System.out.println("b"+b);
         System.out.println("i"+i);
         if(b-1==i){
@@ -1121,6 +1121,7 @@ public class travelRecordEdit extends Activity {
                     Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
                 } else {
                     addContent(v);
+                    btnAdd.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -1268,7 +1269,7 @@ public class travelRecordEdit extends Activity {
             layout.setLayoutParams(layoutParams);
             layout.setOrientation(LinearLayout.VERTICAL);
             layout.setBackgroundResource(R.drawable.border_backgrounddjp);
-            layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
+            layoutParams.setMargins(0, dpToPx(16), 0, 0); // 设置上边距为16dp，根据需要调整间距
             layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
 //TODO 以下是图片的新加
 
@@ -1363,6 +1364,7 @@ public class travelRecordEdit extends Activity {
             btnAdd.setLayoutParams(btnAddParam);
             btnAdd.setBackgroundResource(R.drawable.ic_add);
             btnAdd.setId(View.generateViewId());
+
             btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

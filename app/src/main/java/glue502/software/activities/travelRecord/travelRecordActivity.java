@@ -74,6 +74,7 @@ import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.exoplayer2.text.span.SpanUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -126,6 +127,7 @@ public class travelRecordActivity extends Activity {
     private UserInfo  userInfo= new UserInfo();
     private String travelId = generateUUID();
     private String userId ;
+    private ImageButton imageAdd;
     private String city = "北京市";
     private ListView mSugListView;
     // 在 PostActivity 中定义一个 SharedPreferences 的实例变量,持久化保存
@@ -178,6 +180,9 @@ public class travelRecordActivity extends Activity {
         String TravelName = sharedPreferences.getString("TravelName", "");
         etTravelName.setText(TravelName);
         int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
+        if(numberOfControls==2){
+            imageAdd.setVisibility(View.GONE);
+        }
         // 如果之前有保存的控件数量，则重新创建控件
         if (numberOfControls > 0) {
             for (int i = numberOfControls-1; i > 0; i--) {
@@ -248,6 +253,12 @@ public class travelRecordActivity extends Activity {
         }
     }
     private void setListener() {
+        imageAdd.setVisibility(View.GONE);
+        int b =llContentView.getChildCount();
+        System.out.println("b"+b);
+        if(b==1){
+            imageAdd.setVisibility(View.VISIBLE);
+        }
         etContent1.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
@@ -274,7 +285,7 @@ public class travelRecordActivity extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    Toast.makeText(getApplicationContext(), "focus", Toast.LENGTH_LONG).show();
+
                     mSugListView.setVisibility(View.VISIBLE);
                 } else {
                     mSugListView.setVisibility(View.GONE);
@@ -284,14 +295,14 @@ public class travelRecordActivity extends Activity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //TODO 提交的代码 逻辑如下 通过sharp得到总数 依次上传
                 {finish();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
                             saveContentToSharedPreferences();
+                            int numberOfControls = sharedPreferences.getInt("numberOfControls", 0);
                             for (int j = numberOfControls-1; j >= 0; j--) {
                                  List<File> fileList = new ArrayList<>();
                                List<travelRecord> list = getListFromSharedPreferences();
@@ -375,6 +386,7 @@ public class travelRecordActivity extends Activity {
                             aaa.remove( "userTitle" + 0);
                             aaa.remove("userContent" + 0);
                             aaa.remove("myList");
+                            aaa.remove("TravelName");
                             aaa.apply();
 //                            etTravelName.setText("旅行者，你要去哪里");
                         }
@@ -382,9 +394,11 @@ public class travelRecordActivity extends Activity {
                 }
 
             }
+
             //在这里要删除页面的content和照片
 
         });
+
         btnReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -968,7 +982,6 @@ public class travelRecordActivity extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    Toast.makeText(getApplicationContext(), "focus", Toast.LENGTH_LONG).show();
                     view.setVisibility(View.VISIBLE);
                 } else {
                     view.setVisibility(View.GONE);
@@ -1035,8 +1048,6 @@ public class travelRecordActivity extends Activity {
         btnAdd.setId(View.generateViewId());
         btnAdd.setVisibility(View.GONE);
         int b = sharedPreferences.getInt("numberOfControls", 0);
-        System.out.println("b"+b);
-        System.out.println("i"+i);
         if(b-1==i){
             btnAdd.setVisibility(View.VISIBLE);
         }
@@ -1044,11 +1055,12 @@ public class travelRecordActivity extends Activity {
             @Override
             public void onClick(View v) {
                 loadSave();
-                if(a!=b){
+                if(b-1!=i){
                     // 显示短暂的消息提示
                     Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
                 }else {
                     addContent(v);
+                    btnAdd.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -1160,7 +1172,7 @@ public class travelRecordActivity extends Activity {
         listPhotoAdd = new LinkedList<ImageButton>();
         listPhotoAlbum = new LinkedList<ImageButton>();
         // “+”按钮（第一个）
-        ImageButton ibtnAdd1 = (ImageButton) this.findViewById(R.id.ibn_add1);
+        imageAdd = (ImageButton) this.findViewById(R.id.ibn_add1);
         ImageButton ibtnDelete = (ImageButton) this.findViewById(R.id.ibn_delete);
         ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_photoAdd);
         ImageButton ibtnPhotoAlbum = (ImageButton) this.findViewById(R.id.ibn_PhotoAlbum);
@@ -1172,21 +1184,23 @@ public class travelRecordActivity extends Activity {
                 takeCamera(RESULT_CAMERA_IMAGE);
             }
         });
-        ibtnAdd1.setOnClickListener(new View.OnClickListener() {
+
+        imageAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 获取尺寸变化比例
                 iETContentHeight = etContent1.getHeight();
                 fDimRatio = iETContentHeight / 80;
                 loadSave();
-                int b =llContentView.getChildCount();
-                if(b!=1){
-                    // 显示短暂的消息提示
-                    Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
-                }else {
+//                int b =llContentView.getChildCount();
+//                if(b!=1){
+//                    // 显示短暂的消息提示
+//                    Toast.makeText(getApplicationContext(), "这不是最后一个，要从最后一个开始添加哦", Toast.LENGTH_SHORT).show();
+//                }else {
+                    imageAdd.setVisibility(View.GONE);
                     Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
                     addContent(v);
-                }
+
 
             }
         });
@@ -1221,7 +1235,7 @@ public class travelRecordActivity extends Activity {
 
             }
         });
-        listIBTNAdd.add(ibtnAdd1);
+        listIBTNAdd.add(imageAdd);
         listPhotoAdd.add(ibtnPhotoAdd);
         listPhotoAlbum.add(ibtnPhotoAlbum);
         listIBTNDel.add(null);  // 第一组隐藏了“-”按钮，所以为null
@@ -1330,7 +1344,6 @@ public class travelRecordActivity extends Activity {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (hasFocus) {
-                        Toast.makeText(getApplicationContext(), "focus", Toast.LENGTH_LONG).show();
                         view.setVisibility(View.VISIBLE);
                     } else {
                         view.setVisibility(View.GONE);
@@ -1519,8 +1532,9 @@ public class travelRecordActivity extends Activity {
             llContentView.removeViewAt(iIndex);
             removeFromSharedPreferences(iIndex);
         }
+        System.out.println("llContentView.getChildCount()"+llContentView.getChildCount());
         //TODO 111
-            if(iIndex==llContentView.getChildCount()){
+            if(iIndex==llContentView.getChildCount()&&llContentView.getChildCount()>1){
                 LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(iIndex-1); // 获取第一个LinearLayout
                 int childCount = firstLayout.getChildCount();
                 for (int i = 0; i < childCount; i++) {
@@ -1533,20 +1547,23 @@ public class travelRecordActivity extends Activity {
                     }
                 }
             }
+        else{
+            imageAdd.setVisibility(View.VISIBLE);
+        }
     }
     // 保存内容到 SharedPreferences
     private void saveContentToSharedPreferences() {
         String TravelName = etTravelName.getText().toString();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("TravelName", TravelName);
+        editor.apply();
         for (int i = 0; i < llContentView.getChildCount(); i++) {
             //TODO 在这里执行关闭保存 通过i先读取，读取出总数，得到总数，清空总数，循环count保存，读取出uri再保存
             List<travelRecord> list = getListFromSharedPreferences();
             if (i >= 0 && i < list.size()) { // 确保 i 在列表范围内
                 List<String> path = list.get(i).getImage();
                 if (path != null && !path.isEmpty()) {
-                    System.out.println(i);
-                    System.out.println(path);
+
                     // 这里是当 path 不为空时执行的操作
                     // 例如，可以遍历 path 中的元素或者执行其他操作
                     saveListToSharedPreferences(path,i);
@@ -1702,7 +1719,6 @@ public class travelRecordActivity extends Activity {
         if(submitClicked){
             Toast.makeText(getApplicationContext(), "删除成功", Toast.LENGTH_LONG).show();
         }else {
-            System.out.println("@@@@@@@@@@@@@");
             Log.d("PostActivity", "onPause() called");
             saveContentToSharedPreferences();
             // 保存已添加的控件数量到 SharedPreferences
@@ -1755,20 +1771,6 @@ public class travelRecordActivity extends Activity {
                 )
                 .show();
     }
-//    private static String convertFileToBinaryString(File file) throws IOException {
-//        StringBuilder binaryContent = new StringBuilder();
-//        FileInputStream fileInputStream = new FileInputStream(file);
-//        int byteRead;
-//
-//        while ((byteRead = fileInputStream.read()) != -1) {
-//            // 将字节转换为8位二进制字符串并追加到StringBuilder中
-//            String binary = String.format("%8s", Integer.toBinaryString(byteRead)).replace(' ', '0');
-//            binaryContent.append(binary);
-//        }
-//
-//        fileInputStream.close();
-//        return binaryContent.toString();
-//    }
     private String generateUUID() {
         return UUID.randomUUID().toString();
     }

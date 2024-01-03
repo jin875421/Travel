@@ -24,99 +24,138 @@
             android:textSize="20sp"
             android:text="我的相册"/>
     </RelativeLayout>
-    <com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout
-        android:layout_height="wrap_content"
+
+
+
+    <RelativeLayout
+        android:layout_height="match_parent"
         android:layout_width="match_parent">
-        <TextView
-            android:id="@+id/tv_t1"
-            android:layout_width="match_parent"
+
+
+
+
+
+
+
+        <com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:padding="10dp"
-            android:text="最近"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            app:layout_isSticky="true" />
+            android:layout_width="match_parent">
+            <TextView
+                android:id="@+id/tv_t1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:padding="10dp"
+                android:background="#1Affffff"
+                android:text="最近"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_isSticky="true" />
 
-        <GridView
-            android:id="@+id/gv_view1"
-            android:layout_width="match_parent"
+            <GridView
+                android:id="@+id/gv_view1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:horizontalSpacing="5dp"
+                android:numColumns="3"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp" />
+
+            <TextView
+                android:id="@+id/tv_t2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#1Affffff"
+                android:padding="10dp"
+                android:text="一个月前"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_isSticky="true" />
+
+            <GridView
+                android:id="@+id/gv_view2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:horizontalSpacing="5dp"
+                android:numColumns="3"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp" />
+
+            <TextView
+                android:id="@+id/tv_t3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#1Affffff"
+                android:padding="10dp"
+                android:text="半年前"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_isSticky="true" />
+
+            <GridView
+                android:id="@+id/gv_view3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:horizontalSpacing="5dp"
+                android:numColumns="3"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp" />
+
+            <TextView
+                android:id="@+id/tv_t4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#1Affffff"
+                android:padding="10dp"
+                android:text="一年前"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_isSticky="true" />
+
+            <GridView
+                android:id="@+id/gv_view4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:horizontalSpacing="5dp"
+                android:numColumns="3"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp" />
+
+
+
+        </com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout>
+
+        <!--在这里添加加载动画-->
+        <RelativeLayout
+            android:id="@+id/rl_background"
             android:layout_height="match_parent"
-            android:columnWidth="90dp"
-            android:gravity="center"
-            android:horizontalSpacing="10dp"
-            android:numColumns="3"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp" />
-
-        <TextView
-            android:id="@+id/tv_t2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:padding="10dp"
-            android:text="一个月前"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            app:layout_isSticky="true" />
+            android:background="@color/white">
 
-        <GridView
-            android:id="@+id/gv_view2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:columnWidth="90dp"
-            android:gravity="center"
-            android:horizontalSpacing="10dp"
-            android:numColumns="3"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp" />
+            <ProgressBar
+                android:id="@+id/pb_picture"
+                android:layout_height="100dp"
+                android:layout_width="100dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                />
 
-        <TextView
-            android:id="@+id/tv_t3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:padding="10dp"
-            android:text="半年前"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            app:layout_isSticky="true" />
+        </RelativeLayout>
 
-        <GridView
-            android:id="@+id/gv_view3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:columnWidth="90dp"
-            android:gravity="center"
-            android:horizontalSpacing="10dp"
-            android:numColumns="3"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp" />
 
-        <TextView
-            android:id="@+id/tv_t4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:visibility="gone"
-            android:text="一年前"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            app:layout_isSticky="true" />
-
-        <GridView
-            android:id="@+id/gv_view4"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:columnWidth="90dp"
-            android:gravity="center"
-            android:horizontalSpacing="10dp"
-            android:numColumns="3"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp" />
+    </RelativeLayout>
 
 
 
-    </com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout>
+
+
 
 </LinearLayout>

@@ -33,6 +33,7 @@ import okhttp3.Response;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +46,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -78,40 +80,24 @@ public class StrategyDisplayActivity extends AppCompatActivity {
     private String url = "http://"+ip+"/travel";
     private ReturnStrategy returnStrategy;
     private String strategyId;
-    private TextView strategyTitle;
-    private TextView strategyUserName;
-    private TextView strategyDescribe;
-    private TextView strategyTime;
-    private Double latitude;
-    private Double longitude;
     private ImageView avatar;
-    private LinearLayout images;
     private String userId;
     private String status;
     private List<StrategyComment> commentList = new ArrayList<>();
-
-    private ImageView menuBtn;
     private StrategyCommentListAdapter commentListAdapter;
     private ListView listView;
-    private ImageView star_btn;
-    private ImageView like_btn;
-    private int checkedItemId = R.id.edit;
     private ImageView back_btn;
-    private ImageView submit;
+    private Button submit;
     private LinearLayout dotLinerLayout;
     private ViewPager2 postImage;
-    private PostWithUserInfo postWithUserInfo;
-    private PostWithUserInfo post;
     List<String> postPicturePaths = new ArrayList<>();
     private TextView content;
     private TextView title;
-    private TextView text;
     private TextView userName;
+    private TextView time;
+    private TextView commentNumber;
     private EditText chatInputEt;
     private ScrollView view;
-    private String postId;
-    //记录用户收藏和点赞状态
-    private int likeStatus, starStatus;
 
 
     @Override
@@ -119,8 +105,8 @@ public class StrategyDisplayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_strategy_display);
 
-        initData();
         initView();
+        initData();
         setListener();
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
 
@@ -461,8 +447,6 @@ public class StrategyDisplayActivity extends AppCompatActivity {
 
 
     private void initView() {
-        like_btn = findViewById(R.id.btn_like);
-        menuBtn = findViewById(R.id.popupmenu);
         postImage = findViewById(R.id.post_image);
         dotLinerLayout = findViewById(R.id.index_dot);
         content = findViewById(R.id.post_content);
@@ -470,13 +454,12 @@ public class StrategyDisplayActivity extends AppCompatActivity {
         userName = findViewById(R.id.user_name);
         avatar = findViewById(R.id.avatar);
         back_btn = findViewById(R.id.btn_back);
-        star_btn = findViewById(R.id.btn_star);
         listView = findViewById(R.id.comment_list);
-        text = findViewById(R.id.text);
         submit = findViewById(R.id.submit);
         chatInputEt = findViewById(R.id.chatInputEt);
         view = findViewById(R.id.view);
-
+        time = findViewById(R.id.strategy_time);
+        commentNumber = findViewById(R.id.comment_count);
     }
 
     private void initData() {
@@ -518,24 +501,28 @@ public class StrategyDisplayActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 //Carousel为自定义轮播图工具类
-                                //Carousel carousel = new Carousel(StrategyDisplayActivity.this, dotLinerLayout, postImage);
-                                //carousel.initViews(postPicturePaths);
+                                Carousel carousel = new Carousel(StrategyDisplayActivity.this, dotLinerLayout, postImage, "");
+                                carousel.initViews(postPicturePaths);
                                 content.setText(returnStrategy.getDescribe());
                                 title.setText(returnStrategy.getTitle());
                                 userName.setText(returnStrategy.getUserName());
+                                time.setText(returnStrategy.getTime());
                                 RequestOptions requestOptions = new RequestOptions()
                                         .transform(new CircleCrop());
                                 Glide.with(StrategyDisplayActivity.this)
-                                        .load(url+returnStrategy.getAvatar())
+                                        .load(url+"/"+returnStrategy.getAvatar())
                                         .apply(requestOptions)
+                                        .placeholder(R.mipmap.loading)
+                                        .error(R.mipmap.error)
+                                        .fallback(R.mipmap.blank)
                                         .into(avatar);
+                                Log.v("StrategyDisplayActivity", "lzx 发帖人的头像"+returnStrategy.getAvatar());
                             }
                         });
                     }
                 });
             }
         }).start();
-        getCommentData();
     }
     private void getCommentData() {
         //向服务器发送请求
@@ -573,6 +560,11 @@ public class StrategyDisplayActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Log.v("StrategyDisplayActivity", "lzx评论个数"+commentList);
+                               if (commentList.size() > 0){
+                                   commentNumber.setText(commentList.size()+"");
+                               }else {
+                                   commentNumber.setText("0");
+                               }
                                 commentListAdapter = new StrategyCommentListAdapter(
                                         StrategyDisplayActivity.this,
                                         R.layout.activity_comment_list_adapter,
@@ -588,5 +580,12 @@ public class StrategyDisplayActivity extends AppCompatActivity {
                 }));
             }
         }).start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        System.out.println("ActivityA is Resume");
+        getCommentData();
     }
 }

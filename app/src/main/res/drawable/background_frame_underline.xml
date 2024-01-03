@@ -9,9 +9,9 @@
     </item>
 
     <!-- Draw a thin bottom border with a different color -->
-    <item android:bottom="3dp">
+    <item android:bottom="1dp">
         <shape>
-            <solid android:color="#FFFFFF" />
+            <solid android:color="#FEFEFE" />
         </shape>
     </item>
 </layer-list>
