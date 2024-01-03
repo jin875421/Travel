@@ -62,7 +62,7 @@ public class RespondDetail extends AppCompatActivity {
     List<ReturnCommentRespond> returnCommentResponds;
     private RespondDetailAdapter adapter;
     private ListView listView;
-    private ImageView submit;
+    private Button submit;
     private String status;
     private String postId;
     private EditText chatInputEt;
@@ -249,7 +249,7 @@ public class RespondDetail extends AppCompatActivity {
 
     public void setView(){
         listView = findViewById(R.id.respond_list);
-        submit = findViewById(R.id.respond_submit);
+        submit = findViewById(R.id.submit);
         chatInputEt = findViewById(R.id.chatInputEt);
         username = findViewById(R.id.username);
         avatar = findViewById(R.id.avatar);
