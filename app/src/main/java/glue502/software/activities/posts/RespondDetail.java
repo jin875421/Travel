@@ -49,6 +49,7 @@ import glue502.software.models.Comment;
 import glue502.software.models.CommentRespond;
 import glue502.software.models.ReturnCommentRespond;
 import glue502.software.models.UploadComment;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -71,6 +72,7 @@ public class RespondDetail extends AppCompatActivity {
     private TextView time;
     private TextView text;
     private String url = "http://"+ip+"/travel/";
+    private ImageView backButton;
     private OkHttpClient client = new OkHttpClient();
 
     @Override
@@ -78,6 +80,7 @@ public class RespondDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_respond_detail);
         setView();
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.head),true);
         initData();
         setListener();
 
@@ -255,6 +258,7 @@ public class RespondDetail extends AppCompatActivity {
         avatar = findViewById(R.id.avatar);
         time = findViewById(R.id.time);
         text = findViewById(R.id.text);
+        backButton = findViewById(R.id.btn_back);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false); // 使用水平方向
     }
 

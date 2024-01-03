@@ -151,7 +151,7 @@ public class FunctionFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.v("FunctionFragment", "lzx onCreateView");
         view = inflater.inflate(R.layout.fragment_function, container, false);
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.bmapView),true);
+//        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top).getRootView(),true);
         initView();
         getIntent();
         PoiSugSearch();
