@@ -43,7 +43,7 @@
             android:name=".activities.recoAttraction.MoreAttractionMainActivity"
             android:exported="false" />
         <activity
-            android:name=".mapIcon"
+            android:name=".activities.map.mapIcon"
             android:exported="false" />
         <activity
             android:name=".activities.map.StrategyRespondDetailActivity"
