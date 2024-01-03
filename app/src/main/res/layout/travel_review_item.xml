@@ -2,23 +2,74 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/djp">
-    <TextView
-        android:id="@+id/travel_name"
-        android:layout_marginLeft="5dp"
+    >
+<!--    android:background="@drawable/background_frame"-->
+
+    <!--在这里要实现将所有的内容放到一个圆角的框中-->
+    <RelativeLayout
+        android:id="@+id/ll_review"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:textSize="20sp"/>
-    <HorizontalScrollView
-        android:id="@+id/image_scroll"
-        android:layout_below="@+id/travel_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:id="@+id/image_container"
+        android:layout_height="170dp"
+        android:layout_margin="3dp"
+        android:background="@color/white"
+        android:radius="8dp">
+<!--        android:background="@drawable/round_corner"-->
+
+
+        <HorizontalScrollView
+            android:id="@+id/image_scroll"
+            android:layout_below="@+id/travel_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp"/>
-    </HorizontalScrollView>
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/image_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp"/>
+        </HorizontalScrollView>
+
+        <!--在这里添加一张照片作为背景-->
+
+
+        <ImageView
+            android:id="@+id/iv_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+        />
+        <TextView
+            android:id="@+id/travel_name"
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:shadowColor="#FFFAFA"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"/>
+        <TextView
+            android:id="@+id/travel_time"
+            android:layout_marginLeft="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:textColor="@color/white"
+            android:text="20202020"
+            android:textSize="16sp"
+            android:shadowColor="#FFFAFA"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:layout_below="@+id/travel_name"/>
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+
 </RelativeLayout>

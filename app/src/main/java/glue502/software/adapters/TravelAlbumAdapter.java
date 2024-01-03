@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +75,8 @@ public class TravelAlbumAdapter extends BaseAdapter {
         //将地点写上去
         TextView tvPlace = view.findViewById(R.id.tv_picture);
         //在这里用于改变字体格式
-//        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/幼圆.TTF");
-//        tvPlace.setTypeface(typeface);
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/幼圆.TTF");
+        tvPlace.setTypeface(typeface);
         //在这里用于改变字体背景，让字体背景变透明
 //        tvPlace.getBackground().setAlpha(10);
         tvPlace.setText(sp.getPlaceName());
@@ -82,8 +84,17 @@ public class TravelAlbumAdapter extends BaseAdapter {
         //显示图片
 //        System.out.println(url+picturePath);
         //设定图片宽高
+        int width = 110;
+        int height = 110;
         Glide.with(context)
+                //在这里，`diskCacheStrategy` 设置了磁盘缓存的策略，`skipMemoryCache` 设置为 false，表示不跳过内存缓存
+                .setDefaultRequestOptions(
+                        new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .skipMemoryCache(false)
+                )
                 .load(url+picturePath)
+                .override(convertDpToPixel(width), convertDpToPixel(height))
                 .into(ivAlbum);
         //TODO 设置点击时间监听器
 

@@ -8,7 +8,7 @@ public class TravelReview {
     private String travelId;
     private List<String> images;
     private String travelName;
-    private Date date;
+    private String date;
 
     public String getUserId() {
         return userId;
@@ -34,10 +34,12 @@ public class TravelReview {
     public void setTravelName(String travelName) {
         this.travelName = travelName;
     }
-    public Date getDate() {
+
+    public String getDate() {
         return date;
     }
-    public void setDate(Date date) {
+
+    public void setDate(String date) {
         this.date = date;
     }
 }

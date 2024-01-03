@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#10D4B9</color>
-    <color name="theme_color">#AFDAE3</color>
+    <color name="theme_color">#CCFF99</color>
     <color name="orange">#EB8F3B</color>
     <color name="blue">#009688</color>
     <color name="gray">#EEEEEE</color>
@@ -16,6 +16,6 @@
     <color name="cwn">#fffaf0</color>
     <color name="one">#70B5A5</color>
     <color name="djpback">#d3d3d3</color>
-    <color name="communitytitle">#99DDFF</color>
+    <color name="communitytitle">#fafafa</color>
     <color name="tablayoutba">#81AF9F</color>
 </resources>

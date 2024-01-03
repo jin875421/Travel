@@ -378,6 +378,7 @@ public class travelRecordEdit extends Activity {
                                             }
                                         }
                                         travelRecord travelrecord = travelRecords.get(j);
+                                        travelrecord.setTravelName(etTravelName.getText().toString());
                                         travelrecord.setTravelId(travelId);
                                         travelrecord.setPictureNumber(fileList.size());
                                         if(travelrecord.getCreateTime()==null){
