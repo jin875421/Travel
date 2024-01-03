@@ -5,16 +5,19 @@
     android:background="#ECECEC"
     android:orientation="vertical">
     <RelativeLayout
+        android:id="@+id/title"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:paddingBottom="10dp"
+        android:layout_height="50dp"
         android:background="#ECECEC">
         <ImageView
             android:id="@+id/img_back"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_centerVertical="true"
+            android:layout_alignParentBottom="true"
             android:src="@drawable/back1"
             />
 
@@ -22,25 +25,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
             android:text="修改个人信息"
-            android:textColor="#0c0c0c"
-            android:textSize="18dp"
+            android:layout_alignParentBottom="true"
             android:textStyle="bold"
-            />
-
+            android:textColor="#0c0c0c"
+            android:textSize="18dp" />
         <TextView
             android:id="@+id/txt_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_alignParentBottom="true"
             android:text="保存"
             android:textColor="#2196F3"
-            android:textSize="18dp"/>
+            android:textSize="16dp"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -56,7 +55,7 @@ android:layout_marginBottom="7dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="头像"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="#0c0c0c"
             android:layout_centerVertical="true"
             />
@@ -82,7 +81,7 @@ android:layout_marginBottom="7dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="昵称"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="#0c0c0c"/>
         <EditText
             android:id="@+id/edt_name"
@@ -92,7 +91,7 @@ android:layout_marginBottom="7dp"
             android:layout_centerVertical="true"
             android:gravity="end"
             android:background="@null"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="#0c0c0c"
             android:hint="请输入昵称"/>
     </RelativeLayout>
@@ -108,7 +107,7 @@ android:layout_marginBottom="7dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="性别"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="#0c0c0c"/>
         <TextView
             android:id="@+id/txt_sex"
@@ -117,7 +116,8 @@ android:layout_marginBottom="7dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text=""
-            android:textSize="20dp"/>
+            android:textColor="#0c0c0c"
+            android:textSize="16dp"/>
     </RelativeLayout>
     <RelativeLayout
         android:padding="10dp"
@@ -130,7 +130,7 @@ android:layout_marginBottom="7dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="手机号"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="#0c0c0c"/>
         <EditText
             android:id="@+id/edt_phone"
@@ -140,7 +140,7 @@ android:layout_marginBottom="7dp"
             android:layout_centerVertical="true"
             android:background="@null"
             android:hint="输入手机号"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="#0c0c0c"/>
     </RelativeLayout>
     <RelativeLayout
@@ -154,7 +154,7 @@ android:layout_marginBottom="7dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="邮箱"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="#0c0c0c"/>
         <EditText
             android:id="@+id/edt_email"
@@ -164,7 +164,7 @@ android:layout_marginBottom="7dp"
             android:layout_centerVertical="true"
             android:background="@null"
             android:hint="输入邮箱"
-            android:textSize="18dp"
+            android:textSize="16dp"
             android:textColor="#0c0c0c"/>
     </RelativeLayout>
 

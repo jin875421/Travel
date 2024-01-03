@@ -124,10 +124,11 @@
                 android:layout_marginLeft="20dp"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
-                app:tabTextAppearance="@style/CustomTabLayout"
+                app:tabTextAppearance="@style/PersonTabLayout"
                 android:background="#fafafa"
-                app:tabIndicatorColor="#99CCFF"
-                app:tabRippleColor="#99CCFF"
+                app:tabIndicatorColor="#10D4B9"
+                app:tabRippleColor="@null"
+                app:tabTextColor="#0C0C0C"
                 android:layout_alignParentTop="true" />
         </RelativeLayout>
     </LinearLayout>

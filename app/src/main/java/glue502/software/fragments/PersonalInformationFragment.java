@@ -12,12 +12,14 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -39,6 +41,7 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -74,6 +77,7 @@ public class PersonalInformationFragment extends Fragment {
     private LinearLayout linearCustomerService;
     private ImageView imgAvatar;
     private View view;
+    private float startX;
     private PageAdapter adapter;
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
     private String urlLoadImage="http://"+ip+"/travel/";
@@ -121,11 +125,12 @@ public class PersonalInformationFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tbl);
         viewPager2 = view.findViewById(R.id.vp2);
 
-
+        setViewPager2ScrollSensitivity(9);
         initFragment();
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
         //绑定监听器
         viewPager2.setAdapter(adapter);
+
         TabLayoutMediator mediator = new TabLayoutMediator(
                 tabLayout,
                 viewPager2,
@@ -135,10 +140,10 @@ public class PersonalInformationFragment extends Fragment {
                     public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                         switch (position){
                             case 0:
-                                tab.setText("我的收藏");
+                                tab.setText("收藏");
                                 break;
                             case 1:
-                                tab.setText("我的发布");
+                                tab.setText("发布");
                                 break;
                             default:
                                 break;
@@ -489,5 +494,19 @@ public class PersonalInformationFragment extends Fragment {
 
         builder.show();
     }
+    private void setViewPager2ScrollSensitivity(int sensitivity) {
+        try {
+            Field recyclerViewField = ViewPager2.class.getDeclaredField("mRecyclerView");
+            recyclerViewField.setAccessible(true);
+            RecyclerView recyclerView = (RecyclerView) recyclerViewField.get(viewPager2);
 
+            Field touchSlopField = RecyclerView.class.getDeclaredField("mTouchSlop");
+            touchSlopField.setAccessible(true);
+            int touchSlop = (int) touchSlopField.get(recyclerView);
+
+            touchSlopField.set(recyclerView, touchSlop * sensitivity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

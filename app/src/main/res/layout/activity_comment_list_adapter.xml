@@ -34,7 +34,6 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textColor="@color/black"
-          android:textStyle="bold"
           android:text="用户名 "
           android:textSize="14sp" />
 
@@ -54,7 +53,7 @@
           android:layout_marginTop="10dp"
           android:text="dfsafafadsfsdfadfsadfsdasfsadfasdfsadfasdfsadfasdfafd"
           android:textColor="@color/black"
-          android:textSize="20sp" />
+          android:textSize="15sp" />
 
     </LinearLayout>
 
@@ -89,7 +88,7 @@
           android:background="@android:color/white" />
       <TextView
           android:id="@+id/respond_num"
-          android:textSize="15sp"
+          android:textSize="14sp"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="共N条回复 >"/>
