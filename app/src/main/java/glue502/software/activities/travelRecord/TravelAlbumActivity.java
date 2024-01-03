@@ -46,14 +46,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class TravelAlbumActivity extends AppCompatActivity {
-//
-//    SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId",MODE_PRIVATE);
-//    String userId = sharedPreferences.getString("userId","");
-//    String userId = "111111";
 
     private String url = "http://"+ip+"/travel/travel";
 
-    private List<ShowPicture> list;
     private List<ShowPicture> list1,list2,list3,list4;
 
     private GridView gridView1,gridView2,gridView3,gridView4;
@@ -63,8 +58,6 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
     TravelAlbumAdapter t1,t2,t3,t4;
 
-    //这是一个用于测试的数据源，只有图片，看能不能在相册页面中显示出来
-    private List<String> list10 = new ArrayList<>();
     private ImageView back;
 
     //这是加载动画的控件
@@ -188,8 +181,6 @@ public class TravelAlbumActivity extends AppCompatActivity {
                 //首先将数据转换类型
                 List<ShowPicture> showPictures = new ArrayList<>();
                 showPictures = new Gson().fromJson(response, new TypeToken<List<ShowPicture>>(){}.getType());
-
-//                System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+result);
 
                 //然后将这个列表中的数据分配给四个列表,按照时间分配
                 //遍历这个列表

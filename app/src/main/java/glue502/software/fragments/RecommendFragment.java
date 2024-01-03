@@ -519,8 +519,8 @@ public class RecommendFragment extends Fragment {
     }
     private void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
+        if (listAdapter == null||listAdapter.getCount()<1) {
+            //铺满屏幕
             return;
         }
 

@@ -43,6 +43,9 @@
             android:name=".activities.recoAttraction.MoreAttractionMainActivity"
             android:exported="false" />
         <activity
+            android:name=".mapIcon"
+            android:exported="false" />
+        <activity
             android:name=".MarkerIconActivity"
             android:exported="false" />
         <activity
@@ -65,9 +68,6 @@
             android:exported="false" />
         <activity
             android:name=".activities.travelRecord.travelRecordEdit"
-            android:exported="false" />
-        <activity
-            android:name=".activities.travelRecord.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".activities.travelRecord.TravelPicturesActivity"

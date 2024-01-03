@@ -9,6 +9,7 @@
 
     <TextView
         android:id="@+id/travel_place"
+        android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
@@ -27,6 +28,7 @@
     </HorizontalScrollView>
     <TextView
         android:id="@+id/content"
+        android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp" />

@@ -68,18 +68,32 @@
       android:orientation="vertical"
       android:layout_marginTop="10dp"
       android:layout_marginLeft="60dp"
-      android:layout_marginRight="60dp">
+      android:layout_marginRight="60dp"
+      android:layout_marginBottom="10dp">
     <TextView
         android:id="@+id/first_respond"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="14sp"
         android:text="刘梓煊 回复 楼主:哈哈哈"/>
-    <TextView
-        android:id="@+id/respond_num"
+
+    <LinearLayout
         android:layout_marginTop="5dp"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="共N条回复 >"/>
+        android:orientation="vertical">
+      <!-- 添加划线的 View -->
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@android:color/white" />
+      <TextView
+          android:id="@+id/respond_num"
+          android:textSize="15sp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="共N条回复 >"/>
+    </LinearLayout>
   </LinearLayout>
 
 </LinearLayout>

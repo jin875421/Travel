@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/frame_layout"
     tools:context=".fragments.FunctionFragment"
-    android:paddingTop="25dp"
     android:orientation="vertical">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -35,7 +34,7 @@
                 android:background="@drawable/map_search_layout"
                 android:layout_alignParentTop="true">
                 <LinearLayout
-                    android:layout_width="40dp"
+                    android:layout_width="55dp"
                     android:layout_marginLeft="13dp"
                     android:layout_marginTop="10dp"
                     android:layout_height="wrap_content"
@@ -64,16 +63,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
-                <ImageButton
-                    android:id="@+id/uploadBtn"
-                    android:layout_alignParentEnd="true"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="2.5dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@color/white"
-                    android:src="@mipmap/upload"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/search"
@@ -93,7 +82,6 @@
                     android:visibility="gone" />
             </LinearLayout>
         </RelativeLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -111,7 +99,6 @@
             app:behavior_hideable="true"
             android:background="@drawable/background_frame"
             app:layout_behavior="@string/bottom_sheet_behavior">
-
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="15dp"
@@ -128,8 +115,23 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
         </LinearLayout>
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</FrameLayout>
+    <FrameLayout
+        android:id="@+id/floating_button_layout"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="45dp">
+        <Button
+            android:id="@+id/uploadBtn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@xml/round_button"
+            android:text="+"
+            android:textSize="25sp"
+            android:textColor="@color/white" />
+    </FrameLayout>
+</RelativeLayout>
