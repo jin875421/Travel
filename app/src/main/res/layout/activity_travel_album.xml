@@ -21,7 +21,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:textSize="20sp"
+            android:textColor="#0c0c0c"
+            android:textSize="18dp"
+            android:textStyle="bold"
+
             android:text="我的相册"/>
     </RelativeLayout>
 

@@ -63,7 +63,7 @@ public class RespondDetail extends AppCompatActivity {
     List<ReturnCommentRespond> returnCommentResponds;
     private RespondDetailAdapter adapter;
     private ListView listView;
-    private ImageView submit;
+    private Button submit;
     private String status;
     private String postId;
     private EditText chatInputEt;
@@ -127,7 +127,6 @@ public class RespondDetail extends AppCompatActivity {
                             String parentId = comment.getCommentId();
                             SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
                             String userId = sharedPreferences.getString("userId","");
-                            //UploadComment commentRespond = new UploadComment(id, userId, text, time, comment.getCommentId());
                             UploadComment commentRespond = new UploadComment(postId, userId, text, id, time, parentId);
                             //okHttp
                             Gson gson = new Gson();

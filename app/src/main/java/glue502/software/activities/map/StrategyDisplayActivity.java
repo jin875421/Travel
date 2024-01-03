@@ -122,6 +122,7 @@ public class StrategyDisplayActivity extends AppCompatActivity {
         chatInputEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                chatInputEt.setHint("请友好交流哦");
                 submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -304,6 +305,8 @@ public class StrategyDisplayActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //更改输入框提示内容
+                chatInputEt.setHint("回复@" + commentList.get(position).getUsername());
                 //获取点击的评论
                 StrategyComment comment = commentList.get(position);
                 //获取评论的id
@@ -316,6 +319,7 @@ public class StrategyDisplayActivity extends AppCompatActivity {
                 submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        chatInputEt.setHint("请友好交流哦");
                         String text = chatInputEt.getText().toString();
                         //生成回复实体
                         //获取时间
