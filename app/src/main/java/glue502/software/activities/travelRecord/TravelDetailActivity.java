@@ -53,7 +53,7 @@ public class TravelDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_detail);
         //沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.top),false);
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.top),true);
         //获取上页面传过来的travelId
         travelId = getIntent().getStringExtra("travelId");
         initView();

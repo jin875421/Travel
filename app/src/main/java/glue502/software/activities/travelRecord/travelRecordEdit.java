@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -126,7 +127,7 @@ public class travelRecordEdit extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contentdjp);
-        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), false);
+        MyViewUtils.setImmersiveStatusBar(this, findViewById(R.id.top), true);
         initCtrl();
         //获取上页面传过来的travelId
         sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
@@ -310,6 +311,9 @@ public class travelRecordEdit extends Activity {
                                     new CenterCrop(),
                                     new RoundedCornersTransformation(20,0,RoundedCornersTransformation.CornerType.ALL)
                             );
+                            //设定图片大小
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(convertDpToPixel(130), convertDpToPixel(130));
+                            images.setLayoutParams(layoutParams);
 //// 将 ImageView 添加到内部 LinearLayout
                             Glide.with(travelRecordEdit.this)
                                     .load(url2 + path)
@@ -776,8 +780,8 @@ public class travelRecordEdit extends Activity {
                         .apply(RequestOptions.bitmapTransform(mation5))
                         .into(imageView1);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        convertDpToPixel(150), // 宽度 150dp 转换为像素
-                        convertDpToPixel(150) // 高度 150dp 转换为像素
+                        convertDpToPixel(130), // 宽度 150dp 转换为像素
+                        convertDpToPixel(130) // 高度 150dp 转换为像素
                 );
                 imageView1.setOnClickListener(new View.OnClickListener() {
 
@@ -876,8 +880,8 @@ public class travelRecordEdit extends Activity {
                     }
                 });
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        convertDpToPixel(150), // 宽度 150dp 转换为像素
-                        convertDpToPixel(150) // 高度 150dp 转换为像素
+                        convertDpToPixel(130), // 宽度 150dp 转换为像素
+                        convertDpToPixel(130)// 高度 150dp 转换为像素
                 );
                 layoutParams.setMargins(0, 0, 0, 16);
                 imageView1.setLayoutParams(layoutParams);
@@ -939,8 +943,8 @@ public class travelRecordEdit extends Activity {
                 }
             });
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    convertDpToPixel(150), // 宽度 150dp 转换为像素
-                    convertDpToPixel(150) // 高度 150dp 转换为像素
+                    convertDpToPixel(130), // 宽度 150dp 转换为像素
+                    convertDpToPixel(130) // 高度 150dp 转换为像素
             );
             layoutParams.setMargins(0, 0, 0, 16);
             imageView1.setLayoutParams(layoutParams);
@@ -989,8 +993,8 @@ public class travelRecordEdit extends Activity {
             ImageView images = new ImageView(this);
             images.setScaleType(ImageView.ScaleType.CENTER_CROP); // 设置为CENTER_CROP，你也可以选择其他的缩放类型
             LinearLayout.LayoutParams imagesParams = new LinearLayout.LayoutParams(
-                    convertDpToPixel(150), // 宽度 150dp 转换为像素
-                    convertDpToPixel(150) // 高度 150dp 转换为像素
+                    convertDpToPixel(130), // 宽度 150dp 转换为像素
+                    convertDpToPixel(130) // 高度 150dp 转换为像素
             );
             MultiTransformation mation5 = new MultiTransformation(
                     new CenterCrop(),
@@ -1062,7 +1066,8 @@ public class travelRecordEdit extends Activity {
         etContent1.setGravity(Gravity.LEFT);
         etContent1.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         etContent1.setPadding(dpToPx(5), 0, 0, 0);
-        etContent1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+        etContent1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        etContent1.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         etContent1.setTag(i);
         layout.addView(etContent1);
 

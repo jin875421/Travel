@@ -3,43 +3,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ECECEC"
+    android:id="@+id/top"
     android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/title"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
         android:layout_width="match_parent"
-        android:paddingBottom="10dp"
         android:layout_height="50dp"
-        android:background="#ECECEC">
+        android:background="#ECECEC"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp">
+
         <ImageView
             android:id="@+id/img_back"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/back1"
-            />
+            android:layout_centerVertical="true"
+            android:src="@drawable/back1" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
             android:text="修改个人信息"
-            android:layout_alignParentBottom="true"
-            android:textStyle="bold"
             android:textColor="#0c0c0c"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/txt_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
             android:text="保存"
             android:textColor="#2196F3"
-            android:textSize="16dp"/>
+            android:textSize="16dp" />
     </RelativeLayout>
 
     <RelativeLayout
