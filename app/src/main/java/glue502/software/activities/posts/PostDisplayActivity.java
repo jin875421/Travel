@@ -591,75 +591,90 @@ public class PostDisplayActivity extends AppCompatActivity {
                 submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String text = chatInputEt.getText().toString();
-                        //生成回复实体
-                        //获取时间
-                        Date date = new Date();
-                        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :HH:mm:ss");
-                        String time = dateFormat.format(date);
-                        //生成UUID
-                        String commentRespondId = UUID.randomUUID().toString();
-                        if (text.length() > 0) {
-                            UploadComment commentRespond = new UploadComment(postId,
-                                    commenterId,
-                                    text,
-                                    commentRespondId,
-                                    time,
-                                    commentId);
-                            //生成线程提交回复内容
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //okHttp
-                                    Gson gson = new Gson();
-                                    String json = gson.toJson(commentRespond);
-                                    RequestBody body = RequestBody.create(
-                                            MediaType.parse("application/json;charset=utf-8"),
-                                            json
-                                    );
-                                    Request request = new Request.Builder()
-                                            .post(body)
-                                            .url(url + "comment/addComment")
-                                            .build();
-                                    //3.Call对象
-                                    Call call = client.newCall(request);
-                                    call.enqueue((new Callback() {
-                                        @Override
-                                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        if (status==""){
+                            showLoginDialog();
+                        } else if(chatInputEt.getText().toString().equals("")){
+                            View toastView = getLayoutInflater().inflate(R.layout.toast_layout, null);
 
-                                        }
-                                        // 这里可以包含获取数据的逻辑，比如使用OkHttp请求数据
-                                        // 返回模拟的数据
-                                        @Override
-                                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                                            //获取响应的数据
-                                            String result = response.body().string();
-                                            if (result!=null){
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        getCommentData();
-                                                        commentListAdapter.notifyDataSetChanged();
-                                                        setListViewHeightBasedOnChildren(listView);
-                                                    }
-                                                });
-                                            }
-                                            //清空EditText
-                                            chatInputEt.setText("");
-                                            hideInput();
-                                        }
-                                    }));
-                                }
-                            }).start();
+                            // 获取自定义布局中的 TextView
+                            TextView textView = toastView.findViewById(R.id.toast_text);
+                            textView.setText("请填写完整信息");
+                            // 创建并显示自定义 Toast
+                            Toast toast = new Toast(PostDisplayActivity.this);
+                            toast.setDuration(Toast.LENGTH_SHORT);
+                            toast.setView(toastView);
+                            toast.show();
                         }else {
-                            Handler handler = new Handler(Looper.getMainLooper());
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //放在UI线程弹Toast
-                                    Toast.makeText(PostDisplayActivity.this, "评论内容不能为空", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            String text = chatInputEt.getText().toString();
+                            //生成回复实体
+                            //获取时间
+                            Date date = new Date();
+                            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :HH:mm:ss");
+                            String time = dateFormat.format(date);
+                            //生成UUID
+                            String commentRespondId = UUID.randomUUID().toString();
+                            if (text.length() > 0) {
+                                UploadComment commentRespond = new UploadComment(postId,
+                                        commenterId,
+                                        text,
+                                        commentRespondId,
+                                        time,
+                                        commentId);
+                                //生成线程提交回复内容
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //okHttp
+                                        Gson gson = new Gson();
+                                        String json = gson.toJson(commentRespond);
+                                        RequestBody body = RequestBody.create(
+                                                MediaType.parse("application/json;charset=utf-8"),
+                                                json
+                                        );
+                                        Request request = new Request.Builder()
+                                                .post(body)
+                                                .url(url + "comment/addComment")
+                                                .build();
+                                        //3.Call对象
+                                        Call call = client.newCall(request);
+                                        call.enqueue((new Callback() {
+                                            @Override
+                                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+                                            }
+                                            // 这里可以包含获取数据的逻辑，比如使用OkHttp请求数据
+                                            // 返回模拟的数据
+                                            @Override
+                                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                                //获取响应的数据
+                                                String result = response.body().string();
+                                                if (result!=null){
+                                                    runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            getCommentData();
+                                                            commentListAdapter.notifyDataSetChanged();
+                                                            setListViewHeightBasedOnChildren(listView);
+                                                        }
+                                                    });
+                                                }
+                                                //清空EditText
+                                                chatInputEt.setText("");
+                                                hideInput();
+                                            }
+                                        }));
+                                    }
+                                }).start();
+                            }else {
+                                Handler handler = new Handler(Looper.getMainLooper());
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //放在UI线程弹Toast
+                                        Toast.makeText(PostDisplayActivity.this, "评论内容不能为空", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
                         }
                     }
                 });

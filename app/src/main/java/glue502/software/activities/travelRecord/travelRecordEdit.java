@@ -163,7 +163,7 @@ public class travelRecordEdit extends Activity {
         // “+”按钮（第一个）
         ImageButton ibtnAdd1 = (ImageButton) this.findViewById(R.id.ibn_add1);
         ImageButton ibtnDelete = (ImageButton) this.findViewById(R.id.ibn_delete);
-        ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_add1);
+        ImageButton ibtnPhotoAdd = (ImageButton) this.findViewById(R.id.ibn_photoAdd);
         ImageButton ibtnPhotoAlbum = (ImageButton) this.findViewById(R.id.ibn_PhotoAlbum);
         ibtnPhotoAdd.setOnClickListener(new View.OnClickListener() {
 
@@ -455,6 +455,9 @@ public class travelRecordEdit extends Activity {
                         }
                     }).start();
                 }
+                Toast.makeText(getApplicationContext(), "提交成功", Toast.LENGTH_SHORT).show();
+                finish();
+
             }
             //TODO 在这里要删除页面的content和照片
         });

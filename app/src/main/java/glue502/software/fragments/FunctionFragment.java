@@ -1,11 +1,15 @@
 package glue502.software.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
 import static glue502.software.activities.MainActivity.ip;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -83,9 +87,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.login.LoginActivity;
 import glue502.software.activities.map.AddLabelActivity;
 import glue502.software.activities.map.GlideCustomTransformation;
 import glue502.software.activities.map.StrategyDisplayActivity;
+import glue502.software.activities.posts.PostDisplayActivity;
 import glue502.software.adapters.RecyclerViewStrategyAdapter;
 import glue502.software.models.MarkerInfo;
 import glue502.software.models.ReturnStrategy;
@@ -111,6 +117,7 @@ public class FunctionFragment extends Fragment {
     private List<ReturnStrategy> returnStrategyList = new ArrayList<>();
     private String latitude;
     private String longitude;
+    private String status;
     private CoordinatorLayout coordinatorLayout;
     private BottomSheetBehavior<View> behavior;
     private View bottomSheet;
@@ -160,7 +167,10 @@ public class FunctionFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.v("FunctionFragment", "lzx onCreateView");
         view = inflater.inflate(R.layout.fragment_function, container, false);
-//        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top).getRootView(),true);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+        //获取用户状态和用户名
+        status = sharedPreferences.getString("status","");
+        String commenterId = sharedPreferences.getString("userId","");
         initView();
         getIntent();
         PoiSugSearch();
@@ -423,8 +433,12 @@ public class FunctionFragment extends Fragment {
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), AddLabelActivity.class);
-                startActivity(intent);
+                if (status==""){
+                    showLoginDialog();
+                }else {
+                    Intent intent = new Intent(getActivity(), AddLabelActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         //marker按钮
@@ -502,7 +516,29 @@ public class FunctionFragment extends Fragment {
             }
         });
     }
+    public void showLoginDialog() {
+        // 创建AlertDialog构建器
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("账号未登录！")
+                .setMessage("是否前往登录账号")
+                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 点击“确定”按钮后的操作
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 点击“取消”按钮后的操作
+                        dialog.dismiss(); // 关闭对话框
+                    }
+                });
 
+        // 创建并显示对话框
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     private void addMarker(Double latitude, Double longitude, Bundle extraInfo) {
         // 创建一个空的MarkerOptions对象
         LatLng point = new LatLng(latitude, longitude);

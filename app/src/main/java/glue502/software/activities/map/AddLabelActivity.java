@@ -197,7 +197,6 @@ public class AddLabelActivity extends AppCompatActivity {
     }
 
     public void startLocation() {
-        mBaiduMap.clear();
         // 初始化定位客户端
         try {
             Log.v("AddLabelActivity", "lzxAddLabelActivity页面开启");
@@ -235,6 +234,7 @@ public class AddLabelActivity extends AppCompatActivity {
 
                     //在地图上添加并显示
                     Log.v("AddLabelActivity", "lzx 初始定位添加marker");
+                    mBaiduMap.clear();
                     mBaiduMap.addOverlay(option);
 
                     //将地图中心移动到当前位置
