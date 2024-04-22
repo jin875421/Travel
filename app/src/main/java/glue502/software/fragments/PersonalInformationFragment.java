@@ -361,8 +361,6 @@ public class PersonalInformationFragment extends Fragment {
                     .apply(requestOptions)
                     .signature(new ObjectKey(userId))  // 设置签名
                     .into(imgAvatar);
-
-
         }
 
     }

@@ -110,6 +110,8 @@ public class PostDisplayActivity extends AppCompatActivity {
     private String postId;
     private List<Comment> commentList = new ArrayList<>();
     private OkHttpClient client = new OkHttpClient();
+
+
     private ImageView menuBtn;
     private CommentListAdapter commentListAdapter;
     //记录用户收藏和点赞状态

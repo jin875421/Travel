@@ -689,7 +689,7 @@ public class travelRecordEdit extends Activity {
             tag = getValue();
             if (tag >= 0 && tag < travelRecords.size()) { // 确保 i 在列表范围内
                 List<String> path = travelRecords.get(tag).getImage();
-                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA");
+//                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA");
                     String URI = uri.toString();
                 if (path == null) {
                     path = new ArrayList<>(); // 在使用之前确保 path 不为空，进行初始化
@@ -713,7 +713,7 @@ public class travelRecordEdit extends Activity {
                     }
 
             } else {
-                System.out.println("BBBBBBBBBBBBBBBBB");
+//                System.out.println("BBBBBBBBBBBBBBBBB");
                 List<String> path = new ArrayList<>();
                 String URI = uri.toString();
                 if (n == 10000) {
@@ -737,7 +737,7 @@ public class travelRecordEdit extends Activity {
             }
 
         } else {
-            System.out.println("ccccccccccccccc");
+//            System.out.println("ccccccccccccccc");
             List<String> path = travelRecords.get(tag).getImage();
             String URI = uri.toString();
             if (n == 10000) {
