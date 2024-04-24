@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
+
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -137,6 +140,18 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if(againpassword.equals(password)==false){
                     Toast.makeText(RegisterActivity.this, "两次输入的密码不相同", Toast.LENGTH_LONG).show();
                 } else{
+                    //即时通信注册
+//                    try {
+//                        // 注册失败会抛出 HyphenateException。
+//                        // 同步方法，会阻塞当前线程。
+//                        EMClient.getInstance().createAccount(userId, password);
+//                        //成功
+//                        //callBack.onSuccess(createLiveData(userName));
+//                    } catch (HyphenateException e) {
+//                        //失败
+//                        //callBack.onError(e.getErrorCode(), e.getMessage());
+//                    }
+
 
                     new Thread(new Runnable() {
                         @Override

@@ -38,6 +38,8 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -292,6 +294,11 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
         mediator.attach();
+//        //进行即时通信初始化
+//        EMOptions options = new EMOptions();
+//        options.setAppKey("Your appkey");
+//        // 其他 EMOptions 配置。
+//        EMClient.getInstance().init(this, options);
     }
     private void initpages(){
         fragments = new ArrayList<>();
