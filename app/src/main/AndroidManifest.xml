@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- 权限声明 -->
     <!-- IM SDK required start -->
-  <!-- 允许程序在手机屏幕关闭后后台进程仍然运行 -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- IM SDK required end -->
+    <!-- 允许程序在手机屏幕关闭后后台进程仍然运行 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- IM SDK required end -->
     <!-- 定位权限 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -14,15 +13,16 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" /> <!-- 访问网络状态 -->
     <uses-permission android:name="android.permission.INTERNET" />
-     <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.VIBRATE" /> <!-- 外置存储存取权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 多媒体相关 -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 这个权限用于进行网络定位 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- 访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.FLASHLIGHT" />
+
     <application
         android:name=".utils.MyBaiduApplication"
         android:allowBackup="true"
@@ -34,6 +34,9 @@
         android:theme="@style/Theme.Travel"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.posts.PostSearchActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.recoAttraction.MoreAttractionMainActivity"
             android:exported="false" />
@@ -47,7 +50,7 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"></service>
+            android:process=":remote" />
 
         <activity
             android:name=".activities.recoAttraction.AttractionDetailActivity"
@@ -122,8 +125,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"
-            android:exported="false" />
-        <!-- <intent-filter> -->
+            android:exported="false" /> <!-- <intent-filter> -->
         <!-- <action android:name="android.intent.action.MAIN" /> -->
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
@@ -152,8 +154,6 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="tSbMf5hhwaxtgIE5g3Z0IeldzZ6IYQoN" />
-
-
     </application>
 
 </manifest>

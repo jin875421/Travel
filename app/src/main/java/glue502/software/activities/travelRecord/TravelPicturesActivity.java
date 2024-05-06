@@ -51,7 +51,6 @@ public class TravelPicturesActivity extends AppCompatActivity {
     private String placeName ;
     private TextView name;
     private ImageView back;
-//    private GridView gvPictures;
 
     private TravelPicturesAdapter travelPicturesAdapter;
 

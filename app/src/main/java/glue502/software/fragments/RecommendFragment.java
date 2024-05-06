@@ -127,7 +127,8 @@ public class RecommendFragment extends Fragment {
         getCity();
         setlistener();
         date();
-        getCarousel();
+//        //轮播图
+//        getCarousel();
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
         return view;
     }

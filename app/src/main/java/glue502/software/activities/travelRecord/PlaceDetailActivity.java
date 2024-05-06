@@ -41,6 +41,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
             //设置图片
             Carousel carousel = new Carousel(this, findViewById(R.id.index_dot), findViewById(R.id.post_image),"");
             carousel.initViews(travelRecord.getImage());
+            //设置轮播图大小
+
             title.setText(travelRecord.getPlaceName());
             content.setText(travelRecord.getContent());
         }

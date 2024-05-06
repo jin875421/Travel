@@ -27,9 +27,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -49,7 +51,9 @@ import java.util.List;
 import glue502.software.R;
 import glue502.software.activities.login.LoginActivity;
 import glue502.software.activities.posts.PostDisplayActivity;
+import glue502.software.activities.posts.PostSearchActivity;
 import glue502.software.activities.posts.UploadPostActivity;
+import glue502.software.activities.travelRecord.SearchActivity;
 import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
@@ -69,14 +73,14 @@ public class CommunityFragment extends Fragment {
     private ImageView img;
     private TextView txtSs;
     private AppBarLayout appBarLayout;
-    private LinearLayout lsda;
+    private RelativeLayout lsda;
     private Button uploadBtn;
     private List<Post> posts = new ArrayList<>();
     private List<UserInfo> userInfos = new ArrayList<>();
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private String status;
     private RefreshLayout refreshLayout;
-    private EditText searchText;
+    private ImageButton searchBtn;
     private View view;
     private int page = 0;
     private PostListAdapter postAdapter;
@@ -87,7 +91,7 @@ public class CommunityFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_community,container,false);
         listView = view.findViewById(R.id.post_display);
-        searchText = view.findViewById(R.id.et_searchtext);
+        searchBtn = view.findViewById(R.id.search_btn);
         uploadBtn = view.findViewById(R.id.floating_button);
         refreshLayout = (RefreshLayout) view.findViewById(R.id.refreshLayout);
         postAdapter = new PostListAdapter(getActivity(),R.layout.post_item,posts,userInfos);
@@ -196,62 +200,70 @@ public class CommunityFragment extends Fragment {
 
     }
     public void setListener(){
-        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+//                    String searchText = v.getText().toString().trim();
+//
+//                    if (!searchText.isEmpty()) {
+//                        // 开启线程接收帖子数据
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                OkHttpClient client = new OkHttpClient();
+//                                // 创建请求获取 Post 类
+//                                Request request = new Request.Builder()
+//                                        .url(searchUrl + "?searchText=" + searchText)
+//                                        .build();
+//                                try {
+//                                    // 发起请求并获取响应
+//                                    Response response = client.newCall(request).execute();
+//                                    // 检测响应是否成功
+//                                    if (response.isSuccessful()) {
+//                                        // 获取响应数据
+//                                        ResponseBody responseBody = response.body();
+//                                        if (responseBody != null) {
+//                                            // 处理数据
+//                                            String responseData = responseBody.string();
+//                                            Gson gson = new Gson();
+//                                            List<PostWithUserInfo> postWithUserInfoList = gson.fromJson(responseData, new TypeToken<List<PostWithUserInfo>>() {}.getType());
+//                                            posts = new ArrayList<>();
+//                                            userInfos = new ArrayList<>();
+//                                            for (PostWithUserInfo postWithUserInfo : postWithUserInfoList) {
+//                                                posts.add(postWithUserInfo.getPost());
+//                                                userInfos.add(postWithUserInfo.getUserInfo());
+//                                                handler.post(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        if (posts != null && userInfos != null) {
+//                                                            PostListAdapter postAdapter = new PostListAdapter(getActivity(), R.layout.post_item, posts, userInfos);
+//                                                            listView.setAdapter(postAdapter);
+//                                                        } else {
+//                                                            // 处理异常情况
+//                                                        }
+//                                                    }
+//                                                });
+//                                            }
+//                                        }
+//                                    }
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }).start();
+//                    }
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+        searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    String searchText = v.getText().toString().trim();
-
-                    if (!searchText.isEmpty()) {
-                        // 开启线程接收帖子数据
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                OkHttpClient client = new OkHttpClient();
-                                // 创建请求获取 Post 类
-                                Request request = new Request.Builder()
-                                        .url(searchUrl + "?searchText=" + searchText)
-                                        .build();
-                                try {
-                                    // 发起请求并获取响应
-                                    Response response = client.newCall(request).execute();
-                                    // 检测响应是否成功
-                                    if (response.isSuccessful()) {
-                                        // 获取响应数据
-                                        ResponseBody responseBody = response.body();
-                                        if (responseBody != null) {
-                                            // 处理数据
-                                            String responseData = responseBody.string();
-                                            Gson gson = new Gson();
-                                            List<PostWithUserInfo> postWithUserInfoList = gson.fromJson(responseData, new TypeToken<List<PostWithUserInfo>>() {}.getType());
-                                            posts = new ArrayList<>();
-                                            userInfos = new ArrayList<>();
-                                            for (PostWithUserInfo postWithUserInfo : postWithUserInfoList) {
-                                                posts.add(postWithUserInfo.getPost());
-                                                userInfos.add(postWithUserInfo.getUserInfo());
-                                                handler.post(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (posts != null && userInfos != null) {
-                                                            PostListAdapter postAdapter = new PostListAdapter(getActivity(), R.layout.post_item, posts, userInfos);
-                                                            listView.setAdapter(postAdapter);
-                                                        } else {
-                                                            // 处理异常情况
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }).start();
-                    }
-                    return true;
-                }
-                return false;
+            public void onClick(View view) {
+                //跳转搜索页
+                Intent intent = new Intent(getActivity(), PostSearchActivity.class);
+                startActivity(intent);
             }
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
@@ -263,7 +275,6 @@ public class CommunityFragment extends Fragment {
                 posts = new ArrayList<>();
                 userInfos = new ArrayList<>();
                 initData();
-                searchText.setText("");
                 refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
             }
         });
