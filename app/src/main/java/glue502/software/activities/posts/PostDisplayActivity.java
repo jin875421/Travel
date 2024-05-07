@@ -3,18 +3,15 @@ package glue502.software.activities.posts;
 
 import static glue502.software.activities.MainActivity.ip;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.core.widget.NestedScrollView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,10 +23,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,7 +35,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
-import android.widget.Spinner;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +50,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -65,14 +61,14 @@ import java.util.List;
 import java.util.UUID;
 
 import glue502.software.R;
-import glue502.software.activities.MainActivity;
+
 import glue502.software.activities.login.LoginActivity;
-import glue502.software.activities.travelRecord.travelRecordActivity;
+
 import glue502.software.adapters.CommentListAdapter;
 import glue502.software.models.Comment;
-import glue502.software.models.CommentRespond;
+
 import glue502.software.models.LikeAndStarStatus;
-import glue502.software.models.ReturnCommentRespond;
+
 import glue502.software.models.UploadComment;
 import glue502.software.utils.Carousel;
 import glue502.software.models.PostWithUserInfo;

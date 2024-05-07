@@ -38,8 +38,6 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMOptions;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

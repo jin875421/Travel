@@ -2,18 +2,16 @@ package glue502.software.activities.map;
 
 import static glue502.software.activities.MainActivity.ip;
 
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import glue502.software.R;
-import glue502.software.activities.MainActivity;
-import glue502.software.fragments.FunctionFragment;
+
 import glue502.software.models.MarkerIntentInfo;
 import glue502.software.utils.MyViewUtils;
-import okhttp3.Call;
-import okhttp3.Callback;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -29,12 +27,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
+
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -45,13 +43,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import com.baidu.mapapi.http.HttpClient;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
