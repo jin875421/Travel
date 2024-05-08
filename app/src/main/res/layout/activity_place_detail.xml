@@ -43,7 +43,7 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/post_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="400dp"
                 />
             <LinearLayout
                 android:id="@+id/index_dot"
@@ -53,11 +53,16 @@
                 app:layout_constraintBottom_toBottomOf="@+id/viewPager2"
                 app:layout_constraintEnd_toEndOf="@+id/viewPager2"
                 app:layout_constraintStart_toStartOf="parent"/>
+            <LinearLayout
+                android:background="@drawable/background_frame_underline"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
             <TextView
                 android:paddingTop="5dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:id="@+id/content"
+                android:textColor="@color/black"
                 android:lineSpacingMultiplier="1.3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

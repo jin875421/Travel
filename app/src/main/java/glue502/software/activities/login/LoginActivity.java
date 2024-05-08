@@ -180,6 +180,26 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (password.length() < 6 && password.length() > 1) {
                     Toast.makeText(LoginActivity.this, "输入的密码小于六位数", Toast.LENGTH_LONG).show();
                 } else {
+//                    //即时通信登录
+//                    EMClient.getInstance().login(userId, password, new EMCallBack() {
+//                        // 登录成功回调
+//                        @Override
+//                        public void onSuccess() {
+//
+//                        }
+//
+//                        // 登录失败回调，包含错误信息
+//                        @Override
+//                        public void onError(final int code, final String error) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onProgress(int i, String s) {
+//
+//                        }
+//
+//                    });
 
                     new Thread(new Runnable() {
                         @Override

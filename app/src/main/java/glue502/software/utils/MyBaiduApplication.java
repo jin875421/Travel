@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
 
-
 public class MyBaiduApplication extends Application {
     @Override
     public void onCreate() {
@@ -13,5 +12,9 @@ public class MyBaiduApplication extends Application {
         SDKInitializer.setAgreePrivacy(this,true);
         //sdk初始化
         SDKInitializer.initialize(this);
+
     }
+
+
 }
+

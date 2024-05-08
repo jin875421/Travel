@@ -63,6 +63,7 @@
                     android:background="@drawable/border_backgrounddjpjpjp"
                     android:gravity="left"
                     android:inputType="textMultiLine"
+                    android:hint="请输入地点哦"
                     android:paddingLeft="5dip"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -81,6 +82,7 @@
                     android:background="@drawable/border_backgrounddjpjpjp"
                     android:gravity="left"
                     android:inputType="textMultiLine"
+                    android:hint="请输入内容"
                     android:lines="20"
                     android:minLines="12"
                     android:paddingLeft="5dip"

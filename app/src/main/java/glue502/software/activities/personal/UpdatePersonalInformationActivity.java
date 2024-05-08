@@ -65,7 +65,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upadte_person_information);
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.title),true);
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.top),true);
         edtName=findViewById(R.id.edt_name);
         txtSave=findViewById(R.id.txt_save);
         imgBcak=findViewById(R.id.img_back);

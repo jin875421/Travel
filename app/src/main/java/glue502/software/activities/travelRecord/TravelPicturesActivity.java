@@ -142,7 +142,9 @@ public class TravelPicturesActivity extends AppCompatActivity {
                             }
                         })
                         .setAutoScrollScanPosition(true)
+                        //RecyclerView的数据
                         .setImageUrlList(datas)
+                        //点击的ImageView的ScaleType类型（如果设置不对，打开的动画效果将是错误的）
                         .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP, true)
                         .addPageTransformer(new ScaleInTransformer())
                         .setClickPosition(position)

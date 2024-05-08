@@ -3,18 +3,15 @@ package glue502.software.activities.posts;
 
 import static glue502.software.activities.MainActivity.ip;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.core.widget.NestedScrollView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,10 +23,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,7 +35,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
-import android.widget.Spinner;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +50,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -65,14 +61,14 @@ import java.util.List;
 import java.util.UUID;
 
 import glue502.software.R;
-import glue502.software.activities.MainActivity;
+
 import glue502.software.activities.login.LoginActivity;
-import glue502.software.activities.travelRecord.travelRecordActivity;
+
 import glue502.software.adapters.CommentListAdapter;
 import glue502.software.models.Comment;
-import glue502.software.models.CommentRespond;
+
 import glue502.software.models.LikeAndStarStatus;
-import glue502.software.models.ReturnCommentRespond;
+
 import glue502.software.models.UploadComment;
 import glue502.software.utils.Carousel;
 import glue502.software.models.PostWithUserInfo;
@@ -110,6 +106,8 @@ public class PostDisplayActivity extends AppCompatActivity {
     private String postId;
     private List<Comment> commentList = new ArrayList<>();
     private OkHttpClient client = new OkHttpClient();
+
+
     private ImageView menuBtn;
     private CommentListAdapter commentListAdapter;
     //记录用户收藏和点赞状态
@@ -591,75 +589,90 @@ public class PostDisplayActivity extends AppCompatActivity {
                 submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String text = chatInputEt.getText().toString();
-                        //生成回复实体
-                        //获取时间
-                        Date date = new Date();
-                        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :HH:mm:ss");
-                        String time = dateFormat.format(date);
-                        //生成UUID
-                        String commentRespondId = UUID.randomUUID().toString();
-                        if (text.length() > 0) {
-                            UploadComment commentRespond = new UploadComment(postId,
-                                    commenterId,
-                                    text,
-                                    commentRespondId,
-                                    time,
-                                    commentId);
-                            //生成线程提交回复内容
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //okHttp
-                                    Gson gson = new Gson();
-                                    String json = gson.toJson(commentRespond);
-                                    RequestBody body = RequestBody.create(
-                                            MediaType.parse("application/json;charset=utf-8"),
-                                            json
-                                    );
-                                    Request request = new Request.Builder()
-                                            .post(body)
-                                            .url(url + "comment/addComment")
-                                            .build();
-                                    //3.Call对象
-                                    Call call = client.newCall(request);
-                                    call.enqueue((new Callback() {
-                                        @Override
-                                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        if (status==""){
+                            showLoginDialog();
+                        } else if(chatInputEt.getText().toString().equals("")){
+                            View toastView = getLayoutInflater().inflate(R.layout.toast_layout, null);
 
-                                        }
-                                        // 这里可以包含获取数据的逻辑，比如使用OkHttp请求数据
-                                        // 返回模拟的数据
-                                        @Override
-                                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                                            //获取响应的数据
-                                            String result = response.body().string();
-                                            if (result!=null){
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        getCommentData();
-                                                        commentListAdapter.notifyDataSetChanged();
-                                                        setListViewHeightBasedOnChildren(listView);
-                                                    }
-                                                });
-                                            }
-                                            //清空EditText
-                                            chatInputEt.setText("");
-                                            hideInput();
-                                        }
-                                    }));
-                                }
-                            }).start();
+                            // 获取自定义布局中的 TextView
+                            TextView textView = toastView.findViewById(R.id.toast_text);
+                            textView.setText("请填写完整信息");
+                            // 创建并显示自定义 Toast
+                            Toast toast = new Toast(PostDisplayActivity.this);
+                            toast.setDuration(Toast.LENGTH_SHORT);
+                            toast.setView(toastView);
+                            toast.show();
                         }else {
-                            Handler handler = new Handler(Looper.getMainLooper());
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //放在UI线程弹Toast
-                                    Toast.makeText(PostDisplayActivity.this, "评论内容不能为空", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            String text = chatInputEt.getText().toString();
+                            //生成回复实体
+                            //获取时间
+                            Date date = new Date();
+                            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :HH:mm:ss");
+                            String time = dateFormat.format(date);
+                            //生成UUID
+                            String commentRespondId = UUID.randomUUID().toString();
+                            if (text.length() > 0) {
+                                UploadComment commentRespond = new UploadComment(postId,
+                                        commenterId,
+                                        text,
+                                        commentRespondId,
+                                        time,
+                                        commentId);
+                                //生成线程提交回复内容
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //okHttp
+                                        Gson gson = new Gson();
+                                        String json = gson.toJson(commentRespond);
+                                        RequestBody body = RequestBody.create(
+                                                MediaType.parse("application/json;charset=utf-8"),
+                                                json
+                                        );
+                                        Request request = new Request.Builder()
+                                                .post(body)
+                                                .url(url + "comment/addComment")
+                                                .build();
+                                        //3.Call对象
+                                        Call call = client.newCall(request);
+                                        call.enqueue((new Callback() {
+                                            @Override
+                                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+                                            }
+                                            // 这里可以包含获取数据的逻辑，比如使用OkHttp请求数据
+                                            // 返回模拟的数据
+                                            @Override
+                                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                                //获取响应的数据
+                                                String result = response.body().string();
+                                                if (result!=null){
+                                                    runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            getCommentData();
+                                                            commentListAdapter.notifyDataSetChanged();
+                                                            setListViewHeightBasedOnChildren(listView);
+                                                        }
+                                                    });
+                                                }
+                                                //清空EditText
+                                                chatInputEt.setText("");
+                                                hideInput();
+                                            }
+                                        }));
+                                    }
+                                }).start();
+                            }else {
+                                Handler handler = new Handler(Looper.getMainLooper());
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //放在UI线程弹Toast
+                                        Toast.makeText(PostDisplayActivity.this, "评论内容不能为空", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
                         }
                     }
                 });

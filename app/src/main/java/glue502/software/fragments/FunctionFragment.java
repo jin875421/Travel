@@ -1,16 +1,23 @@
 package glue502.software.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
 import static glue502.software.activities.MainActivity.ip;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +41,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ZoomControls;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
@@ -47,6 +56,7 @@ import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
@@ -77,9 +87,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.login.LoginActivity;
 import glue502.software.activities.map.AddLabelActivity;
 import glue502.software.activities.map.GlideCustomTransformation;
 import glue502.software.activities.map.StrategyDisplayActivity;
+import glue502.software.activities.posts.PostDisplayActivity;
 import glue502.software.adapters.RecyclerViewStrategyAdapter;
 import glue502.software.models.MarkerInfo;
 import glue502.software.models.ReturnStrategy;
@@ -105,11 +117,15 @@ public class FunctionFragment extends Fragment {
     private List<ReturnStrategy> returnStrategyList = new ArrayList<>();
     private String latitude;
     private String longitude;
+    private String status;
     private CoordinatorLayout coordinatorLayout;
     private BottomSheetBehavior<View> behavior;
     private View bottomSheet;
     private Context mContext;
-    private RelativeLayout frameLayout;
+//    private RelativeLayout frameLayout;
+    private FrameLayout frameLayout;
+    private ImageView btnLoc;
+    private boolean isGrantLocation = false;
     private LocationClient mLocationClient;
     AutoCompleteTextView editText2;
     private String city;
@@ -151,7 +167,10 @@ public class FunctionFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.v("FunctionFragment", "lzx onCreateView");
         view = inflater.inflate(R.layout.fragment_function, container, false);
-//        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top).getRootView(),true);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+        //获取用户状态和用户名
+        status = sharedPreferences.getString("status","");
+        String commenterId = sharedPreferences.getString("userId","");
         initView();
         getIntent();
         PoiSugSearch();
@@ -164,6 +183,22 @@ public class FunctionFragment extends Fragment {
         mRecyclerView.setAdapter(recyclerViewStrategyAdapter);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),2);
         mRecyclerView.setLayoutManager(layoutManager);
+
+        // 隐藏百度LOGO
+        View child = mMapView.getChildAt(1);
+        if (child != null && (child instanceof ImageView || child instanceof ZoomControls)) {
+            child.setVisibility(View.INVISIBLE);
+        }
+        // 不显示地图上比例尺
+        //textureMapView.showScaleControl(false);
+        // 不显示地图缩放控件（按钮控制栏）
+        mMapView.showZoomControls(false);
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        } else {
+            isGrantLocation = true;
+        }
 
         return view;
     }
@@ -268,6 +303,7 @@ public class FunctionFragment extends Fragment {
         editText2.setThreshold(1);
         mSuggestionSearch = SuggestionSearch.newInstance();
         cityView = view.findViewById(R.id.city);
+        btnLoc = view.findViewById(R.id.btn_Loc);
         //获取地图控件引用
         mMapView = view.findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
@@ -276,6 +312,45 @@ public class FunctionFragment extends Fragment {
     }
 
     private void setListener() {
+        btnLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mLocationClient = new LocationClient(getActivity().getApplicationContext());
+                    // 配置定位选项
+                    LocationClientOption option = new LocationClientOption();
+                    option.setOpenGps(true); // 打开gps
+                    option.setCoorType("bd09ll"); // 设置坐标类型
+                    option.setScanSpan(0); // 设置扫描时间
+                    option.setIsNeedAddress(true); // 设置需要获取地址信息
+                    option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+                    mLocationClient.setLocOption(option);
+                    mLocationClient.registerLocationListener(new BDAbstractLocationListener() {
+                        @Override
+                        public void onReceiveLocation(BDLocation bdLocation) {
+                            if (bdLocation == null || mMapView == null) {
+                                return;
+                            }
+                            Double latitude = bdLocation.getLatitude();
+                            Double longitude = bdLocation.getLongitude();
+                            city = bdLocation.getCity(); // 获取详细地址信息
+                            cityView.setText(city);
+
+                            // 在这里处理获取到的经纬度信息
+                            MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLng(new LatLng(latitude, longitude));
+                            mBaiduMap.animateMapStatus(mapStatusUpdate);
+                            // 设置合适的缩放级别
+                            MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16.0f);
+                            mBaiduMap.animateMapStatus(u);
+                        }
+                    });
+                    // 开始定位
+                    mLocationClient.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         editText2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -358,8 +433,12 @@ public class FunctionFragment extends Fragment {
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), AddLabelActivity.class);
-                startActivity(intent);
+                if (status==""){
+                    showLoginDialog();
+                }else {
+                    Intent intent = new Intent(getActivity(), AddLabelActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         //marker按钮
@@ -437,7 +516,29 @@ public class FunctionFragment extends Fragment {
             }
         });
     }
+    public void showLoginDialog() {
+        // 创建AlertDialog构建器
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("账号未登录！")
+                .setMessage("是否前往登录账号")
+                .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 点击“确定”按钮后的操作
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 点击“取消”按钮后的操作
+                        dialog.dismiss(); // 关闭对话框
+                    }
+                });
 
+        // 创建并显示对话框
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     private void addMarker(Double latitude, Double longitude, Bundle extraInfo) {
         // 创建一个空的MarkerOptions对象
         LatLng point = new LatLng(latitude, longitude);

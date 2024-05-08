@@ -20,7 +20,6 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -38,7 +37,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -53,13 +51,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
-
-import com.airbnb.lottie.LottieAnimationView;
-import com.airbnb.lottie.LottieComposition;
-import com.airbnb.lottie.LottieCompositionFactory;
-import com.airbnb.lottie.LottieDrawable;
-import com.airbnb.lottie.LottieResult;
-import com.airbnb.lottie.LottieTask;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -197,7 +188,6 @@ public class AddLabelActivity extends AppCompatActivity {
     }
 
     public void startLocation() {
-        mBaiduMap.clear();
         // 初始化定位客户端
         try {
             Log.v("AddLabelActivity", "lzxAddLabelActivity页面开启");
@@ -235,6 +225,7 @@ public class AddLabelActivity extends AppCompatActivity {
 
                     //在地图上添加并显示
                     Log.v("AddLabelActivity", "lzx 初始定位添加marker");
+                    mBaiduMap.clear();
                     mBaiduMap.addOverlay(option);
 
                     //将地图中心移动到当前位置
@@ -480,6 +471,7 @@ public class AddLabelActivity extends AppCompatActivity {
                                     }
 
                                 }else {
+
                                 }
                             }
                             RequestBody requestBody = builder.build();
@@ -672,7 +664,7 @@ public class AddLabelActivity extends AppCompatActivity {
                 convertDpToPixel(150), // 宽度 150dp 转换为像素
                 convertDpToPixel(150) // 高度 150dp 转换为像素
         );
-        layoutParams.setMargins(0, 0, 0, 16);
+        layoutParams.setMargins(0, 0, 5, 16);
         imageView.setLayoutParams(layoutParams);
         imageView.setTag(file.getName());
         imgLinerLayout.addView(imageView);
@@ -692,7 +684,7 @@ public class AddLabelActivity extends AppCompatActivity {
                 convertDpToPixel(150), // 宽度 150dp 转换为像素
                 convertDpToPixel(150) // 高度 150dp 转换为像素
         );
-        layoutParams.setMargins(0, 0, 0, 16);
+        layoutParams.setMargins(0, 0, 5, 16);
         imageView.setLayoutParams(layoutParams);
         //设置Tag
         imageView.setTag(fileName);

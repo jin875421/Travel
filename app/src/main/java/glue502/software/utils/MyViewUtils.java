@@ -27,6 +27,10 @@ public class MyViewUtils {
     public static void setImmersiveStatusBar(Activity activity, View view, boolean isDark) {
         Window window = activity.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+
+
+
+
                 | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION

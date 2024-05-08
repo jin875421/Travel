@@ -73,6 +73,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:hint="输入你的内容"
+                    android:background="@drawable/border_backgrounddjpjp"
                     android:inputType="textMultiLine"
                     android:lines="20"
                     android:minLines="12"

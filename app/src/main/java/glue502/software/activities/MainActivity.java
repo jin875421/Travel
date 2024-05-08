@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
     //192.168.43.123 192.168.142.92
-    public static final String ip = "10.7.89.94:8080";
+    public static final String ip = "192.168.43.123:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
@@ -74,8 +74,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         status = sharedPreferences.getString("status","");
         //沉浸式状态栏
@@ -296,10 +294,12 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
         mediator.attach();
+//        //进行即时通信初始化
+//        EMOptions options = new EMOptions();
+//        options.setAppKey("Your appkey");
+//        // 其他 EMOptions 配置。
+//        EMClient.getInstance().init(this, options);
     }
-
-
-
     private void initpages(){
         fragments = new ArrayList<>();
         fragments.add(new RecommendFragment());
