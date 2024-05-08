@@ -108,6 +108,7 @@ public class TravelAlbumAdapter extends BaseAdapter {
                 Bundle extras = new Bundle();
                 extras.putStringArrayList("parameter_list_key", (ArrayList<String>) list.get(i).getPicturePath());
                 extras.putString("placeName",list.get(i).getPlaceName());
+                extras.putString("placeId",list.get(i).getPlaceId());
                 intent.putExtras(extras);
 
                 context.startActivity(intent);

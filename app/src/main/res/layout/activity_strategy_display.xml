@@ -156,35 +156,36 @@
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/topdivider"
-        android:orientation="horizontal">
+
+        android:background="@color/gray">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:layout_alignParentLeft="true">
 
             <EditText
                 android:id="@+id/chatInputEt"
-                android:layout_width="280dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="15dp"
-                android:hint="请友好交流哦" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="3dp"
-            android:layout_alignParentRight="true">
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="7dp"
+                android:gravity="center_vertical"
+                android:padding="5dp"
+                android:background="@drawable/background_frame_1"
+                android:hint=" 请友好交流哦"
+                android:textSize="13dp"
+                />
             <Button
                 android:id="@+id/submit"
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="35dp"
-                android:text="发送"
-                android:textSize="17sp"
-                android:background="@drawable/background_comment_submit_frame"
-                android:textColor="@color/white"/>
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/login_submit_button"
+                android:text="发送"/>
         </LinearLayout>
 
     </RelativeLayout>

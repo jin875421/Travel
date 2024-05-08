@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -24,10 +26,12 @@ import java.util.Random;
 
 import glue502.software.R;
 import glue502.software.utils.MyViewUtils;
+import jp.wasabeef.blurry.Blurry;
 
 public class SplashActivity extends AppCompatActivity {
     private LottieAnimationView lottieAnimationView;
     private List<String> animationFiles;
+    private ImageView imgBg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,14 @@ public class SplashActivity extends AppCompatActivity {
         animationFiles = new ArrayList<>();
         animationFiles.add("data.json");
         animationFiles.add("camera.json");
+//        imgBg=findViewById(R.id.img_bg);
+        Blurry.with(this)
+                .radius(250) // 设置模糊半径
+                .sampling(2) // 设置采样率
+                .color(Color.argb(66, 255, 255, 0)) // 设置颜色
+                .async() // 异步处理
+                .animate(500) // 设置动画时长
+                .onto(rootView);
         showRandomAnimation();
         //添加沉浸式导航栏
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.rootView),true);

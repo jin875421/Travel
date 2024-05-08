@@ -65,7 +65,7 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
         for (RecoAttraction r : recoAttractions) {
             String imageUrl = url + r.getImgUrls().get(0);
 //            http://localhost:8080/travel/ruoyi/uploadPath/upload/2023/12/22/%E3%80%90%E5%AE%A1%E7%BE%8E%E7%A7%AF%E7%B4%AF%E3%80%91%E5%90%91%E5%B1%B1%E8%80%8C%E5%8E%BB%EF%BD%9CJustin%20Wirtalla_8_%E5%AE%89%E7%9A%84%E8%A7%86%E8%A7%89%E5%AE%B6_%E6%9D%A5%E8%87%AA%E5%B0%8F%E7%BA%A2%E4%B9%A6%E7%BD%91%E9%A1%B5%E7%89%88_20231222170753A004.jpg
-            datas.add(new ImageEntity(imageUrl, imageUrl, null, null, null, 0));
+            datas.add(new ImageEntity(imageUrl, imageUrl, null, null, null, 0,null));
         }
     }
 
@@ -81,7 +81,7 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
         this.imagepath = imagepath;
         this.viewPager2 = viewPager2;
         for (String imageUrl : imagepath) {
-            datas.add(new ImageEntity(url + extraPath + imageUrl, url + extraPath + imageUrl, null, null, null, 0));
+            datas.add(new ImageEntity(url + extraPath + imageUrl, url + extraPath + imageUrl, null, null, null, 0,null));
         }
     }
 

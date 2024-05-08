@@ -10,14 +10,16 @@ public class ImageEntity implements OpenImageUrl {
     public String smallCoverUrl;
     public String videoUrl;
     public int resouceType;
+    public String path;
 
-    public ImageEntity(String photoUrl, String smallPhotoUrl, String coverUrl, String smallCoverUrl, String videoUrl, int resouceType) {
+    public ImageEntity(String photoUrl, String smallPhotoUrl, String coverUrl, String smallCoverUrl, String videoUrl, int resouceType,String path) {
         this.photoUrl = photoUrl;
         this.smallPhotoUrl = smallPhotoUrl;
         this.coverUrl = coverUrl;
         this.smallCoverUrl = smallCoverUrl;
         this.videoUrl = videoUrl;
         this.resouceType = resouceType;
+        this.path=path;
     }
 
     @Override
@@ -38,6 +40,9 @@ public class ImageEntity implements OpenImageUrl {
     @Override
     public MediaType getType() {
         return resouceType == 1 ? MediaType.VIDEO : MediaType.IMAGE;
+    }
+    public String getPath(){
+        return path;
     }
 }
 

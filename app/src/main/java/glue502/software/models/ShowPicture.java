@@ -8,6 +8,7 @@ public class ShowPicture {
     private List<String> picturePath;
     private String travelDate;
     private String placeName;
+    private String placeId;
 
     public ShowPicture() {
     }
@@ -16,6 +17,14 @@ public class ShowPicture {
         this.picturePath = picturePath;
         this.travelDate = travelDate;
         this.placeName = placeName;
+    }
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
     }
 
     public List<String> getPicturePath() {
