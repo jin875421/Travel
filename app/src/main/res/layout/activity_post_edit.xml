@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,70 +7,129 @@
     android:orientation="vertical"
     tools:context=".activities.posts.PostEditActivity">
     <RelativeLayout
-        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/post_back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="返回"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="图文"
-            android:textStyle="bold"
-
-            android:textColor="#0c0c0c"
-            android:textSize="18dp"/>
-        <Button
-            android:id="@+id/post_upload_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="提交"
-            />
-
-    </RelativeLayout>
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="150dp">
-        <LinearLayout
-            android:id="@+id/imageContainer"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/post_edit_top"
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <ImageView
-                android:id="@+id/input_image"
-                android:paddingLeft="10dp"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:src="@drawable/add_image"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/post_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="返回"
                 />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="图文"
+                android:textStyle="bold"
+
+                android:textColor="#0c0c0c"
+                android:textSize="18dp"/>
+            <Button
+                android:id="@+id/post_upload_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="提交"
+                />
+
+        </RelativeLayout>
+        <HorizontalScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/post_edit_top"
+            android:layout_height="150dp">
+            <LinearLayout
+                android:id="@+id/imageContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/input_image"
+                    android:paddingLeft="10dp"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:src="@drawable/add_image"
+                    />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+        <LinearLayout
+            android:id="@+id/input_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/scroll"
+            android:layout_marginBottom="40dp"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/input_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入标题"
+                android:gravity="left"
+                />
+            <EditText
+                android:id="@+id/input_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lineSpacingMultiplier="1.3"
+                android:hint="请输入内容"
+                android:gravity="left|top"
+                />
         </LinearLayout>
-
-    </HorizontalScrollView>
-
-    <EditText
-        android:id="@+id/input_title"
+    </RelativeLayout>
+    <!-- 底部工具栏 -->
+    <LinearLayout
+        android:id="@+id/bottom_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="请输入标题"
-        android:gravity="left"
-        />
-    <EditText
-        android:id="@+id/input_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:lineSpacingMultiplier="1.3"
-        android:hint="请输入内容"
-        android:gravity="left|top"
-        />
+        android:layout_gravity="bottom"
+        android:background="@android:color/transparent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="10dp">
+        <!-- 这里放置你的底部工具栏内容 -->
 
-</LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:src="@mipmap/str_utils" />
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:background="#232323" />
+
+        <ImageView
+            android:id="@+id/str_btn1"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="10dp"
+            android:src="@mipmap/dot_list" />
+
+        <ImageView
+            android:id="@+id/str_btn2"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="10dp"
+            android:src="@mipmap/num_list" />
+
+        <ImageView
+            android:id="@+id/str_btn3"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="10dp"
+            android:src="@mipmap/letter_list" />
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

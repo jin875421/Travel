@@ -123,6 +123,7 @@ public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.
                             }
                         })
                         .setShowDownload()
+                        //添加更多布局控件
 //                        .addMoreView(R.layout.big_img_layout,
 //                                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT),
 //                                MoreViewShowType.BOTH,

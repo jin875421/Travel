@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 光标的宽度 -->
+    <size android:width="2dp" />
+    <solid android:color="#99CCFF" />
+
+    <!-- 使用渐变色 -->
+    <!--    <gradient-->
+    <!--        android:startColor="#FF00FFFF"-->
+    <!--        android:endColor="#46DC4D"-->
+    <!--        android:type="linear"-->
+    <!--        android:angle="90" />-->
+
+    <!-- 圆角矩形 -->
+    <corners android:radius="2dp" />
+
+    <!-- 描边颜色及宽度 -->
+    <!--    <stroke-->
+    <!--        android:color="#00FFFFFF"-->
+    <!--        android:width="1dp" />-->
+
+    <!-- 可选，透明区域，确保光标紧贴文字 -->
+    <padding
+        android:bottom="0dp"
+        android:left="0dp"
+        android:right="0dp"
+        android:top="0dp" />
+</shape>

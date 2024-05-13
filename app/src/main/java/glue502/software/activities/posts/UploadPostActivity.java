@@ -4,6 +4,7 @@ import static glue502.software.activities.MainActivity.PERMISSION_REQUEST_CODE;
 import static glue502.software.activities.MainActivity.ip;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -13,20 +14,29 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -50,6 +60,7 @@ import java.util.UUID;
 import glue502.software.R;
 import glue502.software.models.Post;
 import glue502.software.utils.MyViewUtils;
+import glue502.software.utils.PostTextView.PostEditView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -61,7 +72,7 @@ public class UploadPostActivity extends AppCompatActivity {
     private List<View> viewList = new ArrayList<>();
     private  List<File> fileList = new ArrayList<>();
     private Post post = new Post();
-    private EditText title, content;
+    private EditText title,content;
     private ImageView back, upload;
     private String userId;
     private LinearLayout imgLinerLayout;
@@ -69,18 +80,80 @@ public class UploadPostActivity extends AppCompatActivity {
     private String mCurrentPhotoPath;
     private final int RESULT_LOAD_IMAGES = 1, RESULT_CAMERA_IMAGE = 2;
     private String url = "http://"+ip+"/travel/posts/upload";
+
+    //自适应底部工具栏
+    private CoordinatorLayout coordinatorLayout;
+    private View bottomToolbar;
+    private boolean wasOpened = false;
+    ImageView strBtn1,strBtn2,strBtn3;
+//    Button strBtn2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_post);
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         userId = sharedPreferences.getString("userId","");
+
+        // 获取窗口实例并设置输入法窗口调整模式
+        Window window = getWindow();
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         initView();
+
         MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(),false);
         setListener();
     }
 
     private void setListener() {
+        // 注册根视图全局布局变化监听器
+        coordinatorLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+                int screenHeight = getWindowManager().getDefaultDisplay().getHeight();
+                int heightDiff = screenHeight - r.bottom;
+                if (heightDiff > dpToPx(getApplicationContext(), 200)) { // 高度差大于200dp，通常认为软键盘已打开
+                    if (!wasOpened) {
+                        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) bottomToolbar.getLayoutParams();
+                        layoutParams.bottomMargin = heightDiff;
+                        bottomToolbar.setLayoutParams(layoutParams);
+                        wasOpened = true;
+                    }
+                } else if (wasOpened) {
+                    // 软键盘关闭
+                    ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) bottomToolbar.getLayoutParams();
+                    layoutParams.bottomMargin = 0;
+                    bottomToolbar.setLayoutParams(layoutParams);
+                    wasOpened = false;
+                }
+            }
+        });
+
+        /*文本替换*/
+        strBtn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(UploadPostActivity.this, "无序序列", Toast.LENGTH_SHORT).show();
+                replaceString(content,0);
+            }
+        });
+        /*文本替换*/
+        strBtn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(UploadPostActivity.this, "数字序列", Toast.LENGTH_SHORT).show();
+                replaceString(content,1);
+            }
+        });
+        /*文本替换*/
+        strBtn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(UploadPostActivity.this, "字母序列", Toast.LENGTH_SHORT).show();
+                replaceString(content,2);
+            }
+        });
 
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,6 +333,13 @@ public class UploadPostActivity extends AppCompatActivity {
         content = findViewById(R.id.input_content);
         back = findViewById(R.id.post_back_btn);
         upload = findViewById(R.id.post_upload_btn);
+
+        //自适应底部工具栏
+        coordinatorLayout = findViewById(R.id.coordinator_layout);
+        bottomToolbar = findViewById(R.id.bottom_toolbar);
+        strBtn1=findViewById(R.id.str_btn1);
+        strBtn2=findViewById(R.id.str_btn2);
+        strBtn3=findViewById(R.id.str_btn3);
     }
     //供用户选择拍照或从相册选择
     private void showPopupWindow() {
@@ -482,7 +562,78 @@ public class UploadPostActivity extends AppCompatActivity {
         finish(); // 结束上传页面
     }
 
+    /**
+     * 将dp值转换为px值
+     * @param context 上下文对象
+     * @param dp dp值
+     * @return px值
+     */
+    public static int dpToPx(Context context, int dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
 
+    /**
+     * 将px值转换为dp值
+     * @param context 上下文对象
+     * @param pxValue px值
+     * @return dp值
+     */
+    public static int pxToDp(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) Math.round(pxValue / scale);
+    }
 
+    /**
+     * 将选中的文本替换为有序表
+     * @param content 文本框
+     * @param mode 行首模式 0: ● 圆点序列 1: 1.数字序列 2: a.字母序列
+     */
+    public void replaceString(EditText content, int mode){
+        //根据模式使用不同的序号
+        char dot = '●';
+        int num = 1;
+        int letter = 97; // 'a' -> 97(ASCII)
 
+        //获取选择的文本内容
+        int startSelection = content.getSelectionStart();
+        int endSelection = content.getSelectionEnd();
+
+        Editable editable = content.getText();
+        Layout layout = content.getLayout();
+        Paint edtPaint = content.getPaint();
+        float edtWidth = content.getWidth() - content.getPaddingLeft() - content.getPaddingRight(); //控件可用宽度
+        // 判断起始位置和结束位置是否有效
+        if(startSelection==endSelection) {
+            Toast.makeText(UploadPostActivity.this, "请先选择文本内容", Toast.LENGTH_SHORT).show();
+        } else if (startSelection >= 0 && endSelection <= editable.length() && startSelection <= endSelection) {
+            int startLine = layout.getLineForOffset(startSelection); // 获取起始位置所在行
+            int endLine = layout.getLineForOffset(endSelection); // 获取结束位置所在行
+            StringBuilder selectedLines = new StringBuilder();
+
+            String[] selectedTexts = content.getText().subSequence(startSelection, endSelection).toString().split("\n");
+//            Toast.makeText(UploadPostActivity.this, "选中的文本内容：" + content.getText().subSequence(startSelection, endSelection).toString(), Toast.LENGTH_SHORT).show();
+            String lineText = "";
+            for(String selectedText : selectedTexts){
+                switch (mode){
+                    case 0:
+                        lineText = dot + " " + selectedText + "\n";
+                        break;
+                    case 1:
+                        lineText = num + ". " + selectedText + "\n";
+                        num++;
+                        break;
+                    case 2:
+                        lineText = (char)letter + ". " + selectedText + "\n";
+                        letter++;
+                        break;
+                }
+                selectedLines.append(lineText);
+            }
+            //selectedText 中包含了逐行获取的选中文本内容
+            String processedText = selectedLines.toString();
+            // 替换选中的文本为处理后的文本
+            editable.replace(startSelection, endSelection, processedText);
+        }
+    }
 }

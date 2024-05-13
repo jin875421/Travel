@@ -122,6 +122,7 @@
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".activities.posts.UploadPostActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"

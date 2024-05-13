@@ -13,8 +13,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
@@ -44,6 +46,7 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.scwang.smart.refresh.header.ClassicsHeader;
@@ -99,6 +102,10 @@ public class RecommendFragment extends Fragment {
     private Carousel carousel;
     private final Handler handler = new Handler(Looper.getMainLooper());
 
+    //顶部渐变控件
+    private Toolbar toolbar;
+    private AppBarLayout appBarLayout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -124,12 +131,42 @@ public class RecommendFragment extends Fragment {
                 refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
             }
         });
+
+        //顶部渐变控件
+        toolbar = view.findViewById(R.id.toolbar);
+        appBarLayout=view.findViewById(R.id.appbar);
+
         getCity();
         setlistener();
         date();
 //        //轮播图
 //        getCarousel();
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
+//        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
+        MyViewUtils.setISBarWithoutView(getActivity(),true);
+        // 获取状态栏高度
+        int statusBarHeight = getStatusBarHeight();
+        // 获取 Toolbar 实例
+
+        // 动态设置 Toolbar 的高度
+        ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+        params.height = statusBarHeight + getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+        toolbar.setLayoutParams(params);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                toolbar.setBackgroundColor(changeAlpha(getResources().getColor(R.color.communitytitle),Math.abs(verticalOffset*1.0f)/appBarLayout.getTotalScrollRange()));
+
+                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                    // 完全折叠，显示ImageView
+//                    lsda.setVisibility(View.VISIBLE);
+
+                } else {
+                    // 非完全折叠，隐藏ImageView
+//                    lsda.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
         return view;
     }
 
@@ -335,6 +372,26 @@ public class RecommendFragment extends Fragment {
 
 
     }
+
+    //顶部渐变控件
+
+    public int changeAlpha(int color, float fraction) {
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        int alpha = (int) (Color.alpha(color) * fraction);
+        return Color.argb(alpha, red, green, blue);
+    }
+    // 获取状态栏高度
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+    //--------------------------------------------------------------------------
 
     public void setlistener(){
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
