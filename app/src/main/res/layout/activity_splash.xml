@@ -9,6 +9,7 @@
     android:id="@+id/rootView"
     tools:context=".activities.SplashActivity">
 
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieAnimationView"
         android:layout_width="match_parent"

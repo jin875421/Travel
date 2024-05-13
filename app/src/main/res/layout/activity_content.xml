@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cwn"
+    android:background="@mipmap/content_background"
     android:paddingTop="0dp"
     android:id="@+id/layout"
     tools:context=".activities.travelRecord.travelRecordActivity" >

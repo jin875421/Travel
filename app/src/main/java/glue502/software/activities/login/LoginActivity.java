@@ -23,8 +23,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.google.gson.Gson;
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
 
 import java.io.IOException;
 import java.math.BigInteger;

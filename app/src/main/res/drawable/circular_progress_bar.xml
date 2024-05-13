@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#FF0000"/> <!-- 设置进度条颜色，这里使用红色作为示例 -->
+</shape>

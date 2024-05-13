@@ -9,17 +9,23 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.backup.BackupManager;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flyjingfish.openimagelib.BaseInnerFragment;
 import com.flyjingfish.openimagelib.OpenImage;
@@ -29,16 +35,27 @@ import com.flyjingfish.openimagelib.listener.OnItemLongClickListener;
 import com.flyjingfish.openimagelib.listener.OnLoadViewFinishListener;
 import com.flyjingfish.openimagelib.listener.SourceImageViewIdGet;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
+import com.google.gson.Gson;
+import com.yalantis.ucrop.UCropActivity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.OpenCVTest;
+import glue502.software.activities.personal.UpdatePersonalInformationActivity;
 import glue502.software.adapters.ImagePagerAdapter;
 import glue502.software.adapters.TravelPicturesAdapter;
 import glue502.software.models.ImageEntity;
+import glue502.software.models.UserInfo;
 import glue502.software.utils.MyViewUtils;
 import glue502.software.utils.bigImgUtils.MyImageLoader;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 //这个页面是一个用于展示具体地点照片的页面
@@ -51,6 +68,8 @@ public class TravelPicturesActivity extends AppCompatActivity {
     private String placeName ;
     private TextView name;
     private ImageView back;
+    private String placeId;
+//    private GridView gvPictures;
 
     private TravelPicturesAdapter travelPicturesAdapter;
 
@@ -67,8 +86,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
         if (extras != null) {
              list1 = extras.getStringArrayList("parameter_list_key");
         }
-
-
+        placeId=extras.getString("placeId");
         name = findViewById(R.id.place_name);
         name.setText(placeName);
         back = findViewById(R.id.back);
@@ -80,7 +98,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
         });
         List<ImageEntity> datas = new ArrayList<>();
         for(String s:list1){
-            datas.add(new ImageEntity(url+s,url+s,null,null,null,0));
+            datas.add(new ImageEntity(url+s,url+s,null,null,null,0,s));
         }
         recyclerView = findViewById(R.id.picture_rcv);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
@@ -109,12 +127,15 @@ public class TravelPicturesActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull TravelPicturesActivity.RvAdapter.MyHolder holder, int position) {
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-
             //图片(后面的两张图片：加载时的占位图，加载失败时的占位图。可自行设置)
             MyImageLoader.getInstance().load(holder.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.loading, R.mipmap.blank);
+            String clickedImageUrl = datas.get(position).getCoverImageUrl();
+            String path=datas.get(position).getPath();
+            System.out.println("sdasdasdasd"+path);
             //设置点击图片后打开大图的监听器
             holder.ivImage.setOnClickListener(v -> {
-                OpenImage.with(TravelPicturesActivity.this).setClickRecyclerView(recyclerView, new SourceImageViewIdGet() {
+                OpenImage.with(TravelPicturesActivity.this)
+                        .setClickRecyclerView(recyclerView, new SourceImageViewIdGet() {
                             @Override
                             public int getImageViewId(OpenImageUrl data, int position) {
                                 return R.id.imageView;
@@ -128,6 +149,32 @@ public class TravelPicturesActivity extends AppCompatActivity {
                         .addPageTransformer(new ScaleInTransformer())
                         .setClickPosition(position)
                         .setShowDownload()
+                        .addMoreView(R.layout.activity_photo_edit,
+                                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT),
+                                MoreViewShowType.BOTH,
+                                new OnLoadViewFinishListener() {
+                                    @Override
+                                    public void onLoadViewFinish(View moreView) {
+                                        Button btnEdit = moreView.findViewById(R.id.btnEdit);
+                                        Button btnDelete=moreView.findViewById(R.id.btn_delete);
+                                        btnDelete.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                deletePicture(path);
+                                            }
+                                        });
+                                        btnEdit.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                Intent intent=new Intent(TravelPicturesActivity.this, OpenCVTest.class);
+                                                intent.putExtra("imageUrl",clickedImageUrl);
+                                                intent.putExtra("imagePlaceId",placeId);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                    }
+                                })
                         .show();
             });
         }
@@ -144,4 +191,36 @@ public class TravelPicturesActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void deletePicture(String path) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), path);
+                    Request request = new Request.Builder()
+                            .url(url + "travel/deletePicture") //***.***.**.***为本机IP，xxxx为端口，/  /  为访问的接口后缀
+                            .post(requestBody)
+                            .build(); //创建Http请求
+                    Response response = client.newCall(request).execute();
+                    final String responseData = response.body().string();
+
+                    // 处理服务器响应，更新UI或执行其他操作
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(TravelPicturesActivity.this, responseData, Toast.LENGTH_SHORT).show();
+                            if (responseData.equals("图片已成功删除")) {
+                                TravelPicturesActivity.this.finish();
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 }
