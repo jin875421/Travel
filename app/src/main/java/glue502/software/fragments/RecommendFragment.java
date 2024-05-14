@@ -128,7 +128,7 @@ public class RecommendFragment extends Fragment {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 getCity();
-                refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+                refreshlayout.finishRefresh(3000/*,false*/);//传入false表示刷新失败
             }
         });
 
@@ -548,7 +548,7 @@ public class RecommendFragment extends Fragment {
             public void onPageScrollStateChanged(int state) {
                 //当页面空闲状态被改变的时候
                 if (state == vp2.SCROLL_STATE_IDLE) {
-                    carousel.mHandler.postDelayed(carousel.runnable, 3000);//延时3秒，自动轮播图片
+                    carousel.mHandler.postDelayed(carousel.runnable, 4000);//延时3秒，自动轮播图片
                 } else {
                     carousel.mHandler.removeCallbacks(carousel.runnable);//用户手指触摸页面，停止自动轮播图片
                 }
@@ -561,7 +561,7 @@ public class RecommendFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if(carousel!=null){
-            carousel.mHandler.postDelayed(carousel.runnable,2000);//延时2秒，自动轮播图片
+            carousel.mHandler.postDelayed(carousel.runnable,3000);//延时2秒，自动轮播图片
         }
         //沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
