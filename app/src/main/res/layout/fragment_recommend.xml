@@ -5,7 +5,7 @@
     android:id="@+id/ct_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EFF3F4"
+    android:background="#FFFFFF"
     android:orientation="vertical">
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
@@ -14,8 +14,8 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@drawable/background_green2white">
+            android:layout_height="300dp"
+            android:background="@mipmap/travel_shouye">
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collpasing_toolbar"
                 android:layout_width="match_parent"
@@ -23,47 +23,15 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:expandedTitleMarginStart="48dp"
                 app:expandedTitleMarginEnd="64dp">
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="60dp"-->
-<!--                    android:background="@drawable/background1"-->
-<!--                    android:layout_gravity="bottom"-->
-<!--                    android:orientation="vertical">-->
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center">-->
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"/>-->
-<!--                    </LinearLayout>-->
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center">-->
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"/>-->
-<!--                    </LinearLayout>-->
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center">-->
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"/>-->
-<!--                    </LinearLayout>-->
-<!--                </LinearLayout>-->
                 <LinearLayout
                     android:id="@+id/lrlt"
-                    android:layout_width="match_parent"
+                    android:layout_width="320dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="3dp"
-                    android:layout_gravity="center"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:background="@drawable/background_frame_1"
+                    android:elevation="1dp"
+                    android:layout_marginBottom="15dp"
                     android:orientation="horizontal">
                     <LinearLayout
                         android:id="@+id/lrlt_create"
@@ -73,13 +41,19 @@
                         android:gravity="center"
                         android:orientation="vertical">
                         <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:src="@drawable/travel_begin" />
-                        <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/homepage_mytravel" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/travel_begin" />
+<!--                        <ImageView-->
+<!--                            android:layout_width="70dp"-->
+<!--                            android:layout_height="20dp"-->
+<!--                            android:src="@drawable/homepage_mytravel" />-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="旅程"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/lrlt_footprint"
@@ -89,13 +63,19 @@
                         android:gravity="center"
                         android:orientation="vertical">
                         <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:src="@drawable/travel_itinerary" />
-                        <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/homepage_myfootprint" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/travel_itinerary" />
+<!--                        <ImageView-->
+<!--                            android:layout_width="70dp"-->
+<!--                            android:layout_height="20dp"-->
+<!--                            android:src="@drawable/homepage_myfootprint" />-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="足迹"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/lrlt_photo"
@@ -105,23 +85,52 @@
                         android:gravity="center"
                         android:orientation="vertical">
                         <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:src="@drawable/travel_photo" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/travel_photo" />
+<!--                        <ImageView-->
+<!--                            android:layout_width="70dp"-->
+<!--                            android:layout_height="20dp"-->
+<!--                            android:src="@drawable/homepage_myphoto" />-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="相册"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/lrlt_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
                         <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/homepage_myphoto" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/more_tool" />
+<!--                        <ImageView-->
+<!--                            android:layout_width="70dp"-->
+<!--                            android:layout_height="20dp"-->
+<!--                            android:src="@drawable/homepage_myphoto" />-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="更多"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                     app:layout_collapseMode="pin">
                     <LinearLayout
                         android:id="@+id/community_top"
                         android:layout_centerHorizontal="true"
+                        android:paddingTop="15dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -155,10 +164,24 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+                    <LinearLayout
+                        android:id="@+id/today_recommend"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="5dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="今日推荐"
+                            android:drawableLeft="@mipmap/symbol"/>
+                    </LinearLayout>
                     <RelativeLayout
                         android:id="@+id/pictures"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/today_recommend"
                         android:orientation="vertical"
                         android:layout_marginVertical="5dp"
                         android:elevation="3dp"
@@ -167,7 +190,7 @@
                         <androidx.viewpager2.widget.ViewPager2
                             android:id="@+id/reco_vp2"
                             android:layout_width="match_parent"
-                            android:layout_height="205dp" />
+                            android:layout_height="150dp" />
                         <TextView
                             android:id="@+id/attraction_name"
                             android:layout_width="match_parent"

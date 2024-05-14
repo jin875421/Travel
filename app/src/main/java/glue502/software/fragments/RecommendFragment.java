@@ -140,7 +140,7 @@ public class RecommendFragment extends Fragment {
         setlistener();
         date();
 //        //轮播图
-//        getCarousel();
+        getCarousel();
 //        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.top),true);
         MyViewUtils.setISBarWithoutView(getActivity(),true);
         // 获取状态栏高度
