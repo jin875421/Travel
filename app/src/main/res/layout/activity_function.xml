@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.travelRecord.FunctionActivity">
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#0c0c0c"
+            android:text="实用工具"/>
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:paddingLeft="10dp"
+            android:src="@drawable/back"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_below="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+            <RelativeLayout
+                android:id="@+id/todolist"
+                android:layout_width="100dp"
+                android:layout_height="100dp">
+                <ImageView
+                    android:layout_width="95dp"
+                    android:layout_height="95dp"
+                    android:paddingLeft="5dp"
+                    android:src="@drawable/todolist" />
+                <TextView
+                    android:text="计划列表"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/expense_record"
+                android:layout_width="100dp"
+                android:layout_height="100dp">
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="95dp"
+                    android:paddingLeft="5dp"
+                    android:src="@drawable/expense_record" />
+                <TextView
+                    android:text="记账"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</RelativeLayout>

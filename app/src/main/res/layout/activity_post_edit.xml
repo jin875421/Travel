@@ -26,10 +26,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="图文"
-                android:textStyle="bold"
-
                 android:textColor="#0c0c0c"
-                android:textSize="18dp"/>
+                android:textSize="18dp"
+                android:textStyle="bold" />
             <Button
                 android:id="@+id/post_upload_btn"
                 android:layout_width="wrap_content"

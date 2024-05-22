@@ -12,8 +12,5 @@
         <item name="android:textSize">15dp</item>
 
     </style>
-    <style name="CircularProgressBar" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:indeterminateDrawable">@drawable/circular_progress_bar</item>
-    </style>
 
 </resources>
