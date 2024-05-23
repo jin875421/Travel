@@ -1,8 +1,10 @@
 package glue502.software.activities.travelRecord;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -22,8 +25,6 @@ import glue502.software.utils.MyViewUtils;
 
 public class ExpenseRecordActivity extends AppCompatActivity {
 
-    private EditText expenseAmountEditText;
-    private EditText expenseDescriptionEditText;
     private Button addExpenseButton;
     private Button clearExpensesButton;
     private ListView expenseListView;
@@ -37,10 +38,10 @@ public class ExpenseRecordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_record);
-        //沉浸式状态栏
+
+        //状态栏
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
-        expenseAmountEditText = findViewById(R.id.expenseAmountEditText);
-        expenseDescriptionEditText = findViewById(R.id.expenseDescriptionEditText);
+
         addExpenseButton = findViewById(R.id.addExpenseButton);
         clearExpensesButton = findViewById(R.id.clearExpensesButton);
         expenseListView = findViewById(R.id.expenseListView);
@@ -56,50 +57,92 @@ public class ExpenseRecordActivity extends AppCompatActivity {
         addExpenseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String amountStr = expenseAmountEditText.getText().toString();
-                String description = expenseDescriptionEditText.getText().toString();
-
-                if (!amountStr.isEmpty() && !description.isEmpty()) {
-                    double amount = Double.parseDouble(amountStr);
-                    totalExpense += amount;
-                    expenses.add(description + ": ¥" + String.format("%.2f", amount));
-                    expenseAdapter.notifyDataSetChanged();
-                    updateTotalExpenseTextView();
-                    expenseAmountEditText.setText("");
-                    expenseDescriptionEditText.setText("");
-                    saveExpenses();
-                } else {
-                    Toast.makeText(ExpenseRecordActivity.this, "请输入支出金额和描述", Toast.LENGTH_SHORT).show();
-                }
+                showAddExpenseDialog();
             }
         });
 
         expenseListView.setOnItemLongClickListener((parent, view, position, id) -> {
-            String expense = expenses.get(position);
-            String[] parts = expense.split(": ¥");
-            if (parts.length == 2) {
-                double amount = Double.parseDouble(parts[1]);
-                totalExpense -= amount;
-                expenses.remove(position);
-                expenseAdapter.notifyDataSetChanged();
-                updateTotalExpenseTextView();
-                saveExpenses();
-            } else {
-                Toast.makeText(ExpenseRecordActivity.this, "解析错误，无法删除项目", Toast.LENGTH_SHORT).show();
-            }
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ExpenseRecordActivity.this);
+            builder.setTitle("删除")
+                    .setMessage("确定要删除吗？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String expense = expenses.get(position);
+                            String[] parts = expense.split(": ¥");
+                            if (parts.length == 2) {
+                                double amount = Double.parseDouble(parts[1]);
+                                totalExpense -= amount;
+                                expenses.remove(position);
+                                expenseAdapter.notifyDataSetChanged();
+                                totalExpenseTextView.setText("总支出: ¥" + String.format("%.2f", totalExpense));
+                                saveExpenses();
+                            } else {
+                                Toast.makeText(ExpenseRecordActivity.this, "解析错误，无法删除项目", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .setNegativeButton("取消", null)
+                    .create()
+                    .show();
+
             return true;
         });
 
         clearExpensesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                totalExpense = 0.0;
-                expenses.clear();
-                expenseAdapter.notifyDataSetChanged();
-                updateTotalExpenseTextView();
-                saveExpenses();
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ExpenseRecordActivity.this);
+                builder.setTitle("清空")
+                        .setMessage("确定要清空吗？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                totalExpense = 0.00;
+                                expenses.clear();
+                                expenseAdapter.notifyDataSetChanged();
+                                totalExpenseTextView.setText("总支出: ¥" + String.format("%.2f", totalExpense));
+                                saveExpenses();
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .create()
+                        .show();
             }
         });
+    }
+
+    private void showAddExpenseDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_add_expense, null);
+        builder.setView(dialogView);
+
+        EditText expenseAmountEditText = dialogView.findViewById(R.id.dialogExpenseAmountEditText);
+        EditText expenseDescriptionEditText = dialogView.findViewById(R.id.dialogExpenseDescriptionEditText);
+
+        builder.setTitle("添加支出")
+                .setPositiveButton("添加", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String amountStr = expenseAmountEditText.getText().toString();
+                        String description = expenseDescriptionEditText.getText().toString();
+
+                        if (!amountStr.isEmpty() && !description.isEmpty()) {
+                            double amount = Double.parseDouble(amountStr);
+                            totalExpense += amount;
+                            expenses.add(description + ": ¥" + String.format("%.2f", amount));
+                            expenseAdapter.notifyDataSetChanged();
+                            totalExpenseTextView.setText("总支出: ¥" + String.format("%.2f", totalExpense));
+                            saveExpenses();
+                        } else {
+                            Toast.makeText(ExpenseRecordActivity.this, "请输入支出金额和描述", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .create()
+                .show();
     }
 
     private void saveExpenses() {
@@ -116,10 +159,7 @@ public class ExpenseRecordActivity extends AppCompatActivity {
         expenses.addAll(expenseSet);
         expenseAdapter.notifyDataSetChanged();
         totalExpense = sharedPreferences.getFloat("totalExpense", 0);
-        updateTotalExpenseTextView();
-    }
 
-    private void updateTotalExpenseTextView() {
         totalExpenseTextView.setText("总支出: ¥" + String.format("%.2f", totalExpense));
     }
 }
