@@ -15,7 +15,7 @@
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:background="@mipmap/travel_shouye">
+            android:background="@mipmap/travel_shouye2">
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collpasing_toolbar"
                 android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                         android:layout_marginHorizontal="3dp"
                         android:elevation="3dp"
                         android:layout_marginBottom="10dp"
-                        android:background="@drawable/background_frame_1"
+                        android:background="@drawable/background_frame_3"
                         android:orientation="horizontal">
                         <LinearLayout
                             android:id="@+id/lrlt_create"
@@ -47,10 +47,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@mipmap/travel_begin" />
-                            <!--                        <ImageView-->
-                            <!--                            android:layout_width="70dp"-->
-                            <!--                            android:layout_height="20dp"-->
-                            <!--                            android:src="@drawable/homepage_mytravel" />-->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -69,10 +65,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@mipmap/travel_itinerary" />
-                            <!--                        <ImageView-->
-                            <!--                            android:layout_width="70dp"-->
-                            <!--                            android:layout_height="20dp"-->
-                            <!--                            android:src="@drawable/homepage_myfootprint" />-->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -91,10 +83,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@mipmap/travel_photo" />
-                            <!--                        <ImageView-->
-                            <!--                            android:layout_width="70dp"-->
-                            <!--                            android:layout_height="20dp"-->
-                            <!--                            android:src="@drawable/homepage_myphoto" />-->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -113,10 +101,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@mipmap/more_tool" />
-                            <!--                        <ImageView-->
-                            <!--                            android:layout_width="70dp"-->
-                            <!--                            android:layout_height="20dp"-->
-                            <!--                            android:src="@drawable/homepage_myphoto" />-->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -134,8 +118,8 @@
                     app:layout_collapseMode="pin">
                     <LinearLayout
                         android:id="@+id/community_top"
-                        android:layout_centerHorizontal="true"
                         android:paddingTop="15dp"
+                        android:layout_marginEnd="15dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <EditText
@@ -145,10 +129,9 @@
                             android:layout_weight="3"
                             android:hint="输入关键字搜索"
                             android:textColorHint="#aaaaaa"
-                            android:layout_marginRight="20dp"
                             android:layout_margin="6dp"
                             android:background="@drawable/background_frame"
-                            android:textSize="16sp"
+                            android:textSize="15sp"
                             android:drawableLeft="@drawable/search_16_white"
                             android:singleLine="true"
                             android:imeOptions="actionSearch" />
@@ -180,6 +163,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:text="今日推荐"
+                            android:textColor="#000000"
+                            android:textSize="15sp"
                             android:drawableLeft="@mipmap/symbol"/>
                     </LinearLayout>
                     <RelativeLayout

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/edittext_underline.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <layer-list>
+            <item android:start="10dp" android:end="10dp">
+                <shape>
+                    <solid android:color="#2196F3" />
+                </shape>
+            </item>
+            <item android:bottom="1dp">
+                <shape>
+                    <solid android:color="#FEFEFE" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <item>
+        <layer-list>
+            <item android:start="10dp" android:end="10dp">
+                <shape>
+                    <solid android:color="#F1F0F0" /> <!-- #F1F0F0 -->
+                </shape>
+            </item>
+            <item android:bottom="1dp">
+                <shape>
+                    <solid android:color="#FEFEFE" /> <!-- #FEFEFE -->
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

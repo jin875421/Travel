@@ -73,7 +73,8 @@ public class UploadPostActivity extends AppCompatActivity {
     private  List<File> fileList = new ArrayList<>();
     private Post post = new Post();
     private EditText title,content;
-    private ImageView back, upload;
+    private ImageView back;
+    private TextView upload;
     private String userId;
     private LinearLayout imgLinerLayout;
     private ImageView uploadImage;

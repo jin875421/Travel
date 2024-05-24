@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -72,7 +73,9 @@ public class PostEditActivity extends AppCompatActivity {
 
     private Post post = new Post();
     private EditText title, content;
-    private Button back, upload;
+//    private Button back, upload;
+    private ImageView back;
+    private TextView upload;
     private String userId;
     private LinearLayout imgLinerLayout;
     private ImageView uploadImage;

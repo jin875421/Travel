@@ -31,7 +31,7 @@
             android:layout_alignParentBottom="true"
             android:textStyle="bold"
             android:textColor="#0c0c0c"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
         <TextView
             android:id="@+id/txt_save"
             android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
             android:layout_alignParentBottom="true"
             android:text="保存"
             android:textColor="#2196F3"
-            android:textSize="16dp"/>
+            android:textSize="16sp"/>
     </RelativeLayout>
 
     <RelativeLayout
