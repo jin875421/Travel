@@ -3,7 +3,7 @@ package glue502.software.models;
 import java.io.Serializable;
 import java.util.List;
 
-public class Post implements Serializable {
+public class  Post implements Serializable {
     String postId;
     String postTitle;
     String postContent;

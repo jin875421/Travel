@@ -63,6 +63,7 @@ import java.util.List;
 import glue502.software.R;
 import glue502.software.activities.login.LoginActivity;
 import glue502.software.activities.posts.PostDisplayActivity;
+import glue502.software.activities.travelRecord.FunctionActivity;
 import glue502.software.activities.travelRecord.TravelAlbumActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
@@ -83,6 +84,7 @@ public class RecommendFragment extends Fragment {
     private LinearLayout rltlCreate;
     private LinearLayout rltlFootprint;
     private LinearLayout rltlPhoto;
+    private LinearLayout lrltMore;
     private TextView txtLocation;
     private View view;
     private ViewPager2 vp2;
@@ -116,6 +118,7 @@ public class RecommendFragment extends Fragment {
         rltlCreate = view.findViewById(R.id.lrlt_create);
         rltlFootprint = view.findViewById(R.id.lrlt_footprint);
         rltlPhoto=view.findViewById(R.id.lrlt_photo);
+        lrltMore = view.findViewById(R.id.lrlt_more);
         localPost = view.findViewById(R.id.local_post);
         vp2 = view.findViewById(R.id.reco_vp2);
         dotLinerLayout = view.findViewById(R.id.index_dot);
@@ -403,6 +406,13 @@ public class RecommendFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), PostDisplayActivity.class);
                 intent.putExtra("postwithuserinfo", clickItem);
                 startActivityForResult(intent,1);
+            }
+        });
+        lrltMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), FunctionActivity.class);
+                startActivity(intent);
             }
         });
         rltlCreate.setOnClickListener(new View.OnClickListener() {

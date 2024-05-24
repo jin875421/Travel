@@ -75,6 +75,7 @@
                 <TextView
                     android:paddingLeft="5dp"
                     android:id="@+id/user_name"
+                    android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"/>
             </LinearLayout>
