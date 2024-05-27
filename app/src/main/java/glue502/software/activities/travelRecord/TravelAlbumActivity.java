@@ -4,6 +4,7 @@ import static glue502.software.activities.MainActivity.ip;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -33,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.MainActivity;
 import glue502.software.adapters.TravelAlbumAdapter;
 import glue502.software.adapters.TravelReviewAdapter;
 import glue502.software.models.Result;
