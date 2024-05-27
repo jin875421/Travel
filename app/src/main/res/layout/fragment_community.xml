@@ -17,46 +17,49 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:background="@mipmap/travel_shouye">
+
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collpasing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:expandedTitleMarginEnd="64dp"
                 app:expandedTitleMarginStart="48dp"
-                app:expandedTitleMarginEnd="64dp">
-<!--                <ImageView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:layout_marginStart="20dp"-->
-<!--                    android:layout_marginTop="40dp"-->
-<!--                    android:src="@mipmap/welcome2community"/>-->
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                <!--                <ImageView-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_gravity="center"-->
+                <!--                    android:layout_marginStart="20dp"-->
+                <!--                    android:layout_marginTop="40dp"-->
+                <!--                    android:src="@mipmap/welcome2community"/>-->
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     app:layout_collapseMode="pin">
+
                     <RelativeLayout
                         android:id="@+id/community_top"
-                        android:layout_centerHorizontal="true"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
                             android:text="社区"
-                            android:textStyle="bold"
                             android:textColor="#0c0c0c"
-                            android:textSize="18dp" />
+                            android:textSize="18dp"
+                            android:textStyle="bold" />
 
                         <ImageButton
                             android:id="@+id/search_btn"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_alignParentEnd="true"
-                            android:background="@android:color/transparent"
                             android:layout_marginRight="10dp"
+                            android:background="@android:color/transparent"
                             android:src="@drawable/community_search" />
                     </RelativeLayout>
 

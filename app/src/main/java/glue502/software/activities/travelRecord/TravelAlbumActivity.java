@@ -72,25 +72,11 @@ public class TravelAlbumActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_album);
-
-        //在这个页面显示很多组照片
-        //首先准备数据源,然后将数据源放到适配器当中
-
         //沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
 
-        //实现全屏，去掉页面上面蓝色标题栏
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         findViews();
         setlistener();
-        //初始化数据源
-//        initData();
-
-        //获取到userId
-
-//        initData(sharedPreferences.getString("userId",""));
 
         // 发送网络请求
         list1 = new ArrayList<>();
@@ -98,18 +84,6 @@ public class TravelAlbumActivity extends AppCompatActivity {
         list3 = new ArrayList<>();
         list4 = new ArrayList<>();
         new RequestAsyncTask().execute();
-
-//        //现在分配适配器
-//        t1 = new TravelAlbumAdapter(list1,this,R.layout.travel_album);
-//        t2 = new TravelAlbumAdapter(list2,this,R.layout.travel_album);
-//        t3 = new TravelAlbumAdapter(list3,this,R.layout.travel_album);
-//        t4 = new TravelAlbumAdapter(list4,this,R.layout.travel_album);
-//        System.out.println(list1);
-//        gridView1.setAdapter(t1);
-//        gridView2.setAdapter(t2);
-//        gridView3.setAdapter(t3);
-//        gridView4.setAdapter(t4);
-
 
     }
 
@@ -122,19 +96,11 @@ public class TravelAlbumActivity extends AppCompatActivity {
         });
     }
 
-
     private class RequestAsyncTask extends AsyncTask<Void, Void, String> {
-
-
         protected void onPreExecute() {
-            // 在加载数据之前显示加载动画
-            //如果需要加载数据，就显示加载动画，否则不显示
-//            if(list1 != null || list2 != null || list3 != null || list4 != null){
-//                pbPicture.setVisibility(View.GONE);
-//            }
+
             pbPicture.setVisibility(View.VISIBLE);
         }
-
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -192,19 +158,6 @@ public class TravelAlbumActivity extends AppCompatActivity {
 
                 for(ShowPicture showPicture:showPictures){
                     String date1 = showPicture.getTravelDate();
-
-//                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//
-//                    try {
-//                        LocalDateTime dateTime = LocalDateTime.parse(date1, formatter);
-//                        localDate2 = dateTime.toLocalDate();
-//
-//                        // 在这里使用 localDate2，执行你需要的操作
-//                    } catch (DateTimeParseException e) {
-//                        e.printStackTrace();
-//                        // 处理日期解析错误
-//                    }
-
                     //这里尝试改善，用其他方式来将字符串类型转化成Date类型
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     try {
@@ -214,8 +167,6 @@ public class TravelAlbumActivity extends AppCompatActivity {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-
-
 
                     //判断这个时间是否在当前时间的一个月之内，ture则代表是
                     boolean isAtLeastOneMonthBefore = localDate2.isAfter(localDate1.minusMonths(1));
@@ -243,7 +194,6 @@ public class TravelAlbumActivity extends AppCompatActivity {
                         //填充到list2中
                         list4.add(showPicture);
                     }
-
 
                 }
 
@@ -282,73 +232,11 @@ public class TravelAlbumActivity extends AppCompatActivity {
                 pbPicture.setVisibility(View.GONE);
                 rlBackground.setVisibility(View.GONE);
 
-
             } else {
                 // 处理请求失败的情况
             }
         }
     }
-
-
-
-
-
-
-//    private void initData(String userId){
-//        //在这里实现向服务器发送请求，并且将返回过来的数据按照日期的分来排列在四个列表中
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                OkHttpClient client = new OkHttpClient();
-//                Request request = new Request.Builder().url(url+"/showPictures?userId="+userId).build();
-//                try {
-//                    //打开连接接收数据
-//                    Response response = client.newCall(request).execute();
-//                    //处理数据
-//                    if(response.isSuccessful()){
-//                        //将response转换为List<travelReview>
-//                        if(response.body()!= null){
-//                            //将response转换为Result
-//                            String responseData = response.body().string();
-//                            //将String转换为travelReview
-//                            List<TravelReview> travelReview = new Gson().fromJson(responseData,new TypeToken<List<TravelReview>>(){}.getType());
-//
-//                        }
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//    }
-
-//    private void initData() {
-//
-//        list1 = new ArrayList<>();
-//        list2 = new ArrayList<>();
-//        list3 = new ArrayList<>();
-//        list4 = new ArrayList<>();
-//
-//        ShowPicture sp = new ShowPicture();
-//        Date date = new Date();
-//        sp.setTravelDate(date);
-//        sp.setPlaceName("河北师范大学");
-//        List<String> li = new ArrayList<>();
-//        li.add("https://picst.sunbangyan.cn/2023/12/15/819f5c5edca5d199f65abab3194973cf.jpeg");
-//        li.add("https://picdl.sunbangyan.cn/2023/12/15/24f98c8fc99caba5490846430185efce.jpeg");
-//        li.add("https://picdl.sunbangyan.cn/2023/12/15/16ddc0e539b47227bd082bd59d0f0faf.jpeg");
-//        li.add("https://picdm.sunbangyan.cn/2023/12/20/fc8965d2da51b0a191386036b824d942.jpeg");
-//        li.add("https://picst.sunbangyan.cn/2023/12/20/fefbfc6cbd0e10c7cb11727dc5f2cfae.jpeg");
-//        li.add("https://picst.sunbangyan.cn/2023/12/15/819f5c5edca5d199f65abab3194973cf.jpeg");
-//        li.add("https://picdl.sunbangyan.cn/2023/12/15/24f98c8fc99caba5490846430185efce.jpeg");
-//        li.add("https://picdl.sunbangyan.cn/2023/12/15/16ddc0e539b47227bd082bd59d0f0faf.jpeg");
-//        sp.setPicturePath(li);
-//        list1.add(sp);
-//        list2.add(sp);
-//        list3.add(sp);
-//        list4.add(sp);
-//    }
-
     private void findViews() {
         gridView1 = findViewById(R.id.gv_view1);
         gridView2 = findViewById(R.id.gv_view2);
@@ -368,11 +256,5 @@ public class TravelAlbumActivity extends AppCompatActivity {
         text3.setTypeface(typeface);
         text4.setTypeface(typeface);
 
-
-//        //在这里要将文本先隐藏，在文本下有数据的时候才将文本显现出来
-//        text1.setVisibility(View.GONE);
-//        text2.setVisibility(View.GONE);
-//        text3.setVisibility(View.GONE);
-//        text4.setVisibility(View.GONE);
     }
 }

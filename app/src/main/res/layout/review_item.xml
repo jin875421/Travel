@@ -2,10 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/border_backgrounddjpjpjp"
     android:orientation="vertical">
-
-
-
 
     <TextView
         android:id="@+id/travel_place"
@@ -15,6 +13,7 @@
         android:textColor="@color/black"
         android:textSize="20sp"/>
     <HorizontalScrollView
+        android:layout_margin="5dp"
         android:id="@+id/scrollView"
         android:layout_below="@+id/travel_place"
         android:layout_width="match_parent"
@@ -29,6 +28,7 @@
     <TextView
         android:id="@+id/content"
         android:paddingLeft="10dp"
+        android:layout_marginBottom="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp" />
