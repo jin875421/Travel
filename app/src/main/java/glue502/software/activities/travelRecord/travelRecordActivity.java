@@ -739,6 +739,7 @@ public class travelRecordActivity extends Activity {
                                 int c = (int)innerLayout.getTag();
                                 List<travelRecord> list = getListFromSharedPreferences();
                                 List<String> path= list.get(c).getImage();
+                                System.out.println("742"+index);
                                 path.remove(index-1);
                                 saveListToSharedPreferences(path, c);
                                 // 用户确认删除的处理逻辑，可以在这里执行删除操作
@@ -1633,7 +1634,7 @@ public class travelRecordActivity extends Activity {
     private void loadSave() {
         for (int i = 0; i < llContentView.getChildCount(); i++) {
             LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(i);
-            // 获取第一个LinearLayout}
+            // 获取第一个LinearLayout
             HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
             LinearLayout innerLayout = (LinearLayout) scrollView.getChildAt(0); // 获取HorizontalScrollView中的LinearLayout
             innerLayout.setTag(i);

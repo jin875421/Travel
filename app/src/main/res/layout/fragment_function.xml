@@ -124,7 +124,7 @@
             app:behavior_fitToContents="false"
             android:orientation="vertical"
             app:behavior_hideable="true"
-            android:background="@drawable/background_frame"
+            android:background="@color/white"
             app:layout_behavior="@string/bottom_sheet_behavior">
             <ImageView
                 android:layout_width="100dp"

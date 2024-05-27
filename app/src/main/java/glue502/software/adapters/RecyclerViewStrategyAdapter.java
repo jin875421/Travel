@@ -81,7 +81,6 @@ public class RecyclerViewStrategyAdapter extends RecyclerView.Adapter<RecyclerVi
                 .into(holder.cover);
         holder.desc.setText(returnStrategy.getDescribe());
         holder.title.setText(returnStrategy.getTitle());
-        holder.name.setText(returnStrategy.getUserName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,7 +97,6 @@ public class RecyclerViewStrategyAdapter extends RecyclerView.Adapter<RecyclerVi
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView desc;
-        TextView name;
         ImageView cover;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -106,7 +104,6 @@ public class RecyclerViewStrategyAdapter extends RecyclerView.Adapter<RecyclerVi
             //获取控件对象
             title = itemView.findViewById(R.id.title);
             desc = itemView.findViewById(R.id.desc);
-            name = itemView.findViewById(R.id.name);
             cover = itemView.findViewById(R.id.cover);
         }
     }
