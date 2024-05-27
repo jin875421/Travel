@@ -178,7 +178,7 @@ public class travelRecordActivity extends Activity {
         SDKInitializer.setAgreePrivacy(this.getApplicationContext(), true);
         SDKInitializer.initialize(this.getApplicationContext());
         mSuggestionSearch = SuggestionSearch.newInstance();
-        MyViewUtils.setImmersiveStatusBar(this, findViewById(R.id.top), true);
+        MyViewUtils.setImmersiveStatusBar(this, findViewById(R.id.layout), true);
         // 检查是否已经授予了所需的权限
         Log.d("PostActivity", "onCreate() called");
         initCtrl();
@@ -202,9 +202,6 @@ public class travelRecordActivity extends Activity {
         loadSavedContent();
         PoiSugSearch();
         setListener();
-        //沉浸式状态栏
-//        MyViewUtils.setImmersiveStatusBar(this, findViewById(R.id.top), true);
-        MyViewUtils.setISBarWithoutView(this, true);
     }
 
     private void setValue(int value) {
