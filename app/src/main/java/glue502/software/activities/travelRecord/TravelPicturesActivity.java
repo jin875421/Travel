@@ -38,6 +38,11 @@ import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 import com.google.gson.Gson;
 import com.yalantis.ucrop.UCropActivity;
 
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +53,13 @@ import glue502.software.activities.personal.UpdatePersonalInformationActivity;
 import glue502.software.adapters.ImagePagerAdapter;
 import glue502.software.adapters.TravelPicturesAdapter;
 import glue502.software.models.ImageEntity;
+import glue502.software.models.TravelPicture;
 import glue502.software.models.UserInfo;
 import glue502.software.utils.MyViewUtils;
 import glue502.software.utils.bigImgUtils.MyImageLoader;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -62,7 +71,10 @@ import okhttp3.Response;
 public class TravelPicturesActivity extends AppCompatActivity {
 
     //数据源
-    private List<String> list1;
+    private List<String> list1= new ArrayList<>();
+    private List<TravelPicture> pictureList = new ArrayList<>();
+    // 在 TravelPicturesActivity 中启动 OpenCVTest 活动
+    private static final int REQUEST_CODE_OPENCV_TEST = 1;
     private RecyclerView recyclerView;
     private String url = "http://"+ip+"/travel/";
     private String placeName ;
@@ -84,9 +96,9 @@ public class TravelPicturesActivity extends AppCompatActivity {
         //获取传递过来的参数
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-             list1 = extras.getStringArrayList("parameter_list_key");
+            placeId=extras.getString("placeId");
         }
-        placeId=extras.getString("placeId");
+        getPictureList(placeId);
         name = findViewById(R.id.place_name);
         name.setText(placeName);
         back = findViewById(R.id.back);
@@ -96,6 +108,72 @@ public class TravelPicturesActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void getPictureList(String placeId) {
+        OkHttpClient client = new OkHttpClient();
+
+        // 构建请求URL
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(url+"travel/pictures").newBuilder();
+        urlBuilder.addQueryParameter("placeId", placeId);
+        String url = urlBuilder.build().toString();
+
+        // 构建请求
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        // 发起异步请求
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 处理请求失败情况
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    // 处理服务器响应
+                    String responseData = response.body().string();
+                    try {
+                        // 解析JSON数据
+                        pictureList.clear();
+                        JSONArray jsonArray = new JSONArray(responseData);
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            TravelPicture travelPicture = new TravelPicture();
+                            travelPicture.setPictureId(jsonObject.getString("pictureId"));
+                            travelPicture.setPicturePath(jsonObject.getString("picturePath"));
+                            travelPicture.setPlaceId(jsonObject.getString("placeId"));
+                            pictureList.add(travelPicture);
+                        }
+
+                        // 在数据准备好后更新UI
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                list1.clear();
+                                for (TravelPicture picture : pictureList) {
+                                    list1.add(picture.getPicturePath());
+                                }
+                                initpage();
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // 处理服务器响应失败情况
+                    // 可以根据不同的响应码进行不同的处理
+                }
+            }
+        });
+    }
+
+
+    private void initpage() {
         List<ImageEntity> datas = new ArrayList<>();
         for(String s:list1){
             datas.add(new ImageEntity(url+s,url+s,null,null,null,0,s));
@@ -155,22 +233,22 @@ public class TravelPicturesActivity extends AppCompatActivity {
                                 new OnLoadViewFinishListener() {
                                     @Override
                                     public void onLoadViewFinish(View moreView) {
-                                        Button btnEdit = moreView.findViewById(R.id.btnEdit);
-                                        Button btnDelete=moreView.findViewById(R.id.btn_delete);
-                                        btnDelete.setOnClickListener(new View.OnClickListener() {
+                                        TextView txtEdit = moreView.findViewById(R.id.txtEdit);
+                                        ImageView imgDelete=moreView.findViewById(R.id.img_delete);
+                                        imgDelete.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
                                                 deletePicture(path);
                                             }
                                         });
-                                        btnEdit.setOnClickListener(new View.OnClickListener() {
+                                        txtEdit.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
 
                                                 Intent intent=new Intent(TravelPicturesActivity.this, OpenCVTest.class);
                                                 intent.putExtra("imageUrl",clickedImageUrl);
                                                 intent.putExtra("imagePlaceId",placeId);
-                                                startActivity(intent);
+                                                startActivityForResult(intent, REQUEST_CODE_OPENCV_TEST);
                                             }
                                         });
                                     }
@@ -212,7 +290,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
                         public void run() {
                             Toast.makeText(TravelPicturesActivity.this, responseData, Toast.LENGTH_SHORT).show();
                             if (responseData.equals("图片已成功删除")) {
-                                TravelPicturesActivity.this.finish();
+                                getPictureList(placeId);
                             }
                         }
                     });
@@ -222,5 +300,14 @@ public class TravelPicturesActivity extends AppCompatActivity {
             }
         }).start();
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_OPENCV_TEST && resultCode == RESULT_OK) {
+            // 从 OpenCVTest 返回并且结果码为 RESULT_OK 时，更新图片列表并刷新 UI
+            getPictureList(placeId);
+        }
+    }
+
 
 }

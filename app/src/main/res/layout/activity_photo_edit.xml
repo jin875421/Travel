@@ -8,22 +8,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end">
-        <Button
-            android:layout_marginTop="30dp"
-            android:id="@+id/btnEdit"
+        <TextView
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="20dp"
+            android:id="@+id/txtEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:textColor="@color/white"
             android:text="编辑" />
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_delete"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="20dp"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="删除"/>
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img_delete"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/delete02"/>
+    </LinearLayout>
+
 
 
 </RelativeLayout>
