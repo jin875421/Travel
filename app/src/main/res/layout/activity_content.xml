@@ -1,17 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/content_background"
-    android:paddingTop="0dp"
     android:id="@+id/layout"
+    android:orientation="vertical"
     tools:context=".activities.travelRecord.travelRecordActivity" >
 
-    <ScrollView
-        android:layout_below="@+id/top"
+    <RelativeLayout
+        android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back" />
+
+        <EditText
+            android:id="@+id/Ed_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/edittext_underline"
+            android:gravity="center"
+            android:text="旅行地"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/btn_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:textSize="16sp"
+            android:layout_marginEnd="15dp"
+            android:textColor="#2196F3"
+            android:text="上传"/>
+    </RelativeLayout>
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:scrollbars="none">
 
         <LinearLayout
@@ -26,14 +56,16 @@
                 android:id="@+id/ll_one"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
                 android:background="@drawable/border_backgrounddjp"
                 android:orientation="vertical"
-                android:padding="5dip">
+                android:elevation="5dp"
+                android:layout_margin="5dp"
+                android:padding="5dp">
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
+                    android:background="@drawable/background_hint"
                     android:scrollbars="none">
 
                     <LinearLayout
@@ -59,14 +91,14 @@
                 <EditText
                     android:id="@+id/et_content1"
                     android:layout_width="match_parent"
-                    android:layout_height="30dip"
-                    android:background="@drawable/border_backgrounddjpjpjp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_underline"
                     android:gravity="left"
-                    android:inputType="textMultiLine"
-                    android:hint="请输入地点哦"
-                    android:paddingLeft="5dip"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textColorHighlight="#99CCFF"
+                    android:textCursorDrawable="@drawable/cursor_style"
+                    android:hint="地点（必填）"
+                    android:paddingLeft="5dp"
+                    android:textSize="16sp" />
 
                 <ListView
                     android:id="@+id/sug_list"
@@ -79,10 +111,12 @@
                     android:id="@+id/et_content2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border_backgrounddjpjpjp"
+                    android:background="#FFFFFF"
                     android:gravity="left"
                     android:inputType="textMultiLine"
-                    android:hint="请输入内容"
+                    android:hint="记录下此刻的心情吧！"
+                    android:textColorHighlight="#99CCFF"
+                    android:textCursorDrawable="@drawable/cursor_style"
                     android:lines="20"
                     android:minLines="12"
                     android:paddingLeft="5dip"
@@ -129,34 +163,4 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <RelativeLayout
-        android:id="@+id/top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <Button
-        android:id="@+id/btn_return"
-        android:layout_width="23dp"
-        android:layout_height="23dp"
-        android:background="@mipmap/back3"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="7dp"/>
-
-
-    <EditText
-        android:id="@+id/Ed_place"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-35dp"
-        android:layout_below="@id/btn_return"
-        android:gravity="center"
-        android:text="旅行地" />
-    <Button
-        android:id="@+id/btn_submit"
-        android:layout_width="43dp"
-        android:layout_height="36dp"
-        android:background="@mipmap/submit"
-        android:layout_alignParentRight="true" />
-    </RelativeLayout>
-</RelativeLayout>
+</LinearLayout>
