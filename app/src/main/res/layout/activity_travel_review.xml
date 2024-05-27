@@ -14,11 +14,12 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/back"
+            android:src="@mipmap/back2"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/back1"
-            />
+            android:layout_height="30dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,6 +32,7 @@
 
     </RelativeLayout>
     <ListView
+        android:layout_margin="10dp"
         android:id="@+id/travel_review"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

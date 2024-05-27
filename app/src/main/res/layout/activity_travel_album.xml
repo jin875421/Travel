@@ -31,15 +31,9 @@
 
 
     <RelativeLayout
+        android:layout_margin="10dp"
         android:layout_height="match_parent"
         android:layout_width="match_parent">
-
-
-
-
-
-
-
         <com.donkingliang.consecutivescroller.ConsecutiveScrollerLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
@@ -139,17 +133,16 @@
         <!--在这里添加加载动画-->
         <RelativeLayout
             android:id="@+id/rl_background"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@color/white">
 
             <ProgressBar
                 android:id="@+id/pb_picture"
-                android:layout_height="50dp"
                 android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                />
+                android:layout_centerVertical="true" />
 
         </RelativeLayout>
 

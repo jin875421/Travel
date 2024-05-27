@@ -11,6 +11,7 @@ import glue502.software.adapters.StrategyRespondDetailAdapter;
 import glue502.software.models.ReturnStrategyCommentRespond;
 import glue502.software.models.StrategyComment;
 import glue502.software.models.UploadComment;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -69,7 +70,8 @@ public class StrategyRespondDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_strategy_respond_detail);
-
+        //沉浸式状态栏
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
         setView();
         initData();
         setListener();

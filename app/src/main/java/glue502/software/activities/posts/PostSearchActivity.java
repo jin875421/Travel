@@ -69,7 +69,7 @@ public class PostSearchActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String searchText = v.getText().toString().trim();
-
+                    System.out.println("????");
                     if (!searchText.isEmpty()) {
                         // 开启线程接收帖子数据
                         new Thread(new Runnable() {

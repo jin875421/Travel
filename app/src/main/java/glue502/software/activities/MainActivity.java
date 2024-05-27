@@ -24,22 +24,16 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-
-import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import org.opencv.android.OpenCVLoader;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -47,7 +41,6 @@ import java.util.List;
 
 import glue502.software.R;
 import glue502.software.activities.login.LoginActivity;
-import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.adapters.PageAdapter;
 import glue502.software.fragments.Add;

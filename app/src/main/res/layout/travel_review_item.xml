@@ -39,8 +39,9 @@
             android:scaleType="centerCrop"
         />
         <TextView
+            android:layout_marginTop="10dp"
             android:id="@+id/travel_name"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:textColor="@color/white"
@@ -51,7 +52,7 @@
             android:shadowRadius="1"/>
         <TextView
             android:id="@+id/travel_time"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:textColor="@color/white"

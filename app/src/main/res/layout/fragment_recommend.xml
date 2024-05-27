@@ -122,7 +122,7 @@
                         android:layout_marginEnd="15dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-                        <EditText
+                        <TextView
                             android:id="@+id/et_searchtext"
                             android:layout_width="0dp"
                             android:layout_height="30dp"
@@ -132,9 +132,9 @@
                             android:layout_margin="6dp"
                             android:background="@drawable/background_frame"
                             android:textSize="15sp"
+                            android:paddingTop="5dp"
                             android:drawableLeft="@drawable/search_16_white"
-                            android:singleLine="true"
-                            android:imeOptions="actionSearch" />
+                            android:singleLine="true" />
                     </LinearLayout>
                 </androidx.appcompat.widget.Toolbar>
             </com.google.android.material.appbar.CollapsingToolbarLayout>

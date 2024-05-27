@@ -9,32 +9,30 @@
         android:background="@drawable/background_frame_image"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
+        android:layout_marginLeft="10dp"
         android:orientation="vertical"
-        android:layout_width="170dp">
+        android:layout_width="180dp">
         <ImageView
             android:id="@+id/cover"
             android:background="@drawable/background_frame_image"
             android:scaleType="centerCrop"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_width="162dp"
-            android:layout_height="230dp" />
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_width="160dp"
+            android:layout_height="220dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="标题"
-                android:color="@color/black"
+                android:color="#3c3c3c"
                 android:textStyle="bold"
                 android:textSize="18sp" />
             <TextView
@@ -44,23 +42,6 @@
                 android:text="描述"
                 android:color="@color/black"
                 android:textSize="10sp" />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:src="@mipmap/up"/>
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:text="UP主"/>
-
-            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

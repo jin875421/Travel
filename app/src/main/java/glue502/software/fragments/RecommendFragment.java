@@ -63,7 +63,9 @@ import java.util.List;
 import glue502.software.R;
 import glue502.software.activities.login.LoginActivity;
 import glue502.software.activities.posts.PostDisplayActivity;
+import glue502.software.activities.posts.PostSearchActivity;
 import glue502.software.activities.travelRecord.FunctionActivity;
+import glue502.software.activities.travelRecord.SearchActivity;
 import glue502.software.activities.travelRecord.TravelAlbumActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
@@ -107,6 +109,7 @@ public class RecommendFragment extends Fragment {
     //顶部渐变控件
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
+    private TextView search;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -124,6 +127,7 @@ public class RecommendFragment extends Fragment {
         dotLinerLayout = view.findViewById(R.id.index_dot);
         localCity = view.findViewById(R.id.local_city);
         listView = view.findViewById(R.id.local_post);
+        search = view.findViewById(R.id.et_searchtext);
         attractionName = view.findViewById(R.id.attraction_name);
         refreshLayout = view.findViewById(R.id.refreshLayout);
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
@@ -227,7 +231,7 @@ public class RecommendFragment extends Fragment {
                                                     Gson gson = new Gson();
                                                     List<PostWithUserInfo> postWithUserInfoList = gson.fromJson(responseData,new TypeToken<List<PostWithUserInfo>>(){}.getType());
                                                     if (postWithUserInfoList.size()<=0){
-                                                        //TODO 加载官方的帖子
+                                                        //加载官方的帖子
                                                          new Thread(new Runnable() {
                                                              @Override
                                                              public void run() {
@@ -397,6 +401,13 @@ public class RecommendFragment extends Fragment {
     //--------------------------------------------------------------------------
 
     public void setlistener(){
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PostSearchActivity.class);
+                startActivity(intent);
+            }
+        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
