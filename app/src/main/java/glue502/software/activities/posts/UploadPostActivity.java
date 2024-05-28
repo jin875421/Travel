@@ -101,7 +101,7 @@ public class UploadPostActivity extends AppCompatActivity {
 
         initView();
 
-        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(),false);
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(),true);
         setListener();
     }
 

@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,6 +31,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -43,7 +45,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -139,7 +143,8 @@ public class travelRecordActivity extends Activity {
     private LinearLayout llContentView;
     //添加点击按钮
     private EditText etContent1,etTravelName,etContent2;
-    private Button btnReturn,btnSubmit;
+    private ImageView btnReturn;
+    private TextView btnSubmit;
     boolean submitClicked = false;
     // “+”按钮控件List
     private LinkedList<ImageButton> listIBTNAdd;
@@ -169,7 +174,7 @@ public class travelRecordActivity extends Activity {
         SDKInitializer.setAgreePrivacy(this.getApplicationContext(), true);
         SDKInitializer.initialize(this.getApplicationContext());
         mSuggestionSearch = SuggestionSearch.newInstance();
-        MyViewUtils.setImmersiveStatusBar(this, findViewById(R.id.top),true);
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
         // 检查是否已经授予了所需的权限
         Log.d("PostActivity", "onCreate() called");
         initCtrl();
@@ -736,11 +741,10 @@ public class travelRecordActivity extends Activity {
                             public void onConfirmDelete() {
                                 loadSave();
                                 int index = innerLayout.indexOfChild(v); // 获取点击的 ImageView 在 innerLayout 中的索引位置
-                                int c = (int)innerLayout.getTag();
+                                int c = (int) innerLayout.getTag();
                                 List<travelRecord> list = getListFromSharedPreferences();
-                                List<String> path= list.get(c).getImage();
-                                System.out.println("742"+index);
-                                path.remove(index-1);
+                                List<String> path = list.get(c).getImage();
+                                path.remove(index - 1);
                                 saveListToSharedPreferences(path, c);
                                 // 用户确认删除的处理逻辑，可以在这里执行删除操作
                                 innerLayout.removeView(v);
@@ -755,17 +759,13 @@ public class travelRecordActivity extends Activity {
                 });
                 layoutParams.setMargins(7, 0, 7, 16);
                 imageView1.setLayoutParams(layoutParams);
-// 添加新的imageView1 到 innerLayout
-                if(n==10000){
+                // 添加新的imageView1 到 innerLayout
+                if (n == 10000) {
                     innerLayout.addView(imageView1);
+                } else {
+                    innerLayout.addView(imageView1, getWhich() + 1);
                 }
-                else{
-                    innerLayout.addView(imageView1,getWhich()+1);
-                }
-
-//
-            }
-            else {
+            } else {
                 LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(a);
                 // 获取第一个LinearLayout}
                 HorizontalScrollView scrollView = (HorizontalScrollView) firstLayout.getChildAt(0); // 获取第一个LinearLayout中的HorizontalScrollView
@@ -1165,7 +1165,7 @@ public class travelRecordActivity extends Activity {
         etContent1 = (EditText) this.findViewById(R.id.et_content1);
         etContent2 = (EditText) this.findViewById(R.id.et_content2);
         etTravelName = (EditText) this.findViewById(R.id.Ed_place);
-        btnReturn =findViewById(R.id.btn_return);
+        btnReturn =findViewById(R.id.back);
         btnSubmit =findViewById(R.id.btn_submit);
         mSugListView = findViewById(R.id.sug_list);
         listIBTNAdd = new LinkedList<ImageButton>();
