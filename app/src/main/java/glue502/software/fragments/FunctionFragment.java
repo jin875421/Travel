@@ -565,7 +565,7 @@ public class FunctionFragment extends Fragment {
                 .asBitmap()
                 .load("http://"+ip+"/travel/"+path)
                 .centerCrop()
-                .transform(new GlideCustomTransformation(mContext,4,mContext.getResources().getColor(R.color.one)))
+                .transform(new GlideCustomTransformation(mContext,4,mContext.getResources().getColor(R.color.white)))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .override(widthInPixels, heightInPixels) // 设置加载图片时的大小
                 .into(new SimpleTarget<Bitmap>() {

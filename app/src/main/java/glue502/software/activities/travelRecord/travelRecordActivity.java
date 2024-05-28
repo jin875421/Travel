@@ -739,7 +739,6 @@ public class travelRecordActivity extends Activity {
                                 int c = (int)innerLayout.getTag();
                                 List<travelRecord> list = getListFromSharedPreferences();
                                 List<String> path= list.get(c).getImage();
-                                System.out.println("742"+index);
                                 path.remove(index-1);
                                 saveListToSharedPreferences(path, c);
                                 // 用户确认删除的处理逻辑，可以在这里执行删除操作
@@ -755,15 +754,14 @@ public class travelRecordActivity extends Activity {
                 });
                 layoutParams.setMargins(7, 0, 7, 16);
                 imageView1.setLayoutParams(layoutParams);
-// 添加新的imageView1 到 innerLayout
+                // 添加新的imageView1 到 innerLayout
                 if(n==10000){
                     innerLayout.addView(imageView1);
                 }
                 else{
                     innerLayout.addView(imageView1,getWhich()+1);
                 }
-
-//
+                //
             }
             else {
                 LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(a);
