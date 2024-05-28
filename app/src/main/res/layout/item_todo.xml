@@ -7,7 +7,8 @@
     <CheckBox
         android:id="@+id/cbComplete"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:buttonTint="#03A9F4"/>
 
     <TextView
         android:id="@+id/tvTitle"

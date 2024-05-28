@@ -143,7 +143,8 @@ public class travelRecordActivity extends Activity {
     private LinearLayout llContentView;
     //添加点击按钮
     private EditText etContent1,etTravelName,etContent2;
-    private Button btnReturn,btnSubmit;
+    private ImageView btnReturn;
+    private TextView btnSubmit;
     boolean submitClicked = false;
     // “+”按钮控件List
     private LinkedList<ImageButton> listIBTNAdd;
@@ -173,7 +174,7 @@ public class travelRecordActivity extends Activity {
         SDKInitializer.setAgreePrivacy(this.getApplicationContext(), true);
         SDKInitializer.initialize(this.getApplicationContext());
         mSuggestionSearch = SuggestionSearch.newInstance();
-        MyViewUtils.setImmersiveStatusBar(this, findViewById(R.id.top),true);
+        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
         // 检查是否已经授予了所需的权限
         Log.d("PostActivity", "onCreate() called");
         initCtrl();
@@ -1164,7 +1165,7 @@ public class travelRecordActivity extends Activity {
         etContent1 = (EditText) this.findViewById(R.id.et_content1);
         etContent2 = (EditText) this.findViewById(R.id.et_content2);
         etTravelName = (EditText) this.findViewById(R.id.Ed_place);
-        btnReturn =findViewById(R.id.btn_return);
+        btnReturn =findViewById(R.id.back);
         btnSubmit =findViewById(R.id.btn_submit);
         mSugListView = findViewById(R.id.sug_list);
         listIBTNAdd = new LinkedList<ImageButton>();
