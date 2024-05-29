@@ -143,7 +143,8 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="6dp"
-                android:background="@drawable/login_submit_button"
+                android:background="@drawable/blue_round_button"
+                android:textColor="#FFFFFF"
                 android:text="发送"/>
         </LinearLayout>
 

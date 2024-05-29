@@ -5,7 +5,7 @@
     android:id="@+id/top"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cwn"
+    android:background="#FAFAFA"
     tools:context=".activities.travelRecord.TravelDetailActivity">
     <RelativeLayout
         android:id="@+id/travel_detail_layout"
@@ -13,9 +13,9 @@
         android:layout_height="30dp">
         <ImageView
             android:id="@+id/btn_back"
-            android:src="@mipmap/back2"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
+            android:src="@drawable/back"
+            android:layout_marginStart="6dp"
+            android:layout_alignParentStart="true"
             android:layout_width="30dp"
             android:layout_height="30dp" />
 
@@ -28,16 +28,15 @@
             android:layout_centerVertical="true"
             android:layout_marginBottom="0dp"
             android:textColor="#0c0c0c"
-            android:textSize="18dp"
-            android:textStyle="bold" />
+            android:textSize="18dp" />
 
         <ImageView
             android:id="@+id/popupmenu"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
             android:src="@mipmap/menu"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
+            android:layout_marginEnd="6dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
     </RelativeLayout>
 
     <ListView
@@ -47,5 +46,7 @@
         android:layout_below="@+id/travel_detail_layout"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:divider="#00000000"
+        android:dividerHeight="8dp"/>
 </RelativeLayout>

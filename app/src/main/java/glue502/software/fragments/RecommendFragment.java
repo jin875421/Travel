@@ -161,7 +161,7 @@ public class RecommendFragment extends Fragment {
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                toolbar.setBackgroundColor(changeAlpha(getResources().getColor(R.color.communitytitle),Math.abs(verticalOffset*1.0f)/appBarLayout.getTotalScrollRange()));
+                toolbar.setBackgroundColor(changeAlpha(getResources().getColor(R.color.white),Math.abs(verticalOffset*1.0f)/appBarLayout.getTotalScrollRange()));
 
                 if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
                     // 完全折叠，显示ImageView

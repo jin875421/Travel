@@ -19,6 +19,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -267,7 +268,7 @@ public class travelRecordActivity extends Activity {
     }
 
     private void setListener() {
-        // TODO 注册根视图全局布局变化监听器
+        // 注册根视图全局布局变化监听器
         findViewById(R.id.layout).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -323,7 +324,8 @@ public class travelRecordActivity extends Activity {
         etContent1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus&&(!TextUtils.isEmpty(etContent1.getText()))) {
+                if (hasFocus && (!TextUtils.isEmpty(etContent1.getText()))) {
+                    etContent1.setText(etContent1.getText());
                     mSugListView.setVisibility(View.VISIBLE);
                 } else {
                     mSugListView.setVisibility(View.GONE);
@@ -945,15 +947,14 @@ public class travelRecordActivity extends Activity {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setBackgroundResource(R.drawable.border_backgrounddjp);
         layout.setLayoutParams(layoutParams);
-        layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
         layout.setElevation(dpToPx(5));
-        layoutParams.setMargins(dpToPx(5), dpToPx(11), dpToPx(5), dpToPx(5));
+        layoutParams.setMargins(dpToPx(5), dpToPx(16), dpToPx(5), dpToPx(5));
 
 
-//以下是图片的新加
+        //以下是图片的新加
 
-// 1. 创建外围 HorizontalScrollView 控件
+        // 1. 创建外围 HorizontalScrollView 控件
         HorizontalScrollView scrollView = new HorizontalScrollView(this);
         LinearLayout.LayoutParams scrollParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -961,7 +962,7 @@ public class travelRecordActivity extends Activity {
         scrollView.setBackgroundResource(R.drawable.background_hint);
         scrollView.setLayoutParams(scrollParams);
         scrollView.setHorizontalScrollBarEnabled(false);
-// 创建内部 LinearLayout
+        // 创建内部 LinearLayout
         LinearLayout innerLayout = new LinearLayout(this);
         LinearLayout.LayoutParams innerParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -1019,7 +1020,8 @@ public class travelRecordActivity extends Activity {
         etContent1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus&&(!TextUtils.isEmpty(etContent1.getText()))) {
+                if (hasFocus && (!TextUtils.isEmpty(etContent1.getText()))) {
+                    etContent1.setText(etContent1.getText());
                     view.setVisibility(View.VISIBLE);
                 } else {
                     view.setVisibility(View.GONE);
@@ -1034,6 +1036,12 @@ public class travelRecordActivity extends Activity {
         etContent1.setPadding(dpToPx(5), 0, 0, 0);
         etContent1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         etContent1.setHint("地点（必填）");
+        // 设置选中文字的高亮颜色
+        etContent1.setHighlightColor(Color.parseColor("#99CCFF"));
+        // 设置Cursor的颜色
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {// 要求 Android 10 及以上版本
+            etContent1.setTextCursorDrawable(R.drawable.cursor_style);
+        }
         etContent1.setTag(i);
         layout.addView(etContent1);
 
@@ -1062,6 +1070,12 @@ public class travelRecordActivity extends Activity {
         etContent2.setPadding(dpToPx(5), 0, 0, 0);
         etContent2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         etContent2.setHint("记录下此刻的心情吧！");
+        // 设置选中文字的高亮颜色
+        etContent2.setHighlightColor(Color.parseColor("#99CCFF"));
+        // 设置Cursor的颜色
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {// 要求 Android 10 及以上版本
+            etContent2.setTextCursorDrawable(R.drawable.cursor_style);
+        }
         etContent2.setSingleLine(false);
         etContent2.setLines(25); // 设置初始行数为5行
         etContent2.setMinLines(12); // 设置最大行数为5行
@@ -1108,7 +1122,7 @@ public class travelRecordActivity extends Activity {
         listIBTNAdd.add(1, btnAdd);
         rlBtn.addView(btnAdd);
 
-// 创建第二个按钮
+        // 创建第二个按钮
         ImageButton btnDelete = new ImageButton(travelRecordActivity.this);
         RelativeLayout.LayoutParams btnDeleteParam = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -1138,7 +1152,7 @@ public class travelRecordActivity extends Activity {
         });
         listIBTNDel.add(1, btnDelete);
         rlBtn.addView(btnDelete);
-// 创建第三个按钮
+        // 创建第三个按钮
         ImageButton photoAdd = new ImageButton(travelRecordActivity.this);
         RelativeLayout.LayoutParams photoAddParam = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -1160,7 +1174,7 @@ public class travelRecordActivity extends Activity {
         photoAdd.setId(View.generateViewId());
         rlBtn.addView(photoAdd);
 
-// 创建第四个按钮
+        // 创建第四个按钮
         ImageButton photoAlbum = new ImageButton(travelRecordActivity.this);
         RelativeLayout.LayoutParams photoAlbumParam = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -1279,7 +1293,7 @@ public class travelRecordActivity extends Activity {
      *
      * @param v 事件触发控件，其实就是触发添加事件对应的“+”按钮
      */
-    //TODO 生成页面
+    //TODO 生成页面2
     private void addContent(View v) {
         if (v == null) {
             return;
@@ -1303,7 +1317,7 @@ public class travelRecordActivity extends Activity {
             layout.setBackgroundResource(R.drawable.border_backgrounddjp);
             layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
             layout.setElevation(dpToPx(5));
-            layoutParams.setMargins(dpToPx(5), dpToPx(11), dpToPx(5), dpToPx(5));
+            layoutParams.setMargins(dpToPx(5), dpToPx(16), dpToPx(5), dpToPx(5));
 
             // 1. 创建外围 HorizontalScrollView 控件
             HorizontalScrollView scrollView = new HorizontalScrollView(this);
@@ -1377,7 +1391,8 @@ public class travelRecordActivity extends Activity {
             etContent1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus&&(!TextUtils.isEmpty(etContent1.getText()))) {
+                    if (hasFocus && (!TextUtils.isEmpty(etContent1.getText()))) {
+                        etContent1.setText(etContent1.getText());
                         view.setVisibility(View.VISIBLE);
                     } else {
                         view.setVisibility(View.GONE);
@@ -1391,6 +1406,12 @@ public class travelRecordActivity extends Activity {
             etContent1.setPadding(dpToPx(5), 0, 0, 0);
             etContent1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             etContent1.setHint("地点（必填）");
+            // 设置选中文字的高亮颜色
+            etContent1.setHighlightColor(Color.parseColor("#99CCFF"));
+            // 设置Cursor的颜色
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {// 要求 Android 10 及以上版本
+                etContent1.setTextCursorDrawable(R.drawable.cursor_style);
+            }
             etContent1.setTag(newIndex);
             layout.addView(etContent1);
 
@@ -1421,6 +1442,12 @@ public class travelRecordActivity extends Activity {
             etContent2.setMinLines(12); // 设置最大行数为5行
             // 设置白色背景#FFFFFF
             etContent2.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            // 设置选中文字的高亮颜色
+            etContent2.setHighlightColor(Color.parseColor("#99CCFF"));
+            // 设置Cursor的颜色
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {// 要求 Android 10 及以上版本
+                etContent2.setTextCursorDrawable(R.drawable.cursor_style);
+            }
             etContent2.setHint("记录下此刻的心情吧！");
             etContent2.setTag(newIndex);
 //            etContent2.setPaintFlags(etContent2.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
@@ -1569,7 +1596,6 @@ public class travelRecordActivity extends Activity {
             removeFromSharedPreferences(iIndex);
         }
         System.out.println("llContentView.getChildCount()" + llContentView.getChildCount());
-        //TODO 111
         if (iIndex == llContentView.getChildCount() && llContentView.getChildCount() > 1) {
             LinearLayout firstLayout = (LinearLayout) llContentView.getChildAt(iIndex - 1); // 获取第一个LinearLayout
             int childCount = firstLayout.getChildCount();
@@ -1773,6 +1799,7 @@ public class travelRecordActivity extends Activity {
 
     /**
      * 删除指定索引的控件
+     *
      * @param index
      */
     private void removeFromSharedPreferences(int index) {
@@ -1821,6 +1848,7 @@ public class travelRecordActivity extends Activity {
 
     /**
      * 生成UUID
+     *
      * @return UUID
      */
     private String generateUUID() {
@@ -1830,6 +1858,7 @@ public class travelRecordActivity extends Activity {
     /**
      * For 新添加的板块
      * 获取在线建议搜索结果
+     *
      * @param autoCompleteTextView
      * @param listView
      * @return

@@ -120,17 +120,19 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/tbl"
                 android:layout_alignParentTop="true" />
+
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tbl"
-                android:layout_marginLeft="20dp"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
-                app:tabTextAppearance="@style/PersonTabLayout"
-                android:background="#fafafa"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="-1dp"
+                android:background="#FFFFFF"
                 app:tabIndicatorColor="#10D4B9"
                 app:tabRippleColor="@null"
-                app:tabTextColor="#0C0C0C"
-                android:layout_alignParentTop="true" />
+                app:tabTextAppearance="@style/PersonTabLayout"
+                app:tabTextColor="#0C0C0C" />
         </RelativeLayout>
     </LinearLayout>
 

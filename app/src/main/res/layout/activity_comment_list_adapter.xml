@@ -1,98 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/comment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/comment"
     android:orientation="vertical">
 
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="10dp"
-      android:layout_marginLeft="20dp"
-      android:layout_marginRight="20dp"
-      android:orientation="horizontal">
-
-    <ImageView
-        android:id="@+id/avatar"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:src="@mipmap/ic_launcher_round" />
-
-
     <LinearLayout
-        android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-1dp"
-        android:layout_marginBottom="13dp"
-        android:orientation="vertical">
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
 
-      <TextView
-          android:id="@+id/username"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textColor="@color/black"
-          android:text="用户名 "
-          android:textSize="14sp" />
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@mipmap/ic_launcher_round" />
 
-      <TextView
-          android:id="@+id/time"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textColor="@color/black"
-          android:layout_marginTop="2dp"
-          android:text="2003年11月29日"
-          android:textSize="10sp" />
 
-      <TextView
-          android:id="@+id/text"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="10dp"
-          android:text="dfsafafadsfsdfadfsadfsdasfsadfasdfsadfasdfsadfasdfafd"
-          android:textColor="@color/black"
-          android:textSize="15sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="-1dp"
+            android:layout_marginBottom="13dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用户名 "
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="2003年11月29日"
+                android:textColor="@color/black"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="dfsafafadsfsdfadfsadfsdasfsadfasdfsadfasdfsadfasdfafd"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-  </LinearLayout>
-
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@color/gray"
-      android:id="@+id/respond"
-      android:orientation="vertical"
-      android:layout_marginTop="10dp"
-      android:layout_marginLeft="60dp"
-      android:layout_marginRight="60dp"
-      android:layout_marginBottom="10dp">
-    <TextView
-        android:id="@+id/first_respond"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:text="刘梓煊 回复 楼主:哈哈哈"/>
-
     <LinearLayout
-        android:layout_marginTop="5dp"
+        android:id="@+id/respond"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/gray"
         android:orientation="vertical">
-      <!-- 添加划线的 View -->
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@android:color/white" />
-      <TextView
-          android:id="@+id/respond_num"
-          android:textSize="14sp"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="共N条回复 >"/>
+
+        <TextView
+            android:id="@+id/first_respond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="刘梓煊 回复 楼主:哈哈哈"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+            <!-- 添加划线的 View -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/white" />
+
+            <TextView
+                android:id="@+id/respond_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="共N条回复 >"
+                android:textSize="14sp" />
+        </LinearLayout>
     </LinearLayout>
-  </LinearLayout>
 
 </LinearLayout>

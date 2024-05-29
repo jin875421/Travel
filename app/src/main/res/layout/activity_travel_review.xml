@@ -14,9 +14,9 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/back"
-            android:src="@mipmap/back2"
+            android:src="@drawable/back"
+            android:layout_marginStart="6dp"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:layout_width="30dp"
             android:layout_height="30dp" />
 
@@ -24,11 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="#0c0c0c"
-            android:textStyle="bold"
-            android:textSize="18dp"
             android:text="我的足迹"
-            />
+            android:textColor="#0c0c0c"
+            android:textSize="18dp" />
 
     </RelativeLayout>
     <ListView
@@ -36,11 +34,6 @@
         android:id="@+id/travel_review"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp"/>
-
-
-
-
-
+        android:divider="#00000000"
+        android:dividerHeight="8dp"/>
 </LinearLayout>
