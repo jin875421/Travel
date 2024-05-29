@@ -437,6 +437,7 @@ public class travelRecordEdit extends Activity {
                                                 String responseData = response1.body().string();
                                                 if(responseData.equals("success")&&j==0){
                                                     uploadComplete();
+
                                                 }
                                                 // 处理响应数据
                                             } else {
@@ -456,9 +457,6 @@ public class travelRecordEdit extends Activity {
                         }
                     }).start();
                 }
-                Toast.makeText(getApplicationContext(), "提交成功", Toast.LENGTH_SHORT).show();
-                finish();
-
             }
             //TODO 在这里要删除页面的content和照片
         });

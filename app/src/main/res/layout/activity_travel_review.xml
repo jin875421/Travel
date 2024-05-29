@@ -14,7 +14,7 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/back"
-            android:src="@mipmap/back2"
+            android:src="@drawable/back"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_width="30dp"

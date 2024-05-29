@@ -129,9 +129,7 @@ public class CommunityFragment extends Fragment {
                 }
             }
         });
-
         return view;
-
     }
     // 获取状态栏高度
     private int getStatusBarHeight() {
@@ -197,8 +195,6 @@ public class CommunityFragment extends Fragment {
                 }
             }
         }).start();
-
-
     }
     public void setListener(){
         searchBtn.setOnClickListener(new View.OnClickListener() {
@@ -335,12 +331,5 @@ public class CommunityFragment extends Fragment {
             }
         }
     }
-
-//    @Override
-//    public void onResume(){
-//        super.onResume();
-//        //添加沉浸式
-//        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.appbar),true);
-//    }
 
 }

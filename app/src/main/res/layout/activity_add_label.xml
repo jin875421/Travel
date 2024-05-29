@@ -162,7 +162,7 @@
             <EditText
                 android:layout_below="@+id/total_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="400dp"
                 android:layout_marginTop="20dp"
                 android:id="@+id/dis_edit_text"
                 android:inputType="text"
@@ -170,6 +170,7 @@
                 android:background="@color/white"
                 android:textColor="@color/black"
                 android:textSize="20sp"
+                android:gravity="top"
                 android:importantForAutofill="no" />
         </RelativeLayout>
         <RelativeLayout

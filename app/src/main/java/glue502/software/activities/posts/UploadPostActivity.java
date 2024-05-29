@@ -117,7 +117,7 @@ public class UploadPostActivity extends AppCompatActivity {
                 if (heightDiff > dpToPx(getApplicationContext(), 200)) { // 高度差大于200dp，通常认为软键盘已打开
                     if (!wasOpened) {
                         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) bottomToolbar.getLayoutParams();
-                        layoutParams.bottomMargin = heightDiff;
+                        layoutParams.bottomMargin = heightDiff+dpToPx(getApplicationContext(), 30);
                         bottomToolbar.setLayoutParams(layoutParams);
                         wasOpened = true;
                     }

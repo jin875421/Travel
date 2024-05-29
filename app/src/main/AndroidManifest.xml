@@ -119,7 +119,8 @@
             android:exported="false" />
         <activity
             android:name=".activities.posts.RespondDetail"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".activities.travelRecord.travelRecordActivity"
             android:exported="false" />
