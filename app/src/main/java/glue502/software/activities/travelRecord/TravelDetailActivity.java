@@ -59,6 +59,7 @@ public class TravelDetailActivity extends AppCompatActivity {
         initView();
         setlistener();
         initData();
+
     }
     public void initView(){
         travelName = findViewById(R.id.travel_title);

@@ -61,6 +61,7 @@ public class PostSearchActivity extends AppCompatActivity {
         status = sharedPreferences.getString("status","");
         setListenter();
 
+
     }
 
     private void setListenter() {

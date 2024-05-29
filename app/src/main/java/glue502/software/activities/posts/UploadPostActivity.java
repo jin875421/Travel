@@ -58,9 +58,9 @@ import java.util.Locale;
 import java.util.UUID;
 
 import glue502.software.R;
+import glue502.software.models.AIResult;
 import glue502.software.models.Post;
 import glue502.software.utils.MyViewUtils;
-import glue502.software.utils.PostTextView.PostEditView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -255,8 +255,6 @@ public class UploadPostActivity extends AppCompatActivity {
                                 Response response = client.newCall(request).execute();
 
                                 if (response.isSuccessful()) {
-                                    String responseData = response.body().string();
-                                    // 处理响应数据
                                 } else {
                                     // 请求失败处理错误
                                 }
@@ -376,8 +374,8 @@ public class UploadPostActivity extends AppCompatActivity {
                 //如果权限已经授予
                 if (ContextCompat.checkSelfPermission(UploadPostActivity.this,
                         Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    takeCamera(RESULT_CAMERA_IMAGE);
-                        }
+                            takeCamera(RESULT_CAMERA_IMAGE);
+                }
 
                 popupWindow.dismiss();
             }
@@ -406,6 +404,7 @@ public class UploadPostActivity extends AppCompatActivity {
     }
     //打开文件选择器
     private void openFilePicker() {
+        System.out.println("打开文件选择器");
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -448,6 +447,7 @@ public class UploadPostActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        System.out.println("==onActivityResult");
         if (resultCode == RESULT_OK) {
             if (requestCode == RESULT_LOAD_IMAGES && data != null) {
                 if (data.getClipData() != null) {
@@ -476,6 +476,7 @@ public class UploadPostActivity extends AppCompatActivity {
     }
     //展示所选择的图片
     private void displaySelectedImage(Uri selectedImage,String fileName) {
+        System.out.println("展示");
         ImageView imageView = new ImageView(this);
         imageView.setImageURI(selectedImage);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -521,6 +522,7 @@ public class UploadPostActivity extends AppCompatActivity {
     }
     //通过uri获取文件
     private File getFileFromUri(Uri uri) {
+        System.out.println("通过uri获取文件");
         try {
             ContentResolver contentResolver = getContentResolver();
             String displayName = null;

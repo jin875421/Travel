@@ -79,6 +79,7 @@ public class SearchActivity extends AppCompatActivity {
         startLocation();
         PoiSugSearch();
         setListener();
+
     }
 
     public void startLocation() {

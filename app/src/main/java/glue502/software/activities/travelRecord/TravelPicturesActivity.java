@@ -184,6 +184,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
         TravelPicturesActivity.RvAdapter myAdapter = new RvAdapter(datas);
         recyclerView.setAdapter(myAdapter);
 
+
     }
 
     private class RvAdapter extends RecyclerView.Adapter<TravelPicturesActivity.RvAdapter.MyHolder> {

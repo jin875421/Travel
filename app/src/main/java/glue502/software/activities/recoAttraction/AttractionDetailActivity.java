@@ -48,6 +48,7 @@ public class AttractionDetailActivity extends AppCompatActivity implements View.
         }
         setListener();
         initData();
+
     }
 
     private void initData() {

@@ -200,6 +200,7 @@ public class travelRecordActivity extends Activity {
         setListener();
         //沉浸式状态栏
         MyViewUtils.setISBarWithoutView(this,true);
+
     }
     private void setValue(int value) {
         this.value = value;

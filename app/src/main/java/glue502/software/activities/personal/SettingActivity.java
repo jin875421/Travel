@@ -58,6 +58,7 @@ public class SettingActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
     private void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

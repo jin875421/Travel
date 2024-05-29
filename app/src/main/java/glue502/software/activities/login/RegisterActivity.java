@@ -182,6 +182,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
     private boolean isValidPhoneNumber(String phoneNumber) {
         // 进行手机号合法性判断的逻辑，可以使用正则表达式等方式
