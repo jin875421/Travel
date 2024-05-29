@@ -77,6 +77,7 @@ public class SplashActivity extends AppCompatActivity {
                 // 动画重复时执行的操作
             }
         });
+
     }
     private void showRandomAnimation() {
         // 从列表中随机选择一个 JSON 文件

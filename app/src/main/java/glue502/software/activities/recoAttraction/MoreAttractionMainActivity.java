@@ -44,6 +44,7 @@ public class MoreAttractionMainActivity extends AppCompatActivity implements Vie
         getViews();
         setListener();
         getAttractions();
+
     }
 
     private void setListener() {

@@ -27,6 +27,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         initView();
         setlistener();
         initData();
+
     }
     public void initView() {
         back = findViewById(R.id.btn_back);

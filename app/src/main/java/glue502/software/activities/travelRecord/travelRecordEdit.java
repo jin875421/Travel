@@ -135,6 +135,7 @@ public class travelRecordEdit extends Activity {
         travelId = getIntent().getStringExtra("travelId");
         initData();
         setListener();
+
     }
 
     public List<travelRecord> getTravelRecords() {

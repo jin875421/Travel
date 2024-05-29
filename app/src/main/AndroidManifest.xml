@@ -43,8 +43,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.AI.ImageRecognitionActivityA"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".activities.travelRecord.ExpenseRecordActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".activities.posts.PostSearchActivity"
             android:exported="false" />
@@ -57,7 +61,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.travelRecord.FunctionActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".activities.recoAttraction.MoreAttractionMainActivity"
             android:exported="false" />

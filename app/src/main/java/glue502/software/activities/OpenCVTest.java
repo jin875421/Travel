@@ -389,6 +389,7 @@ public class OpenCVTest extends AppCompatActivity {
                 }.execute();
             }
         });
+
     }
 
     private void buttonDown() {
