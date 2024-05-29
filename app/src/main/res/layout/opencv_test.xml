@@ -9,6 +9,7 @@
         android:id="@+id/lrlt_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/opencv_background1"
         android:orientation="vertical">
         <LinearLayout
             android:id="@+id/lrlt_btn"
@@ -46,76 +47,115 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="10dp"
+            android:layout_marginTop="100dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="250dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:background="@drawable/opencv_jamb"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
             <ImageView
                 android:id="@+id/img_org"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="250dp"/>
-            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                />
+            </LinearLayout>
+            <LinearLayout
                 android:layout_marginStart="20dp"
-                android:id="@+id/img_cha"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="250dp"/>
+                android:background="@drawable/opencv_jamb"
+                android:layout_height="wrap_content"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+                <ImageView
+                    android:id="@+id/img_cha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    />
+            </LinearLayout>
 
         </LinearLayout>
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Button
-                    android:id="@+id/btn_lianhuanhua"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="连环画"/>
-                <Button
-                    android:id="@+id/btn_fudiao"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="浮雕"/>
 
-                <Button
-                    android:id="@+id/btn_gaosi"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="朦胧"/>
-                <Button
-                    android:id="@+id/btn_ink"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="水墨"/>
-                <Button
-                    android:id="@+id/btn_watercolor"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="水彩"/>
-                <Button
-                    android:id="@+id/btn_skinsmoothing"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="提亮"/>
-                <Button
-                    android:id="@+id/btn_huaijiu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="怀旧"/>
-            </LinearLayout>
-
-        </HorizontalScrollView>
     </LinearLayout>
+    <HorizontalScrollView
+        android:layout_marginTop="500dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_lianhuanhua"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/blue_round_button"
+                android:text="连环画"/>
+            <Button
+                android:id="@+id/btn_fudiao"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/blue_round_button"
+                android:text="浮雕"/>
+
+            <Button
+                android:id="@+id/btn_gaosi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/blue_round_button"
+                android:text="朦胧"/>
+            <Button
+                android:id="@+id/btn_ink"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/blue_round_button"
+                android:text="水墨"/>
+            <Button
+                android:id="@+id/btn_watercolor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/blue_round_button"
+                android:text="水彩"/>
+            <Button
+                android:id="@+id/btn_skinsmoothing"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/blue_round_button"
+                android:text="提亮"/>
+            <Button
+                android:id="@+id/btn_huaijiu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/blue_round_button"
+                android:text="怀旧"/>
+        </LinearLayout>
+
+    </HorizontalScrollView>
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="100dp"

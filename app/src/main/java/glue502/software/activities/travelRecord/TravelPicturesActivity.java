@@ -210,7 +210,6 @@ public class TravelPicturesActivity extends AppCompatActivity {
             MyImageLoader.getInstance().load(holder.ivImage, datas.get(position).getCoverImageUrl(), R.mipmap.loading, R.mipmap.blank);
             String clickedImageUrl = datas.get(position).getCoverImageUrl();
             String path=datas.get(position).getPath();
-            System.out.println("sdasdasdasd"+path);
             //设置点击图片后打开大图的监听器
             holder.ivImage.setOnClickListener(v -> {
                 OpenImage.with(TravelPicturesActivity.this)
