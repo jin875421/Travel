@@ -162,6 +162,7 @@ public class AddLabelActivity extends AppCompatActivity {
         //绑定监听器
         setListener();
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
     }
 
     private void initView() {

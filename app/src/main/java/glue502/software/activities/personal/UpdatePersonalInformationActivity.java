@@ -207,6 +207,7 @@ public class UpdatePersonalInformationActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     private void writeData() {

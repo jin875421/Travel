@@ -124,13 +124,14 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class travelRecordActivity extends Activity {
-    private String url = "http://" + ip + "/travel/travel/createTravelRecord";
+//    private static final String[] backgrounds = {"djpa", "djpb", "djpjp","djpd","djpe","djpf","djpg","djph","djpi","djpj","djpk","djpl"};
+    private String url = "http://"+ip+"/travel/travel/createTravelRecord";
     private static Map<String, String> uriIdentifierMap = new HashMap<>();
 
     private List<travelRecord> travelRecordList;
-    private UserInfo userInfo = new UserInfo();
+    private UserInfo  userInfo= new UserInfo();
     private String travelId = generateUUID();
-    private String userId;
+    private String userId ;
     private ImageButton imageAdd;
     private String city = "北京市";
     private ListView mSugListView;
@@ -947,14 +948,15 @@ public class travelRecordActivity extends Activity {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setBackgroundResource(R.drawable.border_backgrounddjp);
         layout.setLayoutParams(layoutParams);
+        layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(dpToPx(5), dpToPx(5), dpToPx(5), dpToPx(5));
         layout.setElevation(dpToPx(5));
         layoutParams.setMargins(dpToPx(5), dpToPx(16), dpToPx(5), dpToPx(5));
 
 
-        //以下是图片的新加
+//以下是图片的新加
 
-        // 1. 创建外围 HorizontalScrollView 控件
+// 1. 创建外围 HorizontalScrollView 控件
         HorizontalScrollView scrollView = new HorizontalScrollView(this);
         LinearLayout.LayoutParams scrollParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -962,7 +964,7 @@ public class travelRecordActivity extends Activity {
         scrollView.setBackgroundResource(R.drawable.background_hint);
         scrollView.setLayoutParams(scrollParams);
         scrollView.setHorizontalScrollBarEnabled(false);
-        // 创建内部 LinearLayout
+// 创建内部 LinearLayout
         LinearLayout innerLayout = new LinearLayout(this);
         LinearLayout.LayoutParams innerParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -1122,7 +1124,7 @@ public class travelRecordActivity extends Activity {
         listIBTNAdd.add(1, btnAdd);
         rlBtn.addView(btnAdd);
 
-        // 创建第二个按钮
+// 创建第二个按钮
         ImageButton btnDelete = new ImageButton(travelRecordActivity.this);
         RelativeLayout.LayoutParams btnDeleteParam = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -1152,7 +1154,7 @@ public class travelRecordActivity extends Activity {
         });
         listIBTNDel.add(1, btnDelete);
         rlBtn.addView(btnDelete);
-        // 创建第三个按钮
+// 创建第三个按钮
         ImageButton photoAdd = new ImageButton(travelRecordActivity.this);
         RelativeLayout.LayoutParams photoAddParam = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -1174,7 +1176,7 @@ public class travelRecordActivity extends Activity {
         photoAdd.setId(View.generateViewId());
         rlBtn.addView(photoAdd);
 
-        // 创建第四个按钮
+// 创建第四个按钮
         ImageButton photoAlbum = new ImageButton(travelRecordActivity.this);
         RelativeLayout.LayoutParams photoAlbumParam = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -1201,6 +1203,14 @@ public class travelRecordActivity extends Activity {
         llContentView.addView(layout, 1);
 
     }
+
+
+    // Method to convert dp to pixels
+    private int dpToPx(Context context, int dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+
 
     /**
      * 初始化控件
@@ -1293,7 +1303,7 @@ public class travelRecordActivity extends Activity {
      *
      * @param v 事件触发控件，其实就是触发添加事件对应的“+”按钮
      */
-    //TODO 生成页面2
+    //TODO 生成页面
     private void addContent(View v) {
         if (v == null) {
             return;

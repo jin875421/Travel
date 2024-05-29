@@ -84,6 +84,7 @@ public class RespondDetail extends AppCompatActivity {
         initData();
         setListener();
 
+
     }
 
     private void setListener() {

@@ -111,6 +111,7 @@ public class StrategyDisplayActivity extends AppCompatActivity {
         //沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
 
+
     }
 
     private void setListener() {

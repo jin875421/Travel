@@ -105,11 +105,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true">
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/btn_upload"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="5dp"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:background="@color/white"
                 android:src="@mipmap/upload" />
 
@@ -118,10 +120,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:textColor="@color/black"
-                android:textSize="25sp"
+                android:textSize="18sp"
                 android:text="图文"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/btn_back"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -160,7 +162,7 @@
             <EditText
                 android:layout_below="@+id/total_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="400dp"
                 android:layout_marginTop="20dp"
                 android:id="@+id/dis_edit_text"
                 android:inputType="text"
@@ -168,6 +170,7 @@
                 android:background="@color/white"
                 android:textColor="@color/black"
                 android:textSize="20sp"
+                android:gravity="top"
                 android:importantForAutofill="no" />
         </RelativeLayout>
         <RelativeLayout

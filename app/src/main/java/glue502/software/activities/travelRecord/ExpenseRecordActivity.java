@@ -110,6 +110,7 @@ public class ExpenseRecordActivity extends AppCompatActivity {
                         .show();
             }
         });
+
     }
 
     private void showAddExpenseDialog() {

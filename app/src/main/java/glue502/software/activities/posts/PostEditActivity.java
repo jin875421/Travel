@@ -100,6 +100,7 @@ public class PostEditActivity extends AppCompatActivity {
         initView();
         initData();
         setListener();
+
     }
     public void setListener(){
         // 注册根视图全局布局变化监听器

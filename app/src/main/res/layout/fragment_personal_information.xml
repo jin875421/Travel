@@ -31,17 +31,12 @@
                 android:gravity="center"
                 android:orientation="vertical">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@mipmap/personal_headset"
 
                     />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="客服"
-                    android:textColor="#000000"
-                    />
+
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/linear_setting"
@@ -51,16 +46,11 @@
                 android:orientation="vertical"
                 android:layout_alignParentRight="true">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@mipmap/personal_setting"
                     />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="设置"
-                    android:textColor="#000000"
-                    />
+
             </LinearLayout>
         </RelativeLayout>
     <LinearLayout

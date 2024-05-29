@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -59,6 +60,7 @@ public class TravelDetailActivity extends AppCompatActivity {
         initView();
         setlistener();
         initData();
+
     }
     public void initView(){
         travelName = findViewById(R.id.travel_title);
@@ -188,14 +190,15 @@ public class TravelDetailActivity extends AppCompatActivity {
             //上一个页面进行了编辑
             if(resultCode==Activity.RESULT_OK){
                 //刷新页面
-                //设定延时
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                           travelRecords.clear();
                           initData();
+
                     }
                 }).start();
+                Toast.makeText(getApplicationContext(), "编辑完成", Toast.LENGTH_SHORT).show();
             }
         }
     }

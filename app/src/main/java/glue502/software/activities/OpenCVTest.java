@@ -3,6 +3,7 @@ package glue502.software.activities;
 import static glue502.software.activities.MainActivity.ip;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -20,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.flyjingfish.openimagelib.OpenImage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +65,7 @@ import glue502.software.R;
 import glue502.software.activities.travelRecord.TravelAlbumActivity;
 import glue502.software.activities.travelRecord.TravelPicturesActivity;
 import glue502.software.utils.ImageUtils;
+import glue502.software.utils.MyViewUtils;
 import glue502.software.utils.Shape;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -91,7 +97,50 @@ public class OpenCVTest extends AppCompatActivity {
         // 使用URL加载图像到Bitmap中
         loadBitmapFromUrl(imageUrl);
 
-        initBitmap();
+        initBitmap(imagePlaceId);
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.lrlt_all),true);
+    }
+    // 显示大图的方法
+    private void showLargeImage(Bitmap bitmap) {
+        // 创建一个Dialog来显示大图
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_large_image);
+        // 设置Dialog窗口的大小
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.copyFrom(dialog.getWindow().getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT; // 设置宽度为MATCH_PARENT，填满屏幕宽度
+        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT; // 设置高度为MATCH_PARENT，填满屏幕高度
+        dialog.getWindow().setAttributes(layoutParams);
+        // 找到ImageView
+        ImageView imageViewLarge = dialog.findViewById(R.id.imageView_large);
+
+        // 设置Bitmap到ImageView中
+        imageViewLarge.setImageBitmap(bitmap);
+        imageViewLarge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        // 显示Dialog
+        dialog.show();
+    }
+
+    private void initBitmap(String imagePlaceId) {
+        imgOrg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLargeImage(bitmap);
+            }
+        });
+        imgCha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLargeImage(bitmap2);
+            }
+        });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,10 +190,10 @@ public class OpenCVTest extends AppCompatActivity {
                                         // 这里可以根据服务器的响应结果进行操作，例如显示消息、更新UI等
                                         if(responseData.equals("1111")) {
                                             // 示例：显示成功消息并结束当前Activity
-                                            Toast.makeText(OpenCVTest.this, "成功", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(OpenCVTest.this, "保存成功", Toast.LENGTH_SHORT).show();
 
                                         }else{
-                                            Toast.makeText(OpenCVTest.this, "失败", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(OpenCVTest.this, "保存失败", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
@@ -158,13 +207,10 @@ public class OpenCVTest extends AppCompatActivity {
                 }
             }
         });
-    }
-
-
-    private void initBitmap() {
         lianHuanHua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                buttonDown();
                 progressBar.setVisibility(View.VISIBLE); // 显示进度条
 
                 // 在后台线程中执行耗时操作
@@ -181,6 +227,7 @@ public class OpenCVTest extends AppCompatActivity {
                         imgCha.setImageBitmap(result);
                         progressBar.setVisibility(View.GONE); // 隐藏进度条
                         bitmap2=result;
+                        buttonUp();
                     }
                 }.execute();
             }
@@ -188,6 +235,7 @@ public class OpenCVTest extends AppCompatActivity {
         fuDiao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                buttonDown();
                 progressBar.setVisibility(View.VISIBLE); // 显示进度条
 
                 // 在后台线程中执行耗时操作
@@ -204,6 +252,7 @@ public class OpenCVTest extends AppCompatActivity {
                         imgCha.setImageBitmap(result);
                         progressBar.setVisibility(View.GONE); // 隐藏进度条
                         bitmap2=result;
+                        buttonUp();
                     }
                 }.execute();
             }
@@ -212,6 +261,7 @@ public class OpenCVTest extends AppCompatActivity {
         huaiJiu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                buttonDown();
                 progressBar.setVisibility(View.VISIBLE); // 显示进度条
 
                 // 在后台线程中执行耗时操作
@@ -228,6 +278,7 @@ public class OpenCVTest extends AppCompatActivity {
                         imgCha.setImageBitmap(result);
                         progressBar.setVisibility(View.GONE); // 隐藏进度条
                         bitmap2=result;
+                        buttonUp();
                     }
                 }.execute();
             }
@@ -236,6 +287,7 @@ public class OpenCVTest extends AppCompatActivity {
         gaoSi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                buttonDown();
                 progressBar.setVisibility(View.VISIBLE); // 显示进度条
 
                 // 在后台线程中执行耗时操作1
@@ -253,7 +305,7 @@ public class OpenCVTest extends AppCompatActivity {
                         // 隐藏进度条
                         progressBar.setVisibility(View.GONE);
                         bitmap2=result;
-
+                        buttonUp();
                     }
                 }.execute();
             }
@@ -262,6 +314,7 @@ public class OpenCVTest extends AppCompatActivity {
         ink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                buttonDown();
                 progressBar.setVisibility(View.VISIBLE); // 显示进度条
 
                 // 在后台线程中执行耗时操作1
@@ -279,7 +332,7 @@ public class OpenCVTest extends AppCompatActivity {
                         // 隐藏进度条
                         progressBar.setVisibility(View.GONE);
                         bitmap2=result;
-
+                        buttonUp();
                     }
                 }.execute();
             }
@@ -287,6 +340,7 @@ public class OpenCVTest extends AppCompatActivity {
         watercolor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                buttonDown();
                 progressBar.setVisibility(View.VISIBLE); // 显示进度条
 
                 // 在后台线程中执行耗时操作1
@@ -304,7 +358,7 @@ public class OpenCVTest extends AppCompatActivity {
                         // 隐藏进度条
                         progressBar.setVisibility(View.GONE);
                         bitmap2=result;
-
+                        buttonUp();
                     }
                 }.execute();
             }
@@ -312,6 +366,7 @@ public class OpenCVTest extends AppCompatActivity {
         skinsmoothing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                buttonDown();
                 progressBar.setVisibility(View.VISIBLE); // 显示进度条
 
                 // 在后台线程中执行耗时操作1
@@ -329,13 +384,32 @@ public class OpenCVTest extends AppCompatActivity {
                         // 隐藏进度条
                         progressBar.setVisibility(View.GONE);
                         bitmap2=result;
-
+                        buttonUp();
                     }
                 }.execute();
             }
         });
+
     }
 
+    private void buttonDown() {
+        lianHuanHua.setEnabled(false);
+        fuDiao.setEnabled(false);
+        huaiJiu.setEnabled(false);
+        gaoSi.setEnabled(false);
+        ink.setEnabled(false);
+        watercolor.setEnabled(false);
+        skinsmoothing.setEnabled(false);
+    }
+    private void  buttonUp(){
+        lianHuanHua.setEnabled(true);
+        fuDiao.setEnabled(true);
+        huaiJiu.setEnabled(true);
+        gaoSi.setEnabled(true);
+        ink.setEnabled(true);
+        watercolor.setEnabled(true);
+        skinsmoothing.setEnabled(true);
+    }
     private void updateActivity() {
         Intent resultIntent = new Intent();
         setResult(Activity.RESULT_OK, resultIntent);

@@ -75,6 +75,7 @@ public class StrategyRespondDetailActivity extends AppCompatActivity {
         setView();
         initData();
         setListener();
+
     }
 
     public void setView(){
