@@ -27,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import glue502.software.R;
@@ -80,6 +81,7 @@ public class TravelDetailActivity extends AppCompatActivity {
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
                     travelRecords = new Gson().fromJson(responseData,new TypeToken<List<travelRecord>>(){}.getType());
+                    Collections.reverse(travelRecords);
                     //打开ui线程
                     handler.post(new Runnable() {
                         @Override
