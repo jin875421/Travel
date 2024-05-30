@@ -4,14 +4,17 @@ import static glue502.software.activities.MainActivity.ip;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.view.View;
 
 import android.view.Window;
@@ -27,6 +30,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.bumptech.glide.Glide;
+import com.flyjingfish.openimagelib.OpenImage;
+import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -44,12 +50,15 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.ByteArrayOutputStream;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.util.Collections;
 import java.util.UUID;
 
 import glue502.software.R;
@@ -75,6 +84,7 @@ public class OpenCVTest extends AppCompatActivity {
     private String result="0000";
     private String saveUrl="http://"+ip+"/travel/travel/";
     private ProgressBar progressBar;
+    private String imageUrl,imageUrl1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +92,7 @@ public class OpenCVTest extends AppCompatActivity {
         initOpenCVll();
         initView();
         // 获取传递的URL
-        String imageUrl = getIntent().getStringExtra("imageUrl");
+        imageUrl = getIntent().getStringExtra("imageUrl");
         String imagePlaceId=getIntent().getStringExtra("imagePlaceId");
 
         // 使用URL加载图像到Bitmap中
@@ -120,17 +130,39 @@ public class OpenCVTest extends AppCompatActivity {
     }
 
     private void initBitmap(String imagePlaceId) {
-        imgOrg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showLargeImage(bitmap);
-            }
+        imgOrg.setOnClickListener(v->{
+            OpenImage.with(this).setClickImageView(imgOrg)
+                    .setAutoScrollScanPosition(true)
+                    .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+                    .addPageTransformer(new ScaleInTransformer())
+                    .setImageUrl(imageUrl, com.flyjingfish.openimagelib.enums.MediaType.IMAGE)
+//                    .setOnItemLongClickListener(new OnItemLongClickListener() {
+//                        @Override
+//                        public void onItemLongClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
+//                            Toast.makeText(getContext(),"长按图片",Toast.LENGTH_LONG).show();
+//                        }
+//                    })
+                    .show();
         });
-        imgCha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showLargeImage(bitmap2);
-            }
+//        imgCha.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showLargeImage(bitmap2);
+//            }
+//        });
+        imgCha.setOnClickListener(v->{
+            OpenImage.with(this).setClickImageView(imgCha)
+                    .setAutoScrollScanPosition(true)
+                    .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+                    .addPageTransformer(new ScaleInTransformer())
+                    .setImageUrl(imageUrl1, com.flyjingfish.openimagelib.enums.MediaType.IMAGE)
+//                    .setOnItemLongClickListener(new OnItemLongClickListener() {
+//                        @Override
+//                        public void onItemLongClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
+//                            Toast.makeText(getContext(),"长按图片",Toast.LENGTH_LONG).show();
+//                        }
+//                    })
+                    .show();
         });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,6 +249,7 @@ public class OpenCVTest extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE); // 隐藏进度条
                         bitmap2=result;
                         buttonUp();
+                        imageUrl1 = createBitmapFilePath(result,1);
                     }
                 }.execute();
             }
@@ -239,6 +272,7 @@ public class OpenCVTest extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE); // 隐藏进度条
                         bitmap2=result;
                         buttonUp();
+                        imageUrl1 = createBitmapFilePath(result,2);
                     }
                 }.execute();
             }
@@ -262,6 +296,7 @@ public class OpenCVTest extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE); // 隐藏进度条
                         bitmap2=result;
                         buttonUp();
+                        imageUrl1 = createBitmapFilePath(result,3);
                     }
                 }.execute();
             }
@@ -286,6 +321,7 @@ public class OpenCVTest extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         bitmap2=result;
                         buttonUp();
+                        imageUrl1 = createBitmapFilePath(result,4);
                     }
                 }.execute();
             }
@@ -310,6 +346,7 @@ public class OpenCVTest extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         bitmap2=result;
                         buttonUp();
+                        imageUrl1 = createBitmapFilePath(result,5);
                     }
                 }.execute();
             }
@@ -333,6 +370,7 @@ public class OpenCVTest extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         bitmap2=result;
                         buttonUp();
+                        imageUrl1 = createBitmapFilePath(result,6);
                     }
                 }.execute();
             }
@@ -356,6 +394,7 @@ public class OpenCVTest extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         bitmap2=result;
                         buttonUp();
+                        imageUrl1 = createBitmapFilePath(result,7);
                     }
                 }.execute();
             }
@@ -696,5 +735,51 @@ public class OpenCVTest extends AppCompatActivity {
         return Math.round(result * 255.0f);
     }
 
+    /**
+     * 获取图片URL地址
+     * @param bitmap
+     * @return 图片URL地址
+     */
+    private String createBitmapFilePath(Bitmap bitmap,int type) {
+        String imageUrl1 = "";
+        // 获取文件输出流
+        String fileName = imageUrl+type+".jpg";
+        FileOutputStream outStream = null;
+        File imageFile = null;
+        try {
+            // 创建一个临时文件
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            imageFile = new File(storageDir, fileName);
 
+            // 将Bitmap保存为JPEG文件
+            outStream = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (outStream != null) {
+                    outStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+// 如果成功保存，创建URL
+        if (imageFile.exists()) {
+            Uri imageUri = Uri.fromFile(imageFile);
+            imageUrl1 = "file://" + imageUri.toString();
+        }
+        return imageUrl1;
+    }
+
+    private void clearGlide(Context context){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Glide.get(getApplicationContext()).clearMemory();
+            }
+        }).start();
+    }
 }

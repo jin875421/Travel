@@ -113,13 +113,13 @@
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tbl"
-                android:layout_width="150dp"
+                android:layout_width="200dp"
                 android:layout_height="50dp"
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="-1dp"
                 android:background="#FFFFFF"
-                app:tabIndicatorColor="#10D4B9"
+                app:tabIndicatorColor="#03A9F4"
                 app:tabRippleColor="@null"
                 app:tabTextAppearance="@style/PersonTabLayout"
                 app:tabTextColor="#0C0C0C" />

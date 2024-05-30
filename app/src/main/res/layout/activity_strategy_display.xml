@@ -187,6 +187,7 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="6dp"
+                android:textColor="@color/white"
                 android:background="@drawable/blue_round_button"
                 android:text="发送"/>
         </LinearLayout>
