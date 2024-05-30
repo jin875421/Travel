@@ -33,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
+import com.yalantis.ucrop.UCrop;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -48,9 +49,11 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +78,7 @@ import okhttp3.Response;
 public class OpenCVTest extends AppCompatActivity {
     private Bitmap bitmap;
     private Bitmap bitmap2;
-    private Button lianHuanHua,fuDiao,huaiJiu,gaoSi,ink,watercolor,skinsmoothing;
+    private Button lianHuanHua,fuDiao,huaiJiu,gaoSi,ink,watercolor,skinsmoothing,btnCrop;
     private ImageView back,save;
     private LinearLayout lrltPhoto;
     private ImageView imgOrg,imgCha;
@@ -85,6 +88,7 @@ public class OpenCVTest extends AppCompatActivity {
     private String saveUrl="http://"+ip+"/travel/travel/";
     private ProgressBar progressBar;
     private String imageUrl,imageUrl1;
+    private String imagePlaceId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,14 +97,28 @@ public class OpenCVTest extends AppCompatActivity {
         initView();
         // 获取传递的URL
         imageUrl = getIntent().getStringExtra("imageUrl");
-        String imagePlaceId=getIntent().getStringExtra("imagePlaceId");
+        imagePlaceId=getIntent().getStringExtra("imagePlaceId");
 
         // 使用URL加载图像到Bitmap中
         loadBitmapFromUrl(imageUrl);
-
+        photoCrop(Uri.parse(imageUrl));
         initBitmap(imagePlaceId);
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.lrlt_all),true);
     }
+
+    private void photoCrop(Uri imageUrl) {
+        btnCrop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri Uri1 = Uri.fromFile(new File(getCacheDir(), "SampleCropImage.jpeg"));
+                //开始
+                UCrop uCrop = UCrop.of(imageUrl, Uri1);
+                uCrop.start(OpenCVTest.this);
+
+            }
+        });
+    }
+
     // 显示大图的方法
     private void showLargeImage(Bitmap bitmap) {
         // 创建一个Dialog来显示大图
@@ -181,50 +199,7 @@ public class OpenCVTest extends AppCompatActivity {
             public void onClick(View view) {
                 // 把bitmap2和placeId传到服务器，相应方法
                 if (bitmap2 != null && imagePlaceId != null) {
-                    String filename = UUID.randomUUID().toString();
-                    // 构建Multipart请求体
-                    RequestBody requestBody = new MultipartBody.Builder()
-                            .setType(MultipartBody.FORM)
-                            .addFormDataPart("placeId", imagePlaceId)
-                            .addFormDataPart("file", filename+".jpg", RequestBody.create(MediaType.parse("image/*"), bitmapToBytes(bitmap2)))
-                            .build();
-
-// 构建POST请求
-                    Request request = new Request.Builder()
-                            .url(saveUrl + "uploadphoto")
-                            .post(requestBody)
-                            .build();
-
-// 发送请求
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                OkHttpClient client = new OkHttpClient();
-                                Response response = client.newCall(request).execute();
-                                final String responseData = response.body().string();
-                                System.out.println(responseData+"dsadasdad");
-                                // 处理服务器响应，更新UI或执行其他操作
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        result=responseData;
-                                        // 处理响应数据
-                                        // 这里可以根据服务器的响应结果进行操作，例如显示消息、更新UI等
-                                        if(responseData.equals("1111")) {
-                                            // 示例：显示成功消息并结束当前Activity
-                                            Toast.makeText(OpenCVTest.this, "保存成功", Toast.LENGTH_SHORT).show();
-
-                                        }else{
-                                            Toast.makeText(OpenCVTest.this, "保存失败", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }).start();
+                    uploadPhoto(bitmapToBytes(bitmap2));
                 }else{
                     Toast.makeText(OpenCVTest.this, "图片滤镜添加未完成", Toast.LENGTH_SHORT).show();
                 }
@@ -402,6 +377,53 @@ public class OpenCVTest extends AppCompatActivity {
 
     }
 
+    private void uploadPhoto(byte[] photo) {
+        String filename = UUID.randomUUID().toString();
+        // 构建Multipart请求体
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("placeId", imagePlaceId)
+                .addFormDataPart("file", filename+".jpg", RequestBody.create(MediaType.parse("image/*"),photo ))
+                .build();
+
+// 构建POST请求
+        Request request = new Request.Builder()
+                .url(saveUrl + "uploadphoto")
+                .post(requestBody)
+                .build();
+
+// 发送请求
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    Response response = client.newCall(request).execute();
+                    final String responseData = response.body().string();
+                    System.out.println(responseData+"dsadasdad");
+                    // 处理服务器响应，更新UI或执行其他操作
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            result=responseData;
+                            // 处理响应数据
+                            // 这里可以根据服务器的响应结果进行操作，例如显示消息、更新UI等
+                            if(responseData.equals("1111")) {
+                                // 示例：显示成功消息并结束当前Activity
+                                Toast.makeText(OpenCVTest.this, "保存成功", Toast.LENGTH_SHORT).show();
+
+                            }else{
+                                Toast.makeText(OpenCVTest.this, "保存失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
     private void buttonDown() {
         lianHuanHua.setEnabled(false);
         fuDiao.setEnabled(false);
@@ -463,6 +485,7 @@ public class OpenCVTest extends AppCompatActivity {
         watercolor=findViewById(R.id.btn_watercolor);
         skinsmoothing=findViewById(R.id.btn_skinsmoothing);
         lrltPhoto = findViewById(R.id.lrlt_photo);
+        btnCrop=findViewById(R.id.btn_crop);
     }
 
     private void initOpenCVll() {
@@ -782,4 +805,54 @@ public class OpenCVTest extends AppCompatActivity {
             }
         }).start();
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
+            final Uri resultUri = UCrop.getOutput(data);
+            if (resultUri != null) {
+                uploadCroppedImage(resultUri);
+            }
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            final Throwable cropError = UCrop.getError(data);
+            // 处理裁剪错误
+        }
+    }
+
+    private byte[] fileToBytes(File file) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream((int) file.length());
+        BufferedInputStream in = null;
+        try {
+            in = new BufferedInputStream(new FileInputStream(file));
+            int bufSize = 1024;
+            byte[] buffer = new byte[bufSize];
+            int len;
+            while ((len = in.read(buffer, 0, bufSize)) != -1) {
+                bos.write(buffer, 0, len);
+            }
+            return bos.toByteArray();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            bos.close();
+        }
+    }
+
+    private void uploadCroppedImage(Uri resultUri) {
+        File file = new File(resultUri.getPath());
+        try {
+            byte[] photoBytes = fileToBytes(file);
+            uploadPhoto(photoBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "文件转换失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }

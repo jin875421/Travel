@@ -163,7 +163,6 @@ public class TravelAlbumActivity extends AppCompatActivity {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     try {
                         Date date2 = sdf.parse(date1);
-                        System.out.println(date2);
                         localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     } catch (ParseException e) {
                         e.printStackTrace();
