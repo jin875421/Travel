@@ -4,6 +4,7 @@ import static glue502.software.activities.MainActivity.ip;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
@@ -13,6 +14,7 @@ import android.app.Activity;
 import android.app.backup.BackupManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -278,10 +280,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
                                                                 startActivityForResult(intentFilter, REQUEST_CODE_OPENCV_TEST);
                                                                 return true;
                                                             case "剪切":
-                                                                Uri Uri1 = Uri.fromFile(new File(getCacheDir(), "SampleCropImage.jpeg"));
-                                                                //开始
-                                                                UCrop uCrop = UCrop.of(Uri.parse(clickedImageUrl), Uri1);
-                                                                uCrop.start(TravelPicturesActivity.this);
+                                                                ucropPhoto(clickedImageUrl);
                                                                 return true;
                                                             default:
                                                                 return false;
@@ -311,6 +310,22 @@ public class TravelPicturesActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void ucropPhoto(String clickedImageUrl) {
+        UCrop.Options options = new UCrop.Options();
+        // 设置裁剪框颜色为绿色
+        options.setCropGridColor(Color.parseColor("#F8B5FFFF"));
+        // 设置工具栏颜色为浅蓝色
+        options.setToolbarColor(ContextCompat.getColor(this, R.color.colorLightBlue));
+        options.setStatusBarColor(ContextCompat.getColor(this, R.color.colorLightBlue));
+        options.setActiveControlsWidgetColor(ContextCompat.getColor(this, R.color.colorLightBlue));
+
+        Uri Uri1 = Uri.fromFile(new File(getCacheDir(), "SampleCropImage.jpeg"));
+        UCrop uCrop = UCrop.of(Uri.parse(clickedImageUrl), Uri1);
+        uCrop.withOptions(options); // 应用自定义选项
+        uCrop.start(TravelPicturesActivity.this);
+    }
+
 
     private void deletePicture(String path) {
         new Thread(new Runnable() {

@@ -78,7 +78,7 @@ import okhttp3.Response;
 public class OpenCVTest extends AppCompatActivity {
     private Bitmap bitmap;
     private Bitmap bitmap2;
-    private Button lianHuanHua,fuDiao,huaiJiu,gaoSi,ink,watercolor,skinsmoothing,btnCrop;
+    private Button lianHuanHua,fuDiao,huaiJiu,gaoSi,ink,watercolor,skinsmoothing;
     private ImageView back,save;
     private LinearLayout lrltPhoto;
     private ImageView imgOrg,imgCha;
@@ -101,23 +101,23 @@ public class OpenCVTest extends AppCompatActivity {
 
         // 使用URL加载图像到Bitmap中
         loadBitmapFromUrl(imageUrl);
-        photoCrop(Uri.parse(imageUrl));
+//        photoCrop(Uri.parse(imageUrl));
         initBitmap(imagePlaceId);
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.lrlt_all),true);
     }
 
-    private void photoCrop(Uri imageUrl) {
-        btnCrop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Uri Uri1 = Uri.fromFile(new File(getCacheDir(), "SampleCropImage.jpeg"));
-                //开始
-                UCrop uCrop = UCrop.of(imageUrl, Uri1);
-                uCrop.start(OpenCVTest.this);
-
-            }
-        });
-    }
+//    private void photoCrop(Uri imageUrl) {
+//        btnCrop.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Uri Uri1 = Uri.fromFile(new File(getCacheDir(), "SampleCropImage.jpeg"));
+//                //开始
+//                UCrop uCrop = UCrop.of(imageUrl, Uri1);
+//                uCrop.start(OpenCVTest.this);
+//
+//            }
+//        });
+//    }
 
     // 显示大图的方法
     private void showLargeImage(Bitmap bitmap) {
@@ -485,7 +485,6 @@ public class OpenCVTest extends AppCompatActivity {
         watercolor=findViewById(R.id.btn_watercolor);
         skinsmoothing=findViewById(R.id.btn_skinsmoothing);
         lrltPhoto = findViewById(R.id.lrlt_photo);
-        btnCrop=findViewById(R.id.btn_crop);
     }
 
     private void initOpenCVll() {
@@ -804,54 +803,6 @@ public class OpenCVTest extends AppCompatActivity {
                 Glide.get(getApplicationContext()).clearMemory();
             }
         }).start();
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK) {
-            final Uri resultUri = UCrop.getOutput(data);
-            if (resultUri != null) {
-                uploadCroppedImage(resultUri);
-            }
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            final Throwable cropError = UCrop.getError(data);
-            // 处理裁剪错误
-        }
-    }
-
-    private byte[] fileToBytes(File file) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream((int) file.length());
-        BufferedInputStream in = null;
-        try {
-            in = new BufferedInputStream(new FileInputStream(file));
-            int bufSize = 1024;
-            byte[] buffer = new byte[bufSize];
-            int len;
-            while ((len = in.read(buffer, 0, bufSize)) != -1) {
-                bos.write(buffer, 0, len);
-            }
-            return bos.toByteArray();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            bos.close();
-        }
-    }
-
-    private void uploadCroppedImage(Uri resultUri) {
-        File file = new File(resultUri.getPath());
-        try {
-            byte[] photoBytes = fileToBytes(file);
-            uploadPhoto(photoBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "文件转换失败", Toast.LENGTH_SHORT).show();
-        }
     }
 
 
