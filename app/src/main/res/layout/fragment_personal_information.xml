@@ -1,115 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="15dp"
-    tools:context=".fragments.PersonalInformationFragment"
-    >
+    tools:context=".fragments.PersonalInformationFragment">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:src="@drawable/personal_bg001"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:src="@drawable/personal_bg001" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <RelativeLayout
             android:id="@+id/personal_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingRight="15dp">
-            <LinearLayout
-                android:id="@+id/linear_customer_service"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@+id/linear_setting"
-                android:gravity="center"
-                android:orientation="vertical">
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@mipmap/personal_headset"
 
-                    />
+<!--            <LinearLayout-->
+<!--                android:id="@+id/linear_customer_service"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginRight="10dp"-->
+<!--                android:layout_toLeftOf="@+id/linear_setting"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="vertical">-->
 
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/linear_setting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_alignParentRight="true">
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@mipmap/personal_setting"
-                    />
+<!--                <ImageView-->
+<!--                    android:layout_width="25dp"-->
+<!--                    android:layout_height="25dp"-->
+<!--                    android:src="@mipmap/personal_headset"/>-->
+<!--            </LinearLayout>-->
 
-            </LinearLayout>
+<!--            <LinearLayout-->
+<!--                android:id="@+id/linear_setting"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <ImageView-->
+<!--                    android:layout_width="25dp"-->
+<!--                    android:layout_height="25dp"-->
+<!--                    android:src="@mipmap/personal_setting" />-->
+
+<!--            </LinearLayout>-->
         </RelativeLayout>
-    <LinearLayout
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="20dp"
-        android:paddingLeft="15dp"
-        >
-        <ImageView
-            android:id="@+id/img_avatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-
-            />
         <LinearLayout
-            android:id="@+id/linear_title"
-            android:layout_width="wrap_content"
+
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="15dp"
-            android:layout_gravity="center"
-            >
-            <TextView
-                android:id="@+id/txt_name"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp">
+
+            <ImageView
+                android:id="@+id/img_avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+
+            <LinearLayout
+                android:id="@+id/linear_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="用户名"
-                android:textColor="#000000"
-                android:textSize="20dp"
-                />
-            <TextView
-                android:id="@+id/txt_userId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#525252"
-                android:text="账号：11111111111"
-                android:layout_marginTop="5dp"
-                />
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="15dp">
+
+                <TextView
+                    android:id="@+id/txt_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="用户名"
+                    android:textColor="#000000"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/txt_userId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="账号：11111111111"
+                    android:textColor="#525252" />
+
+            </LinearLayout>
 
         </LinearLayout>
-
-    </LinearLayout>
-
+        <LinearLayout
+            android:id="@+id/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:id="@+id/follow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/travel_begin" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="我的关注"
+                        android:textColor="#000000"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linear_customer_service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@mipmap/personal_headset" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="客服"
+                        android:textColor="#000000"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linear_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@mipmap/personal_setting" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="设置"
+                        android:textColor="#000000"
+                        android:textSize="12sp" />
+                </LinearLayout>
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/lrlt_more"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:gravity="center"-->
+<!--                    android:orientation="vertical">-->
+<!--                    <ImageView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:src="@mipmap/more_tool" />-->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="更多"-->
+<!--                        android:textColor="#000000"-->
+<!--                        android:textSize="12sp" />-->
+<!--                </LinearLayout>-->
+            </LinearLayout>
+        </LinearLayout>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/background_frame_1"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vp2"
-                android:layout_marginTop="50dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/tbl"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="50dp" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tbl"

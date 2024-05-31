@@ -53,6 +53,7 @@ import java.util.Locale;
 
 import glue502.software.R;
 import glue502.software.activities.login.CodeLoginActivity;
+import glue502.software.activities.personal.MyFollowActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
 import glue502.software.adapters.PageAdapter;
@@ -75,6 +76,7 @@ public class PersonalInformationFragment extends Fragment {
     private LinearLayout linearSetting;
     private LinearLayout linearTitle;
     private LinearLayout linearCustomerService;
+    private LinearLayout follow;
     private ImageView imgAvatar;
     private View view;
     private float startX;
@@ -114,7 +116,7 @@ public class PersonalInformationFragment extends Fragment {
     };
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-         view=inflater.inflate(R.layout.fragment_personal_information, container, false);
+        view=inflater.inflate(R.layout.fragment_personal_information, container, false);
         txtName=view.findViewById(R.id.txt_name);
         txtUserId=view.findViewById(R.id.txt_userId);
         linearSetting=view.findViewById(R.id.linear_setting);
