@@ -323,6 +323,7 @@ public class TravelPicturesActivity extends AppCompatActivity {
         Uri Uri1 = Uri.fromFile(new File(getCacheDir(), "SampleCropImage.jpeg"));
         UCrop uCrop = UCrop.of(Uri.parse(clickedImageUrl), Uri1);
         uCrop.withOptions(options); // 应用自定义选项
+        options.setFreeStyleCropEnabled(true);
         uCrop.start(TravelPicturesActivity.this);
     }
 
