@@ -64,21 +64,29 @@
                 app:layout_constraintBottom_toBottomOf="@+id/viewPager2"
                 app:layout_constraintEnd_toEndOf="@+id/viewPager2"
                 app:layout_constraintStart_toStartOf="parent"/>
-            <LinearLayout
+            <RelativeLayout
                 android:paddingLeft="10dp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageView
                     android:id="@+id/avatar"
                     android:layout_width="35dp"
                     android:layout_height="35dp"/>
                 <TextView
-                    android:paddingLeft="5dp"
                     android:id="@+id/user_name"
+                    android:layout_marginLeft="40dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"/>
-            </LinearLayout>
+                    android:layout_height="20dp"
+                    android:text="11111"
+                    android:layout_centerVertical="true"/>
+                <Button
+                    android:id="@+id/follow"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:text="关注"
+                    android:layout_height="40dp"/>
+            </RelativeLayout>
             <TextView
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"

@@ -49,6 +49,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 
 import java.io.IOException;
@@ -59,12 +60,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 import glue502.software.R;
 
 import glue502.software.activities.login.LoginActivity;
 
 import glue502.software.adapters.CommentListAdapter;
+import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Comment;
 
 import glue502.software.models.LikeAndStarStatus;
@@ -81,6 +84,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class PostDisplayActivity extends AppCompatActivity {
     private ImageView star_btn;
@@ -107,7 +111,7 @@ public class PostDisplayActivity extends AppCompatActivity {
     private List<Comment> commentList = new ArrayList<>();
     private OkHttpClient client = new OkHttpClient();
 
-
+    private Button follow;
     private ImageView menuBtn;
     private CommentListAdapter commentListAdapter;
     //记录用户收藏和点赞状态
@@ -118,7 +122,11 @@ public class PostDisplayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_display);
-        initData();
+        try {
+            initData();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         initView();
         setListener();
         //添加沉浸式状态栏
@@ -126,14 +134,61 @@ public class PostDisplayActivity extends AppCompatActivity {
         displayPost();
 
     }
-    private void initData() {
+    private void initData() throws InterruptedException {
         postWithUserInfo = (PostWithUserInfo) getIntent().getSerializableExtra("postwithuserinfo");
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         //获取用户状态和用户名
         status = sharedPreferences.getString("status","");
         userId = sharedPreferences.getString("userId","");
         postId = postWithUserInfo.getPost().getPostId();
+        if(isFollowed(postWithUserInfo.getUserInfo().getUserId())){
+            follow.setText("已关注");
+        }
     }
+
+    private boolean isFollowed(String authorId) throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(1);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client1 = new OkHttpClient();
+                String urlWithParams = url + "posts/isFollowed?userId=" + userId + "&followedId=" + authorId;
+                Request request = new Request.Builder()
+                        .url(urlWithParams)
+                        .build();
+                ResponseBody responseBody = null;
+                try {
+                    Response response = client1.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        responseBody = response.body();
+                        if (responseBody != null) {
+                            String responseData = responseBody.string();
+                            if (responseData.equals("true")) {
+                                // 在主线程中返回结果
+                                latch.countDown();
+                            } else {
+                                // 如果服务器返回的不是"true"，在这里处理逻辑
+                            }
+                        } else {
+                            // 处理空数据
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (responseBody != null) { // 确保responseBody已初始化再尝试关闭
+                        responseBody.close(); // 关闭响应体以释放资源
+                    }
+                }
+            }
+        }).start();
+
+        // 等待子线程完成
+        latch.await();
+        return false; // 如果没有提前返回，说明服务器返回的不是"true"
+    }
+
+
 
     private void getCommentData() {
         //向服务器发送请求
@@ -259,6 +314,7 @@ public class PostDisplayActivity extends AppCompatActivity {
         }).start();
     }
     public void initView(){
+        follow = findViewById(R.id.follow);
         like_btn = findViewById(R.id.btn_like);
         menuBtn = findViewById(R.id.popupmenu);
         postImage = findViewById(R.id.post_image);
@@ -276,7 +332,43 @@ public class PostDisplayActivity extends AppCompatActivity {
         view = findViewById(R.id.view);
     }
     public void setListener(){
-
+        follow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //处理关注点击事件
+                if (status==""){
+                    showLoginDialog();
+                }else {
+                    try {
+                        //未关注，进行关注
+                        if(!isFollowed(postWithUserInfo.getUserInfo().getUserId())){
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //进行关注
+                                    OkHttpClient client1 = new OkHttpClient();
+                                    Request request = new Request.Builder()
+                                            .url(url+"posts/addFollow?userId="+userId+"&followId="+post.getUserInfo().getUserName())
+                                            .build();
+                                    //发起请求
+                                    try {
+                                        Response response = client1.newCall(request).execute();
+                                        //检测请求是否成功
+                                        if (response.isSuccessful()){
+                                            follow.setText("已关注");
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         menuBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
