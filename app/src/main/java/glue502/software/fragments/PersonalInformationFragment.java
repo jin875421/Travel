@@ -8,22 +8,28 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -40,6 +46,7 @@ import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.ParseException;
@@ -52,9 +59,11 @@ import java.util.List;
 import java.util.Locale;
 
 import glue502.software.R;
+import glue502.software.activities.OpenCVTest;
 import glue502.software.activities.login.CodeLoginActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
+import glue502.software.activities.travelRecord.TravelPicturesActivity;
 import glue502.software.adapters.PageAdapter;
 import glue502.software.models.LoginResult;
 import glue502.software.models.UserInfo;
@@ -75,10 +84,12 @@ public class PersonalInformationFragment extends Fragment {
     private LinearLayout linearSetting;
     private LinearLayout linearTitle;
     private LinearLayout linearCustomerService;
-    private ImageView imgAvatar;
+    private ImageView imgAvatar,imgBackground;
+    private String mCurrentPhotoPath;
     private View view;
     private float startX;
     private PageAdapter adapter;
+    private final int RESULT_LOAD_IMAGES = 1, RESULT_CAMERA_IMAGE = 2;
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
     private String urlLoadImage="http://"+ip+"/travel/";
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -120,7 +131,9 @@ public class PersonalInformationFragment extends Fragment {
         linearSetting=view.findViewById(R.id.linear_setting);
         linearTitle=view.findViewById(R.id.linear_title);
         linearCustomerService=view.findViewById(R.id.linear_customer_service);
+        //头像及背景
         imgAvatar=view.findViewById(R.id.img_avatar);
+        imgBackground=view.findViewById(R.id.img_personal);
         //收藏和发布
         tabLayout = view.findViewById(R.id.tbl);
         viewPager2 = view.findViewById(R.id.vp2);
@@ -187,6 +200,37 @@ public class PersonalInformationFragment extends Fragment {
 //                    })
                     .show();
         });
+//        imgBackground.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // 创建一个 PopupMenu
+//                PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+//                // 从资源文件中填充菜单
+//                popupMenu.getMenu().add("滤镜");
+//                popupMenu.getMenu().add("剪切");
+//
+//                // 为菜单项设置点击监听器
+//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem item) {
+//                        // 处理菜单项点击事件
+//                        switch (item.getTitle().toString()) {
+//                            case "从相册选择":
+//                                openFilePicker();
+//                                return true;
+//                            case "从相机拍照":
+//                                takeCamera(RESULT_CAMERA_IMAGE);
+//                                return true;
+//                            default:
+//                                return false;
+//                        }
+//                    }
+//                });
+//
+//                // 显示 PopupMenu
+//                popupMenu.show();
+//            }
+//        });
         linearTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -230,7 +274,44 @@ public class PersonalInformationFragment extends Fragment {
         return view;
 
     }
-
+    private void openFilePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), RESULT_LOAD_IMAGES);
+    }
+    private void takeCamera(int num) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            File photoFile = null;
+            photoFile = createImageFile();
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                        getActivity().getApplicationContext().getPackageName() + ".fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, num);
+            }
+        }
+    }
+    //处理拍摄的图片
+    private File createImageFile() {
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        File image = null;
+        try {
+            image = File.createTempFile(generateFileName(), ".jpg", storageDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+    //生成文件名
+    private String generateFileName() {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        return "JPEG_" + timeStamp + "_";
+    }
     private void initFragment() {
         fragments = new ArrayList<>();
         fragments.add(starFragment);

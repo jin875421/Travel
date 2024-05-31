@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layout"
     android:orientation="vertical"
-    tools:context=".activities.travelRecord.travelRecordActivity" >
+    android:background="#FFFFFF"
+    tools:context=".activities.travelRecord.travelRecordActivity">
 
     <RelativeLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/back"
             android:layout_width="30dp"
@@ -27,17 +29,19 @@
             android:gravity="center"
             android:text="旅行地"
             android:textSize="18sp" />
+
         <TextView
             android:id="@+id/btn_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:textSize="16sp"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
+            android:text="上传"
             android:textColor="#2196F3"
-            android:text="上传"/>
+            android:textSize="16sp" />
     </RelativeLayout>
+
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -56,10 +60,10 @@
                 android:id="@+id/ll_one"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_backgrounddjp"
-                android:orientation="vertical"
-                android:elevation="5dp"
                 android:layout_margin="5dp"
+                android:background="@drawable/border_backgrounddjp"
+                android:elevation="5dp"
+                android:orientation="vertical"
                 android:padding="5dp">
 
                 <HorizontalScrollView
@@ -70,14 +74,13 @@
 
                     <LinearLayout
                         android:id="@+id/imageContainer"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="8dp">
 
                         <GridView
                             android:id="@+id/gridView"
-
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -94,10 +97,10 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/edittext_underline"
                     android:gravity="left"
-                    android:textColorHighlight="#99CCFF"
-                    android:textCursorDrawable="@drawable/cursor_style"
                     android:hint="地点（必填）"
                     android:paddingLeft="5dp"
+                    android:textColorHighlight="#99CCFF"
+                    android:textCursorDrawable="@drawable/cursor_style"
                     android:textSize="16sp" />
 
                 <ListView
@@ -111,15 +114,15 @@
                     android:id="@+id/et_content2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
+                    android:background="#FAFAFA"
                     android:gravity="left"
-                    android:inputType="textMultiLine"
                     android:hint="记录下此刻的心情吧！"
-                    android:textColorHighlight="#99CCFF"
-                    android:textCursorDrawable="@drawable/cursor_style"
+                    android:inputType="textMultiLine"
                     android:lines="20"
                     android:minLines="12"
                     android:paddingLeft="5dip"
+                    android:textColorHighlight="#99CCFF"
+                    android:textCursorDrawable="@drawable/cursor_style"
                     android:textSize="16sp" />
 
                 <RelativeLayout
@@ -153,9 +156,9 @@
                         android:id="@+id/ibn_PhotoAlbum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/ibn_photoAdd"
                         android:layout_marginStart="-65dp"
-                    android:background="@drawable/imageadd" />
+                        android:layout_toEndOf="@id/ibn_photoAdd"
+                        android:background="@drawable/imageadd" />
 
                 </RelativeLayout>
 

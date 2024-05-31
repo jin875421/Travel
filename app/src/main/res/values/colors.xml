@@ -14,9 +14,9 @@
     <color name="gray">#EEEEEE</color>
     <color name="djp">#F1EEEE</color>
     <color name="cwn">#F1EEEE</color>
-    <color name="one">#70B5A5</color>
+<!--    <color name="one">#70B5A5</color>-->
     <color name="light_gray">#F9F9FA</color>
-    <color name="djpback">#d3d3d3</color>
-    <color name="communitytitle">#fafafa</color>
-    <color name="tablayoutba">#81AF9F</color>
+    <color name="colorLightBlue">#F8B5FFFF</color>
+<!--    <color name="communitytitle">#fafafa</color>-->
+<!--    <color name="tablayoutba">#81AF9F</color>-->
 </resources>

@@ -21,13 +21,16 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,6 +68,7 @@ public class StrategyRespondDetailActivity extends AppCompatActivity {
     private TextView text;
     private String url = "http://"+ip+"/travel/";
     private OkHttpClient client = new OkHttpClient();
+    private boolean wasOpened = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +93,32 @@ public class StrategyRespondDetailActivity extends AppCompatActivity {
     }
 
     private void setListener() {
+        // 注册根视图全局布局变化监听器
+        findViewById(R.id.root_layout).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+                int screenHeight = getWindowManager().getDefaultDisplay().getHeight();
+                int heightDiff = screenHeight - r.bottom;
+                if (heightDiff > dpToPx(getApplicationContext(), 200)) { // 高度差大于200dp，通常认为软键盘已打开
+                    if (!wasOpened) {
+                        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) findViewById(R.id.root_layout).getLayoutParams();
+                        layoutParams.bottomMargin = heightDiff+dpToPx(getApplicationContext(),35);
+
+                        
+                        findViewById(R.id.root_layout).setLayoutParams(layoutParams);
+                        wasOpened = true;
+                    }
+                } else if (wasOpened) {
+                    // 软键盘关闭
+                    ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) findViewById(R.id.root_layout).getLayoutParams();
+                    layoutParams.bottomMargin = 0;
+                    findViewById(R.id.root_layout).setLayoutParams(layoutParams);
+                    wasOpened = false;
+                }
+            }
+        });
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -297,5 +327,10 @@ public class StrategyRespondDetailActivity extends AppCompatActivity {
         if (null != v) {
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
+    }
+
+    public static int dpToPx(Context context, int dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 }

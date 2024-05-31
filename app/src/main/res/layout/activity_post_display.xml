@@ -31,7 +31,7 @@
             android:textSize="18dp" />
         <ImageView
             android:id="@+id/popupmenu"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:src="@mipmap/menu"
             android:layout_marginEnd="6dp"
             android:layout_width="24dp"
@@ -160,7 +160,8 @@
                 android:layout_height="35dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="6dp"
-                android:background="@drawable/login_submit_button"
+                android:background="@drawable/blue_round_button"
+                android:textColor="#FFFFFF"
                 android:text="发送"/>
             <ImageView
                 android:id="@+id/btn_like"

@@ -17,7 +17,7 @@
     </item>
     <item>
         <layer-list>
-            <item android:start="10dp" android:end="10dp">
+            <item android:start="6dp" android:end="6dp">
                 <shape>
                     <solid android:color="#F1F0F0" /> <!-- #F1F0F0 -->
                 </shape>
