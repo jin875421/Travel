@@ -542,6 +542,7 @@ public class OpenCVTest extends AppCompatActivity {
                 AB = AB > 255 ? 255 : AB;
                 huaijiu.setPixel(i,j,Color.rgb(AR,AG,AB));
             }
+
         }
         return huaijiu;
     }
@@ -552,10 +553,13 @@ public class OpenCVTest extends AppCompatActivity {
         int diameter = 9;
         double sigmaColor = 75;
         double sigmaSpace = 75;
+
         // 双边滤波
         Mat filteredMat = new Mat();
         Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_BGR2RGB); // 转换颜色空间
+
         Imgproc.bilateralFilter(inputMat, filteredMat, diameter, sigmaColor, sigmaSpace);
+
         Bitmap outputBitmap = Bitmap.createBitmap(filteredMat.cols(), filteredMat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(filteredMat, outputBitmap);
 
@@ -574,6 +578,7 @@ public class OpenCVTest extends AppCompatActivity {
         Imgproc.resize(edgesMat, resizedEdgesMat, inputMat.size());
         Mat neonMat = new Mat();
         Core.add(inputMat, new Scalar(100, 100, 100), neonMat);
+
         Core.subtract(neonMat, resizedEdgesMat, neonMat);
         Bitmap outputBitmap = Bitmap.createBitmap(neonMat.cols(), neonMat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(neonMat, outputBitmap);
@@ -590,6 +595,7 @@ public class OpenCVTest extends AppCompatActivity {
         Imgproc.cvtColor(inputMat, smoothMat, Imgproc.COLOR_RGBA2RGB);
         Imgproc.bilateralFilter(smoothMat, outputMat, 9, 75, 75);
         // 将图像转换为灰度图像
+
         Mat grayMat = new Mat();
         Imgproc.cvtColor(outputMat, grayMat, Imgproc.COLOR_RGB2GRAY);
         // 检测图像的边缘
@@ -599,6 +605,7 @@ public class OpenCVTest extends AppCompatActivity {
         Imgproc.cvtColor(edgesMat, edgesMat, Imgproc.COLOR_GRAY2RGB);
         Mat dilatedEdgesMat = new Mat();
         Imgproc.cvtColor(edgesMat, edgesMat, Imgproc.COLOR_RGB2RGBA);
+
         Imgproc.medianBlur(edgesMat, dilatedEdgesMat, 7);
         Mat cartoonMat = new Mat();
         Core.addWeighted(inputMat, 0.9, dilatedEdgesMat, 0.1, 0, cartoonMat);

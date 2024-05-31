@@ -1928,11 +1928,6 @@ public class travelRecordActivity extends Activity {
                                 } else {
                                     // 获取坐标信息
                                     LatLng location = result.getLocation();
-
-                                    // 打印输出经纬度信息
-                                    Log.v("AddLabelActivity", "lzx Latitude: " + location.latitude);
-                                    Log.v("AddLabelActivity", "lzx Longitude: " + location.longitude);
-
                                     // 在这里你可以将坐标信息存储到成员变量中，或者进行其他操作
                                     LatLng point = location;
 
