@@ -66,6 +66,7 @@ import glue502.software.activities.personal.UpdatePersonalInformationActivity;
 import glue502.software.activities.travelRecord.TravelPicturesActivity;
 import glue502.software.adapters.PageAdapter;
 import glue502.software.models.LoginResult;
+import glue502.software.models.Personal;
 import glue502.software.models.UserInfo;
 import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
@@ -91,6 +92,7 @@ public class PersonalInformationFragment extends Fragment {
     private PageAdapter adapter;
     private final int RESULT_LOAD_IMAGES = 1, RESULT_CAMERA_IMAGE = 2;
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
+    private String urlBackground="http://"+ip+"/travel/personal/getBackground?userId=";
     private String urlLoadImage="http://"+ip+"/travel/";
     private final Handler handler = new Handler(Looper.getMainLooper());
     private StarFragment starFragment = new StarFragment();
@@ -200,37 +202,37 @@ public class PersonalInformationFragment extends Fragment {
 //                    })
                     .show();
         });
-//        imgBackground.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // 创建一个 PopupMenu
-//                PopupMenu popupMenu = new PopupMenu(getActivity(), view);
-//                // 从资源文件中填充菜单
-//                popupMenu.getMenu().add("滤镜");
-//                popupMenu.getMenu().add("剪切");
-//
-//                // 为菜单项设置点击监听器
-//                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//                        // 处理菜单项点击事件
-//                        switch (item.getTitle().toString()) {
-//                            case "从相册选择":
-//                                openFilePicker();
-//                                return true;
-//                            case "从相机拍照":
-//                                takeCamera(RESULT_CAMERA_IMAGE);
-//                                return true;
-//                            default:
-//                                return false;
-//                        }
-//                    }
-//                });
-//
-//                // 显示 PopupMenu
-//                popupMenu.show();
-//            }
-//        });
+        imgBackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 创建一个 PopupMenu
+                PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+                // 从资源文件中填充菜单
+                popupMenu.getMenu().add("从相册选择");
+                popupMenu.getMenu().add("从相机拍照");
+
+                // 为菜单项设置点击监听器
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        // 处理菜单项点击事件
+                        switch (item.getTitle().toString()) {
+                            case "从相册选择":
+                                openFilePicker();
+                                return true;
+                            case "从相机拍照":
+                                takeCamera(RESULT_CAMERA_IMAGE);
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+
+                // 显示 PopupMenu
+                popupMenu.show();
+            }
+        });
         linearTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -355,6 +357,45 @@ public class PersonalInformationFragment extends Fragment {
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+    private void loadBackground(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", "");
+        OkHttpClient client =new OkHttpClient();
+        Request request=new Request.Builder()
+                .url(urlBackground+userId)
+                .build();
+        // 发送请求
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                // 处理请求失败的情况
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                final String responseData = response.body().string();
+
+                Gson gson=new Gson();
+                Personal personal = gson.fromJson(responseData,Personal.class);
+                String backgroundUrl=personal.getBackground();
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(requireContext())
+                                .load(backgroundUrl)
+                                .placeholder(R.drawable.headimg)
+                                .into(imgBackground);
+
+                    }
+                });
+            }
+        });
+    }
+    private void uploadBackground(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", "");
     }
     private void loadUserAvatar(boolean a) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
