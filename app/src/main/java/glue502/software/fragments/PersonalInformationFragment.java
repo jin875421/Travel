@@ -1,5 +1,6 @@
 package glue502.software.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
 import static glue502.software.activities.MainActivity.ip;
 
 import android.app.Activity;
@@ -96,6 +97,8 @@ public class PersonalInformationFragment extends Fragment {
     private PageAdapter adapter;
     private static final int RESULT_LOAD_IMAGES = 1;
     private static final int RESULT_TAKE_PHOTO = 2;
+    private String userId;
+    private final int RESULT_LOAD_IMAGES = 1, RESULT_CAMERA_IMAGE = 2;
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
     private String urlBackground="http://"+ip+"/travel/personal/getBackground?userId=";
     private String uploadBackgroundUrl="http://"+ip+"/travel/personal//uploadbackground?userId=";
@@ -145,7 +148,8 @@ public class PersonalInformationFragment extends Fragment {
         //收藏和发布
         tabLayout = view.findViewById(R.id.tbl);
         viewPager2 = view.findViewById(R.id.vp2);
-
+        //关注
+        follow = view.findViewById(R.id.follow);
         setViewPager2ScrollSensitivity(9);
         initFragment();
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
@@ -194,6 +198,14 @@ public class PersonalInformationFragment extends Fragment {
             loadUserAvatar(false);
             remindBind();
         }
+        follow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MyFollowActivity.class);
+                intent.putExtra("userId",userId);
+                startActivity(intent);
+            }
+        });
         imgAvatar.setOnClickListener(v->{
             OpenImage.with(getContext()).setClickImageView(imgAvatar)
                     .setAutoScrollScanPosition(true)
