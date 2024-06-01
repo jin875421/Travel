@@ -1,5 +1,6 @@
 package glue502.software.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
 import static glue502.software.activities.MainActivity.ip;
 
 import android.app.Activity;
@@ -53,6 +54,7 @@ import java.util.Locale;
 
 import glue502.software.R;
 import glue502.software.activities.login.CodeLoginActivity;
+import glue502.software.activities.personal.MyFollowActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
 import glue502.software.adapters.PageAdapter;
@@ -81,6 +83,7 @@ public class PersonalInformationFragment extends Fragment {
     private View view;
     private float startX;
     private PageAdapter adapter;
+    private String userId;
     private final int RESULT_LOAD_IMAGES = 1, RESULT_CAMERA_IMAGE = 2;
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
     private String urlLoadImage="http://"+ip+"/travel/";
@@ -129,7 +132,8 @@ public class PersonalInformationFragment extends Fragment {
         //收藏和发布
         tabLayout = view.findViewById(R.id.tbl);
         viewPager2 = view.findViewById(R.id.vp2);
-
+        //关注
+        follow = view.findViewById(R.id.follow);
         setViewPager2ScrollSensitivity(9);
         initFragment();
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
@@ -159,6 +163,7 @@ public class PersonalInformationFragment extends Fragment {
         mediator.attach();
         SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String status=sharedPreferences.getString("status","");
+        userId = sharedPreferences.getString("userId","");
         //沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
         if("".equals(status)){
@@ -178,6 +183,14 @@ public class PersonalInformationFragment extends Fragment {
             loadUserAvatar(false);
             remindBind();
         }
+        follow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MyFollowActivity.class);
+                intent.putExtra("userId",userId);
+                startActivity(intent);
+            }
+        });
         imgAvatar.setOnClickListener(v->{
             OpenImage.with(getContext()).setClickImageView(imgAvatar)
                     .setAutoScrollScanPosition(true)
@@ -273,32 +286,32 @@ public class PersonalInformationFragment extends Fragment {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), RESULT_LOAD_IMAGES);
     }
-    private void takeCamera(int num) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            File photoFile = null;
-            photoFile = createImageFile();
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(getActivity(),
-                        getActivity().getApplicationContext().getPackageName() + ".fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, num);
-            }
-        }
-    }
-    //处理拍摄的图片
-    private File createImageFile() {
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        File image = null;
-        try {
-            image = File.createTempFile(generateFileName(), ".jpg", storageDir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
+//    private void takeCamera(int num) {
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+//            File photoFile = null;
+//            photoFile = createImageFile();
+//            if (photoFile != null) {
+//                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+//                        getActivity().getApplicationContext().getPackageName() + ".fileprovider",
+//                        photoFile);
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//                startActivityForResult(takePictureIntent, num);
+//            }
+//        }
+//    }
+//    //处理拍摄的图片
+//    private File createImageFile() {
+//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+//        File image = null;
+//        try {
+//            image = File.createTempFile(generateFileName(), ".jpg", storageDir);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        mCurrentPhotoPath = image.getAbsolutePath();
+//        return image;
+//    }
     //生成文件名
     private String generateFileName() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
