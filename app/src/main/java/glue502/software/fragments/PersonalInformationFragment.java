@@ -63,6 +63,7 @@ import java.util.Locale;
 import glue502.software.R;
 import glue502.software.activities.OpenCVTest;
 import glue502.software.activities.login.CodeLoginActivity;
+import glue502.software.activities.personal.MyFollowActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
 import glue502.software.activities.travelRecord.TravelPicturesActivity;
@@ -98,7 +99,6 @@ public class PersonalInformationFragment extends Fragment {
     private static final int RESULT_LOAD_IMAGES = 1;
     private static final int RESULT_TAKE_PHOTO = 2;
     private String userId;
-    private final int RESULT_LOAD_IMAGES = 1, RESULT_CAMERA_IMAGE = 2;
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
     private String urlBackground="http://"+ip+"/travel/personal/getBackground?userId=";
     private String uploadBackgroundUrl="http://"+ip+"/travel/personal//uploadbackground?userId=";
