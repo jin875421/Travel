@@ -90,6 +90,7 @@ public class PersonalInformationFragment extends Fragment {
     private LinearLayout linearCustomerService;
     private ImageView imgAvatar,imgBackground;
     private String mCurrentPhotoPath;
+    private LinearLayout follow;
     private View view;
     private float startX;
     private PageAdapter adapter;
@@ -132,7 +133,7 @@ public class PersonalInformationFragment extends Fragment {
     };
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-         view=inflater.inflate(R.layout.fragment_personal_information, container, false);
+        view=inflater.inflate(R.layout.fragment_personal_information, container, false);
         txtName=view.findViewById(R.id.txt_name);
         txtUserId=view.findViewById(R.id.txt_userId);
         linearSetting=view.findViewById(R.id.linear_setting);
