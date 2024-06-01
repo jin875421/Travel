@@ -362,7 +362,30 @@ public class PostDisplayActivity extends AppCompatActivity {
                                     }
                                 }
                             }).start();
+                        }else{
+                            //已关注，取消关注
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //进行关注
+                                    OkHttpClient client1 = new OkHttpClient();
+                                    Request request = new Request.Builder()
+                                            .url(url+"posts/deleteFollow?userId="+userId+"&followId="+post.getUserInfo().getUserName())
+                                            .build();
+                                    //发起请求
+                                    try {
+                                        Response response = client1.newCall(request).execute();
+                                        //检测请求是否成功
+                                        if (response.isSuccessful()){
+                                            follow.setText("关注");
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
                         }
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
