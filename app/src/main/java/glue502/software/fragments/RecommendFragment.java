@@ -427,17 +427,17 @@ public class RecommendFragment extends Fragment {
     //--------------------------------------------------------------------------
 
     public void setlistener(){
-//        weather.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //跳转天气详情页面，可以查看天气预报
-//                Intent intent = new Intent(getActivity(), WeatherActivity.class);
-//                //传输weatherResult
-//                intent.putExtra("weatherResult",mWeatherResult);
-//                intent.putExtra("city",city);
-//                startActivity(intent);
-//            }
-//        });
+        weather.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转天气详情页面，可以查看天气预报
+                Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                //传输weatherResult
+                intent.putExtra("weatherResult",mWeatherResult);
+                intent.putExtra("city",city);
+                startActivity(intent);
+            }
+        });
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
