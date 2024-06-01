@@ -24,34 +24,55 @@
             android:id="@+id/follow_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/follow_item_avatar"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/follow_item_avatar"
             android:text="userName"
-            android:textStyle="bold"
             android:textColor="#181A23"
-            android:textSize="18sp" />
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/follow_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/follow_item_more"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_toStartOf="@+id/follow_item_place"
             android:background="@drawable/round_button_followed_background"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
             android:paddingVertical="5dp"
-            android:paddingHorizontal="18dp"
             android:text="已关注"
             android:textColor="#181A23"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
+
+        <!--占位-->
+        <View
+            android:id="@+id/follow_item_place"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
 
         <ImageView
             android:id="@+id/follow_item_more"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@mipmap/menu" />
+            android:src="@mipmap/menu1" />
+
+        <CheckBox
+            android:id="@+id/follow_item_checkbox"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:src="@mipmap/menu"
+            android:visibility="invisible" />
+
+
     </RelativeLayout>
 </LinearLayout>

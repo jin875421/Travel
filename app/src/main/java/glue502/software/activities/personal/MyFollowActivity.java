@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,13 +31,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.travelRecord.TravelDetailActivity;
 import glue502.software.adapters.FollowListAdapter;
 import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Follow;
 import glue502.software.models.PostWithUserInfo;
 import glue502.software.models.UserInfo;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -45,7 +49,10 @@ public class MyFollowActivity extends AppCompatActivity {
     private String userId;
     private RelativeLayout title;
     private ImageView back;
+    private ImageView titleMenu;
     private TextView tvTitle;
+    private TextView unfollowCancel;
+    private TextView unfollowSure;
     private SmartRefreshLayout refreshLayout;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private ListView followListView;
@@ -85,6 +92,9 @@ public class MyFollowActivity extends AppCompatActivity {
         tvTitle = findViewById(R.id.title_text);
         refreshLayout = findViewById(R.id.refreshLayout);
         followListView = findViewById(R.id.travel_review);
+        titleMenu = findViewById(R.id.title_menu);
+        unfollowCancel = findViewById(R.id.unfollow_cancel);
+        unfollowSure = findViewById(R.id.unfollow_sure);
     }
 
     private void setClickListeners() {
@@ -94,11 +104,70 @@ public class MyFollowActivity extends AppCompatActivity {
                 finish(); // 返回上一个Activity
             }
         });
+        titleMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 弹出菜单
+                showPopupMenu(v);
+            }
+        });
+        unfollowCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 取消批量取关
+                followListAdapter.setType(FollowListAdapter.NORMAL_TYPE);
+                followListAdapter.notifyDataSetChanged();
+                unfollowCancel.setVisibility(View.GONE);
+                unfollowSure.setVisibility(View.GONE);
+                titleMenu.setVisibility(View.VISIBLE);
+            }
+        });
+        unfollowSure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO 弹窗确认
+                initData();
+                unfollowCancel.setVisibility(View.GONE);
+                unfollowSure.setVisibility(View.GONE);
+                titleMenu.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void showPopupMenu(View v) {
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(MyFollowActivity.this, v);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.follow_title_menu, popupMenu.getMenu());
+        //显示PopupMenu
+        popupMenu.show();
+        // 添加菜单项点击监听器
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(android.view.MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.unfollow:
+                        // 进入批量取关
+                        followListAdapter.setType(FollowListAdapter.UNFOLLOW_TYPE);
+                        followListAdapter.notifyDataSetChanged();
+                        unfollowCancel.setVisibility(View.VISIBLE);
+                        unfollowSure.setVisibility(View.VISIBLE);
+                        titleMenu.setVisibility(View.GONE);
+                        break;
+                    case R.id.cancel:
+                        // 取消
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     private void setListAdapter() {
         // 创建并设置Adapter
-        followListAdapter = new FollowListAdapter(getApplicationContext(),R.layout.adapter_fellow_item,userInfoList,userId);
+        followListAdapter = new FollowListAdapter(getApplicationContext(),R.layout.adapter_fellow_item,userInfoList,userId,FollowListAdapter.NORMAL_TYPE);
         followListView.setAdapter(followListAdapter);
     }
 
@@ -127,6 +196,10 @@ public class MyFollowActivity extends AppCompatActivity {
             public void run() {
                 //获取关注列表
                 OkHttpClient client = new OkHttpClient();
+//                RequestBody requestBody = new MultipartBody.Builder()
+//                        .setType(MultipartBody.FORM)
+//                        .addFormDataPart("userId",userId)
+//                        .build();
                 Request request = new Request.Builder()
                         .url(url+"/posts/getFollowList?userId="+userId)
                         .build();
@@ -146,7 +219,7 @@ public class MyFollowActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     if (userInfoList != null){
-                                        followListAdapter = new FollowListAdapter(MyFollowActivity.this,R.layout.adapter_fellow_item,userInfoList,userId);
+                                        followListAdapter = new FollowListAdapter(MyFollowActivity.this,R.layout.adapter_fellow_item,userInfoList,userId,FollowListAdapter.NORMAL_TYPE);
                                         followListView.setAdapter(followListAdapter);
                                     }else {
 
