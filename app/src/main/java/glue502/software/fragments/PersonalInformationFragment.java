@@ -8,28 +8,22 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -46,7 +40,6 @@ import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.ParseException;
@@ -59,11 +52,9 @@ import java.util.List;
 import java.util.Locale;
 
 import glue502.software.R;
-import glue502.software.activities.OpenCVTest;
 import glue502.software.activities.login.CodeLoginActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
-import glue502.software.activities.travelRecord.TravelPicturesActivity;
 import glue502.software.adapters.PageAdapter;
 import glue502.software.models.LoginResult;
 import glue502.software.models.UserInfo;
@@ -86,6 +77,7 @@ public class PersonalInformationFragment extends Fragment {
     private LinearLayout linearCustomerService;
     private ImageView imgAvatar,imgBackground;
     private String mCurrentPhotoPath;
+    private LinearLayout follow;
     private View view;
     private float startX;
     private PageAdapter adapter;
@@ -125,7 +117,7 @@ public class PersonalInformationFragment extends Fragment {
     };
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-         view=inflater.inflate(R.layout.fragment_personal_information, container, false);
+        view=inflater.inflate(R.layout.fragment_personal_information, container, false);
         txtName=view.findViewById(R.id.txt_name);
         txtUserId=view.findViewById(R.id.txt_userId);
         linearSetting=view.findViewById(R.id.linear_setting);
