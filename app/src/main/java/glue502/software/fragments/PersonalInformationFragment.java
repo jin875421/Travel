@@ -542,16 +542,29 @@ public class PersonalInformationFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            Uri imageUri = null;
-            if (requestCode == RESULT_LOAD_IMAGES && data != null && data.getData() != null) {
-                imageUri = data.getData();
-            } else if (requestCode == RESULT_TAKE_PHOTO) {
-                File file = new File(mCurrentPhotoPath);
-                imageUri = Uri.fromFile(file);
-            }
-            if (imageUri != null) {
-                uploadBackground(imageUri);
-            }
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+            String status = sharedPreferences.getString("status", "");
+           if("".equals(status)){
+               txtName.setText("请登录");
+               txtUserId.setText("");
+               RequestOptions requestOptions = new RequestOptions()
+                       .transform(new CircleCrop());
+               Glide.with(requireContext())
+                       .load(R.drawable.headimg)
+                       .apply(requestOptions) // 设置签名
+                       .into(imgAvatar);
+           }else {
+               Uri imageUri = null;
+               if (requestCode == RESULT_LOAD_IMAGES && data != null && data.getData() != null) {
+                   imageUri = data.getData();
+               } else if (requestCode == RESULT_TAKE_PHOTO) {
+                   File file = new File(mCurrentPhotoPath);
+                   imageUri = Uri.fromFile(file);
+               }
+               if (imageUri != null) {
+                   uploadBackground(imageUri);
+               }
+           }
         }
 
         if (requestCode == 1) { // 检查请求码是否与上传页面的请求码一致
