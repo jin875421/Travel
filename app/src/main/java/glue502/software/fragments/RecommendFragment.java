@@ -46,6 +46,12 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.weather.OnGetWeatherResultListener;
+import com.baidu.mapapi.search.weather.WeatherDataType;
+import com.baidu.mapapi.search.weather.WeatherResult;
+import com.baidu.mapapi.search.weather.WeatherSearch;
+import com.baidu.mapapi.search.weather.WeatherSearchLocation;
+import com.baidu.mapapi.search.weather.WeatherSearchOption;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -67,6 +73,7 @@ import glue502.software.activities.posts.PostSearchActivity;
 import glue502.software.activities.travelRecord.FunctionActivity;
 import glue502.software.activities.travelRecord.SearchActivity;
 import glue502.software.activities.travelRecord.TravelAlbumActivity;
+import glue502.software.activities.travelRecord.WeatherActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
 import glue502.software.adapters.PostListAdapter;
@@ -110,7 +117,8 @@ public class RecommendFragment extends Fragment {
     private Toolbar toolbar;
     private AppBarLayout appBarLayout;
     private TextView search;
-
+    private TextView weather;
+    private WeatherResult mWeatherResult;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -130,6 +138,7 @@ public class RecommendFragment extends Fragment {
         search = view.findViewById(R.id.et_searchtext);
         attractionName = view.findViewById(R.id.attraction_name);
         refreshLayout = view.findViewById(R.id.refreshLayout);
+        weather = view.findViewById(R.id.weather);
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -193,6 +202,23 @@ public class RecommendFragment extends Fragment {
                     // 获取经纬度信息
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
+                    //获取天气信息
+                    WeatherSearchOption weatherSearchOption = new WeatherSearchOption()
+                            .weatherDataType(WeatherDataType.WEATHER_DATA_TYPE_ALL)
+                            .districtID("130108");
+                    WeatherSearch mWeatherSearch = WeatherSearch.newInstance();
+                    //发起天气检索请求
+                    mWeatherSearch.setWeatherSearchResultListener(new OnGetWeatherResultListener() {
+                        @Override
+                        public void onGetWeatherResultListener(final WeatherResult weatherResult) {
+                            weather.setText(weatherResult.getRealTimeWeather().getPhenomenon()+"  "+weatherResult.getRealTimeWeather().getTemperature()+"℃   ");
+                            mWeatherResult = weatherResult;
+                        }
+                    });
+                    mWeatherSearch.request(weatherSearchOption);
+
+
+                    //获取天气信息
 
                     // 逆地理编码获取城市信息
                     GeoCoder geoCoder = GeoCoder.newInstance();
@@ -401,6 +427,17 @@ public class RecommendFragment extends Fragment {
     //--------------------------------------------------------------------------
 
     public void setlistener(){
+//        weather.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //跳转天气详情页面，可以查看天气预报
+//                Intent intent = new Intent(getActivity(), WeatherActivity.class);
+//                //传输weatherResult
+//                intent.putExtra("weatherResult",mWeatherResult);
+//                intent.putExtra("city",city);
+//                startActivity(intent);
+//            }
+//        });
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
