@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,30 +14,34 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import glue502.software.R;
 import glue502.software.models.TodoItem;
-import glue502.software.utils.TodoDatabaseHelper;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+import static glue502.software.activities.MainActivity.ip;
 
 public class TodoListAdapter extends ArrayAdapter<TodoItem> {
-    private TodoDatabaseHelper dbHelper;
     private Context mContext;
     private List<TodoItem> mTodos;
+    private OkHttpClient client;
+    private String url = "http://" + ip + "/travel/todo/";
 
-    public TodoListAdapter(Context context, List<TodoItem> todos, TodoDatabaseHelper dbHelper) {
+    public TodoListAdapter(Context context, List<TodoItem> todos) {
         super(context, 0, todos);
         this.mContext = context;
-        this.dbHelper = dbHelper;
-        this.mTodos = todos; // 创建一个新的ArrayList来存储传入的todos，避免直接修改传入的列表
-        for (int i = 0; i < mTodos.size(); i++) {
-            mTodos.get(i).setOriginalIndex(i);
-        }
+        this.mTodos = todos;
+        this.client = new OkHttpClient();
     }
-
 
     @NonNull
     @Override
@@ -55,7 +60,7 @@ public class TodoListAdapter extends ArrayAdapter<TodoItem> {
                 boolean isChecked = checkBox.isChecked();
 
                 todo.setCompleted(isChecked);
-                dbHelper.updateTodo(todo);
+                updateTodoOnServer(todo);
                 updateListAfterCheckChange(todo, isChecked); // 更新列表并排序
             });
             convertView.setOnLongClickListener(v -> {
@@ -68,7 +73,7 @@ public class TodoListAdapter extends ArrayAdapter<TodoItem> {
                             public void onClick(DialogInterface dialog, int which) {
                                 // 用户点击是，执行删除操作
                                 TodoItem todo = getItem(position);
-                                dbHelper.deleteTodo(todo.getId());
+                                deleteTodoOnServer(todo.getId());
                                 mTodos.remove(todo);
                                 notifyDataSetChanged();
                             }
@@ -97,19 +102,18 @@ public class TodoListAdapter extends ArrayAdapter<TodoItem> {
         mTodos.add(0, newItem); // 将新项目插入到列表的开头位置
         notifyDataSetChanged(); // 通知适配器数据集已更改
     }
-    // 更新列表并根据完成状态进行排序
+
     private void updateListAfterCheckChange(TodoItem todo, boolean isChecked) {
         todo.setCompleted(isChecked);
-        dbHelper.updateTodo(todo);
+        updateTodoOnServer(todo);
         sortTodos1();
     }
 
-    // ViewHolder类用于缓存视图组件
     private static class ViewHolder {
         TextView tvTitle;
         CheckBox cbComplete;
     }
-    // 分离已完成和未完成任务，未完成任务在前面
+
     private void sortTodos1() {
         List<TodoItem> completedTodos = new ArrayList<>();
         List<TodoItem> uncompletedTodos = new ArrayList<>(mTodos.size());
@@ -128,5 +132,42 @@ public class TodoListAdapter extends ArrayAdapter<TodoItem> {
         notifyDataSetChanged();
     }
 
+    private void updateTodoOnServer(TodoItem todo) {
+        new Thread(() -> {
+            String updateUrl = url + "update";
+            Gson gson = new Gson();
+            String json = gson.toJson(todo);
 
+            RequestBody body = RequestBody.create(json, MediaType.parse("application/json; charset=utf-8"));
+            Request request = new Request.Builder()
+                    .url(updateUrl)
+                    .post(body)
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    Log.e("TodoListAdapter", "Error: " + response.code());
+                }
+            } catch (IOException e) {
+                Log.e("TodoListAdapter", "Error updating todo", e);
+            }
+        }).start();
+    }
+
+    private void deleteTodoOnServer(String todoId) {
+        new Thread(() -> {
+            String deleteUrl = url + "delete?todoId=" + todoId;
+            Request request = new Request.Builder()
+                    .url(deleteUrl)
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    Log.e("TodoListAdapter", "Error: " + response.code());
+                }
+            } catch (IOException e) {
+                Log.e("TodoListAdapter", "Error deleting todo", e);
+            }
+        }).start();
+    }
 }
