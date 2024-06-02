@@ -1,11 +1,14 @@
 package glue502.software.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
+import static glue502.software.activities.MainActivity.PERMISSION_REQUEST_CODE;
 import static glue502.software.activities.MainActivity.ip;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +23,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -29,14 +33,18 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -54,7 +62,9 @@ import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,6 +81,7 @@ import glue502.software.activities.login.CodeLoginActivity;
 import glue502.software.activities.personal.MyFollowActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
+import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.activities.travelRecord.TravelPicturesActivity;
 import glue502.software.adapters.PageAdapter;
 import glue502.software.models.LoginResult;
@@ -238,35 +249,7 @@ public class PersonalInformationFragment extends Fragment {
         imgBackground.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                // 创建一个 PopupMenu
-                PopupMenu popupMenu = new PopupMenu(getActivity(), view);
-                // 从资源文件中填充菜单
-                popupMenu.getMenu().add("从相册选择");
-                popupMenu.getMenu().add("从相机拍照");
-
-                // 为菜单项设置点击监听器
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        // 处理菜单项点击事件
-                        switch (item.getTitle().toString()) {
-                            case "从相册选择":
-                                checkStoragePermission();
-                                openFilePicker();
-                                return true;
-                            case "从相机拍照":
-                                checkCameraPermission();
-                                takeCamera(RESULT_TAKE_PHOTO);
-                                return true;
-                            default:
-                                return false;
-                        }
-                    }
-                });
-
-                // 显示 PopupMenu
-                popupMenu.show();
-
+               showPopupWindow();
                 // 返回 true 表示事件已被处理
                 return true;
             }
@@ -315,13 +298,78 @@ public class PersonalInformationFragment extends Fragment {
         return view;
 
     }
-    //相册选择
-    private void openFilePicker() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-        startActivityForResult(Intent.createChooser(intent, "选择图片"), RESULT_LOAD_IMAGES);
+    //供用户选择拍照或从相册选择
+    private void showPopupWindow() {
+        View popView = View.inflate(getActivity(), R.layout.popupwindow_camera_need, null);
+        Button bt_album = popView.findViewById(R.id.btn_pop_album);
+        Button bt_camera = popView.findViewById(R.id.btn_pop_camera);
+        Button bt_cancel = popView.findViewById(R.id.btn_pop_cancel);
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels * 1 / 3;
+        final PopupWindow popupWindow = new PopupWindow(popView, width, height);
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        //用户点击从相册选择
+        bt_album.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFilePicker();
+                popupWindow.dismiss();
+            }
+        });
+        //用户选择拍照上传
+        bt_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+
+                    // 如果权限尚未授予，则请求权限
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.CAMERA},
+                            PERMISSION_REQUEST_CODE);
+                }
+                //如果权限已经授予
+                if (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    takeCamera(RESULT_TAKE_PHOTO);
+                }
+
+                popupWindow.dismiss();
+            }
+        });
+        //用户选择取消
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+                lp.alpha = 1.0f;
+                getActivity().getWindow().setAttributes(lp);
+            }
+        });
+
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        lp.alpha = 0.5f;
+        getActivity().getWindow().setAttributes(lp);
+        popupWindow.showAtLocation(popView, Gravity.BOTTOM, 0, 50);
     }
+    //打开文件选择器
+    private void openFilePicker() {
+        System.out.println("打开文件选择器");
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), RESULT_LOAD_IMAGES);
+    }
+
     //拍摄照片
     private void takeCamera(int num) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -352,6 +400,39 @@ public class PersonalInformationFragment extends Fragment {
     private String generateFileName() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         return "JPEG_" + timeStamp + "_";
+    }
+    private void loadBackground(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", "");
+        OkHttpClient client =new OkHttpClient();
+        Request request=new Request.Builder()
+                .url(urlBackground+userId)
+                .build();
+        // 发送请求
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                // 处理请求失败的情况
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                final String responseData = response.body().string();
+
+                Gson gson=new Gson();
+                Personal personal = gson.fromJson(responseData,Personal.class);
+                String backgroundUrl=personal.getBackground();
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(backgroundUrl!=null) {
+                            updateBackgroundWithGlide(backgroundUrl,true);
+                        }
+                    }
+                });
+            }
+        });
     }
     private void initFragment() {
         fragments = new ArrayList<>();
@@ -397,39 +478,7 @@ public class PersonalInformationFragment extends Fragment {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-    private void loadBackground(){
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
-        String userId = sharedPreferences.getString("userId", "");
-        OkHttpClient client =new OkHttpClient();
-        Request request=new Request.Builder()
-                .url(urlBackground+userId)
-                .build();
-        // 发送请求
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                // 处理请求失败的情况
-                e.printStackTrace();
-            }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                final String responseData = response.body().string();
-
-                Gson gson=new Gson();
-                Personal personal = gson.fromJson(responseData,Personal.class);
-                String backgroundUrl=personal.getBackground();
-                requireActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(backgroundUrl!=null) {
-                            updateBackgroundWithGlide(backgroundUrl,true);
-                        }
-                    }
-                });
-            }
-        });
-    }
     private void updateBackgroundWithGlide(String avatarUrl, boolean forceRefresh) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
@@ -459,10 +508,10 @@ public class PersonalInformationFragment extends Fragment {
         }
 
     }
-    private void uploadBackground(Uri imageUri){
+    private void uploadBackground(File file){
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
-        File file = new File(imageUri.getPath()); // 获取图片文件路径
+//        File file = new File(imageUri.getPath()); // 获取图片文件路径
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("userId", userId)
@@ -494,6 +543,13 @@ public class PersonalInformationFragment extends Fragment {
                             editor.putString("personalStatu","1");
                             editor.apply();
                             loadBackground();
+                            // 延时2秒后执行
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loadUserAvatar(true);
+                                }
+                            }, 2000);
                         } else {
                             Toast.makeText(requireContext(), "上传失败", Toast.LENGTH_SHORT).show();
                         }
@@ -502,18 +558,7 @@ public class PersonalInformationFragment extends Fragment {
             }
         });
     }
-    private String getPathFromUri(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            String path = cursor.getString(column_index);
-            cursor.close();
-            return path;
-        }
-        return null;
-    }
+    //从服务器获取用户头像路径
     private void loadUserAvatar(boolean a) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
@@ -568,7 +613,7 @@ public class PersonalInformationFragment extends Fragment {
             }
         });
     }
-
+    //加载用户头像
     private void loadImageWithGlide(String avatarUrl, boolean forceRefresh) {
         // 使用 Glide 加载用户头像，并进行圆形裁剪
         RequestOptions requestOptions = new RequestOptions()
@@ -603,34 +648,52 @@ public class PersonalInformationFragment extends Fragment {
         }
 
     }
-
+    // 获取相册图片真实路径
+    private File getFileFromUri(Uri uri) {
+        File file = null;
+        try {
+            InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+            if (inputStream != null) {
+                file = new File(getActivity().getCacheDir(), "temp_image.jpg");
+                FileOutputStream outputStream = new FileOutputStream(file);
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                inputStream.close();
+                outputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
             String status = sharedPreferences.getString("status", "");
-           if("".equals(status)){
-               txtName.setText("请登录");
-               txtUserId.setText("");
-               RequestOptions requestOptions = new RequestOptions()
-                       .transform(new CircleCrop());
-               Glide.with(requireContext())
-                       .load(R.drawable.headimg)
-                       .apply(requestOptions) // 设置签名
-                       .into(imgAvatar);
-           }else {
                Uri imageUri = null;
-               if (requestCode == RESULT_LOAD_IMAGES && data != null && data.getData() != null) {
-                   imageUri = data.getData();
+               if (requestCode == RESULT_LOAD_IMAGES && data != null) {
+                   if (data.getClipData() != null) {
+                       ClipData clipData = data.getClipData();
+                       int count = clipData.getItemCount();
+                       for (int i = 0; i < count; i++) {
+                           Uri selectedImage = clipData.getItemAt(i).getUri();
+                           File file = getFileFromUri(selectedImage);
+                           System.out.println(file.getName()+"asdawdawd");
+                           uploadBackground(file);
+                       }
+                   }
                } else if (requestCode == RESULT_TAKE_PHOTO) {
                    File file = new File(mCurrentPhotoPath);
                    imageUri = Uri.fromFile(file);
-               }
-               if (imageUri != null) {
-                   uploadBackground(imageUri);
+                   if (imageUri != null) {
+                       uploadBackground(file);
+                   }
 
-               }
            }
         }
         if (requestCode == 1) { // 检查请求码是否与上传页面的请求码一致
@@ -775,97 +838,5 @@ public class PersonalInformationFragment extends Fragment {
             e.printStackTrace();
         }
     }
-    //相机和相册权限判断
-    private void checkStoragePermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                showPermissionExplanationDialog(Manifest.permission.READ_EXTERNAL_STORAGE, REQUEST_READ_STORAGE_PERMISSION);
-            } else {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        REQUEST_READ_STORAGE_PERMISSION);
-            }
-        } else {
-            openFilePicker();
-        }
-    }
-    private void showPermissionExplanationDialog(final String permission, final int requestCode) {
-        new AlertDialog.Builder(getActivity())
-                .setTitle("权限请求")
-                .setMessage("该操作需要访问存储权限，请授予权限以继续。")
-                .setPositiveButton("允许", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions(getActivity(),
-                                new String[]{permission},
-                                requestCode);
-                    }
-                })
-                .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create()
-                .show();
-    }
-    private void checkCameraPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                showPermissionExplanationDialog(Manifest.permission.WRITE_EXTERNAL_STORAGE, REQUEST_WRITE_STORAGE_PERMISSION);
-            } else {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        REQUEST_WRITE_STORAGE_PERMISSION);
-            }
-        } else {
-            takeCamera(RESULT_TAKE_PHOTO);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_READ_STORAGE_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openFilePicker();
-            } else {
-                showPermissionDeniedDialog();
-            }
-        } else if (requestCode == REQUEST_WRITE_STORAGE_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                takeCamera(RESULT_TAKE_PHOTO);
-            } else {
-                showPermissionDeniedDialog();
-            }
-        }
-    }
-
-    private void showPermissionDeniedDialog() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle("需要权限")
-                .setMessage("该操作需要存储权限，请前往设置中授予权限。")
-                .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
-                        intent.setData(uri);
-                        startActivity(intent);
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create()
-                .show();
-    }
-
 
 }
