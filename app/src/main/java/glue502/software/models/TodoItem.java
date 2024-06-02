@@ -3,15 +3,24 @@ package glue502.software.models;
 import android.content.ContentValues;
 
 public class TodoItem {
-    private long id;
+    private String id;
     private String title;
     private boolean completed;
+    private String userId;
 
-    public long getId() {
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
