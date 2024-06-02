@@ -5,10 +5,12 @@ import static glue502.software.activities.MainActivity.ip;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -44,7 +46,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class MyFollowActivity extends AppCompatActivity {
+public class MyFollowActivity extends AppCompatActivity implements View.OnClickListener {
     private String url = "http://"+ip+"/travel";
     private String userId;
     private RelativeLayout title;
@@ -126,12 +128,38 @@ public class MyFollowActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO 弹窗确认
+                Log.i("MyFollowActivity", followListAdapter.getUnfollowIdList().toString());
                 initData();
                 unfollowCancel.setVisibility(View.GONE);
                 unfollowSure.setVisibility(View.GONE);
                 titleMenu.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void showUnfollowDialog(List<String> unfollowIdList) {
+        // 创建Dialog
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.custom_dialog_layout);
+
+        // 获取Dialog中的控件
+        TextView dialogTitle = dialog.findViewById(R.id.dialog_title);
+        TextView sure = dialog.findViewById(R.id.dialog_button_sure);
+        TextView cancel = dialog.findViewById(R.id.dialog_button_cancel);
+        dialogTitle.setText("不再关注这些用户？");
+        // 设置按钮点击事件 (尝试新写法)
+        sure.setOnClickListener(v -> {
+            
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 关闭Dialog
+                dialog.dismiss();
+            }
+        });
+        // 显示Dialog
+        dialog.show();
     }
 
     private void showPopupMenu(View v) {
@@ -236,5 +264,10 @@ public class MyFollowActivity extends AppCompatActivity {
                 }
             }
         }).start();
+    }
+
+    @Override
+    public void onClick(View v) {
+        // Activity实现View.OnClickListener接口设置监听
     }
 }

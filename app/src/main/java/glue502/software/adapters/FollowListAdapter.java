@@ -46,6 +46,7 @@ public class FollowListAdapter extends BaseAdapter {
     private Context context;
     private int adapter_fellow_item;
     private List<UserInfo> userInfoList;
+    private List<String> unfollowIdList;
     private String userId;
     private int type;
 
@@ -59,6 +60,10 @@ public class FollowListAdapter extends BaseAdapter {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public List<String> getUnfollowIdList() {
+        return unfollowIdList;
     }
 
     /**
@@ -119,10 +124,12 @@ public class FollowListAdapter extends BaseAdapter {
                 } else if ((int)holder.followState.getTag()==0) {
                     setFollowStateUI(holder,0);
                 }
-                // 设置监听
                 holder.checkBox.setVisibility(View.INVISIBLE);
                 holder.more.setVisibility(View.VISIBLE);
                 holder.followState.setVisibility(View.VISIBLE);
+                // 重置复选框状态
+                holder.checkBox.setChecked(false);
+                // 设置监听
                 setListener(holder, currentUserInfo);
                 break;
             case UNFOLLOW_TYPE:
@@ -137,6 +144,18 @@ public class FollowListAdapter extends BaseAdapter {
                         @Override
                         public void onClick(View v) {
                             // TODO 记录选中状态
+                            if (holder.checkBox.isChecked()) {
+                                // 选中
+                                if (unfollowIdList == null) {
+                                    unfollowIdList = new ArrayList<>();
+                                }
+                                unfollowIdList.add(currentUserInfo.getUserId());
+                            } else {
+                                // 取消选中
+                                if (unfollowIdList != null) {
+                                    unfollowIdList.remove(currentUserInfo.getUserId());
+                                }
+                           }
                         }
                     });
                     holder.checkBox.setVisibility(View.VISIBLE);
@@ -177,6 +196,7 @@ public class FollowListAdapter extends BaseAdapter {
                 // 弹出菜单
             }
         });
+
     }
 
     private void showDialog(ViewHolder holder, UserInfo userInfo) {

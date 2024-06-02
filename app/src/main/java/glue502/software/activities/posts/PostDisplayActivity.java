@@ -152,7 +152,7 @@ public class PostDisplayActivity extends AppCompatActivity {
             @Override
             public void run() {
                 OkHttpClient client1 = new OkHttpClient();
-                String urlWithParams = url + "posts/isFollowed?userId=" + userId + "&followedId=" + authorId;
+                String urlWithParams = url + "follow/isFollowed?userId=" + userId + "&followedId=" + authorId;
                 Request request = new Request.Builder()
                         .url(urlWithParams)
                         .build();

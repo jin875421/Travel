@@ -73,7 +73,7 @@ import glue502.software.activities.posts.PostSearchActivity;
 import glue502.software.activities.travelRecord.FunctionActivity;
 import glue502.software.activities.travelRecord.SearchActivity;
 import glue502.software.activities.travelRecord.TravelAlbumActivity;
-//import glue502.software.activities.travelRecord.WeatherActivity;
+import glue502.software.activities.travelRecord.WeatherActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.activities.travelRecord.TravelReviewActivity;
 import glue502.software.adapters.PostListAdapter;
