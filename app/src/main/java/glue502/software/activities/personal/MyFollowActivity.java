@@ -7,16 +7,28 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -55,10 +67,14 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
     private TextView tvTitle;
     private TextView unfollowCancel;
     private TextView unfollowSure;
+    private TextView selectGroup;
+    private LinearLayout groupLayout;
     private SmartRefreshLayout refreshLayout;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private ListView followListView;
-    private List<UserInfo> userInfoList;
+    private List<UserInfo> followUserInfoList;
+    private List<String> followGroupList;
+    private List<Follow> followList;
     private FollowListAdapter followListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +113,13 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
         titleMenu = findViewById(R.id.title_menu);
         unfollowCancel = findViewById(R.id.unfollow_cancel);
         unfollowSure = findViewById(R.id.unfollow_sure);
+
+        selectGroup = findViewById(R.id.select_group);
+        groupLayout = findViewById(R.id.group_layout);
     }
 
     private void setClickListeners() {
+        selectGroup.setOnClickListener(this);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,12 +147,14 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
         unfollowSure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO 弹窗确认
-                Log.i("MyFollowActivity", followListAdapter.getUnfollowIdList().toString());
-                initData();
-                unfollowCancel.setVisibility(View.GONE);
-                unfollowSure.setVisibility(View.GONE);
-                titleMenu.setVisibility(View.VISIBLE);
+                // 弹窗确认
+                List<String> unfollowIdList = followListAdapter.getUnfollowIdList();
+                if(unfollowIdList == null || unfollowIdList.size() == 0){
+                    Toast.makeText(MyFollowActivity.this, "请选择用户", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Log.i("MyFollowActivity", unfollowIdList.toString());
+                showUnfollowDialog(unfollowIdList);
             }
         });
     }
@@ -149,7 +171,9 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
         dialogTitle.setText("不再关注这些用户？");
         // 设置按钮点击事件 (尝试新写法)
         sure.setOnClickListener(v -> {
-            
+            unFollowUsers(unfollowIdList);
+            // 关闭Dialog
+            dialog.dismiss();
         });
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,6 +184,61 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
         });
         // 显示Dialog
         dialog.show();
+    }
+
+    private void unFollowUsers(List<String> unfollowIdList) {
+        Gson gson = new Gson();
+        String unfollowIds = gson.toJson(unfollowIdList);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //执行取消关注
+                OkHttpClient client = new OkHttpClient();
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("userId", userId)
+                        .addFormDataPart("unfollowIds", unfollowIds)
+                        .build();
+                Request request = new Request.Builder()
+                        .url(url + "/follow/deleteFollows")
+                        .post(requestBody)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        String responseData = response.body().string();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                //获取返回消息
+                                switch (responseData) {
+                                    case "success":
+                                        //取消关注成功
+                                        initData();
+                                        unfollowCancel.setVisibility(View.GONE);
+                                        unfollowSure.setVisibility(View.GONE);
+                                        titleMenu.setVisibility(View.VISIBLE);
+                                        Toast.makeText(MyFollowActivity.this, "取关成功", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case "fail":
+                                        //取消关注失败
+                                        Toast.makeText(MyFollowActivity.this, "请选择用户", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case "Unknown records exist":
+                                        Toast.makeText(MyFollowActivity.this, "存在未知记录", Toast.LENGTH_SHORT).show();
+                                    default:
+                                        //未知错误
+                                        Toast.makeText(MyFollowActivity.this, "未知错误", Toast.LENGTH_SHORT).show();
+                                        break;
+                                }
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
     }
 
     private void showPopupMenu(View v) {
@@ -195,7 +274,7 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
 
     private void setListAdapter() {
         // 创建并设置Adapter
-        followListAdapter = new FollowListAdapter(getApplicationContext(),R.layout.adapter_fellow_item,userInfoList,userId,FollowListAdapter.NORMAL_TYPE);
+        followListAdapter = new FollowListAdapter(getApplicationContext(),R.layout.adapter_fellow_item,followUserInfoList,userId,FollowListAdapter.NORMAL_TYPE);
         followListView.setAdapter(followListAdapter);
     }
 
@@ -218,45 +297,73 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initData() {
-        userInfoList = new ArrayList<>();
+        followUserInfoList = new ArrayList<>();
+        followGroupList = new ArrayList<>();
+        followList = new ArrayList<>();
         //开启线程获取关注列表
         new Thread(new Runnable() {
             public void run() {
                 //获取关注列表
                 OkHttpClient client = new OkHttpClient();
-//                RequestBody requestBody = new MultipartBody.Builder()
-//                        .setType(MultipartBody.FORM)
-//                        .addFormDataPart("userId",userId)
-//                        .build();
-                Request request = new Request.Builder()
-                        .url(url+"/posts/getFollowList?userId="+userId)
+
+                Request getFollowUserInfoList = new Request.Builder()
+                        .url(url+"/follow/getFollowUserInfoList?userId="+userId)
+                        .build();
+                Request getFollowList = new Request.Builder()
+                        .url(url+"/follow/getFollowList?userId="+userId)
+                        .build();
+                Request getGroupList = new Request.Builder()
+                        .url(url+"/follow/getGroupInfo?userId="+userId)
                         .build();
                 try {
                     //发起请求并获取响应
-                    Response response = client.newCall(request).execute();
+                    Response followUserInfoListResponse = client.newCall(getFollowUserInfoList).execute();
+                    Response followListResponse = client.newCall(getFollowList).execute();
+                    Response groupListResponse = client.newCall(getGroupList).execute();
                     //检测响应是否成功
-                    if (response.isSuccessful()){
+                    if (followUserInfoListResponse.isSuccessful() && followListResponse.isSuccessful()){
                         //获取响应数据
-                        ResponseBody responseBody = response.body();
+                        ResponseBody responseBody = followUserInfoListResponse.body();
+                        ResponseBody responseBody1 = followListResponse.body();
                         if (responseBody!=null){
                             //处理数据
                             String responseData = responseBody.string();
+                            String responseData1 = responseBody1.string();
                             Gson gson = new Gson();
-                            userInfoList = gson.fromJson(responseData,new TypeToken<List<UserInfo>>(){}.getType());
+                            followUserInfoList = gson.fromJson(responseData,new TypeToken<List<UserInfo>>(){}.getType());
+                            followList = gson.fromJson(responseData1,new TypeToken<List<Follow>>(){}.getType());
+                            Log.i("MyFollowActivity",followList.toString());
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (userInfoList != null){
-                                        followListAdapter = new FollowListAdapter(MyFollowActivity.this,R.layout.adapter_fellow_item,userInfoList,userId,FollowListAdapter.NORMAL_TYPE);
+                                    if (followUserInfoList != null){
+                                        followListAdapter = new FollowListAdapter(MyFollowActivity.this,R.layout.adapter_fellow_item,followUserInfoList,userId,FollowListAdapter.NORMAL_TYPE);
                                         followListView.setAdapter(followListAdapter);
                                     }else {
-
                                     }
                                 }
                             });
 
                         }else {
                             //处理空数据
+                            Log.e("MyFollowActivity","获取关注列表失败");
+                        }
+                    } else {
+                        Log.e("MyFollowActivity","获取关注列表失败");
+                    }
+                    if (groupListResponse.isSuccessful()){
+                        //获取响应数据
+                        ResponseBody responseBody = groupListResponse.body();
+                        if (responseBody!=null){
+                            //处理数据
+                            String responseData = responseBody.string();
+                            Gson gson = new Gson();
+                            followGroupList = gson.fromJson(responseData,new TypeToken<List<String>>(){}.getType());
+//                            handler.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                }
+//                            });
                         }
                     }
                 } catch (IOException e) {
@@ -269,5 +376,78 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         // Activity实现View.OnClickListener接口设置监听
+        switch (v.getId()){
+            case R.id.select_group:
+                showPopupWindow();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void showPopupWindow() {
+        // 创建适配器
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.simple_popup_item, followGroupList);
+
+        // 设置下拉菜单的布局
+        View view = LayoutInflater.from(this).inflate(R.layout.popupwindow_list_view, null, false);
+        ListView listView = view.findViewById(R.id.popupwindow_list_view);
+
+        // 创建 PopupWindow 对象
+        PopupWindow popupWindow = new PopupWindow(view);
+        listView.setAdapter(adapter);
+
+        // 设置背景并使其可点击
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setOutsideTouchable(true);
+
+        // 在背景点击时关闭 PopupWindow
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (popupWindow != null && popupWindow.isShowing()) {
+                    popupWindow.dismiss();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectGroupName = followGroupList.get(position);
+                selectGroup.setText(selectGroupName);
+                // 执行点击列表项后的操作
+//                Toast.makeText(MyFollowActivity.this, "你点击了：" + selectedItem, Toast.LENGTH_SHORT).show();
+                List<String> filteredIdList = new ArrayList<>();
+                Gson gson = new Gson();
+                for (Follow follow : followList) {
+                    List<String> groups = gson.fromJson(follow.getGroupOf(), new TypeToken<List<String>>() {}.getType());
+                    if (groups.contains(selectGroupName)) {
+                        filteredIdList.add(follow.getFollowId());
+                    }
+                }
+                List<UserInfo> filteredUserInfoList = new ArrayList<>();
+                for(UserInfo userInfo : followUserInfoList){
+                    if(filteredIdList.contains(userInfo.getUserId())){
+                        filteredUserInfoList.add(userInfo);
+                    }
+                }
+                followListAdapter.setUserInfoList(filteredUserInfoList);
+                followListAdapter.notifyDataSetChanged();
+                // 点击后关闭下拉菜单
+                popupWindow.dismiss();
+            }
+        });
+        // 设置下拉菜单的宽度和高度
+        popupWindow.setWidth(WindowManager.LayoutParams.MATCH_PARENT);
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+
+        // 显示下拉菜单
+        View anchorView = findViewById(R.id.select_group); // 这里的 anchor_view 是你想要下拉菜单显示在哪个 View 附近的 id
+        int offsetX = 0; // X 轴偏移量
+        int offsetY = 0; // Y 轴偏移量
+        popupWindow.showAsDropDown(anchorView, offsetX, offsetY);
     }
 }

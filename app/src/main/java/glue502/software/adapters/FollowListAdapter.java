@@ -45,11 +45,15 @@ public class FollowListAdapter extends BaseAdapter {
     public static final int UNFOLLOW_TYPE = 1;
     private Context context;
     private int adapter_fellow_item;
+    // 关注用户信息
     private List<UserInfo> userInfoList;
+    // 关注信息(分组信息)
+    private List<Follow> followList;
+    // 批量取关列表
     private List<String> unfollowIdList;
     private String userId;
     private int type;
-
+    private Gson gson = new Gson();
     private String url = "http://" + ip + "/travel/";
     private String urlLoadImage = "http://" + ip + "/travel/";
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -64,6 +68,14 @@ public class FollowListAdapter extends BaseAdapter {
 
     public List<String> getUnfollowIdList() {
         return unfollowIdList;
+    }
+
+    public List<UserInfo> getUserInfoList() {
+        return userInfoList;
+    }
+
+    public void setUserInfoList(List<UserInfo> userInfoList) {
+        this.userInfoList = userInfoList;
     }
 
     /**
@@ -143,7 +155,7 @@ public class FollowListAdapter extends BaseAdapter {
                     holder.checkBox.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // TODO 记录选中状态
+                            // 记录选中状态
                             if (holder.checkBox.isChecked()) {
                                 // 选中
                                 if (unfollowIdList == null) {
@@ -260,7 +272,7 @@ public class FollowListAdapter extends BaseAdapter {
                         .addFormDataPart("followId", userInfo.getUserId())
                         .build();
                 Request request = new Request.Builder()
-                        .url(url + "/posts/addFollow")
+                        .url(url + "/follow/addFollow")
                         .post(requestBody)
                         .build();
                 try {
@@ -303,7 +315,7 @@ public class FollowListAdapter extends BaseAdapter {
                         .addFormDataPart("followId", followUser.getUserId())
                         .build();
                 Request request = new Request.Builder()
-                        .url(url + "/posts/deleteFollow")
+                        .url(url + "/follow/deleteFollow")
                         .post(requestBody)
                         .build();
                 try {

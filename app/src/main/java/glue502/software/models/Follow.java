@@ -4,6 +4,7 @@ public class Follow {
     private String id;
     private String userId;
     private String followId;
+    private String groupOf = "默认";
 
     public Follow() {
 
@@ -14,7 +15,12 @@ public class Follow {
         this.userId = userId;
         this.followId = followId;
     }
-
+    public Follow(String id, String userId, String followId, String groupOf) {
+        this.id = id;
+        this.userId = userId;
+        this.followId = followId;
+        this.groupOf = groupOf;
+    }
     public String getId() {
         return id;
     }
@@ -37,5 +43,21 @@ public class Follow {
 
     public void setFollowId(String followId) {
         this.followId = followId;
+    }
+
+    public String getGroupOf() {
+        return groupOf;
+    }
+
+    public void setGroupOf(String groupOf) {
+        this.groupOf = groupOf;
+    }
+    public String toString() {
+        return "Follow{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", followId='" + followId + '\'' +
+                ", groupOf='" + groupOf + '\'' +
+                '}';
     }
 }
