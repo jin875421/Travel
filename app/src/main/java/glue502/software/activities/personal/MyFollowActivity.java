@@ -34,13 +34,14 @@ import glue502.software.adapters.FollowListAdapter;
 import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Follow;
 import glue502.software.models.PostWithUserInfo;
+import glue502.software.models.UserInfo;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class MyFollowActivity extends AppCompatActivity {
-    private String url = "http://"+ip+"/travel/posts/getFollowList";
+    private String url = "http://"+ip+"/travel";
     private String userId;
     private RelativeLayout title;
     private ImageView back;
@@ -48,7 +49,7 @@ public class MyFollowActivity extends AppCompatActivity {
     private SmartRefreshLayout refreshLayout;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private ListView followListView;
-    private List<Follow> followList;
+    private List<UserInfo> userInfoList;
     private FollowListAdapter followListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +98,7 @@ public class MyFollowActivity extends AppCompatActivity {
 
     private void setListAdapter() {
         // 创建并设置Adapter
-        followListAdapter = new FollowListAdapter(getApplicationContext(),R.layout.adapter_fellow_item,followList);
+        followListAdapter = new FollowListAdapter(getApplicationContext(),R.layout.adapter_fellow_item,userInfoList,userId);
         followListView.setAdapter(followListAdapter);
     }
 
@@ -120,14 +121,14 @@ public class MyFollowActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        followList = new ArrayList<>();
+        userInfoList = new ArrayList<>();
         //开启线程获取关注列表
         new Thread(new Runnable() {
             public void run() {
                 //获取关注列表
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url(url+"?userId="+userId)
+                        .url(url+"/posts/getFollowList?userId="+userId)
                         .build();
                 try {
                     //发起请求并获取响应
@@ -140,19 +141,21 @@ public class MyFollowActivity extends AppCompatActivity {
                             //处理数据
                             String responseData = responseBody.string();
                             Gson gson = new Gson();
-                            followList = gson.fromJson(responseData,new TypeToken<List<Follow>>(){}.getType());
+                            userInfoList = gson.fromJson(responseData,new TypeToken<List<UserInfo>>(){}.getType());
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (followList != null){
-                                        followListAdapter = new FollowListAdapter(getApplicationContext(),R.layout.adapter_fellow_item,followList);
+                                    if (userInfoList != null){
+                                        followListAdapter = new FollowListAdapter(MyFollowActivity.this,R.layout.adapter_fellow_item,userInfoList,userId);
                                         followListView.setAdapter(followListAdapter);
                                     }else {
-                                        //处理空数据
+
                                     }
                                 }
                             });
+
                         }else {
+                            //处理空数据
                         }
                     }
                 } catch (IOException e) {

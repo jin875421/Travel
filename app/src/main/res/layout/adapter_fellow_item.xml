@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fellow_item_root"
+    android:id="@+id/follow_item_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#F2F2F2"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/fellow_item_avatar"
+            android:id="@+id/follow_item_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
@@ -21,10 +21,10 @@
             android:src="@drawable/ic_launcher_background" />
 
         <TextView
-            android:id="@+id/fellow_item_name"
+            android:id="@+id/follow_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/fellow_item_avatar"
+            android:layout_toEndOf="@+id/follow_item_avatar"
             android:layout_centerVertical="true"
             android:text="userName"
             android:textStyle="bold"
@@ -32,14 +32,14 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/fellow_item_text_follow"
+            android:id="@+id/follow_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/fellow_item_more"
+            android:layout_toStartOf="@+id/follow_item_more"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="#E0E0E0"
+            android:background="@drawable/round_button_followed_background"
             android:paddingVertical="5dp"
             android:paddingHorizontal="18dp"
             android:text="已关注"
@@ -47,7 +47,7 @@
             android:textSize="18sp" />
 
         <ImageView
-            android:id="@+id/fellow_item_more"
+            android:id="@+id/follow_item_more"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
