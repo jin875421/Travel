@@ -267,7 +267,7 @@ public class PersonalInformationFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SettingActivity.class);
-                startActivityForResult(intent, 2);
+                startActivityForResult(intent, 3);
             }
         });
         linearCustomerService.setOnClickListener(new View.OnClickListener() {
@@ -450,7 +450,7 @@ public class PersonalInformationFragment extends Fragment {
             showLoginAlertDialog();
         }else{
             Intent intent = new Intent(getActivity(), UpdatePersonalInformationActivity.class);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, 4);
         }
     }
 
@@ -696,14 +696,14 @@ public class PersonalInformationFragment extends Fragment {
 
            }
         }
-        if (requestCode == 1) { // 检查请求码是否与上传页面的请求码一致
+        if (requestCode == 4) { // 检查请求码是否与上传页面的请求码一致
             if (resultCode == Activity.RESULT_OK) { // 检查是否上传完成
                 // 进行刷新操作，重新加载数据
                 loadUserAvatar(true);
             }
         }
 
-        if (requestCode == 2) {
+        if (requestCode == 3) {
             if (resultCode == Activity.RESULT_OK) {
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
                 String status = sharedPreferences.getString("status", "");
