@@ -1,9 +1,12 @@
 package glue502.software.activities.travelRecord;
 
+import static glue502.software.activities.MainActivity.ip;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,12 +19,27 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import glue502.software.R;
+import glue502.software.adapters.ExpenseAdapter;
+import glue502.software.models.Expense;
 import glue502.software.utils.MyViewUtils;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ExpenseRecordActivity extends AppCompatActivity {
 
@@ -29,10 +47,12 @@ public class ExpenseRecordActivity extends AppCompatActivity {
     private Button clearExpensesButton;
     private ListView expenseListView;
     private TextView totalExpenseTextView;
-    private ArrayList<String> expenses;
-    private ArrayAdapter<String> expenseAdapter;
+    private List<Expense> expenses;
     private double totalExpense = 0.0;
-    private SharedPreferences sharedPreferences;
+    private String url = "http://"+ip + "/travel/expense/";
+    private String userId;
+    private ExpenseAdapter expenseAdapter;
+    private OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,18 +60,20 @@ public class ExpenseRecordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_expense_record);
 
         //状态栏
-        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
-
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), true);
+        SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", MODE_PRIVATE);
+        userId = sharedPreferences.getString("userId", "");
         addExpenseButton = findViewById(R.id.addExpenseButton);
         clearExpensesButton = findViewById(R.id.clearExpensesButton);
         expenseListView = findViewById(R.id.expenseListView);
         totalExpenseTextView = findViewById(R.id.totalExpenseTextView);
 
         expenses = new ArrayList<>();
-        expenseAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, expenses);
+        expenseAdapter = new ExpenseAdapter(this, R.layout.expense_item, expenses);
         expenseListView.setAdapter(expenseAdapter);
 
-        sharedPreferences = getSharedPreferences("TravelAppPrefs", Context.MODE_PRIVATE);
+        client = new OkHttpClient();
+
         loadExpenses();
 
         addExpenseButton.setOnClickListener(new View.OnClickListener() {
@@ -68,18 +90,12 @@ public class ExpenseRecordActivity extends AppCompatActivity {
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            String expense = expenses.get(position);
-                            String[] parts = expense.split(": ¥");
-                            if (parts.length == 2) {
-                                double amount = Double.parseDouble(parts[1]);
-                                totalExpense -= amount;
-                                expenses.remove(position);
-                                expenseAdapter.notifyDataSetChanged();
-                                totalExpenseTextView.setText("总支出: ¥" + String.format("%.2f", totalExpense));
-                                saveExpenses();
-                            } else {
-                                Toast.makeText(ExpenseRecordActivity.this, "解析错误，无法删除项目", Toast.LENGTH_SHORT).show();
-                            }
+                            Expense expense = expenses.get(position);
+                            totalExpense -= expense.getPrice();
+                            expenses.remove(position);
+                            expenseAdapter.notifyDataSetChanged();
+                            totalExpenseTextView.setText("总支出: ¥" + String.format("%.2f", totalExpense));
+                            deleteExpense(expense.getId());
                         }
                     })
                     .setNegativeButton("取消", null)
@@ -102,7 +118,7 @@ public class ExpenseRecordActivity extends AppCompatActivity {
                                 expenses.clear();
                                 expenseAdapter.notifyDataSetChanged();
                                 totalExpenseTextView.setText("总支出: ¥" + String.format("%.2f", totalExpense));
-                                saveExpenses();
+                                clearExpense();
                             }
                         })
                         .setNegativeButton("取消", null)
@@ -110,7 +126,57 @@ public class ExpenseRecordActivity extends AppCompatActivity {
                         .show();
             }
         });
+    }
 
+    private void clearExpense() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String clearUrl = url + "clear?userId="+userId;
+
+                Request request = new Request.Builder()
+                        .url(clearUrl)
+                        .build();
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                loadExpenses();
+                                Toast.makeText(ExpenseRecordActivity.this, "支出清空成功", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    Log.e("ExpenseRecordActivity", "Error clearing expenses", e);
+                }
+            }
+        }).start();
+    }
+
+    private void deleteExpense(String id) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String deleteUrl = url + "delete?id="+id;
+                Request request = new Request.Builder()
+                        .url(deleteUrl)
+                        .build();
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                loadExpenses();
+                                Toast.makeText(ExpenseRecordActivity.this, "支出删除成功", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    Log.e("ExpenseRecordActivity", "Error deleting expense", e);
+                }
+            }
+        }).start();
     }
 
     private void showAddExpenseDialog() {
@@ -128,14 +194,14 @@ public class ExpenseRecordActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String amountStr = expenseAmountEditText.getText().toString();
                         String description = expenseDescriptionEditText.getText().toString();
-
                         if (!amountStr.isEmpty() && !description.isEmpty()) {
                             double amount = Double.parseDouble(amountStr);
-                            totalExpense += amount;
-                            expenses.add(description + ": ¥" + String.format("%.2f", amount));
-                            expenseAdapter.notifyDataSetChanged();
-                            totalExpenseTextView.setText("总支出: ¥" + String.format("%.2f", totalExpense));
-                            saveExpenses();
+                            Expense expense = new Expense();
+                            expense.setDescribe(description);
+                            expense.setPrice(amount);
+                            expense.setId(UUID.randomUUID().toString());
+                            expense.setUserId(userId);
+                            saveExpenses(expense);
                         } else {
                             Toast.makeText(ExpenseRecordActivity.this, "请输入支出金额和描述", Toast.LENGTH_SHORT).show();
                         }
@@ -146,21 +212,76 @@ public class ExpenseRecordActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void saveExpenses() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Set<String> expenseSet = new HashSet<>(expenses);
-        editor.putStringSet("expenses", expenseSet);
-        editor.putFloat("totalExpense", (float) totalExpense);
-        editor.apply();
+    private void saveExpenses(Expense expense) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String saveUrl = url + "save";
+                Gson gson = new Gson();
+                String json = gson.toJson(expense);
+
+                RequestBody body = RequestBody.create(json, MediaType.parse("application/json; charset=utf-8"));
+
+                Request request = new Request.Builder()
+                        .url(saveUrl)
+                        .post(body)
+                        .build();
+
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        String responseData = response.body().string();
+                        Log.d("ExpenseRecordActivity", "Response: " + responseData);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                loadExpenses();
+                            }
+                        });
+                    } else {
+                        Log.e("ExpenseRecordActivity", "Error: " + response.code());
+                    }
+                } catch (IOException e) {
+                    Log.e("ExpenseRecordActivity", "Error saving expense", e);
+                }
+            }
+        }).start();
     }
+
+
 
     private void loadExpenses() {
-        Set<String> expenseSet = sharedPreferences.getStringSet("expenses", new HashSet<>());
-        expenses.clear();
-        expenses.addAll(expenseSet);
-        expenseAdapter.notifyDataSetChanged();
-        totalExpense = sharedPreferences.getFloat("totalExpense", 0);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String loadUrl = url + "load?userId"+"="+userId;
+                Request request = new Request.Builder()
+                        .url(loadUrl)
+                        .build();
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        String jsonResponse = response.body().string();
+                        Gson gson = new Gson();
+                        List<Expense> expenseList = gson.fromJson(jsonResponse, new TypeToken<List<Expense>>(){}.getType());
 
-        totalExpenseTextView.setText("总支出: ¥" + String.format("%.2f", totalExpense));
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                expenses.clear();
+                                totalExpense = 0.0;
+                                for (Expense expense : expenseList) {
+                                    expenses.add(expense);
+                                    totalExpense += expense.getPrice();
+                                }
+                                expenseAdapter.notifyDataSetChanged();
+                                totalExpenseTextView.setText("总支出: ¥" + String.format("%.2f", totalExpense));
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    Log.e("ExpenseRecordActivity", "Error loading expenses", e);
+                }
+            }
+        }).start();
     }
 }
+
