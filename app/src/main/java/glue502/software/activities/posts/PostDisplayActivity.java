@@ -78,6 +78,7 @@ import glue502.software.models.PostWithUserInfo;
 import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -163,7 +164,7 @@ public class PostDisplayActivity extends AppCompatActivity {
                         responseBody = response.body();
                         if (responseBody != null) {
                             String responseData = responseBody.string();
-                            if (responseData.equals("true")) {
+                            if (responseData.equals("success")) {
                                 // 在主线程中返回结果
                                 latch.countDown();
                             } else {
@@ -367,10 +368,16 @@ public class PostDisplayActivity extends AppCompatActivity {
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    String deleteUrl = url+"posts/deleteFollow";
                                     //进行关注
                                     OkHttpClient client1 = new OkHttpClient();
+                                    RequestBody formBody = new FormBody.Builder()
+                                            .add("userId", userId)
+                                            .add("followId", postWithUserInfo.getUserInfo().getUserId())
+                                            .build();
                                     Request request = new Request.Builder()
-                                            .url(url+"posts/deleteFollow?userId="+userId+"&followId="+post.getUserInfo().getUserName())
+                                            .url(deleteUrl)
+                                            .post(formBody)
                                             .build();
                                     //发起请求
                                     try {
@@ -421,7 +428,6 @@ public class PostDisplayActivity extends AppCompatActivity {
                                     .build();
                             try {
                                 Response response = client.newCall(request).execute();
-
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
