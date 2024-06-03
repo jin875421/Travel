@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/follow_group_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FEFEFE"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/follow_group_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="groupName"
+        android:textColor="#181A23"
+        android:textSize="16sp"
+        android:layout_marginStart="10dp" />
+
+    <CheckBox
+        android:id="@+id/follow_group_item_checkbox"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="5dp"
+        android:buttonTint="#03A9F4"/>
+</RelativeLayout>

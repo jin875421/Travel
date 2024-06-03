@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:text="选项"
+    android:padding="10dp"
     android:textColor="#0C0C0C"
     android:background="#FAFAFA"
     android:textSize="16sp" />
