@@ -1,34 +1,20 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/transparent"
-    android:gravity="center"
     android:padding="16dp">
 
     <ViewFlipper
         android:id="@+id/view_flipper"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:autoStart="true"
-        android:flipInterval="5000">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"/>
-    </ViewFlipper>
-
-    <TextView
-        android:id="@+id/widget_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="旅游App"
-        android:textSize="18sp"/>
-
+        android:flipInterval="5000"/>
     <TextView
         android:id="@+id/widget_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="点击查看"
         android:textSize="14sp"/>
-</LinearLayout>
+</FrameLayout>
