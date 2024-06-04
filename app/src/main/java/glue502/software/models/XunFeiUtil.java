@@ -15,7 +15,7 @@ import org.json.JSONTokener;
 
 public class XunFeiUtil {
 
-    public static String appid = "28a64a93";
+    public static String appid = "16621d18";
 
     public static void initXunFei(Context context){
         SpeechUtility.createUtility(context, SpeechConstant.APPID +"="+appid);

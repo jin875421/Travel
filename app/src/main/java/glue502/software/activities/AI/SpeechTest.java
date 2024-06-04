@@ -28,8 +28,8 @@ public class SpeechTest extends AppCompatActivity {
         initXunFei(this);
         Intent intent = getIntent();
 
-        btn_click = (Button) findViewById(R.id.btn_click);
-        mResultText = ((EditText) findViewById(R.id.result));
+        btn_click =  findViewById(R.id.btn_click);
+        mResultText = findViewById(R.id.result);
         btn_click.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -30,7 +30,7 @@ import java.util.List;
 public class ChatActivity extends Activity {
 
     private EditText et_chat;
-    private Button btn_send,btn_chat_return;
+    private Button btn_send,btn_chat_return, btn_startsetting;
     private ChatlistAdapter chatAdapter;
     private List<Chatlist> mDatas;
 
@@ -46,22 +46,8 @@ public class ChatActivity extends Activity {
         setContentView(R.layout.activity_chat);
         init();
 
-
-
-
-
         //聊天信息
         mDatas = new ArrayList<Chatlist>();
-
-        /*Chatlist C1;
-        C1=new Chatlist("ABC：","Hello,world!");
-        mDatas.add(C1);
-        Chatlist C2;
-        C2=new Chatlist("DEF：","This is a new app.");
-        mDatas.add(C2);
-
-        //或者通过数据库插入数据
-        */
 
         //读取用户设置里的文心一言的API_Key等信息
         preferences= this.getSharedPreferences("usersetting",MODE_PRIVATE);
@@ -84,8 +70,6 @@ public class ChatActivity extends Activity {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btn_send.setVisibility(View.GONE);//点击发送后，隐藏发送按钮（防止用户重复点点点）
-                lo_msgloading.setVisibility(View.VISIBLE);
                 //用户的提问
                 String user_ask=et_chat.getText().toString();//获取输入框里的信息
                 Chatlist C3;
@@ -101,7 +85,6 @@ public class ChatActivity extends Activity {
                     @Override
                     public void run() {
                         //请求详情
-
 
                         // 调用 GetAnswer 方法
                         try {
@@ -160,9 +143,15 @@ public class ChatActivity extends Activity {
             }
         });
 
-
-
-
+        //跳转到设置界面
+        btn_startsetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(ChatActivity.this, SettingActivity.class);
+                startActivity(intent);
+                //MainActivity.this.finish();
+            }
+        });
     }
 
     private void init(){
@@ -170,7 +159,7 @@ public class ChatActivity extends Activity {
         et_chat=findViewById(R.id.et_chat);
         btn_chat_return=findViewById(R.id.btn_chat_return);
         rc_chatlist=findViewById(R.id.rc_chatlist);
-        lo_msgloading=findViewById(R.id.lo_msgloading);
+        btn_startsetting=findViewById(R.id.btn_startsetting);
     }
 
 
@@ -180,7 +169,6 @@ public class ChatActivity extends Activity {
             if (msg.what == MESSAGE_UPDATE_VIEW) {
                 rc_chatlist.setAdapter(chatAdapter);
                 btn_send.setVisibility(View.VISIBLE);//恢复按钮
-                lo_msgloading.setVisibility(View.INVISIBLE);
                 //读出回答
                 //at.ReadOut("Hello?");
             }

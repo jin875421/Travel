@@ -47,15 +47,6 @@ public class MainWenXinActivity extends Activity {
                 //MainActivity.this.finish();
             }
         });
-        //跳转到设置界面
-        btn_startsetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(MainWenXinActivity.this, SettingActivity.class);
-                startActivity(intent);
-                //MainActivity.this.finish();
-            }
-        });
     }
 
     /**进行初始化操作

@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import glue502.software.R;
+import glue502.software.activities.AI.ChatActivity;
 import glue502.software.activities.AI.ImageRecognitionActivityA;
 import glue502.software.activities.AI.MainWenXinActivity;
 import glue502.software.activities.AI.SpeechTest;
@@ -117,7 +118,7 @@ public class FunctionActivity extends AppCompatActivity {
         wenXinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FunctionActivity.this, MainWenXinActivity.class);
+                Intent intent = new Intent(FunctionActivity.this, ChatActivity.class);
                 startActivity(intent);
             }
         });

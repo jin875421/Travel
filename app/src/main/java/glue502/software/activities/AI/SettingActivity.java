@@ -38,7 +38,6 @@ public class SettingActivity extends Activity {
                 preferences=getSharedPreferences("usersetting",MODE_PRIVATE);
                 editor=preferences.edit();
                 //将输入的数据写入SharedPreference
-
                 editor.putString("API_Key",et_APIKEY.getText().toString());
                 editor.putString("Secret_Key",et_SECRETKEY.getText().toString());
                 editor.putString("Role",et_role.getText().toString());

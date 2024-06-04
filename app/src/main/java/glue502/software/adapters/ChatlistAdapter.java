@@ -42,7 +42,6 @@ public class ChatlistAdapter extends RecyclerView.Adapter
     private LayoutInflater inflater;
     private String userId;
     private String urlAvatar="http://"+ip+"/travel/user/getAvatar?userId=";
-    TextView rc_tv_speakername;
     TextView rc_tv_speakcontent;
     ImageView rc_iv_portrait;
     View v;
@@ -61,7 +60,6 @@ public class ChatlistAdapter extends RecyclerView.Adapter
 
         public MyViewHolder(View view) {
             super(view);
-            rc_tv_speakername=(TextView) view.findViewById(R.id.rc_tv_speakername);
             rc_tv_speakcontent=(TextView) view.findViewById(R.id.rc_tv_speakcontent);
             rc_iv_portrait=view.findViewById(R.id.rc_iv_portrait);
             v=view;
@@ -73,7 +71,6 @@ public class ChatlistAdapter extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         Chatlist da=mDatas.get(position);
-        rc_tv_speakername.setText(da.getSpeakerName());
         rc_tv_speakcontent.setText(da.getSpeakContent());
 
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
@@ -84,7 +81,6 @@ public class ChatlistAdapter extends RecyclerView.Adapter
         }
         if(!da.getSpeakerName().equals("ERNIE")){//如果不是文心一言，则获取头像
             rc_iv_portrait.setImageResource(R.drawable.ai_avatar);
-            rc_tv_speakername.setText("I");
         }
     }
 

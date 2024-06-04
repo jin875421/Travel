@@ -5,71 +5,81 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/chat_background"
         tools:context=".activities.AI.ChatActivity">
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <!--返回主界面按钮-->
         <LinearLayout
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_height="wrap_content">
             <Button
-                    android:layout_gravity="center"
-                    android:id="@+id/btn_chat_return"
-                    android:text="返 回"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/lo_msgloading"
-                    app:lottie_fileName="lottie_msgloading.json"
-                    android:layout_width="243dp"
-                    android:visibility="invisible"
-                    android:layout_gravity="center_vertical"
-                    app:lottie_autoPlay="true"
-                    app:lottie_loop="true"
-                    android:layout_height="37dp"/>
+                android:layout_gravity="center"
+                android:id="@+id/btn_chat_return"
+                android:text="返 回"
+                android:textSize="50px"
+                android:textColor="@color/white"
+                android:background="@drawable/blue_round_button_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"/>
+            <Button
+                android:layout_gravity="center"
+                android:id="@+id/btn_startsetting"
+                android:layout_marginLeft="180dp"
+                android:layout_marginRight="10dp"
+                android:text="设 置"
+                android:textSize="50px"
+                android:textColor="@color/white"
+                android:background="@drawable/blue_round_button_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"/>
         </LinearLayout>
         <!--聊天信息界面-->
         <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="34">
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="34">
             <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:id="@+id/rc_chatlist"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/rc_chatlist"/>
         </ScrollView>
         <!--输入信息栏以及发送信息界面-->
         <LinearLayout
-                android:layout_weight="2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            android:layout_weight="2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <EditText
                     android:id="@+id/et_chat"
-                    android:hint="Enjoy your chat"
+                    android:hint=" 发送信息"
                     android:layout_width="wrap_content"
                     android:layout_weight="3"
                     android:layout_gravity="center"
                     android:background="@drawable/shape_arc_bg"
                     android:layout_height="wrap_content"/>
             <Button
+                android:layout_marginLeft="10dp"
                 android:id="@+id/btn_send"
-                android:text="发 送"
-                android:textStyle="bold"
-                android:textSize="60px"
+                android:text="发   送"
+                android:textSize="50px"
                 android:textColor="@color/pearlwhite"
                 android:layout_gravity="center"
-                android:background="#0f0f0f0f"
+                android:background="@drawable/blue_round_button_chat"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="35dp"/>
         </LinearLayout>
     </LinearLayout>
-
-
 
 </LinearLayout>
