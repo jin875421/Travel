@@ -57,7 +57,9 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.TextOptions;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
@@ -82,6 +84,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,6 +99,8 @@ import glue502.software.adapters.RecyclerViewStrategyAdapter;
 import glue502.software.models.MarkerInfo;
 import glue502.software.models.ReturnStrategy;
 
+import glue502.software.models.Speech;
+import glue502.software.models.XunFeiCallbackListener;
 import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -105,10 +110,20 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import com.google.gson.reflect.TypeToken;
+import com.iflytek.cloud.RecognizerResult;
+import static glue502.software.models.XunFeiUtil.parseIatResult;
+import static glue502.software.models.XunFeiUtil.*;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class FunctionFragment extends Fragment {
     private String url="http://"+ip+"/travel/strategy";
-    private Button uploadBtn;
+    private String url2="http://"+ip+"/travel/AI";
+    private Button uploadBtn, speechBtn;
     private List<MarkerInfo> markerList;
     private TextureMapView mMapView;
     private TextView cityView;
@@ -117,6 +132,7 @@ public class FunctionFragment extends Fragment {
     private List<ReturnStrategy> returnStrategyList = new ArrayList<>();
     private String latitude;
     private String longitude;
+    private String userId;
     private String status;
     private CoordinatorLayout coordinatorLayout;
     private BottomSheetBehavior<View> behavior;
@@ -171,10 +187,13 @@ public class FunctionFragment extends Fragment {
         //获取用户状态和用户名
         status = sharedPreferences.getString("status","");
         String commenterId = sharedPreferences.getString("userId","");
+        initXunFei(mContext);
         initView();
         getIntent();
         PoiSugSearch();
 
+        //获取userId
+        userId = sharedPreferences.getString("userId","");
         recyclerViewStrategyAdapter = new RecyclerViewStrategyAdapter(
                 getActivity(),
                 returnStrategyList
@@ -223,6 +242,26 @@ public class FunctionFragment extends Fragment {
     }
 
     private void initData() {
+        //获取文字覆盖物
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url2+"/getSpeech")
+                        .build();
+                try (Response response = client.newCall(request).execute()) {
+                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                    // 获取服务器响应的JSON字符串
+                    String json = response.body().string();
+                    // 然后使用Gson将JSON字符串转换为List<Speech>
+                    List<Speech> speeches = parseJsonToList(json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
         //获取marker图标的哈希表
         new Thread(new Runnable() {
             @Override
@@ -247,6 +286,7 @@ public class FunctionFragment extends Fragment {
                 });
             }
         }).start();
+
         //隐藏底部抽屉
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         //获取marker点
@@ -289,9 +329,14 @@ public class FunctionFragment extends Fragment {
             }
         }).start();
     }
-
+    private List<Speech> parseJsonToList(String json) {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<Speech>>(){}.getType();
+        return gson.fromJson(json, listType);
+    }
     private void initView() {
         uploadBtn = view.findViewById(R.id.uploadBtn);
+        speechBtn = view.findViewById(R.id.speechBtn);
         //底部抽屉
         mRecyclerView = view.findViewById(R.id.recyclerview);
         bottomSheet =  view.findViewById(R.id.bottom_sheet);
@@ -312,6 +357,70 @@ public class FunctionFragment extends Fragment {
     }
 
     private void setListener() {
+        speechBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("FunctionFragment", "lzx 点击语音按钮");
+                startVoice(mContext, new XunFeiCallbackListener() {
+                    @Override
+                    public void onFinish(RecognizerResult results) {
+                        String text = parseIatResult(results.getResultString());
+                        // 自动填写地址
+                        //mResultText.append(text);
+                        //生成标签
+                        //文字覆盖物位置坐标
+                        BDLocation bdLocation = new BDLocation();
+                        Double latitude = bdLocation.getLatitude();
+                        Double longitude = bdLocation.getLongitude();
+                        LatLng myPos = new LatLng(latitude, longitude);
+
+                        //构建TextOptions对象
+                        OverlayOptions mTextOptions = new TextOptions()
+                                .text(text) //文字内容
+                                .bgColor(0xAAFFFF00) //背景色
+                                .fontSize(24) //字号
+                                .fontColor(0xFFFF00FF) //文字颜色
+                                .position(myPos);
+
+                        //在地图上显示文字覆盖物
+                        Overlay mText = mBaiduMap.addOverlay(mTextOptions);
+
+                        //向服务器传输信息
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                client = new OkHttpClient();
+                                //创建请求获取Post类
+                                MultipartBody.Builder builder = new MultipartBody.Builder()
+                                        .setType(MultipartBody.FORM)
+                                        .addFormDataPart("userId", userId)
+                                        .addFormDataPart("text", text)
+                                        .addFormDataPart("latitude", latitude.toString())
+                                        .addFormDataPart("longitude", longitude.toString());
+                                RequestBody requestBody = builder.build();
+                                Request request = new Request.Builder()
+                                        .url(url+"/addSpeech")
+                                        .post(requestBody)
+                                        .build();
+                                try {
+                                    //发送请求
+                                    Response response = client.newCall(request).execute();
+
+                                    if (response.isSuccessful()) {
+                                        String responseData = response.body().string();
+                                        // 处理响应数据
+                                    } else {
+                                        // 请求失败处理错误
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
+                    }
+                });
+            }
+        });
         btnLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
