@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AI.SpeechTest">
+    <Button
+        android:id="@+id/btn_click"
+        android:text="点击打开讯飞语音识别"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    <EditText
+        android:id="@+id/result"
+        android:layout_below="@id/btn_click"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="此处显示你所录下的内容"
+        />
+
+</LinearLayout>

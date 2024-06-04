@@ -1,6 +1,7 @@
 package glue502.software.models;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
@@ -14,7 +15,7 @@ import org.json.JSONTokener;
 
 public class XunFeiUtil {
 
-    public static String appid = "28a64a93";
+    public static String appid = "16621d18";
 
     public static void initXunFei(Context context){
         SpeechUtility.createUtility(context, SpeechConstant.APPID +"="+appid);
@@ -27,13 +28,16 @@ public class XunFeiUtil {
         dialog.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
         dialog.setParameter(SpeechConstant.ACCENT, "mandarin");
         dialog.setParameter(SpeechConstant.ASR_PTT, "0");
+        System.out.println("==="+dialog.toString());
         dialog.setListener(new RecognizerDialogListener() {
             @Override
             public void onResult(RecognizerResult recognizerResult, boolean b) {
                 callbackListener.onFinish(recognizerResult);
+                Log.v("XunFeiUtil", "lzx ===");
             }
             @Override
             public void onError(SpeechError speechError) {
+                Log.v("XunFeiUtil", "lzx ==error==");
             }
         });
         dialog.show();

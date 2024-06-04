@@ -30,12 +30,15 @@ import java.util.Date;
 import java.util.Locale;
 
 import glue502.software.R;
+import glue502.software.activities.AI.ChatActivity;
 import glue502.software.activities.AI.ImageRecognitionActivityA;
+import glue502.software.activities.AI.MainWenXinActivity;
+import glue502.software.activities.AI.SpeechTest;
 import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.utils.MyViewUtils;
 
 public class FunctionActivity extends AppCompatActivity {
-    private RelativeLayout todolist,expenserecord, AI_1, AI_5;
+    private RelativeLayout todolist,expenserecord, AI_1, AI_5, speechBtn, wenXinBtn;
     private ImageView back;
     private RelativeLayout top;
     private String mCurrentPhotoPath;
@@ -56,6 +59,9 @@ public class FunctionActivity extends AppCompatActivity {
         expenserecord = findViewById(R.id.expense_record);
         AI_1 = findViewById(R.id.AI_1);
         AI_5 = findViewById(R.id.AI_5);
+        speechBtn = findViewById(R.id.speechBtn);
+        wenXinBtn = findViewById(R.id.wenxin);
+
     }
     private void setListener() {
         back.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +105,20 @@ public class FunctionActivity extends AppCompatActivity {
                 int sign = 5;
                 intent.putExtra("sign",sign);
 
+                startActivity(intent);
+            }
+        });
+        speechBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FunctionActivity.this, SpeechTest.class);
+                startActivity(intent);
+            }
+        });
+        wenXinBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FunctionActivity.this, ChatActivity.class);
                 startActivity(intent);
             }
         });
