@@ -38,7 +38,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation "androidx.work:work-runtime:2.7.1"
     //图片格式库
     implementation 'jp.wasabeef:blurry:4.0.0'
     implementation 'com.github.yalantis:ucrop:2.2.8'
