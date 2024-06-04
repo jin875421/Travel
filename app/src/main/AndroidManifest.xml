@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <!-- 权限声明 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <!-- IM SDK required start -->
     <!-- 允许程序在手机屏幕关闭后后台进程仍然运行 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- IM SDK required end -->
@@ -28,13 +32,11 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-    <uses-permission android:name="Manifest.permission.RECORD_AUDIO" />
-    <!--允许程序改变网络连接状态 -->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <!--读取联系人权限，上传联系人需要用到此权限 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <!--配置权限，用来记录应用配置信息 -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+    <uses-permission android:name="Manifest.permission.RECORD_AUDIO" /> <!-- 允许程序改变网络连接状态 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 读取联系人权限，上传联系人需要用到此权限 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- 配置权限，用来记录应用配置信息 -->
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- android13的图片、音频、视频的权限 -->
@@ -71,6 +73,28 @@
                 android:resource="@xml/widget_info"/>
         </receiver>
         <activity
+            android:name=".activities.AI.MainWenXinActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AI.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AI.LaunchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AI.HistoryChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AI.SettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AI.WenXinChat"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AI.SpeechTest"
+            android:exported="false" >
+        </activity>
+        <activity
             android:name=".activities.personal.MyFollowActivity"
             android:exported="false" />
         <activity
@@ -78,7 +102,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.AI.ImageRecognitionActivityA"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".activities.travelRecord.ExpenseRecordActivity"
             android:exported="false" />
@@ -213,6 +237,10 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="tSbMf5hhwaxtgIE5g3Z0IeldzZ6IYQoN" />
+        <service
+            android:name=".activities.AI.SpeechTest"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

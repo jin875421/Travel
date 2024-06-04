@@ -102,7 +102,42 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
+
         </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/speechBtn"
+            android:layout_width="100dp"
+            android:layout_height="100dp">
+            <ImageView
+                android:layout_width="75dp"
+                android:layout_height="95dp"
+                android:paddingLeft="25dp"
+                android:src="@drawable/ai_plant_recognition" />
+            <TextView
+                android:text="语音识别"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/wenxin"
+            android:layout_width="100dp"
+            android:layout_height="100dp">
+            <ImageView
+                android:layout_width="75dp"
+                android:layout_height="95dp"
+                android:paddingLeft="25dp"
+                android:src="@drawable/ai_plant_recognition" />
+            <TextView
+                android:text="文心一言"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
 <!--    <LinearLayout-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="100dp">-->

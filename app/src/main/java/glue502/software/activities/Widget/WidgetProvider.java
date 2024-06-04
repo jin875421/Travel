@@ -70,6 +70,7 @@ public class WidgetProvider extends AppWidgetProvider {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(KEY_CURRENT_INDEX, 0);
         editor.apply();
+
         // 获取服务器上的图片URL列表
         getTravelPictureList(userId, context, appWidgetManager, appWidgetIds);
         // 注册更新任务

@@ -19,4 +19,14 @@
     <color name="colorLightBlue">#F8B5FFFF</color>
 <!--    <color name="communitytitle">#fafafa</color>-->
 <!--    <color name="tablayoutba">#81AF9F</color>-->
+    <color name="colorPrimary">#008577</color>
+    <color name="skyblue">#5FB8FF</color>
+    <color name="darkblue">#2196F3</color>
+    <color name="deepgreen">#134B46</color>
+    <color name="darkgrey">#2B2B2B</color>
+    <color name="shadowsky">#DBE0EC</color>
+    <color name="barbackground">#3F5894</color>
+    <color name="universeblue">#13227a</color>
+    <color name="pearlwhite">#F0F0F0</color>
+    <color name="grey">#ABABAB</color>
 </resources>
