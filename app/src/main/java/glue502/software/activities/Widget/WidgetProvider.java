@@ -96,7 +96,7 @@ public class WidgetProvider extends AppWidgetProvider {
         if (runnable != null) {
             handler.removeCallbacks(runnable);
         }
-        registerUpdateAlarm(context);
+//        registerUpdateAlarm(context);
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -200,36 +200,36 @@ public class WidgetProvider extends AppWidgetProvider {
         return currentDayPictures;
     }
 
-    @Override
-    public void onEnabled(Context context) {
-        super.onEnabled(context);
-        registerUpdateAlarm(context);
-    }
+//    @Override
+//    public void onEnabled(Context context) {
+//        super.onEnabled(context);
+//        registerUpdateAlarm(context);
+//    }
 
-    @Override
-    public void onDisabled(Context context) {
-        super.onDisabled(context);
-        unregisterUpdateAlarm(context);
-        handler.removeCallbacks(runnable);
-    }
-    private static void registerUpdateAlarm(Context context) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, UpdateReceiver.class);
-        intent.setAction("glue502.software.UPDATE_WIDGET");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+//    @Override
+//    public void onDisabled(Context context) {
+//        super.onDisabled(context);
+//        unregisterUpdateAlarm(context);
+//        handler.removeCallbacks(runnable);
+//    }
+//    private static void registerUpdateAlarm(Context context) {
+//        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(context, UpdateReceiver.class);
+//        intent.setAction("glue502.software.UPDATE_WIDGET");
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+//
+//        long interval = AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15;
+//        long triggerAtMillis = System.currentTimeMillis() + interval;
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, interval, pendingIntent);
+//    }
 
-        long interval = AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15;
-        long triggerAtMillis = System.currentTimeMillis() + interval;
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, triggerAtMillis, interval, pendingIntent);
-    }
-
-    private void unregisterUpdateAlarm(Context context) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, UpdateReceiver.class);
-        intent.setAction("glue502.software.UPDATE_WIDGET");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-        alarmManager.cancel(pendingIntent);
-    }
+//    private void unregisterUpdateAlarm(Context context) {
+//        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(context, UpdateReceiver.class);
+//        intent.setAction("glue502.software.UPDATE_WIDGET");
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+//        alarmManager.cancel(pendingIntent);
+//    }
 
     public static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         startImageRotation(context, appWidgetManager, appWidgetIds);
