@@ -38,7 +38,7 @@ import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.utils.MyViewUtils;
 
 public class FunctionActivity extends AppCompatActivity {
-    private RelativeLayout todolist,expenserecord, AI_1, AI_5, speechBtn, wenXinBtn;
+    private RelativeLayout todolist,expenserecord, AI_1, AI_5,currancyexchange,translate,speechBtn, wenXinBtn;
     private ImageView back;
     private RelativeLayout top;
     private String mCurrentPhotoPath;
@@ -59,6 +59,8 @@ public class FunctionActivity extends AppCompatActivity {
         expenserecord = findViewById(R.id.expense_record);
         AI_1 = findViewById(R.id.AI_1);
         AI_5 = findViewById(R.id.AI_5);
+        currancyexchange = findViewById(R.id.currancy_exchange);
+        translate = findViewById(R.id.translate);
         speechBtn = findViewById(R.id.speechBtn);
         wenXinBtn = findViewById(R.id.wenxin);
 
@@ -74,6 +76,20 @@ public class FunctionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FunctionActivity.this, TodolistActivity.class);
+                startActivity(intent);
+            }
+        });
+        translate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FunctionActivity.this, TranslateActivity.class);
+                startActivity(intent);
+            }
+        });
+        currancyexchange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FunctionActivity.this, CurrencyExchangeActivity.class);
                 startActivity(intent);
             }
         });
