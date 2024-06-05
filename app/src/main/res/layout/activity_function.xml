@@ -17,6 +17,7 @@
             android:textStyle="bold"
             android:textColor="#0c0c0c"
             android:text="实用工具"/>
+
         <ImageView
             android:id="@+id/back"
             android:layout_width="40dp"

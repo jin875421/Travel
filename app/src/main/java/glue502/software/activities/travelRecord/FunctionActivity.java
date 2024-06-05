@@ -51,6 +51,7 @@ public class FunctionActivity extends AppCompatActivity {
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
         setListener();
 
+
     }
     private void init(){
         todolist = findViewById(R.id.todolist);
