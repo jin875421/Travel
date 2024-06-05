@@ -34,11 +34,12 @@ import glue502.software.activities.AI.ChatActivity;
 import glue502.software.activities.AI.ImageRecognitionActivityA;
 import glue502.software.activities.AI.MainWenXinActivity;
 import glue502.software.activities.AI.SpeechTest;
+import glue502.software.activities.photoMeld.PhotoMeld;
 import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.utils.MyViewUtils;
 
 public class FunctionActivity extends AppCompatActivity {
-    private RelativeLayout todolist,expenserecord, AI_1, AI_5, speechBtn, wenXinBtn;
+    private RelativeLayout todolist,expenserecord, AI_1, AI_5, speechBtn, wenXinBtn,photoMeld;
     private ImageView back;
     private RelativeLayout top;
     private String mCurrentPhotoPath;
@@ -61,13 +62,19 @@ public class FunctionActivity extends AppCompatActivity {
         AI_5 = findViewById(R.id.AI_5);
         speechBtn = findViewById(R.id.speechBtn);
         wenXinBtn = findViewById(R.id.wenxin);
-
+        photoMeld = findViewById(R.id.rltl_photo_meld);
     }
     private void setListener() {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        photoMeld.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
         todolist.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +126,13 @@ public class FunctionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FunctionActivity.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+        photoMeld.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FunctionActivity.this, PhotoMeld.class);
                 startActivity(intent);
             }
         });
