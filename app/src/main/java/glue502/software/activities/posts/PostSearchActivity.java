@@ -38,7 +38,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class PostSearchActivity extends AppCompatActivity {
+public class    PostSearchActivity extends AppCompatActivity {
     private String url="http://"+ip+"/travel/posts/getpostlist";
     private String searchUrl="http://"+ip+"/travel/posts/search";
     private EditText searchText1;

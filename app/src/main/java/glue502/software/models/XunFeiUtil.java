@@ -6,12 +6,15 @@ import android.widget.Toast;
 import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import java.util.Locale;
 
 public class XunFeiUtil {
 
@@ -26,6 +29,7 @@ public class XunFeiUtil {
     public static void startVoice(Context context, final XunFeiCallbackListener callbackListener) {
         RecognizerDialog dialog = new RecognizerDialog(context,null);
         dialog.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+        dialog.setUILanguage(Locale.CHINA);
         dialog.setParameter(SpeechConstant.ACCENT, "mandarin");
         dialog.setParameter(SpeechConstant.ASR_PTT, "0");
         System.out.println("==="+dialog.toString());

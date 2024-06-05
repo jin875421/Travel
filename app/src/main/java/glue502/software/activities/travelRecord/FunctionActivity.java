@@ -60,6 +60,8 @@ public class FunctionActivity extends AppCompatActivity {
         expenserecord = findViewById(R.id.expense_record);
         AI_1 = findViewById(R.id.AI_1);
         AI_5 = findViewById(R.id.AI_5);
+        currancyexchange = findViewById(R.id.currancy_exchange);
+        translate = findViewById(R.id.translate);
         speechBtn = findViewById(R.id.speechBtn);
         wenXinBtn = findViewById(R.id.wenxin);
         photoMeld = findViewById(R.id.rltl_photo_meld);
@@ -84,6 +86,20 @@ public class FunctionActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        translate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FunctionActivity.this, TranslateActivity.class);
+                startActivity(intent);
+            }
+        });
+        currancyexchange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FunctionActivity.this, CurrencyExchangeActivity.class);
+                startActivity(intent);
+            }
+        });
         expenserecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +111,7 @@ public class FunctionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //跳转
-                Intent intent = new Intent(FunctionActivity.this, ImageRecognitionActivityA.class);
+                Intent intent = new Intent(FunctionActivity.this, MainWenXinActivity.class);
 
                 int sign = 1;
                 intent.putExtra("sign",sign);

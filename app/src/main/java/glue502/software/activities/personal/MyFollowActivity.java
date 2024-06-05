@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -52,6 +54,7 @@ import glue502.software.R;
 import glue502.software.adapters.FollowGroupListAdapter;
 import glue502.software.adapters.FollowListAdapter;
 import glue502.software.models.Follow;
+import glue502.software.models.UserExtraInfo;
 import glue502.software.models.UserInfo;
 import glue502.software.utils.MyViewUtils;
 import okhttp3.MultipartBody;
@@ -62,7 +65,9 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class MyFollowActivity extends AppCompatActivity implements View.OnClickListener {
+    static final String TAG = "MyFollowActivity";
     private String url = "http://" + ip + "/travel";
+    Gson gson = new Gson();
     private String userId;
     private RelativeLayout title;
     private ImageView back, titleMenu;
@@ -77,7 +82,7 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
     private List<UserInfo> followUserInfoList;
     private List<String> followGroupList;
     private List<Follow> followList;
-    private View bottomSheet, coverView,groupSetting;
+    private View bottomSheet, coverView, groupSetting;
     // 抽屉布局
     private RelativeLayout myFollowDrawer;
     private RelativeLayout rlUserInfo;
@@ -89,8 +94,12 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
     private LinearLayout llUnfollow;
     private TextView tvUnfollow;
     // 抽屉布局对应的userInfo
-    private UserInfo drawerUserInfo;
+    private UserInfo selectUserInfo;
     private int position;
+
+    // 群组设置布局
+    private TextView groupSettingCancel, groupSettingAdd;
+    private Button groupSettingSave;
 
     private BottomSheetBehavior<View> behavior, behavior2;
     private FollowListAdapter followListAdapter;
@@ -146,11 +155,6 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
         bottomSheet = findViewById(R.id.bottom_sheet);
         behavior = BottomSheetBehavior.from(bottomSheet);
 
-        // 分组信息布局
-        groupSetting = findViewById(R.id.group_setting);
-        behavior2 = BottomSheetBehavior.from(groupSetting);
-        followGroupListView = findViewById(R.id.group_setting_list);
-
         // 用户信息抽屉布局的控件
         myFollowDrawer = findViewById(R.id.my_follow_drawer);
         rlUserInfo = findViewById(R.id.rl_userInfo);
@@ -162,16 +166,26 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
         llSeeMore = findViewById(R.id.ll_see_more);
         llUnfollow = findViewById(R.id.ll_unfollow);
         tvUnfollow = findViewById(R.id.tv_unfollow);
+
+
+        // 分组信息布局
+        groupSetting = findViewById(R.id.group_setting);
+        behavior2 = BottomSheetBehavior.from(groupSetting);
+        followGroupListView = findViewById(R.id.group_setting_list);
+        groupSettingCancel = findViewById(R.id.group_setting_cancel);
+        groupSettingAdd = findViewById(R.id.group_setting_add);
+        groupSettingSave = findViewById(R.id.group_setting_save);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void setClickListeners() {
+        // 主界面
         behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NotNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        if(behavior2.getState()==BottomSheetBehavior.STATE_HIDDEN){
+                        if (behavior2.getState() == BottomSheetBehavior.STATE_HIDDEN) {
                             coverView.setVisibility(View.GONE);
                         }
                         break;
@@ -227,66 +241,38 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
             }
         });
         coverView.setOnTouchListener((v, event) -> {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            // 触摸到屏幕时，隐藏底部抽屉
-                            // 获取触摸点的坐标
-                            float x = event.getX();
-                            float y = event.getY();
-                            // 判断触摸点是否在抽屉1区域内
-                            if(behavior.getState()!=BottomSheetBehavior.STATE_HIDDEN){
-                                if (!isPointInsideView(bottomSheet, x, y)) {
-                                    if (behavior != null) {
-                                        behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                                        coverView.setVisibility(View.GONE);
-                                    }
-                                }
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    // 触摸到屏幕时，隐藏底部抽屉
+                    // 获取触摸点的坐标
+                    float x = event.getX();
+                    float y = event.getY();
+                    // 判断触摸点是否在抽屉1区域内
+                    if (behavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
+                        if (!isPointInsideView(bottomSheet, x, y)) {
+                            if (behavior != null) {
+                                behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                                coverView.setVisibility(View.GONE);
                             }
-                            if (behavior2.getState()!=BottomSheetBehavior.STATE_HIDDEN){
-                                if (!isPointInsideView(groupSetting, x, y)) {
-                                    if (behavior2 != null) {
-                                        behavior2.setState(BottomSheetBehavior.STATE_HIDDEN);
-                                        coverView.setVisibility(View.GONE);
-                                    }
-                                }
-                            }
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            // 松开手指时的逻辑处理
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            // 手指移动时的逻辑处理
-                            break;
+                        }
                     }
-                    return true;
-                });
-        llSetGroup.setOnClickListener(v -> {
-            if (followGroupList.size() == 0) {
-                Toast.makeText(MyFollowActivity.this, "您还没有分组", Toast.LENGTH_SHORT).show();
-            } else {
-                followGroupListAdapter = new FollowGroupListAdapter(getApplicationContext(),
-                        R.layout.adapter_follow_group_item,
-                        followGroupList,
-                        followList,
-                        drawerUserInfo.getUserId());
-                followGroupListView.setAdapter(followGroupListAdapter);
-                // 收起用户信息抽屉
-                behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                // 弹出分组信息抽屉
-                behavior2.setState(BottomSheetBehavior.STATE_EXPANDED);
-                // 覆盖层
-                coverView.setVisibility(View.VISIBLE);
+                    if (behavior2.getState() != BottomSheetBehavior.STATE_HIDDEN) {
+                        if (!isPointInsideView(groupSetting, x, y)) {
+                            if (behavior2 != null) {
+                                behavior2.setState(BottomSheetBehavior.STATE_HIDDEN);
+                                coverView.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    // 松开手指时的逻辑处理
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    // 手指移动时的逻辑处理
+                    break;
             }
-
-        });
-        tvClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 收起用户信息抽屉
-                behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                // 覆盖层
-                coverView.setVisibility(View.GONE);
-            }
+            return true;
         });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,9 +311,70 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
                 showUnfollowDialog(unfollowIdList);
             }
         });
-        // 这个绑定的是activity实现的点击事件
-        selectGroup.setOnClickListener(this);
+
+        // 用户信息界面
+        llSetGroup.setOnClickListener(v -> {
+            if (followGroupList.size() == 0) {
+                Toast.makeText(MyFollowActivity.this, "您还没有分组", Toast.LENGTH_SHORT).show();
+            } else {
+                followGroupListAdapter = new FollowGroupListAdapter(getApplicationContext(),
+                        R.layout.adapter_follow_group_item,
+                        followGroupList,
+                        followList,
+                        selectUserInfo.getUserId(),
+                        adapterHandler);
+                followGroupListView.setAdapter(followGroupListAdapter);
+                // 收起用户信息抽屉
+                behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                // 弹出分组信息抽屉
+                behavior2.setState(BottomSheetBehavior.STATE_EXPANDED);
+                // 覆盖层
+                coverView.setVisibility(View.VISIBLE);
+            }
+
+        });
+        tvClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 收起用户信息抽屉
+                behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                // 覆盖层
+                coverView.setVisibility(View.GONE);
+            }
+        });
         llUnfollow.setOnClickListener(this);
+        //分组设置界面
+        groupSettingCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 关闭分组设置
+                behavior2.setState(BottomSheetBehavior.STATE_HIDDEN);
+                // 覆盖层
+                coverView.setVisibility(View.GONE);
+            }
+        });
+        selectGroup.setOnClickListener(this);
+        groupSettingSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> selectGroupList = followGroupListAdapter.getSelectGroupList();
+                String newGroupOf = gson.toJson(selectGroupList);
+                Follow updateFollow = null;
+                for (Follow follow : followList) {
+                    if (follow.getFollowId().equals(selectUserInfo.getUserId())) {
+                        follow.setGroupOf(newGroupOf);
+                        updateFollow = follow;
+                        Log.i(TAG, "updateFollow" + updateFollow.toString());
+                    }
+                }
+                // 更新数据到服务器
+                updateFollow(updateFollow);
+                followGroupListAdapter.notifyDataSetChanged();
+                Log.i(TAG, "更新本地分组信息");
+                behavior2.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+        groupSettingAdd.setOnClickListener(v -> showAddGroupDialog());
     }
 
     @Override
@@ -341,13 +388,113 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
                 int isFollow[] = followListAdapter.getIsFollow();
                 isFollow[position] = 0;
                 List<String> unfollowIdList = new ArrayList<>();
-                unfollowIdList.add(drawerUserInfo.getUserId());
+                unfollowIdList.add(selectUserInfo.getUserId());
                 unFollowUsers(unfollowIdList);
                 followListAdapter.setIsFollow(isFollow);
                 followListAdapter.notifyDataSetChanged();
             default:
                 break;
         }
+    }
+
+    private void updateFollow(Follow updateFollow) {
+        if (updateFollow != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    OkHttpClient client = new OkHttpClient();
+                    RequestBody requestBody = new MultipartBody.Builder()
+//                            .addFormDataPart("userId", updateFollow.getUserId())
+//                            .addFormDataPart("followId", updateFollow.getFollowId())
+//                            .addFormDataPart("groupOf", updateFollow.getGroupOf())
+                            .addFormDataPart("followStr", gson.toJson(updateFollow))
+                            .build();
+                    Request request = new Request.Builder()
+                            .url(url + "/follow/updateFollow")
+                            .post(requestBody)
+                            .build();
+                    try {
+                        Response response = client.newCall(request).execute();
+                        String responseData = response.body().string();
+                        if (responseData.equals("success")) {
+                            Log.i(TAG, "更新分组信息成功");
+                        } else {
+                            Log.i(TAG, "更新分组信息失败");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        } else {
+            Log.i(TAG, "updateFollow is null");
+        }
+    }
+
+    private void showAddGroupDialog() {
+        // 创建Dialog
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.custom_edit_dialog_layout);
+
+        // 获取Dialog中的控件
+        TextView dialogTitle = dialog.findViewById(R.id.dialog_title);
+        TextView sure = dialog.findViewById(R.id.dialog_button_sure);
+        TextView cancel = dialog.findViewById(R.id.dialog_button_cancel);
+        EditText editText = dialog.findViewById(R.id.dialog_input);
+        dialogTitle.setText("新建分组");
+
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!editText.getText().toString().equals("")) {
+                    String newGroup = editText.getText().toString();
+                    if (followGroupList.contains(newGroup)) {
+                        Toast.makeText(MyFollowActivity.this, "该分组已存在", Toast.LENGTH_SHORT).show();
+                    } else {
+                        followGroupList.add(newGroup);
+                        followGroupListAdapter.notifyDataSetChanged();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                UserExtraInfo updateUserExtraInfo = new UserExtraInfo(userId, gson.toJson(followGroupList));
+                                OkHttpClient client = new OkHttpClient();
+                                Log.i(TAG, "updateUserExtraInfoStr" + updateUserExtraInfo.toString());
+                                RequestBody requestBody = new MultipartBody.Builder()
+                                        .addFormDataPart("updateUserExtraInfoStr", gson.toJson(updateUserExtraInfo))
+                                        .build();
+                                Request request = new Request.Builder()
+                                        .url(url + "/userExtraInfo/update")
+                                        .post(requestBody)
+                                        .build();
+                                try {
+                                    Response response = client.newCall(request).execute();
+                                    String responseData = response.body().string();
+                                    if (responseData.equals("success")) {
+                                        Log.i(TAG, "新建分组：" + newGroup);
+                                    } else {
+                                        Log.i(TAG, "新建分组失败");
+                                    }
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }).start();
+                        dialog.dismiss();
+                    }
+                } else {
+                    Toast.makeText(MyFollowActivity.this, "请输入分组名称", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 关闭Dialog
+                dialog.dismiss();
+            }
+        });
+        // 显示Dialog
+        dialog.show();
     }
 
     private void showUnfollowDialog(List<String> unfollowIdList) {
@@ -378,7 +525,6 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void unFollowUsers(List<String> unfollowIdList) {
-        Gson gson = new Gson();
         String unfollowIds = gson.toJson(unfollowIdList);
         new Thread(new Runnable() {
             @Override
@@ -482,11 +628,11 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
             public boolean handleMessage(@NonNull Message msg) {
                 switch (msg.what) {
                     case 0:
-                        drawerUserInfo = (UserInfo) msg.obj;
-                        if (drawerUserInfo != null) {
+                        selectUserInfo = (UserInfo) msg.obj;
+                        if (selectUserInfo != null) {
                             //获取用户信息成功
-                            tvUserName.setText(drawerUserInfo.getUserName());
-                            tvUserId.setText("万里录ID: "+drawerUserInfo.getUserId());
+                            tvUserName.setText(selectUserInfo.getUserName());
+                            tvUserId.setText("万里录ID: " + selectUserInfo.getUserId());
                         } else {
                             //获取用户信息失败
                             Toast.makeText(MyFollowActivity.this, "获取用户信息失败", Toast.LENGTH_SHORT).show();
@@ -495,6 +641,100 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
                         //召唤底部抽屉
                         coverView.setVisibility(View.VISIBLE);
                         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        return true;
+                    case 1:
+                        String deleteGroup = (String) msg.obj;
+                        int deleteGroupPosition = msg.arg1;
+                        // 创建Dialog
+                        final Dialog dialog = new Dialog(MyFollowActivity.this);
+                        dialog.setContentView(R.layout.custom_dialog_layout);
+                        // 获取Dialog中的控件
+                        TextView dialogTitle = dialog.findViewById(R.id.dialog_title);
+                        TextView sure = dialog.findViewById(R.id.dialog_button_sure);
+                        TextView cancel = dialog.findViewById(R.id.dialog_button_cancel);
+                        dialogTitle.setText("确定删除该分组吗？");
+                        sure.setOnClickListener(v -> {
+                            // 删除分组
+                            List<String> updateGroupList = followGroupListAdapter.getGroupList();
+                            updateGroupList.remove(deleteGroupPosition);
+                            UserExtraInfo updateUserExtraInfo = new UserExtraInfo(userId, gson.toJson(updateGroupList));
+
+                            // 记录被修改过的follow
+                            List<Follow> updateFollowList = new ArrayList<>();
+                            // 遍历followList中的分组信息，如果分组信息的字符串中包含该分组，则删除该字符串
+                            for (int i = 0; i < followList.size(); i++) {
+                                String followGroupInfo = followList.get(i).getGroupOf();
+//                                Log.i(TAG, "修改前followGroupInfo" + followGroupInfo);
+                                if (followGroupInfo.contains(deleteGroup)) {
+                                    followGroupInfo = followGroupInfo.replace(",\""+deleteGroup+"\"", "");
+                                    followList.get(i).setGroupOf(followGroupInfo);
+//                                    Log.i(TAG, "修改后followGroupInfo" + followGroupInfo);
+                                    updateFollowList.add(followList.get(i));
+                                }
+                            }
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    OkHttpClient client = new OkHttpClient();
+                                    Log.i(TAG, "准备上传修改后的分组信息：" + updateUserExtraInfo.toString());
+                                    RequestBody userExtraInfoRequestBody = new MultipartBody.Builder()
+                                            .addFormDataPart("updateUserExtraInfoStr", gson.toJson(updateUserExtraInfo))
+                                            .build();
+                                    Request userExtraInfoRequest = new Request.Builder()
+                                            .url(url + "/userExtraInfo/update")
+                                            .post(userExtraInfoRequestBody)
+                                            .build();
+                                    Log.i(TAG, "准备上传修改后的关注信息：" + updateFollowList.toString());
+                                    RequestBody followListRequestBody = new MultipartBody.Builder()
+                                            .addFormDataPart("followsStr", gson.toJson(updateFollowList))
+                                            .build();
+                                    Request followListRequest = new Request.Builder()
+                                            .url(url + "/follow/updateFollows")
+                                            .post(followListRequestBody)
+                                            .build();
+                                    try {
+                                        Response userExtraInfoResponse = client.newCall(userExtraInfoRequest).execute();
+                                        String userExtraInfoResponseStr = userExtraInfoResponse.body().string();
+                                        if (userExtraInfoResponseStr.equals("success")) {
+                                            // 删除分组成功
+                                            followGroupListAdapter.setGroupList(updateGroupList);
+                                            Log.i(TAG, "删除分组"+deleteGroup+"成功");
+                                        } else {
+                                            // 删除分组失败
+                                            Log.i(TAG, "删除分组"+deleteGroup+"失败");
+                                        }
+                                        Response followListResponse = client.newCall(followListRequest).execute();
+                                        String followListResponseStr = followListResponse.body().string();
+                                        if (followListResponseStr.equals("success")) {
+                                            // 修改关注信息成功
+                                            handler.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    followGroupListAdapter.notifyDataSetChanged();
+                                                }
+                                            });
+                                            Log.i(TAG, "修改关注信息成功");
+                                        } else {
+                                            // 删除关注信息失败
+                                            Log.i(TAG, "修改关注信息失败");
+                                        }
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                            }).start();
+                            // 关闭Dialog
+                            dialog.dismiss();
+                        });
+                        cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // 关闭Dialog
+                                dialog.dismiss();
+                            }
+                        });
+                        // 显示Dialog
+                        dialog.show();
                         return true;
                     default:
                         return false;
@@ -526,8 +766,8 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         behavior2.setState(BottomSheetBehavior.STATE_HIDDEN);
         int height = getResources().getDisplayMetrics().heightPixels;
-        behavior.setExpandedOffset(height - dpToPx(this,280));
-        behavior2.setExpandedOffset(height - dpToPx(this,400));
+        behavior.setExpandedOffset(height - dpToPx(this, 280));
+        behavior2.setExpandedOffset(height - dpToPx(this, 400));
 
         followUserInfoList = new ArrayList<>();
         followGroupList = new ArrayList<>();
@@ -561,7 +801,6 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
                             //处理数据
                             String responseData = responseBody.string();
                             String responseData1 = responseBody1.string();
-                            Gson gson = new Gson();
                             followUserInfoList = gson.fromJson(responseData, new TypeToken<List<UserInfo>>() {
                             }.getType());
                             followList = gson.fromJson(responseData1, new TypeToken<List<Follow>>() {
@@ -595,7 +834,6 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
                         if (responseBody != null) {
                             //处理数据
                             String responseData = responseBody.string();
-                            Gson gson = new Gson();
                             followGroupList = gson.fromJson(responseData, new TypeToken<List<String>>() {
                             }.getType());
 //                            handler.post(new Runnable() {
@@ -647,7 +885,6 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
                 selectGroup.setText(selectGroupName);
                 // 执行点击列表项后的操作
                 List<String> filteredIdList = new ArrayList<>();
-                Gson gson = new Gson();
                 for (Follow follow : followList) {
                     List<String> groups = gson.fromJson(follow.getGroupOf(), new TypeToken<List<String>>() {
                     }.getType());
@@ -703,7 +940,7 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onStop() {
         super.onStop();
-        if (groupPopupWindow != null && groupPopupWindow.isShowing()){
+        if (groupPopupWindow != null && groupPopupWindow.isShowing()) {
             groupPopupWindow.dismiss();
         }
     }
@@ -711,7 +948,7 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (groupPopupWindow != null && groupPopupWindow.isShowing()){
+        if (groupPopupWindow != null && groupPopupWindow.isShowing()) {
             groupPopupWindow.dismiss();
         }
     }

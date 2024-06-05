@@ -28,14 +28,18 @@
         android:layout_below="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:weightSum="4">
             <RelativeLayout
                 android:id="@+id/todolist"
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1">
                 <ImageView
                     android:layout_width="95dp"
                     android:layout_height="95dp"
@@ -52,8 +56,9 @@
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/expense_record"
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1">
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="95dp"
@@ -70,12 +75,13 @@
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/AI_1"
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1">
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="95dp"
-                    android:paddingLeft="14dp"
+                    android:paddingLeft="17dp"
                     android:src="@drawable/ai_iamge_recognition" />
                 <TextView
                     android:text="识图"

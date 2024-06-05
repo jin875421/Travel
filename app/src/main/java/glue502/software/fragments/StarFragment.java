@@ -45,7 +45,7 @@ import okhttp3.ResponseBody;
 public class StarFragment extends Fragment {
     private ListView postList;
     private String url = "http://"+ip+"/travel/posts/getstarlist";
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
     private List<UserInfo> userInfos;
     private String userId;
     private RefreshLayout refreshLayout;

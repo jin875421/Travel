@@ -174,7 +174,6 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical"
             app:behavior_fitToContents="false"
-            app:behavior_halfExpandedRatio="0.01"
             app:behavior_hideable="true"
             app:behavior_peekHeight="400dp"
             app:layout_behavior="@string/bottom_sheet_behavior">

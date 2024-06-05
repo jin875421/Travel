@@ -1,11 +1,14 @@
 package glue502.software.adapters;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,23 +30,41 @@ public class FollowGroupListAdapter extends ArrayAdapter<String> {
     private List<String> groupList;
     private List<Follow> followList;
     private  String followId;
+    private Handler adapterHandler;
+    // 选中分组
+    private List<String> selectGroupList;
 
-    public FollowGroupListAdapter(Context context, int layoutResource, List<String> groupList,List<Follow> followList,String followId) {
+    public List<String> getGroupList() {
+        return groupList;
+    }
+
+    public void setGroupList(List<String> groupList) {
+        this.groupList = groupList;
+    }
+
+    public List<String> getSelectGroupList() {
+        return selectGroupList;
+    }
+
+    public FollowGroupListAdapter(Context context, int layoutResource, List<String> groupList, List<Follow> followList, String followId, Handler adapterHandler) {
         super(context, layoutResource, groupList);
         this.context = context;
         this.layoutResource = layoutResource;
         this.groupList = groupList;
         this.followList = followList;
         this.followId = followId;
+        this.adapterHandler = adapterHandler;
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         ViewHolder viewHolder;
+        selectGroupList = new ArrayList<>();
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(layoutResource, parent, false);
             viewHolder = new ViewHolder();
+            viewHolder.itemRootLayout = convertView.findViewById(R.id.follow_group_item_root);
             viewHolder.groupName = convertView.findViewById(R.id.follow_group_item_name);
             viewHolder.itemCheckBox = convertView.findViewById(R.id.follow_group_item_checkbox);
             convertView.setTag(viewHolder);
@@ -65,23 +86,41 @@ public class FollowGroupListAdapter extends ArrayAdapter<String> {
         }
         if (groupOfList != null && groupOfList.contains(groupName)){
             viewHolder.itemCheckBox.setChecked(true);
+        } else {
+            viewHolder.itemCheckBox.setEnabled(true);
+            viewHolder.itemCheckBox.setChecked(false);
         }
-
+        selectGroupList = groupOfList;
         viewHolder.itemCheckBox.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // TODO 收集勾选的分组 ?: 通过handler将收集到的分组信息组成List<String> 回传给activity activity根据回传的分组信息修改FollowList 并且传给服务器 更新数据
                 CheckBox checkBox = (CheckBox) v;
                 if (checkBox.isChecked()) {
 //                    Toast.makeText(context, "选中了" + groupName, Toast.LENGTH_SHORT).show();
+                    selectGroupList.add(groupName);
                 } else {
 //                    Toast.makeText(context, "取消了" + groupName, Toast.LENGTH_SHORT).show();
+                    selectGroupList.remove(groupName);
                 }
+            }
+        });
+
+        // 长按item删除
+        viewHolder.itemRootLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            public boolean onLongClick(View v) {
+                // 回传用户信息并在activity中弹出抽屉
+                Message message = adapterHandler.obtainMessage();
+                message.what = 1;
+                message.arg1 = position;
+                message.obj = groupName;
+                adapterHandler.sendMessage(message);
+                return true;
             }
         });
         return convertView;
     }
 
     private static class ViewHolder {
+        RelativeLayout itemRootLayout;
         TextView groupName;
         CheckBox itemCheckBox;
     }
