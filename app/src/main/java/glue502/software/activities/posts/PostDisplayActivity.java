@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -66,6 +67,7 @@ import glue502.software.R;
 
 import glue502.software.activities.login.LoginActivity;
 
+import glue502.software.activities.personal.UserInfoActivity;
 import glue502.software.adapters.CommentListAdapter;
 import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Comment;
@@ -118,17 +120,18 @@ public class PostDisplayActivity extends AppCompatActivity {
     //记录用户收藏和点赞状态
     private int likeStatus, starStatus;
     private final Handler handler = new Handler(Looper.getMainLooper());
-
+    private boolean isFollow = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_display);
+        initView();
         try {
             initData();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        initView();
+
         setListener();
         //添加沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
@@ -143,52 +146,45 @@ public class PostDisplayActivity extends AppCompatActivity {
         userId = sharedPreferences.getString("userId","");
         postId = postWithUserInfo.getPost().getPostId();
         if(isFollowed(postWithUserInfo.getUserInfo().getUserId())){
+            isFollow = true;
             follow.setText("已关注");
+            follow.setTextColor(Color.parseColor("#181A23"));
+            follow.setBackground(getResources().getDrawable(R.drawable.round_button_followed_background));
         }
     }
 
     private boolean isFollowed(String authorId) throws InterruptedException {
-        final CountDownLatch latch = new CountDownLatch(1);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                OkHttpClient client1 = new OkHttpClient();
-                String urlWithParams = url + "follow/isFollowed?userId=" + userId + "&followedId=" + authorId;
+            final CountDownLatch latch = new CountDownLatch(1);
+            final Boolean[] result = new Boolean[1]; // 用于存储结果
+
+            new Thread(() -> {
+                String urlWithParams = url + "follow/isFollow?userId=" + userId + "&followId=" + authorId;
                 Request request = new Request.Builder()
                         .url(urlWithParams)
                         .build();
-                ResponseBody responseBody = null;
-                try {
-                    Response response = client1.newCall(request).execute();
-                    if (response.isSuccessful()) {
-                        responseBody = response.body();
-                        if (responseBody != null) {
-                            String responseData = responseBody.string();
-                            if (responseData.equals("success")) {
-                                // 在主线程中返回结果
-                                latch.countDown();
-                            } else {
-                                // 如果服务器返回的不是"true"，在这里处理逻辑
-                            }
-                        } else {
-                            // 处理空数据
-                        }
+
+                try (Response response = client.newCall(request).execute()) {
+                    if (!response.isSuccessful()) {
+                        throw new IOException("Unexpected code " + response);
+                    }
+                    String responseData = response.body().string();
+                    if ("true".equals(responseData)) {
+                        result[0] = true;
+                    } else {
+                        result[0] = false;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    result[0] = false; // 或根据需要处理异常情况
                 } finally {
-                    if (responseBody != null) { // 确保responseBody已初始化再尝试关闭
-                        responseBody.close(); // 关闭响应体以释放资源
-                    }
+                    latch.countDown(); // 通知主线程任务已完成
                 }
-            }
-        }).start();
+            }).start();
 
-        // 等待子线程完成
-        latch.await();
-        return false; // 如果没有提前返回，说明服务器返回的不是"true"
-    }
-
+            latch.await(); // 阻塞主线程，等待子线程完成
+            return result[0];
+        }
+        // 如果没有提前返回，说明服务器返回的不是"true"
 
 
     private void getCommentData() {
@@ -333,30 +329,51 @@ public class PostDisplayActivity extends AppCompatActivity {
         view = findViewById(R.id.view);
     }
     public void setListener(){
+        //点击头像跳转个人信息页
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PostDisplayActivity.this, UserInfoActivity.class);
+                intent.putExtra("AuthorId", postWithUserInfo.getUserInfo().getUserId());
+                startActivity(intent);
+            }
+        });
+
         follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //处理关注点击事件
                 if (status==""){
                     showLoginDialog();
-                }else {
+                } else if (userId.equals(postWithUserInfo.getUserInfo().getUserId())) {
+                    //提示
+                    Toast.makeText(PostDisplayActivity.this, "不能关注自己", Toast.LENGTH_SHORT).show();
+                } else {
                     try {
                         //未关注，进行关注
                         if(!isFollowed(postWithUserInfo.getUserInfo().getUserId())){
+                            follow.setBackground(getResources().getDrawable(R.drawable.round_button_followed_background));
+                            follow.setTextColor(Color.parseColor("#181A23"));
+                            follow.setText("已关注");
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
                                     //进行关注
                                     OkHttpClient client1 = new OkHttpClient();
+                                    RequestBody formBody = new FormBody.Builder()
+                                            .add("userId", userId)
+                                            .add("followId", postWithUserInfo.getUserInfo().getUserId())
+                                            .build();
                                     Request request = new Request.Builder()
-                                            .url(url+"posts/addFollow?userId="+userId+"&followId="+post.getUserInfo().getUserName())
+                                            .url(url+"follow/addFollow")
+                                            .post(formBody)
                                             .build();
                                     //发起请求
                                     try {
                                         Response response = client1.newCall(request).execute();
                                         //检测请求是否成功
                                         if (response.isSuccessful()){
-                                            follow.setText("已关注");
+
                                         }
                                     } catch (IOException e) {
                                         e.printStackTrace();
@@ -365,32 +382,53 @@ public class PostDisplayActivity extends AppCompatActivity {
                             }).start();
                         }else{
                             //已关注，取消关注
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    String deleteUrl = url+"posts/deleteFollow";
-                                    //进行关注
-                                    OkHttpClient client1 = new OkHttpClient();
-                                    RequestBody formBody = new FormBody.Builder()
-                                            .add("userId", userId)
-                                            .add("followId", postWithUserInfo.getUserInfo().getUserId())
-                                            .build();
-                                    Request request = new Request.Builder()
-                                            .url(deleteUrl)
-                                            .post(formBody)
-                                            .build();
-                                    //发起请求
-                                    try {
-                                        Response response = client1.newCall(request).execute();
-                                        //检测请求是否成功
-                                        if (response.isSuccessful()){
-                                            follow.setText("关注");
+                            //弹出确认窗口
+                            AlertDialog.Builder builder = new AlertDialog.Builder(PostDisplayActivity.this);
+                            builder.setTitle("取消关注");
+                            builder.setMessage("确定取消关注吗？");
+                            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //已关注，取消关注
+                                    follow.setText("关注");
+                                    follow.setTextColor(Color.parseColor("#ffffff"));
+                                    follow.setBackground(getResources().getDrawable(R.drawable.round_button_unfollowed_background));
+                                    isFollow = false;
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            String deleteUrl = url+"follow/deleteFollow";
+                                            //进行关注
+                                            OkHttpClient client1 = new OkHttpClient();
+                                            RequestBody formBody = new FormBody.Builder()
+                                                    .add("userId", userId)
+                                                    .add("followId", postWithUserInfo.getUserInfo().getUserId())
+                                                    .build();
+                                            Request request = new Request.Builder()
+                                                    .url(deleteUrl)
+                                                    .post(formBody)
+                                                    .build();
+                                            //发起请求
+                                            try {
+                                                Response response = client1.newCall(request).execute();
+                                                //检测请求是否成功
+                                                if (response.isSuccessful()){
+
+                                                }
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                                    }).start();
+
                                 }
-                            }).start();
+                            });
+                            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            builder.show();
                         }
 
                     } catch (InterruptedException e) {

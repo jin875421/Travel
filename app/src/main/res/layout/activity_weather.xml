@@ -7,7 +7,29 @@
     android:padding="16dp"
     android:background="@android:color/background_light"
     tools:context=".activities.travelRecord.WeatherActivity">
-
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        >
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back"
+            android:paddingLeft="10dp"
+            />
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="天气情况"
+            android:textSize="20sp"
+            android:textColor="#0c0c0c"
+            android:textStyle="bold"
+            />
+    </RelativeLayout>
     <TextView
         android:id="@+id/tv_location"
         android:layout_width="wrap_content"

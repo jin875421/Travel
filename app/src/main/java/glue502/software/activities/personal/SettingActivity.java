@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,6 +66,7 @@ public class SettingActivity extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+
         btnDestroy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,13 +111,18 @@ public class SettingActivity extends AppCompatActivity {
 
     private void clearSharedPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+            // 清除SharedPreferences中的用户信息
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.apply();
+        SharedPreferences sharedPreferences1 = getSharedPreferences("personalStatu", Context.MODE_PRIVATE);
         // 清除SharedPreferences中的用户信息
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.apply();
-        Intent resultIntent = new Intent();
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
+        SharedPreferences.Editor editor1 = sharedPreferences.edit();
+        editor1.clear();
+        editor1.apply();
+            Intent resultIntent = new Intent();
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
     }
 
     private void showLoginAlertDialog() {

@@ -134,6 +134,7 @@ public class PersonalInformationFragment extends Fragment {
     private StarFragment starFragment = new StarFragment();
     private MyPostFragment myPostFragment = new MyPostFragment();
     private boolean firstLoad = true;
+    private SharedPreferences sharedPreferences1;
 
     //顶部渐变控件
     private Toolbar toolbar;
@@ -223,7 +224,7 @@ public class PersonalInformationFragment extends Fragment {
         );
         mediator.attach();
         SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
-        SharedPreferences sharedPreferences1=getActivity().getSharedPreferences("personalBackground",MODE_PRIVATE);
+         sharedPreferences1=getActivity().getSharedPreferences("personalBackground",MODE_PRIVATE);
         String personalStatu=sharedPreferences1.getString("personalStatu","");
         String status=sharedPreferences.getString("status","");
         if("".equals(status)){
@@ -247,7 +248,7 @@ public class PersonalInformationFragment extends Fragment {
             if(personalStatu.equals("1"))
             {
                 loadBackground();
-            }
+           }
             remindBind();
         }
         
@@ -543,7 +544,10 @@ public class PersonalInformationFragment extends Fragment {
 
                 Gson gson=new Gson();
                 Personal personal = gson.fromJson(responseData,Personal.class);
-                String backgroundUrl=personal.getBackground();
+
+                if(personal!=null){
+                    String backgroundUrl=personal.getBackground();
+
                 requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -553,7 +557,8 @@ public class PersonalInformationFragment extends Fragment {
                     }
                 });
             }
-        });
+        } });
+
     }
     private void initFragment() {
         fragments = new ArrayList<>();
@@ -609,7 +614,7 @@ public class PersonalInformationFragment extends Fragment {
                     .skipMemoryCache(true)  //允许内存缓存
                     .diskCacheStrategy(DiskCacheStrategy.ALL)  // 使用磁盘缓存
                     .placeholder(R.drawable.personal_bg001)  // 设置占位图
-                    .signature(new ObjectKey(userId))  // 设置签名
+                    .signature(new ObjectKey(userId+"1"))  // 设置签名
                     .into(imgBackground);
         }else{
             Glide.get(requireContext()).clearMemory();
@@ -624,7 +629,7 @@ public class PersonalInformationFragment extends Fragment {
                     .skipMemoryCache(true)  //允许内存缓存
                     .diskCacheStrategy(DiskCacheStrategy.ALL)  // 使用磁盘缓存
                     .placeholder(R.drawable.personal_bg001)  // 设置占位图
-                    .signature(new ObjectKey(userId))  // 设置签名
+                    .signature(new ObjectKey(userId+"1"))  // 设置签名
                     .into(imgBackground);
         }
 
@@ -659,8 +664,8 @@ public class PersonalInformationFragment extends Fragment {
                     public void run() {
                         if (response.isSuccessful()) {
                             Toast.makeText(requireContext(), "上传成功", Toast.LENGTH_SHORT).show();
-                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("personalBackground", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                             sharedPreferences1 = getActivity().getSharedPreferences("personalBackground", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences1.edit();
                             editor.putString("personalStatu","1");
                             editor.apply();
                             loadBackground();

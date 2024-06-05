@@ -8,84 +8,41 @@
     tools:context=".fragments.CommunityFragment">
 
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
+    <RelativeLayout
+        android:layout_marginTop="25dp"
+        android:id="@+id/community_top"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:background="@mipmap/travel_shouye">
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true">
 
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/collpasing_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:expandedTitleMarginEnd="64dp"
-                app:expandedTitleMarginStart="48dp"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    app:layout_collapseMode="pin">
-
-                    <RelativeLayout
-                        android:id="@+id/community_top"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
-                            android:text="社区"
-                            android:textColor="#0c0c0c"
-                            android:textSize="18dp"
-                            android:textStyle="bold" />
-
-                        <ImageButton
-                            android:id="@+id/search_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginRight="10dp"
-                            android:background="@android:color/transparent"
-                            android:src="@drawable/community_search" />
-                    </RelativeLayout>
-
-                </androidx.appcompat.widget.Toolbar>
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-        </com.google.android.material.appbar.AppBarLayout>
-        <com.scwang.smart.refresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
-            android:layout_width="match_parent"
+        <com.google.android.material.tabs.TabLayout
+            android:layout_centerHorizontal="true"
+            android:id="@+id/tbl"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="-1dp"
+            android:background="#00FFFFFF"
+            app:tabIndicatorColor="#03A9F4"
+            app:tabRippleColor="@null"
+            app:tabTextAppearance="@style/PersonTabLayout"
+            app:tabTextColor="#0C0C0C" />
+        <ImageButton
+            android:id="@+id/search_btn"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:background="#fafafa"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/community_search" />
+    </RelativeLayout>
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-                <glue502.software.utils.NoScrollListView
-                    android:id="@+id/post_display"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
-
-            </androidx.core.widget.NestedScrollView>
-
-        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/community_top"
+         />
 
     <FrameLayout
         android:id="@+id/floating_button_layout"
