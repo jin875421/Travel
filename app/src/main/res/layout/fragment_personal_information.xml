@@ -7,217 +7,308 @@
     android:layout_margin="15dp"
     tools:context=".fragments.PersonalInformationFragment">
 
-    <ImageView
-        android:id="@+id/img_personal"
+    <!--
+        Toolbar默认左侧默认有间距，我们只需要一行代码就可以消除此间距：
+        app:contentInsetStart="0dp"
+        去掉下面的阴影效果需要在AppBarLayout上添加一行代码：
+        app:elevation="0dp"
+        如果你添加了代码报红，那是因为你没有在根布局添加：
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+     -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/personal_bg001" />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:id="@+id/personal_top"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingRight="15dp">
+            android:layout_height="wrap_content">
 
-<!--            <LinearLayout-->
-<!--                android:id="@+id/linear_customer_service"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginRight="10dp"-->
-<!--                android:layout_toLeftOf="@+id/linear_setting"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="25dp"-->
-<!--                    android:layout_height="25dp"-->
-<!--                    android:src="@mipmap/personal_headset"/>-->
-<!--            </LinearLayout>-->
-
-<!--            <LinearLayout-->
-<!--                android:id="@+id/linear_setting"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_alignParentRight="true"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="25dp"-->
-<!--                    android:layout_height="25dp"-->
-<!--                    android:src="@mipmap/personal_setting" />-->
-
-<!--            </LinearLayout>-->
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_marginTop="30dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal"
-            android:paddingLeft="15dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:background="@drawable/background_frame_login"
-                android:orientation="horizontal">
-                <ImageView
-                    android:id="@+id/img_avatar"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp" />
-
-                <LinearLayout
-                    android:id="@+id/linear_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="vertical"
-                    android:paddingLeft="15dp">
-
-                    <TextView
-                        android:id="@+id/txt_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="用户名"
-                        android:textColor="#000000"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/txt_userId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="账号：11111111111"
-                        android:textColor="#2E2D2D" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/tools"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:id="@+id/follow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/travel_begin" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="我的关注"
-                        android:textColor="#000000"
-                        android:textSize="12sp" />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/linear_customer_service"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="vertical">
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:src="@mipmap/personal_headset" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="客服"
-                        android:textColor="#000000"
-                        android:textSize="12sp" />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/linear_setting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="vertical">
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:src="@mipmap/personal_setting" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="设置"
-                        android:textColor="#000000"
-                        android:textSize="12sp" />
-                </LinearLayout>
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/lrlt_more"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="center"-->
-<!--                    android:orientation="vertical">-->
-<!--                    <ImageView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:src="@mipmap/more_tool" />-->
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="更多"-->
-<!--                        android:textColor="#000000"-->
-<!--                        android:textSize="12sp" />-->
-<!--                </LinearLayout>-->
-            </LinearLayout>
-        </LinearLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/vp2"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collpasing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/tbl"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="50dp" />
+                app:expandedTitleMarginEnd="64dp"
+                app:expandedTitleMarginStart="48dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:contentInsetStart="0dp">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tbl"
-                android:layout_width="200dp"
-                android:layout_height="50dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="-1dp"
-                android:background="#FFFFFF"
-                app:tabIndicatorColor="#03A9F4"
-                app:tabRippleColor="@null"
-                app:tabTextAppearance="@style/PersonTabLayout"
-                app:tabTextColor="#0C0C0C" />
-        </RelativeLayout>
-    </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
+                    <ImageView
+                        android:id="@+id/img_personal"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/personal_bg001" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/img_personal"
+                        android:layout_marginTop="-15dp"
+                        android:paddingTop="5dp"
+                        android:background="@drawable/background_frame_6"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/follow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@mipmap/my_follow" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="我的关注"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/my_achievement"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@mipmap/achievement" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="成就"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/task_center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@mipmap/task_center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="任务中心"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/linear_setting"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@mipmap/personal_setting" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="设置"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="60dp"
+                        android:background="@drawable/background_frame_login">
+                        <LinearLayout
+                            android:id="@+id/ll_userInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginEnd="20dp"
+                            android:padding="10dp">
+
+                            <ImageView
+                                android:id="@+id/img_avatar"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp" />
+
+                            <LinearLayout
+                                android:id="@+id/linear_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:orientation="vertical"
+                                android:paddingLeft="15dp">
+
+                                <TextView
+                                    android:id="@+id/txt_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="用户名"
+                                    android:textColor="#000000"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:id="@+id/txt_userId"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:text="账号：11111111111"
+                                    android:textColor="#2E2D2D" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/ll_userInfo"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/tv_level"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Lv.0"
+                                android:textColor="#FEFEFE"
+                                android:textSize="8sp"
+                                android:padding="2dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="@drawable/round_button_unfollowed_background"/>
+                            <ProgressBar
+                                android:id="@+id/experienceBar"
+                                style="@android:style/Widget.ProgressBar.Horizontal"
+                                android:layout_width="250dp"
+                                android:layout_height="6dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginEnd="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:max="100"
+                                android:progress="0"
+                                android:progressDrawable="@drawable/user_experience_progress_bar" />
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    app:layout_collapseMode="pin"
+                    app:contentInsetStart="0dp">
+
+                    <LinearLayout
+                        android:id="@+id/community_top"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:paddingTop="15dp">
+
+                        <TextView
+                            android:id="@+id/top_txt_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="6dp"
+                            android:paddingTop="5dp"
+                            android:text="txt_name"
+                            android:gravity="center"
+                            android:textColor="#0c0c0c"
+                            android:textStyle="bold"
+                            android:singleLine="true"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:orientation="vertical">
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/vp2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/tbl"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="50dp" />
+
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/tbl"
+                            android:layout_width="200dp"
+                            android:layout_height="50dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="-1dp"
+                            android:background="#FFFFFF"
+                            app:tabIndicatorColor="#03A9F4"
+                            app:tabRippleColor="@null"
+                            app:tabTextAppearance="@style/PersonTabLayout"
+                            app:tabTextColor="#0C0C0C" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </FrameLayout>

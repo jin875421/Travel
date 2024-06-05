@@ -2,7 +2,11 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <solid android:color="#80FFFFFF" />
-    <corners android:radius="10dp" />
+<!--    <corners android:radius="10dp" />-->
+    <!--仅右上和右下圆角-->
+    <corners
+        android:topRightRadius="10dp"
+        android:bottomRightRadius="10dp"/>
 
     <padding
         android:bottom="0.1dp"

@@ -2,11 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <!-- 权限声明 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!-- IM SDK required start -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- IM SDK required start -->
     <!-- 允许程序在手机屏幕关闭后后台进程仍然运行 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- IM SDK required end -->
     <!-- 定位权限 -->
@@ -43,7 +42,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- 存储权限 -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" /> <!-- 打开相机权限 -->
@@ -60,18 +59,27 @@
         android:theme="@style/Theme.Travel"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <service android:name=".activities.Widget.UpdateWorker" android:permission="android.permission.BIND_JOB_SERVICE" />
-        <receiver android:name=".activities.Widget.WidgetProvider"
+        <activity
+            android:name=".activities.personal.AchievementActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".activities.Widget.UpdateWorker"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver
+            android:name=".activities.Widget.WidgetProvider"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="glue502.software.UPDATE_WIDGET_ON_CLICK" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info"/>
+                android:resource="@xml/widget_info" />
         </receiver>
+
         <activity
             android:name=".activities.AI.MainWenXinActivity"
             android:exported="false" />
@@ -92,10 +100,12 @@
             android:exported="false" />
         <activity
             android:name=".activities.AI.SpeechTest"
-            android:exported="false" >
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".activities.personal.MyFollowActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.personal.FollowSearchActivity"
             android:exported="false" />
         <activity
             android:name=".activities.travelRecord.WeatherActivity"
@@ -237,6 +247,7 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="tSbMf5hhwaxtgIE5g3Z0IeldzZ6IYQoN" />
+
         <service
             android:name=".activities.AI.SpeechTest"
             android:enabled="true"

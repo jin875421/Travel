@@ -407,7 +407,6 @@ public class RecommendFragment extends Fragment {
     }
 
     //顶部渐变控件
-
     public int changeAlpha(int color, float fraction) {
         int red = Color.red(color);
         int green = Color.green(color);

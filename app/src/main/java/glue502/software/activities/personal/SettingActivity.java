@@ -23,15 +23,17 @@ import glue502.software.utils.MyViewUtils;
 public class SettingActivity extends AppCompatActivity {
     private Button btnDestroy;
     private ImageView imgBcak;
-    private RelativeLayout rltlAccount;
+    private RelativeLayout rltlAccount, rltlCustomerService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
-        btnDestroy=findViewById(R.id.btn_destroy);
-        imgBcak=findViewById(R.id.img_back);
-        rltlAccount=findViewById(R.id.rltl_account);
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), true);
+        btnDestroy = findViewById(R.id.btn_destroy);
+        imgBcak = findViewById(R.id.img_back);
+        rltlAccount = findViewById(R.id.rltl_account);
+        rltlCustomerService = findViewById(R.id.rltl_customer_service);
 //        MyViewUtils.setISBarWithoutView(this,true);
         rltlAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,14 +42,39 @@ public class SettingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        rltlCustomerService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+                builder.setTitle("联系客服");
+                builder.setMessage("请拨打1008611或发送邮件到2391835196@qq.com");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 在这里执行确定按钮被点击后的操作
+                        dialogInterface.dismiss(); // 关闭对话框
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 在这里执行取消按钮被点击后的操作
+                        dialogInterface.dismiss(); // 关闭对话框
+                    }
+                });
+                // 创建并显示AlertDialog
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
         btnDestroy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
                 String status = sharedPreferences.getString("status", "");
-                if(!status.equals("1")&&status.isEmpty()){
+                if (!status.equals("1") && status.isEmpty()) {
                     showLoginAlertDialog();
-                }else {
+                } else {
                     showLogoutConfirmationDialog();
                 }
             }
@@ -60,6 +87,7 @@ public class SettingActivity extends AppCompatActivity {
         });
 
     }
+
     private void showLogoutConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("退出登录");
@@ -83,14 +111,15 @@ public class SettingActivity extends AppCompatActivity {
 
     private void clearSharedPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
-            // 清除SharedPreferences中的用户信息
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.clear();
-            editor.apply();
-            Intent resultIntent = new Intent();
-            setResult(Activity.RESULT_OK, resultIntent);
-            finish();
+        // 清除SharedPreferences中的用户信息
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
     }
+
     private void showLoginAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("提示");
