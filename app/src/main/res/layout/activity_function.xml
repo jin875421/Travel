@@ -94,8 +94,9 @@
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/AI_5"
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1">
                 <ImageView
                     android:layout_width="75dp"
                     android:layout_height="95dp"
@@ -112,13 +113,15 @@
 
         </LinearLayout>
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:weightSum="4">
             <RelativeLayout
                 android:id="@+id/speechBtn"
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1">
                 <ImageView
                     android:layout_width="75dp"
                     android:layout_height="95dp"
@@ -134,8 +137,9 @@
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/wenxin"
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1">
                 <ImageView
                     android:layout_width="75dp"
                     android:layout_height="95dp"
@@ -151,12 +155,13 @@
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/rltl_photo_meld"
-                android:layout_width="100dp"
-                android:layout_height="100dp">
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1">
                 <ImageView
-                    android:layout_width="75dp"
+                    android:layout_width="80dp"
                     android:layout_height="95dp"
-                    android:paddingLeft="25dp"
+                    android:paddingLeft="17dp"
                     android:src="@drawable/ai_iamge_recognition" />
                 <TextView
                     android:text="图片融合"
@@ -166,13 +171,51 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/translate"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="95dp"
+                    android:paddingLeft="17dp"
+                    android:src="@drawable/ai_iamge_recognition" />
+                <TextView
+                    android:text="语音翻译"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
         </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="100dp">-->
-<!--        -->
-<!--    </LinearLayout>-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal"
+            android:weightSum="4">
+            <RelativeLayout
+                android:id="@+id/currancy_exchange"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="75dp"
+                    android:layout_height="95dp"
+                    android:paddingLeft="25dp"
+                    android:src="@drawable/ai_plant_recognition" />
+                <TextView
+                    android:text="货币转换"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 </RelativeLayout>
