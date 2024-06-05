@@ -87,7 +87,6 @@ public class WeatherActivity extends AppCompatActivity {
                     mWeatherSearch.setWeatherSearchResultListener(new OnGetWeatherResultListener() {
                         @Override
                         public void onGetWeatherResultListener(final WeatherResult weatherResult) {
-                            System.out.println("天气信息：" + weatherResult.getRealTimeWeather().getPhenomenon());
                             mTvRealTimeWeather.setText(weatherResult.getRealTimeWeather().getPhenomenon()); // 假设RealTimeWeather有一个getWeather()方法
                             mTvRealTimeTemperature.setText(weatherResult.getRealTimeWeather().getTemperature() + "°C"); // 假设RealTimeWeather有一个getTemperature()方法
                             mWeatherAdapter = new WeatherAdapter(WeatherActivity.this,weatherResult.getForecasts());
