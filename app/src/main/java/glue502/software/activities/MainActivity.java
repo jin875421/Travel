@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.AlertDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.Widget.WidgetProvider;
 import glue502.software.activities.login.LoginActivity;
 import glue502.software.activities.travelRecord.travelRecordActivity;
 import glue502.software.adapters.PageAdapter;
@@ -55,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
     //192.168.43.123 192.168.142.92 10.7.89.245
-    public static final String ip = "192.168.17.92:8080";
+    public static final String ip = "10.7.89.104:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
@@ -71,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
         status = sharedPreferences.getString("status","");
         //沉浸式状态栏
         MyViewUtils.setISBarWithoutView(this,true);
+        // 调用 registerUpdateWork 注册更新任务
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.setComponent(new ComponentName(this, WidgetProvider.class));
+        sendBroadcast(intent);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
