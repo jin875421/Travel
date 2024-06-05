@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,59 +8,14 @@
     android:background="@drawable/chat_background"
     android:orientation="vertical"
     tools:context=".activities.AI.MainWenXinActivity">
+    <Button
+        android:id="@+id/myButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="点击我"
+        android:layout_marginLeft="110dp"
+        android:layout_marginTop="230dp"  />
 
 
-    <LinearLayout
-        android:gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:textColor="@color/black"
-            android:layout_marginTop="100dp"
-            android:textSize="70dp"
-            android:layout_height="wrap_content"
-            android:text="导游文心"
-            android:textStyle="bold"
-            android:id="@+id/textView" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_marginTop="100dp"
-        android:layout_width="match_parent"
-        android:layout_height="300dp">
-        <LinearLayout
-            android:gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <Button
-                android:text="开始新的聊天?"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:background="@drawable/background_startanewchat"
-                android:layout_width="250dp"
-                android:textColor="@color/pearlwhite"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_startnewchat" />
-            <Button
-                android:text="从已有聊天记录开始"
-                android:layout_width="250dp"
-                android:background="@drawable/background_startanewchat"
-                android:layout_height="wrap_content"
-                android:textColor="@color/pearlwhite"
-                android:id="@+id/btn_startoldchat"
-                android:layout_marginTop="48dp" />
-            <Button
-                android:id="@+id/btn_startsetting"
-                android:text="设置"
-                android:layout_width="250dp"
-                android:textColor="@color/pearlwhite"
-                android:background="@drawable/background_startanewchat"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp" />
-        </LinearLayout>
-    </LinearLayout>
-
-
-</LinearLayout>
+</FrameLayout>

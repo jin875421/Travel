@@ -369,54 +369,83 @@ public class FunctionFragment extends Fragment {
                         //mResultText.append(text);
                         //生成标签
                         //文字覆盖物位置坐标
-                        BDLocation bdLocation = new BDLocation();
-                        Double latitude = bdLocation.getLatitude();
-                        Double longitude = bdLocation.getLongitude();
-                        LatLng myPos = new LatLng(latitude, longitude);
-
-                        //构建TextOptions对象
-                        OverlayOptions mTextOptions = new TextOptions()
-                                .text(text) //文字内容
-                                .bgColor(0xAAFFFF00) //背景色
-                                .fontSize(24) //字号
-                                .fontColor(0xFFFF00FF) //文字颜色
-                                .position(myPos);
-
-                        //在地图上显示文字覆盖物
-                        Overlay mText = mBaiduMap.addOverlay(mTextOptions);
-
-                        //向服务器传输信息
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                client = new OkHttpClient();
-                                //创建请求获取Post类
-                                MultipartBody.Builder builder = new MultipartBody.Builder()
-                                        .setType(MultipartBody.FORM)
-                                        .addFormDataPart("userId", userId)
-                                        .addFormDataPart("text", text)
-                                        .addFormDataPart("latitude", latitude.toString())
-                                        .addFormDataPart("longitude", longitude.toString());
-                                RequestBody requestBody = builder.build();
-                                Request request = new Request.Builder()
-                                        .url(url+"/addSpeech")
-                                        .post(requestBody)
-                                        .build();
-                                try {
-                                    //发送请求
-                                    Response response = client.newCall(request).execute();
-
-                                    if (response.isSuccessful()) {
-                                        String responseData = response.body().string();
-                                        // 处理响应数据
-                                    } else {
-                                        // 请求失败处理错误
+                        try {
+                            Log.v("AddLabelActivity", "lzxAddLabelActivity页面开启");
+                            mLocationClient = new LocationClient(getActivity().getApplicationContext());
+                            // 配置定位选项
+                            LocationClientOption option = new LocationClientOption();
+                            option.setOpenGps(true); // 打开gps
+                            option.setCoorType("bd09ll"); // 设置坐标类型
+                            option.setScanSpan(0); // 设置扫描时间
+                            option.setIsNeedAddress(true); // 设置需要获取地址信息
+                            option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+                            mLocationClient.setLocOption(option);
+                            mLocationClient.registerLocationListener(new BDAbstractLocationListener() {
+                                @Override
+                                public void onReceiveLocation(BDLocation bdLocation) {
+                                    if (bdLocation == null || mMapView == null) {
+                                        return;
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                    Double latitude = bdLocation.getLatitude();
+                                    Double longitude = bdLocation.getLongitude();
+                                    city = bdLocation.getCity(); // 获取详细地址信息
+                                    cityView.setText(city);
+                                    //构建TextOptions对象
+                                    OverlayOptions mTextOptions = new TextOptions()
+                                            .text(text) //文字内容
+                                            .bgColor(0xAAFFFF00) //背景色
+                                            .fontSize(24) //字号
+                                            .fontColor(0xFFFF00FF) //文字颜色
+                                            .position(new LatLng(latitude, longitude));
+
+                                    //在地图上显示文字覆盖物
+                                    Overlay mText = mBaiduMap.addOverlay(mTextOptions);
+
+                                    // 在这里处理获取到的经纬度信息
+                                    MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLng(new LatLng(latitude, longitude));
+                                    mBaiduMap.animateMapStatus(mapStatusUpdate);
+                                    // 设置合适的缩放级别
+                                    MapStatusUpdate u = MapStatusUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16.0f);
+                                    mBaiduMap.animateMapStatus(u);
+                                    //向服务器传输信息
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            client = new OkHttpClient();
+                                            //创建请求获取Post类
+                                            MultipartBody.Builder builder = new MultipartBody.Builder()
+                                                    .setType(MultipartBody.FORM)
+                                                    .addFormDataPart("userId", userId)
+                                                    .addFormDataPart("text", text)
+                                                    .addFormDataPart("latitude", latitude.toString())
+                                                    .addFormDataPart("longitude", longitude.toString());
+                                            RequestBody requestBody = builder.build();
+                                            Request request = new Request.Builder()
+                                                    .url(url2+"/addSpeech")
+                                                    .post(requestBody)
+                                                    .build();
+                                            try {
+                                                //发送请求
+                                                Response response = client.newCall(request).execute();
+
+                                                if (response.isSuccessful()) {
+                                                    String responseData = response.body().string();
+                                                    // 处理响应数据
+                                                } else {
+                                                    // 请求失败处理错误
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }).start();
                                 }
-                            }
-                        }).start();
+                            });
+                            // 开始定位
+                            mLocationClient.start();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
             }

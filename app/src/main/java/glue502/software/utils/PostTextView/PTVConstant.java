@@ -2,10 +2,6 @@ package glue502.software.utils.PostTextView;
 
 import android.graphics.Paint;
 
-/**
- * @author xxl
- *
- */
 public class PTVConstant {
     /*
      * replace TAB

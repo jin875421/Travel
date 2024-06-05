@@ -84,9 +84,9 @@ dependencies {
     implementation files('libs\\BaiduLBS_Android.jar')
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-
     implementation files('libs\\Msc.jar')
-    implementation files('src\\main\\assets\\Msc.jar')
+    implementation files('libs\\AIUI.jar')
+
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     //smartrefresh
 
@@ -107,7 +107,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation "com.airbnb.android:lottie:5.2.0"
-    implementation project(path: ':opencv')
+    implementation project(path: ':sdk')
     //环信
 //    implementation 'io.hyphenate:hyphenate-chat:4.2.1'
 

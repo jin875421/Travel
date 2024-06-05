@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import glue502.software.R;
+import glue502.software.activities.travelRecord.FunctionActivity;
 
 
 /**
@@ -47,14 +48,26 @@ public class MainWenXinActivity extends Activity {
                 //MainActivity.this.finish();
             }
         });
+//        AI_5.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //跳转
+//                Intent intent = new Intent(FunctionActivity.this, ImageRecognitionActivityA.class);
+//
+//                int sign = 5;
+//                intent.putExtra("sign",sign);
+//
+//                startActivity(intent);
+//            }
+//        });
     }
 
     /**进行初始化操作
      */
     private void init(){
         //与xml的控件绑定
-        btn_startnewchat=findViewById(R.id.btn_startnewchat);
-        btn_startoldchat=findViewById(R.id.btn_startoldchat);
+//        btn_startnewchat=findViewById(R.id.btn_startnewchat);
+//        btn_startoldchat=findViewById(R.id.btn_startoldchat);
         btn_startsetting=findViewById(R.id.btn_startsetting);
     }
 
