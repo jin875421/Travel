@@ -40,6 +40,7 @@ import glue502.software.utils.MyViewUtils;
 
 public class FunctionActivity extends AppCompatActivity {
     private RelativeLayout todolist,expenserecord, AI_1, AI_5, speechBtn, wenXinBtn,photoMeld;
+    private RelativeLayout translate,currancyexchange;
     private ImageView back;
     private RelativeLayout top;
     private String mCurrentPhotoPath;
