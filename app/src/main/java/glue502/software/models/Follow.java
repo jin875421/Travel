@@ -4,7 +4,7 @@ public class Follow {
     private String id;
     private String userId;
     private String followId;
-    private String groupOf = "默认";
+    private String groupOf = "全部";
 
     public Follow() {
 

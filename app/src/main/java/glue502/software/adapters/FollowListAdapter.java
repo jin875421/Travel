@@ -49,7 +49,7 @@ public class FollowListAdapter extends BaseAdapter {
     private int adapter_fellow_item;
     // 关注用户信息
     private List<UserInfo> userInfoList;
-    // 关注信息(分组信息)
+    // 关注信息(是否关注)
     private int[] isFollow;
     // 批量取关列表
     private List<String> unfollowIdList;
@@ -59,7 +59,7 @@ public class FollowListAdapter extends BaseAdapter {
     private String url = "http://" + ip + "/travel/";
     private String urlLoadImage = "http://" + ip + "/travel/";
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private Handler adapterHandler;
+    private final Handler adapterHandler;
 
     public int getType() {
         return type;

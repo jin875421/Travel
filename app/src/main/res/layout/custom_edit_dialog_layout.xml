@@ -8,26 +8,50 @@
 
     <TextView
         android:id="@+id/dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/background_frame_4"
+        android:padding="10dp"
+        android:text="新建分组"
+        android:textColor="#0C0C0C"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/dialog_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialog_title"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/background_frame_4"
+        android:padding="10dp"
+        android:text="标题最多不超过12个字"
+        android:textColor="#666666"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/dialog_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_frame_4"
-        android:layout_centerHorizontal="true"
-        android:padding="10dp"
-        android:text="这是一个自定义弹窗"
-        android:textColor="#0C0C0C"
-        android:textSize="18sp" />
+        android:layout_below="@+id/dialog_tips"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/background_frame_5"
+        android:hint="在这里输入一些内容"
+        android:padding="5dp"
+        android:textSize="15sp" />
 
     <View
-        android:id="@+id/dialog_divider"
-        android:layout_below="@+id/dialog_title"
+        android:id="@+id/dialog_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@id/dialog_input"
         android:background="#50AAAAAA" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dialog_divider"
+        android:layout_below="@+id/dialog_line"
         android:background="@drawable/background_frame_4"
         android:orientation="horizontal">
 

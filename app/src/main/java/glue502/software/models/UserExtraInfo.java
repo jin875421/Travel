@@ -13,5 +13,11 @@ public class UserExtraInfo {
         this.followGroupInfo = followGroupInfo;
     }
 
-
+    @Override
+    public String toString() {
+        return "UserExtraInfo{" +
+                "userId='" + userId + '\'' +
+                ", followGroupInfo='" + followGroupInfo + '\'' +
+                '}';
+    }
 }
