@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -50,24 +51,24 @@ import okhttp3.Response;
 public class WidgetProvider extends AppWidgetProvider {
 
     private static List<List<String>> travelPictureList = new ArrayList<>();
-    private static Handler handler = new Handler();
+    private static Handler handler = new Handler(Looper.getMainLooper());
     private static Runnable runnable;
     private String url = "http://" + ip + "/travel/travel/";
     private String urlLoadImage = "http://" + ip + "/travel/";
     private String userId;
     private static final String PREFS_NAME = "TravelAppPrefs";
     private static final String KEY_CURRENT_INDEX = "currentIndex";
-    private static SharedPreferences sharedPreferences1,sharedPreferences;
+    private static SharedPreferences sharedPreferences1, sharedPreferences;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
 
         // 从SharedPreferences加载userid
-         sharedPreferences = context.getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", "");
         sharedPreferences1 = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = sharedPreferences1.edit();
         editor.putInt(KEY_CURRENT_INDEX, 0);
         editor.apply();
 
@@ -76,15 +77,19 @@ public class WidgetProvider extends AppWidgetProvider {
         // 注册更新任务
         registerUpdateWork(context);
     }
+
     public static void registerUpdateWork(Context context) {
         PeriodicWorkRequest updateWorkRequest =
                 new PeriodicWorkRequest.Builder(UpdateWorker.class, 60, TimeUnit.SECONDS)
                         .build();
         WorkManager.getInstance(context).enqueue(updateWorkRequest);
     }
+
     private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, List<String> imageUrls) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-        if(sharedPreferences.getString("status","").equals("1")){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+
+        if (sharedPreferences.getString("status", "").equals("1")) {
             views.setViewVisibility(R.id.progress_bar, View.VISIBLE);
             views.setViewVisibility(R.id.view_flipper, View.GONE);
             // 清空视图
@@ -93,7 +98,6 @@ public class WidgetProvider extends AppWidgetProvider {
             if (imageUrls != null && !imageUrls.isEmpty()) {
                 // 创建一个 LoadImageTask 实例
                 LoadImageTask loadImageTask = new LoadImageTask(context, views, appWidgetId, imageUrls, appWidgetManager);
-
                 // 执行任务
                 loadImageTask.execute();
             }
@@ -104,16 +108,14 @@ public class WidgetProvider extends AppWidgetProvider {
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
             views.setOnClickPendingIntent(R.id.view_flipper, pendingIntent);
             appWidgetManager.updateAppWidget(appWidgetId, views);
-        }else {
+        } else {
             views.setTextViewText(R.id.widget_subtitle, "请登录");
             Intent intent = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
             views.setOnClickPendingIntent(R.id.view_flipper, pendingIntent);
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-
     }
-
 
     static void startImageRotation(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
         if (runnable != null) {
@@ -123,8 +125,8 @@ public class WidgetProvider extends AppWidgetProvider {
             @SuppressLint("SuspiciousIndentation")
             @Override
             public void run() {
-                List<String> currentDayPictures = getNextDayPictures();
-                for(int appWidgetId:appWidgetIds)
+                List<String> currentDayPictures = getNextDayPictures(context);
+                for (int appWidgetId : appWidgetIds)
                     updateAppWidget(context, appWidgetManager, appWidgetId, currentDayPictures);
                 handler.postDelayed(this, 60000); // 每分钟更新一次
             }
@@ -203,18 +205,18 @@ public class WidgetProvider extends AppWidgetProvider {
         });
     }
 
-    public static List<String> getNextDayPictures() {
+    public static List<String> getNextDayPictures(Context context) {
+        SharedPreferences sharedPreferences1 = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         if (travelPictureList == null || travelPictureList.isEmpty()) {
             // 列表为空或未初始化，处理错误
             return new ArrayList<>();
         }
 
         // 获取当前索引
-        int currentIndex = sharedPreferences1.getInt(KEY_CURRENT_INDEX,0);
+        int currentIndex = sharedPreferences1.getInt(KEY_CURRENT_INDEX, 0);
 
         // 获取当前索引对应的图片列表
-        List<String> currentDayPictures=new ArrayList<>();
-        currentDayPictures = travelPictureList.get(currentIndex);
+        List<String> currentDayPictures = travelPictureList.get(currentIndex);
 
         // 计算下一个索引，循环至开头
         int nextIndex = (currentIndex + 1) % travelPictureList.size();
@@ -223,6 +225,7 @@ public class WidgetProvider extends AppWidgetProvider {
         sharedPreferences1.edit().putInt(KEY_CURRENT_INDEX, nextIndex).apply();
         return currentDayPictures;
     }
+
     @Override
     public void onEnabled(Context context) {
         super.onEnabled(context);

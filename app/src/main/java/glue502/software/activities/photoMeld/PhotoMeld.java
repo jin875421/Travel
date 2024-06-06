@@ -1,6 +1,10 @@
 package glue502.software.activities.photoMeld;
 
+import static glue502.software.activities.MainActivity.ip;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,7 +19,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -25,7 +32,14 @@ import java.io.IOException;
 import java.util.UUID;
 
 import glue502.software.R;
+import glue502.software.utils.MyViewUtils;
 import glue502.software.utils.bigImgUtils.FileUtils;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class PhotoMeld extends AppCompatActivity {
 
@@ -35,10 +49,11 @@ public class PhotoMeld extends AppCompatActivity {
     private ImageView imageView1;
     private ImageView imageView2;
     private ImageView imageViewBlended;
-
+    private String outputImagePath;
     private Uri imageUri1;
     private Uri imageUri2;
-
+    private Button buttonBlendImages, buttonSelectImage1, buttonSelectImage2,btnSave;
+    private String uploadUrl="http://"+ip+"/travel/pictureEdit/uploadPicture";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +64,23 @@ public class PhotoMeld extends AppCompatActivity {
         imageView2 = findViewById(R.id.imageView2);
         imageViewBlended = findViewById(R.id.imageViewBlended);
 
-        Button buttonSelectImage1 = findViewById(R.id.buttonSelectImage1);
-        Button buttonSelectImage2 = findViewById(R.id.buttonSelectImage2);
-        Button buttonBlendImages = findViewById(R.id.buttonBlendImages);
+        buttonSelectImage1 = findViewById(R.id.buttonSelectImage1);
+        buttonSelectImage2 = findViewById(R.id.buttonSelectImage2);
+        buttonBlendImages = findViewById(R.id.buttonBlendImages);
+        btnSave=findViewById(R.id.btn_save);
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.lrlt_photo_meld),true);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                File outputFile = new File(outputImagePath);
+                System.out.println(outputFile.getName()+"------------------------");
+                if(outputFile.exists()) {
+                    uploadPhoto(outputFile);
+                } else {
+                    Toast.makeText(PhotoMeld.this, "输出文件不存在", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         buttonSelectImage1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +143,7 @@ public class PhotoMeld extends AppCompatActivity {
         String image2Path = getPathFromUri(imageUri2);
 
         // 生成输出路径
-        String outputImagePath = getExternalFilesDir(null) + "/" + UUID.randomUUID().toString() + ".jpg";
+        outputImagePath = getExternalFilesDir(null) + "/" + UUID.randomUUID().toString() + ".jpg";
 
         // 融合图片
         blendImages(image1Path, image2Path, outputImagePath);
@@ -122,8 +151,7 @@ public class PhotoMeld extends AppCompatActivity {
         // 显示融合后的图片
         imageViewBlended.setImageURI(Uri.fromFile(new File(outputImagePath)));
 
-//        // 上传融合后的图片到服务器
-//        uploadImageToServer(outputImagePath);
+//
     }
 
     private String getPathFromUri(Uri uri) {
@@ -131,12 +159,6 @@ public class PhotoMeld extends AppCompatActivity {
         return FileUtils.getPath(this, uri);
     }
 
-    private void uploadImageToServer(String imagePath) {
-        // 实现图片上传到服务器的方法
-        // 这里可以使用任何网络库，例如 Retrofit、OkHttp 等
-        // 伪代码示例：
-        // uploadFile(new File(imagePath));
-    }
 
     public void blendImages(String image1Path, String image2Path, String outputImagePath) {
         // 读取第一张图片
@@ -157,19 +179,88 @@ public class PhotoMeld extends AppCompatActivity {
             Imgproc.resize(image2, image2, size);
         }
 
+        // 图像对齐（可以使用特征匹配算法，如ORB、SURF等，这里省略具体实现）
+        // image1 = alignImages(image1, image2);
+
         // 初始化结果矩阵
         Mat blendedImage = new Mat(size, image1.type());
 
-        // 使用alpha值进行融合，这里假设alpha=0.5，你可以根据需要调整
-        double alpha = 0.5;
+        // 使用动态alpha值进行融合，可以根据需要进行调整
+        double alpha = 0.3;
         double beta = 1 - alpha;
 
-        // 将两张图片融合
-        Core.addWeighted(image1, alpha, image2, beta, 0, blendedImage);
+        // 使用不同的混合模式（这里示例为简单加权）
+//        Core.addWeighted(image1, alpha, image2, beta, 0, blendedImage);
+
+        // 可选：使用掩膜进行选择性混合
+         Mat mask = createBlendMask(size);
+         Core.addWeighted(image1, alpha, image2, beta, 0, blendedImage, mask);
+
+        // 图像增强
+        enhanceImage(blendedImage);
 
         // 保存融合后的图片
         Imgcodecs.imwrite(outputImagePath, blendedImage);
 
         Log.d("PhotoMeld", "Blended image saved to: " + outputImagePath);
+    }
+
+    // 示例：图像增强方法
+    private void enhanceImage(Mat image) {
+        // 调整亮度和对比度
+        image.convertTo(image, -1, 1.2, 20);
+
+    }
+
+    // 示例：创建融合掩膜
+    private Mat createBlendMask(Size size) {
+        Mat mask = new Mat(size, CvType.CV_8UC1, new Scalar(0));
+        Imgproc.rectangle(mask, new Point(50, 50), new Point(size.width - 50, size.height - 50), new Scalar(255), -1);
+        return mask;
+    }
+
+    private void uploadPhoto(File photo) {
+        SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", "");
+        String filename = UUID.randomUUID().toString();
+        // 构建Multipart请求体
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("userId", userId)
+                .addFormDataPart("file", filename+".jpg", RequestBody.create(MediaType.parse("image/*"),photo ))
+                .build();
+
+        // 构建POST请求
+        Request request = new Request.Builder()
+                .url(uploadUrl)
+                .post(requestBody)
+                .build();
+
+        // 发送请求
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    Response response = client.newCall(request).execute();
+                    final String responseData = response.body().string();
+                    // 处理服务器响应，更新UI或执行其他操作
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 处理响应数据
+                            if(response.isSuccessful()) {
+                                Toast.makeText(PhotoMeld.this, "保存成功", Toast.LENGTH_SHORT).show();
+
+                            }else{
+                                Toast.makeText(PhotoMeld.this, "保存失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }
