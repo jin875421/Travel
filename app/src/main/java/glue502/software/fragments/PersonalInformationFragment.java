@@ -15,10 +15,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -33,6 +35,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -45,6 +48,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -55,6 +59,7 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.flyjingfish.openimagelib.OpenImage;
 import com.flyjingfish.openimagelib.enums.MediaType;
 import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.Gson;
@@ -78,6 +83,7 @@ import java.util.Locale;
 import glue502.software.R;
 import glue502.software.activities.OpenCVTest;
 import glue502.software.activities.login.CodeLoginActivity;
+import glue502.software.activities.personal.FollowSearchActivity;
 import glue502.software.activities.personal.MyFollowActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
@@ -86,6 +92,7 @@ import glue502.software.activities.travelRecord.TravelPicturesActivity;
 import glue502.software.adapters.PageAdapter;
 import glue502.software.models.LoginResult;
 import glue502.software.models.Personal;
+import glue502.software.models.UserExtraInfo;
 import glue502.software.models.UserInfo;
 import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
@@ -98,17 +105,18 @@ import okhttp3.Response;
 
 
 public class PersonalInformationFragment extends Fragment {
+    private String url = "http://" + ip + "/travel";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
-    private TextView txtName;
+    private TextView txtName,topTxtName;
     private TextView txtUserId;
     private LinearLayout linearSetting;
     private LinearLayout linearTitle;
-    private LinearLayout linearCustomerService;
+//    private LinearLayout linearCustomerService;
     private ImageView imgAvatar,imgBackground;
     private String mCurrentPhotoPath;
-    private LinearLayout follow;
+    private LinearLayout follow,myAchievement;
     private View view;
     private float startX;
     private PageAdapter adapter;
@@ -127,6 +135,16 @@ public class PersonalInformationFragment extends Fragment {
     private MyPostFragment myPostFragment = new MyPostFragment();
     private boolean firstLoad = true;
     private SharedPreferences sharedPreferences1;
+
+    //顶部渐变控件
+    private Toolbar toolbar;
+    private AppBarLayout appBarLayout;
+
+    // 用户额外信息
+    UserExtraInfo userExtraInfo;
+    // 经验条
+    TextView tvLevel;
+    ProgressBar experienceBar;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -158,10 +176,10 @@ public class PersonalInformationFragment extends Fragment {
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_personal_information, container, false);
         txtName=view.findViewById(R.id.txt_name);
+        topTxtName=view.findViewById(R.id.top_txt_name);
         txtUserId=view.findViewById(R.id.txt_userId);
         linearSetting=view.findViewById(R.id.linear_setting);
         linearTitle=view.findViewById(R.id.linear_title);
-        linearCustomerService=view.findViewById(R.id.linear_customer_service);
         //头像及背景
         imgAvatar=view.findViewById(R.id.img_avatar);
         imgBackground=view.findViewById(R.id.img_personal);
@@ -170,9 +188,17 @@ public class PersonalInformationFragment extends Fragment {
         viewPager2 = view.findViewById(R.id.vp2);
         //关注
         follow = view.findViewById(R.id.follow);
+        //成就
+        myAchievement = view.findViewById(R.id.my_achievement);
+        //顶部渐变控件
+        toolbar = view.findViewById(R.id.toolbar);
+        appBarLayout=view.findViewById(R.id.appbar);
+        //经验条
+        tvLevel = view.findViewById(R.id.tv_level);
+        experienceBar = view.findViewById(R.id.experienceBar);
         setViewPager2ScrollSensitivity(9);
         initFragment();
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
+        MyViewUtils.setISBarWithoutView(getActivity(),true);
         //绑定监听器
         viewPager2.setAdapter(adapter);
 
@@ -201,10 +227,9 @@ public class PersonalInformationFragment extends Fragment {
          sharedPreferences1=getActivity().getSharedPreferences("personalBackground",MODE_PRIVATE);
         String personalStatu=sharedPreferences1.getString("personalStatu","");
         String status=sharedPreferences.getString("status","");
-        //沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(getActivity(),view.findViewById(R.id.personal_top),true);
         if("".equals(status)){
             txtName.setText("请登录");
+            topTxtName.setText("");
             txtUserId.setText("");
             RequestOptions requestOptions = new RequestOptions()
                     .transform(new CircleCrop());
@@ -215,8 +240,9 @@ public class PersonalInformationFragment extends Fragment {
         }else{
             String userName=sharedPreferences.getString("userName","");
             String userId=sharedPreferences.getString("userId","");
-            System.out.println(userId+"sdasdasd");
+//            System.out.println(userId+"sdasdasd");
             txtName.setText(userName);
+            topTxtName.setText(userName);
             txtUserId.setText("账号: "+userId);
             loadUserAvatar(false);
             if(personalStatu.equals("1"))
@@ -225,12 +251,25 @@ public class PersonalInformationFragment extends Fragment {
            }
             remindBind();
         }
+        
+        // TODO 经验条相关
+        loadUserExtraInfo();
+        
         follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MyFollowActivity.class);
                 intent.putExtra("userId",userId);
                 startActivity(intent);
+            }
+        });
+        myAchievement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO 成就展示界面
+//                Intent intent = new Intent(getActivity(), FollowSearchActivity.class);
+//                intent.putExtra("userId",userId);
+//                startActivity(intent);
             }
         });
         imgAvatar.setOnClickListener(v->{
@@ -271,34 +310,116 @@ public class PersonalInformationFragment extends Fragment {
                 startActivityForResult(intent, 3);
             }
         });
-        linearCustomerService.setOnClickListener(new View.OnClickListener() {
+//        linearCustomerService.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                builder.setTitle("联系客服");
+//                builder.setMessage("请拨打1008611或发送邮件到2391835196@qq.com");
+//                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        // 在这里执行确定按钮被点击后的操作
+//                        dialogInterface.dismiss(); // 关闭对话框
+//                    }
+//                });
+//                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        // 在这里执行取消按钮被点击后的操作
+//                        dialogInterface.dismiss(); // 关闭对话框
+//                    }
+//                });
+//                // 创建并显示AlertDialog
+//                AlertDialog alertDialog = builder.create();
+//                alertDialog.show();
+//            }
+//        });
+
+        // 顶部渐变控件 获取状态栏高度
+        int statusBarHeight = getStatusBarHeight();
+        // 获取 Toolbar 实例 动态设置 Toolbar 的高度
+        ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+        params.height = statusBarHeight + getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+        toolbar.setLayoutParams(params);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("联系客服");
-                builder.setMessage("请拨打1008611或发送邮件到2391835196@qq.com");
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // 在这里执行确定按钮被点击后的操作
-                        dialogInterface.dismiss(); // 关闭对话框
-                    }
-                });
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // 在这里执行取消按钮被点击后的操作
-                        dialogInterface.dismiss(); // 关闭对话框
-                    }
-                });
-                // 创建并显示AlertDialog
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                toolbar.setBackgroundColor(changeAlpha(getResources().getColor(R.color.white),Math.abs(verticalOffset*1.0f)/appBarLayout.getTotalScrollRange()));
+                topTxtName.setTextColor(changeAlpha(Color.parseColor("#0c0c0c"),Math.abs(verticalOffset*1.0f)/appBarLayout.getTotalScrollRange()));
+//                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+//                    // 完全折叠，显示顶部用户名
+//                    topTxtName.setVisibility(View.VISIBLE);
+//
+//                } else {
+//                    // 非完全折叠，隐藏ImageView
+//                    topTxtName.setVisibility(View.INVISIBLE);
+//                }
             }
         });
         return view;
 
     }
+
+    private void loadUserExtraInfo() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url+"user/getUserExperience?userId="+userId)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    if(response.isSuccessful()){
+                        String responseData = response.body().string();
+                        if(responseData.equals("")){
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i("PersonalInformationFragment", "获取用户额外数据失败");
+                                }
+                            });
+                        } else {
+                            userExtraInfo = new Gson().fromJson(responseData, UserExtraInfo.class);
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int level = userExtraInfo.getLevel();
+                                    // 设置经验和等级
+                                    tvLevel.setText("Lv." + level);
+                                    // 0->1 :(lv+1)*100 + lv*50=100   1->2 :250   2->3 :400   3->4 :600   4->5 :750
+                                    experienceBar.setMax((level+1)*100 + level*50);
+                                    experienceBar.setProgress(userExtraInfo.getExperience());
+                                }
+                            });
+                        }
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+    }).start();
+    }
+
+    //顶部渐变控件
+    public int changeAlpha(int color, float fraction) {
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        int alpha = (int) (Color.alpha(color) * fraction);
+        return Color.argb(alpha, red, green, blue);
+    }
+    // 获取状态栏高度
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
     //供用户选择拍照或从相册选择
     private void showPopupWindow() {
         View popView = View.inflate(getActivity(), R.layout.popupwindow_camera_need, null);
@@ -611,6 +732,7 @@ public class PersonalInformationFragment extends Fragment {
                         }
                         if(!userName.isEmpty()){
                             txtName.setText(userName);
+                            topTxtName.setText(userName);
                             txtUserId.setText("账号: "+userId);
                         }
                     }
@@ -714,6 +836,7 @@ public class PersonalInformationFragment extends Fragment {
                 String status = sharedPreferences.getString("status", "");
                 if ("".equals(status)) {
                     txtName.setText("请登录");
+                    topTxtName.setText("");
                     txtUserId.setText("");
                     RequestOptions requestOptions = new RequestOptions()
                             .transform(new CircleCrop());
@@ -749,6 +872,7 @@ public class PersonalInformationFragment extends Fragment {
                     String userName = sharedPreferences.getString("userName", "");
                     String userId = sharedPreferences.getString("userId", "");
                     txtName.setText(userName);
+                    topTxtName.setText(userName);
                     txtUserId.setText("账号: " + userId);
                     loadUserAvatar(false);
                     remindBind();

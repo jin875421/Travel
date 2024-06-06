@@ -7,35 +7,41 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:orientation="vertical">
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:background="@mipmap/travel_shouye2">
+
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collpasing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:expandedTitleMarginEnd="64dp"
                 app:expandedTitleMarginStart="48dp"
-                app:expandedTitleMarginEnd="64dp">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
                 <LinearLayout
                     android:id="@+id/lrlt"
                     android:layout_width="320dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal">
+
                     <LinearLayout
                         android:layout_width="320dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="3dp"
-                        android:elevation="3dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/background_frame_3"
+                        android:elevation="3dp"
                         android:orientation="horizontal">
+
                         <LinearLayout
                             android:id="@+id/lrlt_create"
                             android:layout_width="wrap_content"
@@ -43,10 +49,12 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical">
+
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@mipmap/travel_begin" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -54,6 +62,7 @@
                                 android:textColor="#000000"
                                 android:textSize="12sp" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/lrlt_footprint"
                             android:layout_width="wrap_content"
@@ -61,10 +70,12 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical">
+
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@mipmap/travel_itinerary" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -72,6 +83,7 @@
                                 android:textColor="#000000"
                                 android:textSize="12sp" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/lrlt_photo"
                             android:layout_width="wrap_content"
@@ -79,10 +91,12 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical">
+
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@mipmap/travel_photo" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -90,6 +104,7 @@
                                 android:textColor="#000000"
                                 android:textSize="12sp" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/lrlt_more"
                             android:layout_width="wrap_content"
@@ -97,10 +112,12 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical">
+
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@mipmap/more_tool" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -116,88 +133,99 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     app:layout_collapseMode="pin">
+
                     <LinearLayout
                         android:id="@+id/community_top"
-                        android:paddingTop="15dp"
-                        android:layout_marginEnd="15dp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:paddingTop="15dp">
+
                         <TextView
                             android:id="@+id/et_searchtext"
                             android:layout_width="0dp"
                             android:layout_height="30dp"
-                            android:layout_weight="3"
-                            android:hint="输入关键字搜索"
-                            android:textColorHint="#aaaaaa"
                             android:layout_margin="6dp"
+                            android:layout_weight="3"
                             android:background="@drawable/background_frame"
-                            android:textSize="15sp"
-                            android:paddingTop="5dp"
                             android:drawableLeft="@drawable/search_16_white"
-                            android:singleLine="true" />
+                            android:hint="输入关键字搜索"
+                            android:paddingTop="5dp"
+                            android:singleLine="true"
+                            android:textColorHint="#aaaaaa"
+                            android:textSize="15sp" />
                     </LinearLayout>
                 </androidx.appcompat.widget.Toolbar>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
+
         <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:overScrollMode="never"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <LinearLayout
                         android:id="@+id/today_recommend"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:paddingHorizontal="5dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:drawableLeft="@mipmap/symbol"
                             android:gravity="center_vertical"
                             android:text="今日推荐"
                             android:textColor="#000000"
-                            android:textSize="15sp"
-                            android:drawableLeft="@mipmap/symbol"/>
+                            android:textSize="15sp" />
                     </LinearLayout>
+
                     <RelativeLayout
                         android:id="@+id/pictures"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/today_recommend"
-                        android:orientation="vertical"
+                        android:layout_marginHorizontal="8dp"
                         android:layout_marginVertical="5dp"
-                        android:elevation="3dp"
                         android:background="@drawable/background_frame_1"
-                        android:layout_marginHorizontal="8dp">
+                        android:elevation="3dp"
+                        android:orientation="vertical">
+
                         <androidx.viewpager2.widget.ViewPager2
                             android:id="@+id/reco_vp2"
                             android:layout_width="match_parent"
                             android:layout_height="150dp" />
+
                         <TextView
                             android:id="@+id/attraction_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:text="景点名称"
                             android:background="@drawable/background_frame_2"
                             android:gravity="center"
+                            android:text="景点名称"
                             android:textColor="#FAFAFA"
                             android:textSize="16dp" />
+
                         <LinearLayout
                             android:id="@+id/index_dot"
                             android:layout_width="match_parent"
                             android:layout_height="20dp"
-                            android:orientation="horizontal"
-                            android:layout_marginHorizontal="12dp"
                             android:layout_alignParentBottom="true"
+                            android:layout_marginHorizontal="12dp"
+                            android:orientation="horizontal"
                             android:paddingTop="5dp" />
                     </RelativeLayout>
 
@@ -208,11 +236,12 @@
                         android:layout_marginLeft="3dp"
                         android:layout_marginRight="3dp"
                         android:background="@drawable/background_frame_1"
-                        android:orientation="vertical"
-                        >
+                        android:orientation="vertical">
+
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
+
                             <TextView
                                 android:id="@+id/local_city"
                                 android:layout_width="wrap_content"
@@ -222,17 +251,18 @@
                                 android:paddingTop="5dp"
                                 android:paddingBottom="2dp"
                                 android:text="当前城市" />
+
                             <TextView
                                 android:id="@+id/weather"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                />
+                                android:layout_alignParentRight="true" />
                         </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
+
                             <ListView
                                 android:id="@+id/local_post"
                                 android:layout_width="match_parent"
@@ -241,6 +271,6 @@
                     </LinearLayout>
                 </RelativeLayout>
             </androidx.core.widget.NestedScrollView>
-    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </FrameLayout>

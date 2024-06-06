@@ -61,6 +61,28 @@
         android:theme="@style/Theme.Travel"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <service
+            android:name=".activities.Widget.UpdateWorker"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver
+            android:name=".activities.Widget.WidgetProvider"
+        <service android:name=".activities.Widget.UpdateWorker" android:permission="android.permission.BIND_JOB_SERVICE" />
+        <receiver android:name=".activities.Widget.WidgetProvider"
+        android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="glue502.software.UPDATE_WIDGET_ON_CLICK" />
+            </intent-filter>
+
+            <meta-data
+            android:name="android.appwidget.provider"
+            android:resource="@xml/widget_info" />
+        </receiver>
+        <activity
+            android:name=".activities.personal.AchievementActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.personal.UserInfoActivity"
             android:exported="false" />
@@ -70,18 +92,6 @@
         <activity
             android:name=".activities.travelRecord.CurrencyExchangeActivity"
             android:exported="false" />
-        <service android:name=".activities.Widget.UpdateWorker" android:permission="android.permission.BIND_JOB_SERVICE" />
-        <receiver android:name=".activities.Widget.WidgetProvider"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-                <action android:name="glue502.software.UPDATE_WIDGET_ON_CLICK" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info"/>
-        </receiver>
         <activity android:name=".activities.photoMeld.PhotoMeld"
             android:exported="false" />
         <activity
@@ -104,10 +114,12 @@
             android:exported="false" />
         <activity
             android:name=".activities.AI.SpeechTest"
-            android:exported="false" >
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".activities.personal.MyFollowActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.personal.FollowSearchActivity"
             android:exported="false" />
         <activity
             android:name=".activities.travelRecord.WeatherActivity"

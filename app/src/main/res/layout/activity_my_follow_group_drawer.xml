@@ -53,7 +53,7 @@
         android:layout_below="@+id/group_setting_title"
         android:layout_above="@+id/group_setting_save"
         android:dividerHeight="1dp"
-        android:overScrollFooter="@drawable/background_frame_2"
+        android:overScrollMode="never"
         android:divider="#E3E3E3"/>
     <Button
         android:id="@+id/group_setting_save"

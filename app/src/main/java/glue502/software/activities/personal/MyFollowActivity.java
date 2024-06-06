@@ -9,6 +9,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -70,7 +71,7 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
     Gson gson = new Gson();
     private String userId;
     private RelativeLayout title;
-    private ImageView back, titleMenu;
+    private ImageView back, titleMenu,toAddFollow;
     private TextView tvTitle;
     private TextView unfollowCancel, unfollowSure, selectGroup;
     private LinearLayout groupLayout;
@@ -144,6 +145,7 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
         refreshLayout = findViewById(R.id.refreshLayout);
         followListView = findViewById(R.id.travel_review);
         titleMenu = findViewById(R.id.title_menu);
+        toAddFollow = findViewById(R.id.to_add_follow);
         unfollowCancel = findViewById(R.id.unfollow_cancel);
         unfollowSure = findViewById(R.id.unfollow_sure);
 
@@ -280,6 +282,14 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
                 finish(); // 返回上一个Activity
             }
         });
+        toAddFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyFollowActivity.this, FollowSearchActivity.class);
+                intent.putExtra("userId",userId);
+                startActivity(intent);
+            }
+        });
         titleMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,6 +319,15 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
                 }
                 Log.i("MyFollowActivity", unfollowIdList.toString());
                 showUnfollowDialog(unfollowIdList);
+            }
+        });
+
+        followListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // TODO 转跳到用户信息界面
+//                Intent intent = new Intent(MyFollowActivity.this, UserInformationActivity.class);
+                Toast.makeText(MyFollowActivity.this, "点击了" + position, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -597,6 +616,7 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
                         unfollowCancel.setVisibility(View.VISIBLE);
                         unfollowSure.setVisibility(View.VISIBLE);
                         titleMenu.setVisibility(View.GONE);
+                        toAddFollow.setVisibility(View.GONE);
                         break;
                     case R.id.cancel:
                         // 取消

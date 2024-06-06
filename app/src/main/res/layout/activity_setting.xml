@@ -3,19 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <RelativeLayout
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_frame_underline">
+        android:background="@drawable/background_frame_underline"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
         <ImageView
             android:id="@+id/img_back"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/back"
-            />
+            android:src="@drawable/back" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -26,31 +27,55 @@
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="4dp"
             android:text="设置"
-            android:textStyle="bold"
             android:textColor="#0c0c0c"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rltl_account"
-        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_frame_underline">
+        android:background="@drawable/background_frame_underline"
+        android:padding="10dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="账号管理"
             android:textColor="#0c0c0c"
-            android:textSize="16dp"/>
+            android:textSize="16sp" />
+
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/play_store_512"
-            />
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/play_store_512" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rltl_customer_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_frame_underline"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="客服"
+            android:textColor="#0c0c0c"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/play_store_512" />
 
     </RelativeLayout>
     <Button
@@ -58,8 +83,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
+        android:background="@drawable/blue_round_button"
         android:text="退出登录"
-        android:textColor="#0c0c0c"
-        android:background="@drawable/background_frame_0"/>
+        android:textColor="#FEFEFE" />
 
 </LinearLayout>
