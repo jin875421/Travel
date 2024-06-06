@@ -62,12 +62,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-        <service
-            android:name=".activities.Widget.UpdateWorker"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <receiver
-            android:name=".activities.Widget.WidgetProvider"
         <service android:name=".activities.Widget.UpdateWorker" android:permission="android.permission.BIND_JOB_SERVICE" />
         <receiver android:name=".activities.Widget.WidgetProvider"
         android:exported="false">
@@ -80,6 +74,8 @@
             android:name="android.appwidget.provider"
             android:resource="@xml/widget_info" />
         </receiver>
+        <activity android:name=".activities.photoMeld.ShowPictureEdit"
+            android:exported="false" />
         <activity
             android:name=".activities.personal.AchievementActivity"
             android:exported="false" />

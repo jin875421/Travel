@@ -87,6 +87,7 @@ import glue502.software.activities.personal.FollowSearchActivity;
 import glue502.software.activities.personal.MyFollowActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
+import glue502.software.activities.photoMeld.ShowPictureEdit;
 import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.activities.travelRecord.TravelPicturesActivity;
 import glue502.software.adapters.PageAdapter;
@@ -116,7 +117,7 @@ public class PersonalInformationFragment extends Fragment {
 //    private LinearLayout linearCustomerService;
     private ImageView imgAvatar,imgBackground;
     private String mCurrentPhotoPath;
-    private LinearLayout follow,myAchievement;
+    private LinearLayout follow,myAchievement,lrltPhotoEdit;
     private View view;
     private float startX;
     private PageAdapter adapter;
@@ -180,6 +181,7 @@ public class PersonalInformationFragment extends Fragment {
         txtUserId=view.findViewById(R.id.txt_userId);
         linearSetting=view.findViewById(R.id.linear_setting);
         linearTitle=view.findViewById(R.id.linear_title);
+        lrltPhotoEdit=view.findViewById(R.id.lrlt_photo_edit);
         //头像及背景
         imgAvatar=view.findViewById(R.id.img_avatar);
         imgBackground=view.findViewById(R.id.img_personal);
@@ -251,7 +253,14 @@ public class PersonalInformationFragment extends Fragment {
            }
             remindBind();
         }
-        
+        //我的创作
+        lrltPhotoEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ShowPictureEdit.class);
+                startActivity(intent);
+            }
+        });
         // TODO 经验条相关
         loadUserExtraInfo();
         
