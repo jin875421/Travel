@@ -55,7 +55,8 @@ public class AchievementActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", "");
 
-        MyViewUtils.setISBarWithoutView(this, true);
+        //沉浸式状态栏
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), true);
         initView();
         setListener();
         initData();
@@ -93,7 +94,7 @@ public class AchievementActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request achievementRequest = new Request.Builder()
-                        .url(url + "/userExtraInfo/getAchievement?userId=" + userId)
+                        .url(url + "/achievement/getAchievement?userId=" + userId)
                         .build();
                 // 同步请求
                 try {
@@ -153,6 +154,7 @@ public class AchievementActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        refreshLayout = findViewById(R.id.refreshLayout);
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         btnBack = findViewById(R.id.back);
