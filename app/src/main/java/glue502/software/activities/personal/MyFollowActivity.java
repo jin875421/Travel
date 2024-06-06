@@ -124,8 +124,8 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
         //初始化数据
         initData();
 
-        //设置沉浸式状态栏
-        MyViewUtils.setImmersiveStatusBar(this, title, true);
+        //沉浸式状态栏
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), true);
 
         // 设置点击事件
         setClickListeners();
@@ -326,8 +326,12 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO 转跳到用户信息界面
-//                Intent intent = new Intent(MyFollowActivity.this, UserInformationActivity.class);
-                Toast.makeText(MyFollowActivity.this, "点击了" + position, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MyFollowActivity.this, UserInfoActivity.class);
+//                Toast.makeText(MyFollowActivity.this, "点击了" + position, Toast.LENGTH_SHORT).show();
+                intent.putExtra("AuthorId", followList.get(position).getFollowId());
+                //跳转
+                startActivity(intent);
+
             }
         });
 

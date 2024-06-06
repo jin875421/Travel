@@ -13,9 +13,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -252,6 +254,9 @@ public class UserInfoActivity extends AppCompatActivity {
                                             .load("http://"+ip+"/travel/"+userInfo.getAvatar() )
                                             .apply(requestOptions)
                                             .into(avatar);
+                                }else {
+                                    //加载默认头像
+                                    avatar.setImageResource(R.drawable.user_defaultimage);
                                 }
                             }
                         });
@@ -353,6 +358,7 @@ public class UserInfoActivity extends AppCompatActivity {
                                     if (posts !=null&&userInfos!=null){
                                         PostListAdapter postAdapter = new PostListAdapter(UserInfoActivity.this,R.layout.post_item,posts,userInfos);
                                         postList.setAdapter(postAdapter);
+                                        setListViewHeightBasedOnChildren(postList);
                                     }else {
                                         System.out.println("数据为空");
                                     }
@@ -425,4 +431,23 @@ public class UserInfoActivity extends AppCompatActivity {
         latch.await(); // 阻塞主线程，等待子线程完成
         return result[0];
     }
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
 }

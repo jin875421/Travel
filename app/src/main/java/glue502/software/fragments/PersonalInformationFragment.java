@@ -83,6 +83,7 @@ import java.util.Locale;
 import glue502.software.R;
 import glue502.software.activities.OpenCVTest;
 import glue502.software.activities.login.CodeLoginActivity;
+import glue502.software.activities.personal.AchievementActivity;
 import glue502.software.activities.personal.FollowSearchActivity;
 import glue502.software.activities.personal.MyFollowActivity;
 import glue502.software.activities.personal.SettingActivity;
@@ -276,9 +277,8 @@ public class PersonalInformationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO 成就展示界面
-//                Intent intent = new Intent(getActivity(), FollowSearchActivity.class);
-//                intent.putExtra("userId",userId);
-//                startActivity(intent);
+                Intent intent = new Intent(getActivity(), AchievementActivity.class);
+                startActivity(intent);
             }
         });
         imgAvatar.setOnClickListener(v->{
@@ -644,6 +644,7 @@ public class PersonalInformationFragment extends Fragment {
 
     }
     private void uploadBackground(File file){
+        System.out.println("向服务器发送请求");
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
 //        File file = new File(imageUri.getPath()); // 获取图片文件路径
@@ -813,7 +814,9 @@ public class PersonalInformationFragment extends Fragment {
             String status = sharedPreferences.getString("status", "");
                Uri imageUri = null;
                if (requestCode == RESULT_LOAD_IMAGES && data != null) {
+
                    if (data.getClipData() != null) {
+                       Log.println(Log.INFO, "onActivityResult", "333");
                        ClipData clipData = data.getClipData();
                        int count = clipData.getItemCount();
                        for (int i = 0; i < count; i++) {
