@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:padding="16dp">
     <LinearLayout
+        android:id="@+id/lrlt_photo_meld"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -68,4 +69,10 @@
         android:layout_marginTop="16dp"
         android:scaleType="centerCrop"
         android:background="#ccc"/>
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="保存"/>
 </LinearLayout>

@@ -608,7 +608,7 @@ public class OpenCVTest extends AppCompatActivity {
 
         Imgproc.medianBlur(edgesMat, dilatedEdgesMat, 7);
         Mat cartoonMat = new Mat();
-        Core.addWeighted(inputMat, 0.9, dilatedEdgesMat, 0.1, 0, cartoonMat);
+//        Core.addWeighted(inputMat, 0.9, dilatedEdgesMat, 0.1, 0, cartoonMat);
         Bitmap outputBitmap = Bitmap.createBitmap(cartoonMat.cols(), cartoonMat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(cartoonMat, outputBitmap);
 

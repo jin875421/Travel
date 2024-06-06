@@ -74,10 +74,16 @@ public class MainActivity extends AppCompatActivity {
         status = sharedPreferences.getString("status","");
         //沉浸式状态栏
         MyViewUtils.setISBarWithoutView(this,true);
-        // 调用 registerUpdateWork 注册更新任务
-        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        intent.setComponent(new ComponentName(this, WidgetProvider.class));
-        sendBroadcast(intent);
+
+        // 延迟发送广播更新小部件
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                intent.setComponent(new ComponentName(MainActivity.this, WidgetProvider.class));
+                sendBroadcast(intent);
+            }
+        }, 1000); // 延迟1秒（1000毫秒）
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
