@@ -28,23 +28,23 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
-    <uses-permission android:name="Manifest.permission.RECORD_AUDIO" />
-    <!--允许程序改变网络连接状态 -->
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <!--读取联系人权限，上传联系人需要用到此权限 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <!--配置权限，用来记录应用配置信息 -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+    <uses-permission android:name="Manifest.permission.RECORD_AUDIO" /> <!-- 允许程序改变网络连接状态 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 读取联系人权限，上传联系人需要用到此权限 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- 配置权限，用来记录应用配置信息 -->
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- android13的图片、音频、视频的权限 -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- 存储权限 -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera"/>
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" /> <!-- 打开相机权限 -->
@@ -61,19 +61,30 @@
         android:theme="@style/Theme.Travel"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.personal.FansActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.personal.FollowsActivity"
+            android:exported="false" />
 
-        <service android:name=".activities.Widget.UpdateWorker" android:permission="android.permission.BIND_JOB_SERVICE" />
-        <receiver android:name=".activities.Widget.WidgetProvider"
-        android:exported="false">
+        <service
+            android:name=".activities.Widget.UpdateWorker"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver
+            android:name=".activities.Widget.WidgetProvider"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="glue502.software.UPDATE_WIDGET_ON_CLICK" />
             </intent-filter>
 
             <meta-data
-            android:name="android.appwidget.provider"
-            android:resource="@xml/widget_info" />
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
         </receiver>
+
         <activity android:name=".activities.photoMeld.ShowPictureEdit"
             android:exported="false" />
         <activity
@@ -88,7 +99,8 @@
         <activity
             android:name=".activities.travelRecord.CurrencyExchangeActivity"
             android:exported="false" />
-        <activity android:name=".activities.photoMeld.PhotoMeld"
+        <activity
+            android:name=".activities.photoMeld.PhotoMeld"
             android:exported="false" />
         <activity
             android:name=".activities.AI.MainWenXinActivity"
@@ -253,9 +265,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="tSbMf5hhwaxtgIE5g3Z0IeldzZ6IYQoN" />
+
         <service
             android:name=".activities.AI.SpeechTest"
             android:enabled="true"
