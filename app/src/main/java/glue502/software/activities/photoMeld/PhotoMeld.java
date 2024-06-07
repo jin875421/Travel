@@ -27,6 +27,7 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -59,7 +60,7 @@ public class PhotoMeld extends AppCompatActivity {
     private String outputImagePath;
     private Uri imageUri1;
     private Uri imageUri2;
-    private Button buttonBlendImages, buttonSelectImage1, buttonSelectImage2,btnSave;
+    private Button buttonBlendImages, buttonSelectImage1, buttonSelectImage2,btnSave,btnStitchH,btnStitchV;
     private String uploadUrl="http://"+ip+"/travel/pictureEdit/uploadPicture";
 
     @Override
@@ -74,6 +75,8 @@ public class PhotoMeld extends AppCompatActivity {
         buttonSelectImage1 = findViewById(R.id.buttonSelectImage1);
         buttonSelectImage2 = findViewById(R.id.buttonSelectImage2);
         buttonBlendImages = findViewById(R.id.buttonBlendImages);
+        btnStitchH=findViewById(R.id.btn_stitch_h);
+        btnStitchV=findViewById(R.id.btn_stitch_v);
         btnSave=findViewById(R.id.btn_save);
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.lrlt_photo_meld),true);
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +94,22 @@ public class PhotoMeld extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        btnStitchH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (imageUri1 != null && imageUri2 != null) {
+                    stitchAndUploadImages(true);
+                }
+            }
+        });
+        btnStitchV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (imageUri1 != null && imageUri2 != null) {
+                    stitchAndUploadImages(false);
+                }
             }
         });
         buttonSelectImage1.setOnClickListener(new View.OnClickListener() {
@@ -240,13 +259,76 @@ public class PhotoMeld extends AppCompatActivity {
 
 //
     }
+    private void stitchAndUploadImages(boolean horizontal) {
+        // 获取图片路径
+        String image1Path = getPathFromUri(imageUri1);
+        String image2Path = getPathFromUri(imageUri2);
+
+        // 生成输出路径
+        outputImagePath = getExternalFilesDir(null) + "/" + UUID.randomUUID().toString() + ".jpg";
+
+        // 融合图片
+        stitchImages(image1Path, image2Path, outputImagePath, horizontal);
+
+        // 显示融合后的图片
+        imageViewBlended.setImageURI(Uri.fromFile(new File(outputImagePath)));
+
+//
+    }
 
     private String getPathFromUri(Uri uri) {
         // 获取文件路径的方法，这里可以根据具体实现进行调整
         return FileUtils.getPath(this, uri);
     }
 
+    //图像拼接
+    public void stitchImages(String image1Path, String image2Path, String outputImagePath, boolean horizontal) {
+        // 读取第一张图片
+        Mat image1 = Imgcodecs.imread(image1Path);
+        if (image1.empty()) {
+            throw new RuntimeException("Failed to load image: " + image1Path);
+        }
 
+        // 读取第二张图片
+        Mat image2 = Imgcodecs.imread(image2Path);
+        if (image2.empty()) {
+            throw new RuntimeException("Failed to load image: " + image2Path);
+        }
+
+        // 定义拼接后的图片尺寸
+        Size imageSize1 = image1.size();
+        Size imageSize2 = image2.size();
+        Size resultSize;
+        if (horizontal) { // 水平拼接
+            resultSize = new Size(imageSize1.width + imageSize2.width, Math.max(imageSize1.height, imageSize2.height));
+        } else { // 垂直拼接
+            resultSize = new Size(Math.max(imageSize1.width, imageSize2.width), imageSize1.height + imageSize2.height);
+        }
+
+        // 初始化结果矩阵
+        Mat stitchedImage = new Mat(resultSize, image1.type());
+
+        // 根据是否水平拼接，计算ROI区域
+        Rect roi1, roi2;
+        if (horizontal) {
+            roi1 = new Rect(0, 0, (int)imageSize1.width, (int)imageSize1.height);
+            roi2 = new Rect((int)imageSize1.width, 0, (int)imageSize2.width, (int)imageSize2.height);
+        } else {
+            roi1 = new Rect(0, 0, (int)imageSize1.width, (int)imageSize1.height);
+            roi2 = new Rect(0, (int)imageSize1.height, (int)imageSize2.width, (int)imageSize2.height);
+        }
+
+        // 将图片复制到结果矩阵的相应区域
+        image1.copyTo(stitchedImage.submat(roi1));
+        image2.copyTo(stitchedImage.submat(roi2));
+
+        // 保存拼接后的图片
+        Imgcodecs.imwrite(outputImagePath, stitchedImage);
+
+        Log.d("PhotoMeld", "Stitched image saved to: " + outputImagePath);
+    }
+
+    //图像融合
     public void blendImages(String image1Path, String image2Path, String outputImagePath) {
         // 读取第一张图片
         Mat image1 = Imgcodecs.imread(image1Path);
