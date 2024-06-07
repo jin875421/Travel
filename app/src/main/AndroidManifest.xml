@@ -62,13 +62,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-        <service
-            android:name=".activities.Widget.UpdateWorker"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <receiver
-            android:name=".activities.Widget.WidgetProvider"
-            android:exported="false">
+        <service android:name=".activities.Widget.UpdateWorker" android:permission="android.permission.BIND_JOB_SERVICE" />
+        <receiver android:name=".activities.Widget.WidgetProvider"
+        android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="glue502.software.UPDATE_WIDGET_ON_CLICK" />
@@ -82,6 +78,8 @@
             android:name=".activities.personal.DailyTaskActivity"
             android:exported="false" />
 
+        <activity android:name=".activities.photoMeld.ShowPictureEdit"
+            android:exported="false" />
         <activity
             android:name=".activities.personal.AchievementActivity"
             android:exported="false" />

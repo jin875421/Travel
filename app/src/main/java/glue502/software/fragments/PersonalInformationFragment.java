@@ -89,6 +89,7 @@ import glue502.software.activities.personal.FollowSearchActivity;
 import glue502.software.activities.personal.MyFollowActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
+import glue502.software.activities.photoMeld.ShowPictureEdit;
 import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.activities.travelRecord.TravelPicturesActivity;
 import glue502.software.adapters.PageAdapter;
@@ -118,9 +119,8 @@ public class PersonalInformationFragment extends Fragment {
 //    private LinearLayout linearCustomerService;
     private ImageView imgAvatar,imgBackground;
     private String mCurrentPhotoPath;
-    private LinearLayout follow,myAchievement,taskCenter;
+    private LinearLayout follow,myAchievement,taskCenter,rltPhotoEdit;
     private View view;
-    private float startX;
     private PageAdapter adapter;
     private static final int RESULT_LOAD_IMAGES = 1;
     private static final int RESULT_TAKE_PHOTO = 2;
@@ -182,6 +182,7 @@ public class PersonalInformationFragment extends Fragment {
         txtUserId=view.findViewById(R.id.txt_userId);
         linearSetting=view.findViewById(R.id.linear_setting);
         linearTitle=view.findViewById(R.id.linear_title);
+        lrltPhotoEdit=view.findViewById(R.id.lrlt_photo_edit);
         //头像及背景
         imgAvatar=view.findViewById(R.id.img_avatar);
         imgBackground=view.findViewById(R.id.img_personal);
@@ -256,7 +257,14 @@ public class PersonalInformationFragment extends Fragment {
            }
             remindBind();
         }
-
+        //我的创作
+        lrltPhotoEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ShowPictureEdit.class);
+                startActivity(intent);
+            }
+        });
         // TODO 经验条相关
         loadUserExtraInfo();
 
@@ -672,6 +680,7 @@ public class PersonalInformationFragment extends Fragment {
 
     }
     private void uploadBackground(File file){
+        System.out.println("向服务器发送请求");
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
 //        File file = new File(imageUri.getPath()); // 获取图片文件路径
@@ -841,7 +850,9 @@ public class PersonalInformationFragment extends Fragment {
             String status = sharedPreferences.getString("status", "");
                Uri imageUri = null;
                if (requestCode == RESULT_LOAD_IMAGES && data != null) {
+
                    if (data.getClipData() != null) {
+                       Log.println(Log.INFO, "onActivityResult", "333");
                        ClipData clipData = data.getClipData();
                        int count = clipData.getItemCount();
                        for (int i = 0; i < count; i++) {

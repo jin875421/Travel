@@ -5,8 +5,10 @@ import static glue502.software.activities.MainActivity.ip;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +18,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.flyjingfish.openimagelib.OpenImage;
+import com.flyjingfish.openimagelib.transformers.ScaleInTransformer;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
@@ -28,6 +33,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -49,6 +55,7 @@ public class PhotoMeld extends AppCompatActivity {
     private ImageView imageView1;
     private ImageView imageView2;
     private ImageView imageViewBlended;
+    private ImageView imgBack;
     private String outputImagePath;
     private Uri imageUri1;
     private Uri imageUri2;
@@ -63,7 +70,7 @@ public class PhotoMeld extends AppCompatActivity {
         imageView1 = findViewById(R.id.imageView1);
         imageView2 = findViewById(R.id.imageView2);
         imageViewBlended = findViewById(R.id.imageViewBlended);
-
+        imgBack=findViewById(R.id.img_back);
         buttonSelectImage1 = findViewById(R.id.buttonSelectImage1);
         buttonSelectImage2 = findViewById(R.id.buttonSelectImage2);
         buttonBlendImages = findViewById(R.id.buttonBlendImages);
@@ -73,7 +80,6 @@ public class PhotoMeld extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 File outputFile = new File(outputImagePath);
-                System.out.println(outputFile.getName()+"------------------------");
                 if(outputFile.exists()) {
                     uploadPhoto(outputFile);
                 } else {
@@ -81,7 +87,12 @@ public class PhotoMeld extends AppCompatActivity {
                 }
             }
         });
-
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         buttonSelectImage1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,9 +117,85 @@ public class PhotoMeld extends AppCompatActivity {
                 }
             }
         });
+        imageView1.setOnClickListener(v->{
+                OpenImage.with(this).setClickImageView(imageView1)
+                        .setAutoScrollScanPosition(true)
+                        .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+                        .addPageTransformer(new ScaleInTransformer())
+                        .setImageUrl(String.valueOf(imageUri1), com.flyjingfish.openimagelib.enums.MediaType.IMAGE)
+//                    .setOnItemLongClickListener(new OnItemLongClickListener() {
+//                        @Override
+//                        public void onItemLongClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
+//                            Toast.makeText(getContext(),"长按图片",Toast.LENGTH_LONG).show();
+//                        }
+//                    })
+                        .show();
+            });
+        imageView2.setOnClickListener(v->{
+            OpenImage.with(this).setClickImageView(imageView2)
+                    .setAutoScrollScanPosition(true)
+                    .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+                    .addPageTransformer(new ScaleInTransformer())
+                    .setImageUrl(String.valueOf(imageUri2), com.flyjingfish.openimagelib.enums.MediaType.IMAGE)
+//                    .setOnItemLongClickListener(new OnItemLongClickListener() {
+//                        @Override
+//                        public void onItemLongClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
+//                            Toast.makeText(getContext(),"长按图片",Toast.LENGTH_LONG).show();
+//                        }
+//                    })
+                    .show();
+        });
+        imageViewBlended.setOnClickListener(v->{
+            OpenImage.with(this).setClickImageView(imageViewBlended)
+                    .setAutoScrollScanPosition(true)
+                    .setSrcImageViewScaleType(ImageView.ScaleType.CENTER_CROP,true)
+                    .addPageTransformer(new ScaleInTransformer())
+                    .setShowDownload()
+                    .setImageUrl(String.valueOf(outputImagePath), com.flyjingfish.openimagelib.enums.MediaType.IMAGE)
+//                    .setOnItemLongClickListener(new OnItemLongClickListener() {
+//                        @Override
+//                        public void onItemLongClick(BaseInnerFragment fragment, OpenImageUrl openImageUrl, int position) {
+//                            Toast.makeText(getContext(),"长按图片",Toast.LENGTH_LONG).show();
+//                        }
+//                    })
+                    .show();
+        });
         initOpenCVll();
     }
+    //获取图片路径
+    private String createBitmapFilePath(Bitmap bitmap, int type) {
+        String imageUrl1 = "";
+        // 获取文件输出流
+        String fileName = type+".jpg";
+        FileOutputStream outStream = null;
+        File imageFile = null;
+        try {
+            // 创建一个临时文件
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            imageFile = new File(storageDir, fileName);
 
+            // 将Bitmap保存为JPEG文件
+            outStream = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (outStream != null) {
+                    outStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+// 如果成功保存，创建URL
+        if (imageFile.exists()) {
+            Uri imageUri = Uri.fromFile(imageFile);
+            imageUrl1 = "file://" + imageUri.toString();
+        }
+        return imageUrl1;
+    }
     private void selectImage(int requestCode) {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, requestCode);
