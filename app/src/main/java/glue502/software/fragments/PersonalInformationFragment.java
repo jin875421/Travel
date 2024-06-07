@@ -84,6 +84,7 @@ import glue502.software.R;
 import glue502.software.activities.OpenCVTest;
 import glue502.software.activities.login.CodeLoginActivity;
 import glue502.software.activities.personal.AchievementActivity;
+import glue502.software.activities.personal.DailyTaskActivity;
 import glue502.software.activities.personal.FollowSearchActivity;
 import glue502.software.activities.personal.MyFollowActivity;
 import glue502.software.activities.personal.SettingActivity;
@@ -117,7 +118,7 @@ public class PersonalInformationFragment extends Fragment {
 //    private LinearLayout linearCustomerService;
     private ImageView imgAvatar,imgBackground;
     private String mCurrentPhotoPath;
-    private LinearLayout follow,myAchievement;
+    private LinearLayout follow,myAchievement,taskCenter;
     private View view;
     private float startX;
     private PageAdapter adapter;
@@ -191,6 +192,8 @@ public class PersonalInformationFragment extends Fragment {
         follow = view.findViewById(R.id.follow);
         //成就
         myAchievement = view.findViewById(R.id.my_achievement);
+        // 任务中心
+        taskCenter = view.findViewById(R.id.task_center);
         //顶部渐变控件
         toolbar = view.findViewById(R.id.toolbar);
         appBarLayout=view.findViewById(R.id.appbar);
@@ -225,7 +228,8 @@ public class PersonalInformationFragment extends Fragment {
         );
         mediator.attach();
         SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
-         sharedPreferences1=getActivity().getSharedPreferences("personalBackground",MODE_PRIVATE);
+        userId = sharedPreferences.getString("userId", "");
+        sharedPreferences1=getActivity().getSharedPreferences("personalBackground",MODE_PRIVATE);
         String personalStatu=sharedPreferences1.getString("personalStatu","");
         String status=sharedPreferences.getString("status","");
         if("".equals(status)){
@@ -252,10 +256,10 @@ public class PersonalInformationFragment extends Fragment {
            }
             remindBind();
         }
-        
+
         // TODO 经验条相关
         loadUserExtraInfo();
-        
+
         follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,9 +272,33 @@ public class PersonalInformationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO 成就展示界面
-                Intent intent = new Intent(getActivity(), AchievementActivity.class);
-                startActivity(intent);
+                SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+                String status=sharedPreferences.getString("status","");
+                if ("".equals(status)) {
+                    // 用户未登录，弹出提示框
+                    showLoginAlertDialog();
+                }else{
+                    Intent intent = new Intent(getActivity(), AchievementActivity.class);
+                    intent.putExtra("userId",userId);
+                    startActivity(intent);
+                }
             }
+        });
+        taskCenter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO 任务中心
+                SharedPreferences sharedPreferences=getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
+                String status=sharedPreferences.getString("status","");
+                if ("".equals(status)) {
+                    // 用户未登录，弹出提示框
+                    showLoginAlertDialog();
+                }else{
+                   Intent intent = new Intent(getActivity(), DailyTaskActivity.class);
+                   intent.putExtra("userId",userId);
+                   startActivity(intent);
+               }
+           }
         });
         imgAvatar.setOnClickListener(v->{
             OpenImage.with(getContext()).setClickImageView(imgAvatar)
@@ -362,12 +390,18 @@ public class PersonalInformationFragment extends Fragment {
     }
 
     private void loadUserExtraInfo() {
+        Log.i("PersonalInformationFragment", "开始获取用户额外数据");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 OkHttpClient client = new OkHttpClient();
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("userId", userId)
+                        .build();
                 Request request = new Request.Builder()
-                        .url(url+"user/getUserExperience?userId="+userId)
+                        .url(url+"/userExtraInfo/getUserExtraInfo")
+                        .post(requestBody)
                         .build();
                 try {
                     Response response = client.newCall(request).execute();
@@ -377,7 +411,7 @@ public class PersonalInformationFragment extends Fragment {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.i("PersonalInformationFragment", "获取用户额外数据失败");
+                                    Log.i("PersonalInformationFragment", "无数据");
                                 }
                             });
                         } else {
@@ -385,6 +419,7 @@ public class PersonalInformationFragment extends Fragment {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    Log.i("PersonalInformationFragment", "获取用户额外数据成功");
                                     int level = userExtraInfo.getLevel();
                                     // 设置经验和等级
                                     tvLevel.setText("Lv." + level);
@@ -394,6 +429,8 @@ public class PersonalInformationFragment extends Fragment {
                                 }
                             });
                         }
+                    } else {
+                        Log.i("PersonalInformationFragment", "获取用户额外数据失败");
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -635,7 +672,6 @@ public class PersonalInformationFragment extends Fragment {
 
     }
     private void uploadBackground(File file){
-        System.out.println("向服务器发送请求");
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
 //        File file = new File(imageUri.getPath()); // 获取图片文件路径
@@ -805,9 +841,7 @@ public class PersonalInformationFragment extends Fragment {
             String status = sharedPreferences.getString("status", "");
                Uri imageUri = null;
                if (requestCode == RESULT_LOAD_IMAGES && data != null) {
-
                    if (data.getClipData() != null) {
-                       Log.println(Log.INFO, "onActivityResult", "333");
                        ClipData clipData = data.getClipData();
                        int count = clipData.getItemCount();
                        for (int i = 0; i < count; i++) {

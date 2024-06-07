@@ -1,5 +1,7 @@
 package glue502.software.adapters;
 
+import static glue502.software.activities.MainActivity.ip;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import glue502.software.R;
 import glue502.software.models.Achievement;
 
 public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.AchievementViewHolder> {
+    private String url = "http://" + ip + "/travel";
 
     private List<Achievement> achievementList;
     private Context context;
@@ -37,7 +40,9 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
     @Override
     public void onBindViewHolder(@NonNull AchievementViewHolder holder, int position) {
         Achievement achievement = achievementList.get(position);
-        Glide.with(context).load(achievement.getImageUrl()).into(holder.achievementImage);
+        Glide.with(context)
+                .load(url+"/"+achievement.getImageUrl())
+                .into(holder.achievementImage);
         holder.achievementName.setText(achievement.getName());
         holder.achievementDescription.setText(achievement.getDescription());
     }

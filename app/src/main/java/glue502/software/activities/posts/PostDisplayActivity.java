@@ -151,6 +151,41 @@ public class PostDisplayActivity extends AppCompatActivity {
             follow.setTextColor(Color.parseColor("#181A23"));
             follow.setBackground(getResources().getDrawable(R.drawable.round_button_followed_background));
         }
+        if(!postWithUserInfo.getUserInfo().getUserId().equals(userId)){
+            addExp("浏览3个帖子");
+        }
+    }
+
+    private void addExp(String tag) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .addFormDataPart("userId", userId)
+                        .addFormDataPart("tag", tag)
+                        .build();
+                Request request = new Request.Builder()
+                        .url(url+"userDailyTask/updateByUserIdAndTag")
+                        .post(requestBody)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        String responseData = response.body().string();
+                        if (responseData.equals("success")) {
+                            Log.i("PostDisplayActivity","增加浏览帖子经验");
+                        } else {
+                            Log.i("PostDisplayActivity","增加浏览帖子经验失败");
+                        }
+                    } else {
+                        Log.i("PostDisplayActivity","增加浏览帖子经验失败");
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
     }
 
     private boolean isFollowed(String authorId) throws InterruptedException {
@@ -450,6 +485,8 @@ public class PostDisplayActivity extends AppCompatActivity {
                 if (status==""){
                    showLoginDialog();
                 }else if (likeStatus==0){
+                    // TODO 加经验
+                    addExp("完成5次点赞");
                     new Thread(new Runnable() {
                         @Override
                         public void run() {

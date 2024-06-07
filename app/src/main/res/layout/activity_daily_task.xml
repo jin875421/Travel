@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.personal.AchievementActivity">
+    tools:context=".activities.personal.DailyTaskActivity">
 
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:paddingVertical="10dp"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="#19A2FD"
+        android:paddingTop="15dp">
 
         <ImageView
             android:id="@+id/back"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginStart="6dp"
             android:src="@drawable/back" />
 
@@ -26,9 +26,9 @@
             android:id="@+id/title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="我的成就"
-            android:textColor="#0c0c0c"
+            android:layout_centerHorizontal="true"
+            android:text="获取经验值"
+            android:textColor="#FEFEFE"
             android:textSize="18sp" />
 
         <ImageView
@@ -36,16 +36,20 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:layout_marginEnd="6dp"
             android:src="@mipmap/menu" />
+        <View
+            android:id="@+id/experienceBar"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@+id/title_text"/>
     </RelativeLayout>
-
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/title"
-        app:layout_constraintTop_toBottomOf="@id/title">
+        android:layout_below="@+id/title">
 
         <com.scwang.smart.refresh.header.ClassicsHeader
             android:layout_width="match_parent"
@@ -55,7 +59,7 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
+            android:overScrollMode="never"
             android:padding="16dp" />
 
         <com.scwang.smart.refresh.footer.ClassicsFooter
