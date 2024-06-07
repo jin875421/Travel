@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+
 import glue502.software.R;
 import glue502.software.activities.login.CodeLoginActivity;
 import glue502.software.utils.MyViewUtils;

@@ -61,10 +61,20 @@
         android:theme="@style/Theme.Travel"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.personal.FansActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.personal.FollowsActivity"
+            android:exported="false" />
 
-        <service android:name=".activities.Widget.UpdateWorker" android:permission="android.permission.BIND_JOB_SERVICE" />
-        <receiver android:name=".activities.Widget.WidgetProvider"
-        android:exported="false">
+        <service
+            android:name=".activities.Widget.UpdateWorker"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver
+            android:name=".activities.Widget.WidgetProvider"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="glue502.software.UPDATE_WIDGET_ON_CLICK" />

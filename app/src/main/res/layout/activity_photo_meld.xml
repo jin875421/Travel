@@ -71,12 +71,34 @@
 
 
 
-    <Button
-        android:id="@+id/buttonBlendImages"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="合成"/>
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/buttonBlendImages"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="合成"/>
+        <Button
+            android:id="@+id/btn_stitch_h"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="16dp"
+            android:text="水平拼接"/>
+        <Button
+            android:id="@+id/btn_stitch_v"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="垂直拼接"/>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageViewBlended"
