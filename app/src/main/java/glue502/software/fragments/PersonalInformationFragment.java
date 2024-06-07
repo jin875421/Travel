@@ -119,7 +119,7 @@ public class PersonalInformationFragment extends Fragment {
 //    private LinearLayout linearCustomerService;
     private ImageView imgAvatar,imgBackground;
     private String mCurrentPhotoPath;
-    private LinearLayout follow,myAchievement,taskCenter,rltPhotoEdit;
+    private LinearLayout follow,myAchievement,taskCenter,lrltPhotoEdit;
     private View view;
     private PageAdapter adapter;
     private static final int RESULT_LOAD_IMAGES = 1;
