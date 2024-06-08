@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.personal.FollowsActivity"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="7dp"
+        android:layout_alignParentTop="true">
+        <ImageView
+            android:id="@+id/back"
+            android:src="@drawable/back"
+            android:layout_marginStart="6dp"
+            android:layout_alignParentLeft="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:textColor="#0c0c0c"
+            android:text="关注"
+            android:textStyle="bold"
+            android:textSize="18dp" />
+    </RelativeLayout>
+    <ListView
+        android:id="@+id/followList"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

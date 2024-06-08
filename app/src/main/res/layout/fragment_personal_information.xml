@@ -188,32 +188,43 @@
                                 android:id="@+id/img_avatar"
                                 android:layout_width="100dp"
                                 android:layout_height="100dp" />
-
                             <LinearLayout
-                                android:id="@+id/linear_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:orientation="vertical"
                                 android:paddingLeft="15dp">
 
-                                <TextView
-                                    android:id="@+id/txt_name"
+                                <RelativeLayout
+                                    android:id="@+id/rl_title"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="用户名"
-                                    android:textColor="#000000"
-                                    android:textSize="20sp" />
+                                    android:layout_height="wrap_content">
 
+                                    <TextView
+                                        android:id="@+id/txt_name"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="用户名"
+                                        android:layout_centerVertical="true"
+                                        android:textColor="#000000"
+                                        android:textSize="20sp" />
+                                    <ImageView
+                                        android:id="@+id/level_image"
+                                        android:layout_width="38dp"
+                                        android:layout_height="38dp"
+                                        android:layout_toEndOf="@+id/txt_name"/>
+
+                                </RelativeLayout>
                                 <TextView
                                     android:id="@+id/txt_userId"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="账号：11111111111"
+                                    android:layout_below="@+id/level_image"
                                     android:textColor="#2E2D2D" />
-
                             </LinearLayout>
+
 
                         </LinearLayout>
                         <LinearLayout

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +54,7 @@ public class ExpenseRecordActivity extends AppCompatActivity {
     private String userId;
     private ExpenseAdapter expenseAdapter;
     private OkHttpClient client;
+    private ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +69,7 @@ public class ExpenseRecordActivity extends AppCompatActivity {
         clearExpensesButton = findViewById(R.id.clearExpensesButton);
         expenseListView = findViewById(R.id.expenseListView);
         totalExpenseTextView = findViewById(R.id.totalExpenseTextView);
-
+        back = findViewById(R.id.back);
         expenses = new ArrayList<>();
         expenseAdapter = new ExpenseAdapter(this, R.layout.expense_item, expenses);
         expenseListView.setAdapter(expenseAdapter);
@@ -82,7 +84,12 @@ public class ExpenseRecordActivity extends AppCompatActivity {
                 showAddExpenseDialog();
             }
         });
-
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         expenseListView.setOnItemLongClickListener((parent, view, position, id) -> {
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ExpenseRecordActivity.this);
             builder.setTitle("删除")

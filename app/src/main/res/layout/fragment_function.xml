@@ -23,78 +23,83 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <LinearLayout
                 android:id="@+id/top"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:layout_marginTop="10dp"
+                android:layout_alignParentTop="true"
                 android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:padding="3dp"
-                android:orientation="horizontal"
                 android:background="@drawable/map_search_layout"
-                android:layout_alignParentTop="true">
-<!--                <LinearLayout-->
-<!--                    android:layout_width="55dp"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    android:layout_gravity="center_vertical"-->
-<!--                    android:orientation="vertical">-->
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="当前城市"-->
-<!--                        android:textSize="10sp"-->
-<!--                        android:textColor="@color/black" />-->
-                    <TextView
-                        android:id="@+id/city"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="5dp"
-                        android:layout_gravity="center_vertical"
-                        android:textSize="14sp"
-                        android:text="我的城市"
-                        android:textColor="@color/black"/>
-<!--                </LinearLayout>-->
+                android:orientation="horizontal"
+                android:padding="3dp">
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="55dp"-->
+                <!--                    android:layout_height="20dp"-->
+                <!--                    android:layout_marginTop="10dp"-->
+                <!--                    android:layout_gravity="center_vertical"-->
+                <!--                    android:orientation="vertical">-->
+                <!--                    <TextView-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="当前城市"-->
+                <!--                        android:textSize="10sp"-->
+                <!--                        android:textColor="@color/black" />-->
+                <TextView
+                    android:id="@+id/city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:text="我的城市"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+                <!--                </LinearLayout>-->
                 <LinearLayout
                     android:layout_width="220dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="90"
-                    android:layout_marginHorizontal="10dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="90"
                     android:orientation="vertical">
+
                     <AutoCompleteTextView
                         android:id="@+id/fragment_main_edt_poi"
                         android:layout_width="match_parent"
-                        android:background="@drawable/edittext_underline"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edittext_underline" />
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/top"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:background="@drawable/background_frame_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:background="@drawable/background_frame_login">
+
                 <ListView
                     android:id="@+id/fragment_sug_list"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
                     android:visibility="gone" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/floating_button_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical"
                 android:paddingRight="5dp"
                 android:paddingBottom="10dp">
 
@@ -104,28 +109,31 @@
                     android:layout_height="50dp"
                     android:background="@xml/round_button"
                     android:text="随手记"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/white"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white" />
+                    android:textStyle="bold" />
 
                 <ImageButton
                     android:id="@+id/btn_Loc"
-                    android:layout_width="43dp"
+                    android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="5dp"
                     android:background="@xml/round_button"
                     android:src="@mipmap/focus" />
+
                 <Button
                     android:id="@+id/uploadBtn"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@xml/round_button"
                     android:text="+"
-                    android:textSize="25sp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="25sp" />
             </LinearLayout>
         </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

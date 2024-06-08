@@ -17,8 +17,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +68,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private List<UserInfo> userInfos = new ArrayList<>();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private boolean isFollow = false;
+    private RelativeLayout follows,fans;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +97,18 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void setListener() {
+        //点击跳转至展示此用户关注的人
+        follows.setOnClickListener(v->{
+            Intent intent = new Intent(UserInfoActivity.this, FollowsActivity.class);
+            intent.putExtra("authorId",authorId);
+            startActivity(intent);
+        });
+        //点击跳转至展示此用户的粉丝
+        fans.setOnClickListener(v->{
+            Intent intent = new Intent(UserInfoActivity.this, FansActivity.class);
+            intent.putExtra("authorId",authorId);
+            startActivity(intent);
+        });
 
         //为头像添加大图显示
         avatar.setOnClickListener(v->{
@@ -222,6 +237,8 @@ public class UserInfoActivity extends AppCompatActivity {
          fansCount = findViewById(R.id.fans_count);
          followCount = findViewById(R.id.follow_count);
          postList = findViewById(R.id.post_list);
+         follows = findViewById(R.id.follows);
+         fans = findViewById(R.id.fans);
     }
     public void initData() {
         //通过id查询个人数据
