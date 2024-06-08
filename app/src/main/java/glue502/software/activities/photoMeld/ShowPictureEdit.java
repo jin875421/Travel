@@ -5,6 +5,9 @@ import static glue502.software.activities.MainActivity.ip;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +41,7 @@ public class ShowPictureEdit extends AppCompatActivity {
     private String url="http://"+ip+"/travel/";
     private List<String> imageUrls = new ArrayList<>();
     private ShowPictureResultAdapter adapter;
+    private ImageView back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +51,17 @@ public class ShowPictureEdit extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 设置两列
         SharedPreferences sharedPreferences = getSharedPreferences("userName_and_userId", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", "");
-        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.recyclerView),true);
+        back = findViewById(R.id.back);
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.linearLayout),true);
         loadPictureList(userId);
         adapter = new ShowPictureResultAdapter(this, imageUrls);
         recyclerView.setAdapter(adapter);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void loadPictureList(String userId) {
