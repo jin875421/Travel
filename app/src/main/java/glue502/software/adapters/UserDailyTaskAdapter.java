@@ -45,9 +45,20 @@ public class UserDailyTaskAdapter extends RecyclerView.Adapter<UserDailyTaskAdap
                 .into(holder.taskImage);
         holder.taskName.setText(userDailyTask.getTaskName());
         holder.taskReward.setText(userDailyTask.getReward() + "");
-        holder.taskProgress.setText(userDailyTask.getProgress() + "");
+        if (userDailyTask.getTaskName().equals("每日登录打卡")){
+            if (userDailyTask.isCompleted()){
+                holder.taskProgress.setText("1");
+                holder.taskProgressBar.setProgress(1);
+            }else {
+                holder.taskProgress.setText("0");
+                holder.taskProgressBar.setProgress(0);
+            }
+        }else {
+            holder.taskProgress.setText(userDailyTask.getProgress() + "");
+            holder.taskProgressBar.setProgress(userDailyTask.getProgress());
+        }
         holder.taskMaxProgress.setText("/"+userDailyTask.getMaxProgress() + "");
-        holder.taskProgressBar.setProgress(userDailyTask.getProgress());
+
         holder.taskProgressBar.setMax(userDailyTask.getMaxProgress());
     }
 

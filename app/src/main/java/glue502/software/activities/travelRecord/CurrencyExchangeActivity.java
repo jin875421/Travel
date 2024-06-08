@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import glue502.software.R;
+import glue502.software.utils.MyViewUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -29,6 +31,7 @@ public class CurrencyExchangeActivity extends AppCompatActivity {
     private Spinner spinnerFromCurrency, spinnerToCurrency;
     private TextView textResult;
     private Button buttonConvert;
+    private ImageView back;
 
     private static final String API_URL = "http://op.juhe.cn/onebox/exchange/currency";
     private static final String API_KEY = "a322d7b2b417667c2d94738e89463c4a";
@@ -37,6 +40,8 @@ public class CurrencyExchangeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency_exchange);
+        //状态栏
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), true);
 
         // 初始化UI组件
         inputAmount = findViewById(R.id.input_amount);
@@ -44,6 +49,7 @@ public class CurrencyExchangeActivity extends AppCompatActivity {
         spinnerToCurrency = findViewById(R.id.spinner_to_currency);
         textResult = findViewById(R.id.text_result);
         buttonConvert = findViewById(R.id.button_convert);
+        back = findViewById(R.id.back);
 
         // 设置Spinner的适配器
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -51,7 +57,12 @@ public class CurrencyExchangeActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFromCurrency.setAdapter(adapter);
         spinnerToCurrency.setAdapter(adapter);
-
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         // 设置按钮点击事件
         buttonConvert.setOnClickListener(new View.OnClickListener() {
             @Override

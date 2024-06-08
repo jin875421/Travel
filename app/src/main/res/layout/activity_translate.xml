@@ -1,38 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".activities.travelRecord.TranslateActivity"
-    android:padding="16dp">
+    tools:context=".activities.travelRecord.TranslateActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="语音翻译"
-        android:textSize="24sp"
-        android:layout_gravity="center"
-        android:paddingBottom="16dp"/>
-
-    <Button
-        android:id="@+id/startButton"
+    <RelativeLayout
+        android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="开始录音"
-        android:layout_marginBottom="8dp"/>
+        android:layout_height="30dp">
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back"
+            android:layout_alignParentStart="true"
+            android:contentDescription="返回" />
 
-    <Button
-        android:id="@+id/stopButton"
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:text="语音翻译"
+            android:textColor="#0c0c0c"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:padding="16dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="停止录音"
-        android:layout_marginBottom="8dp"/>
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/startButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="开始录音"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:padding="12dp"
+            android:background="@drawable/blue_round_button"
+            android:textColor="#ffffff"
+            android:textSize="16sp"/>
 
-    <Button
-        android:id="@+id/translateButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="翻译录音"/>
+        <Button
+            android:id="@+id/stopButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="停止录音"
+            android:layout_marginBottom="8dp"
+            android:padding="12dp"
+            android:background="@drawable/blue_round_button"
+            android:textColor="#ffffff"
+            android:textSize="16sp"/>
 
+        <Button
+            android:id="@+id/translateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="翻译录音"
+            android:padding="12dp"
+            android:background="@drawable/blue_round_button"
+            android:textColor="#ffffff"
+            android:textSize="16sp"/>
+    </LinearLayout>
 </LinearLayout>

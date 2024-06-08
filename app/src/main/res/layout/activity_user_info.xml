@@ -6,7 +6,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activities.personal.UserInfoActivity">
-
+    <RelativeLayout
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="7dp"
+        android:layout_alignParentTop="true">
+        <ImageView
+            android:id="@+id/back"
+            android:src="@drawable/back"
+            android:layout_marginStart="6dp"
+            android:layout_alignParentLeft="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:textColor="#0c0c0c"
+            android:text="个人信息"
+            android:textStyle="bold"
+            android:textSize="18dp" />
+    </RelativeLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -16,29 +38,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/head"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="7dp"
-                android:layout_alignParentTop="true">
-                <ImageView
-                    android:id="@+id/back"
-                    android:src="@drawable/back"
-                    android:layout_marginStart="6dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#0c0c0c"
-                    android:text="个人信息"
-                    android:textStyle="bold"
-                    android:textSize="18dp" />
-            </RelativeLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -77,6 +77,7 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
                 <RelativeLayout
+                    android:id="@+id/follows"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
@@ -97,6 +98,7 @@
                         android:text="111" />
                 </RelativeLayout>
                 <RelativeLayout
+                    android:id="@+id/fans"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
