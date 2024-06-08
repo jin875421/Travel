@@ -1,53 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activities.travelRecord.CurrencyExchangeActivity">
 
-    <EditText
-        android:id="@+id/input_amount"
+    <RelativeLayout
+        android:id="@+id/top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:hint="输入金额"
-        android:inputType="numberDecimal" />
+        android:layout_height="30dp">
 
-    <Spinner
-        android:id="@+id/spinner_from_currency"
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back"
+            android:layout_alignParentStart="true"
+            android:contentDescription="返回" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="货币转换"
+            android:textSize="20sp"
+            android:textColor="#0c0c0c"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/input_amount"
-        android:layout_margin="16dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <EditText
+            android:id="@+id/input_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="输入金额"
+            android:inputType="numberDecimal"
+            android:padding="10dp"
+            android:background="@drawable/edittext_background"/>
 
-    <Spinner
-        android:id="@+id/spinner_to_currency"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/spinner_from_currency"
-        android:layout_margin="16dp" />
+        <Spinner
+            android:id="@+id/spinner_from_currency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="10dp"
+            android:background="@drawable/spinner_background"
+            android:spinnerMode="dropdown"/>
 
-    <Button
-        android:id="@+id/button_convert"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/spinner_to_currency"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="转换" />
+        <Spinner
+            android:id="@+id/spinner_to_currency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="10dp"
+            android:background="@drawable/spinner_background"
+            android:spinnerMode="dropdown"/>
 
-    <TextView
-        android:id="@+id/text_result"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/button_convert"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="转换结果"
-        android:textSize="18sp" />
+        <Button
+            android:id="@+id/button_convert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="转换"
+            android:padding="12dp"
+            android:background="@drawable/blue_round_button"
+            android:textColor="#ffffff"
+            android:textSize="16sp"/>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/text_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="转换结果"
+            android:textSize="18sp"
+            android:textColor="#0c0c0c"
+            android:padding="10dp"
+            android:background="#f8f8f8"/>
+    </LinearLayout>
+</LinearLayout>

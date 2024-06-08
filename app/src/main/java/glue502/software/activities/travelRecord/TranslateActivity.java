@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +31,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import glue502.software.R;
 import glue502.software.utils.AudioRecorder;
 import glue502.software.utils.AuthUtils;
+import glue502.software.utils.MyViewUtils;
 import glue502.software.utils.PcmToWav;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -54,6 +56,7 @@ public class TranslateActivity extends AppCompatActivity {
     private static final String vcn = "x2_catherine";
     // 输出音频编码方式 PCM
     private static final String encoding = "raw";
+    private ImageView back;
 
     // 输入的源音频文件
 
@@ -86,7 +89,8 @@ public class TranslateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_translate);
         // 使用 getExternalFilesDir 获取可靠的路径
         fileName = getExternalFilesDir(Environment.DIRECTORY_MUSIC) + "/audiorecordtest.pcm";
-        System.out.println("fileName: " + fileName);
+        //状态栏
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), true);
 
         outPutPcm = getExternalFilesDir(Environment.DIRECTORY_MUSIC) +outPutPcm;
         outPutWav = getExternalFilesDir(Environment.DIRECTORY_MUSIC) +outPutWav;
@@ -100,7 +104,7 @@ public class TranslateActivity extends AppCompatActivity {
         }
         //获取文件地址
 
-
+        back = findViewById(R.id.back);
         Button startButton = findViewById(R.id.startButton);
         Button stopButton = findViewById(R.id.stopButton);
         Button translateButton = findViewById(R.id.translateButton);
@@ -112,6 +116,9 @@ public class TranslateActivity extends AppCompatActivity {
         stopButton.setOnClickListener(v -> {
             recorder.stopRecording();
 
+        });
+        back.setOnClickListener(v -> {
+            finish();
         });
 
         translateButton.setOnClickListener(v -> {

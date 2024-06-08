@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,6 +46,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     private TextView mTvLocation, mTvRealTimeWeather, mTvRealTimeTemperature;
     private ListView mLvForecasts;
+    private ImageView back;
     private WeatherAdapter mWeatherAdapter;
     private String city;
     public LocationClient mLocationClient = null;
@@ -57,10 +60,18 @@ public class WeatherActivity extends AppCompatActivity {
         mTvRealTimeWeather = findViewById(R.id.tv_realtime_weather);
         mTvRealTimeTemperature = findViewById(R.id.tv_realtime_temperature);
         mLvForecasts = findViewById(R.id.lv_forecasts);
+        back = findViewById(R.id.back);
         mTvLocation.setText(city); // 假设Location对象有一个getName()方法
         getweather();
         //沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(this,getWindow().getDecorView(),true);
+        //添加监听器
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
     private void getweather(){
         //初始化了mLocationClient

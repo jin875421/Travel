@@ -180,7 +180,7 @@
                     android:layout_width="80dp"
                     android:layout_height="95dp"
                     android:paddingLeft="17dp"
-                    android:src="@drawable/ai_iamge_recognition" />
+                    android:src="@drawable/translate" />
                 <TextView
                     android:text="语音翻译"
                     android:gravity="center"
@@ -205,7 +205,7 @@
                     android:layout_width="75dp"
                     android:layout_height="95dp"
                     android:paddingLeft="25dp"
-                    android:src="@drawable/ai_plant_recognition" />
+                    android:src="@drawable/exchange" />
                 <TextView
                     android:text="货币转换"
                     android:gravity="center"
