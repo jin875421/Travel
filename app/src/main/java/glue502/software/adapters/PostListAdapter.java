@@ -22,6 +22,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
 import glue502.software.R;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
+import glue502.software.models.UserExtraInfo;
 import glue502.software.models.UserInfo;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.MultipartBody;
@@ -43,6 +45,7 @@ public class PostListAdapter extends BaseAdapter {
     private List<Post> posts;
     private List<UserInfo> userInfos;
     private String url = "http://"+ip+"/travel/";
+    private final Handler handler = new Handler(Looper.getMainLooper());
     public PostListAdapter(Context context, int layoutId, List<Post> posts, List<UserInfo> userInfos){
         this.posts = posts;
         this.layoutId = layoutId;
@@ -74,6 +77,7 @@ public class PostListAdapter extends BaseAdapter {
         LinearLayout images = v.findViewById(R.id.image_container);
         TextView likeCount = v.findViewById(R.id.like_count);
         TextView commentCount = v.findViewById(R.id.comment_count);
+        ImageView levelImage = v.findViewById(R.id.level_image);
         Post post1 = posts.get(i);
         title.setText(post1.getPostTitle());
         if (post1.getPostContent().length()<20){
@@ -180,6 +184,68 @@ public class PostListAdapter extends BaseAdapter {
 
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+            }
+        }).start();
+        // 查询用户额外信息
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("userId", post1.getUserId())
+                        .build();
+                Request request = new Request.Builder()
+                        .url(url+"/userExtraInfo/getUserExtraInfo")
+                        .post(requestBody)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    if(response.isSuccessful()){
+                        String responseData = response.body().string();
+                        if(responseData.equals("")){
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i("PostListAdapter", "无数据");
+                                }
+                            });
+                        } else {
+                            UserExtraInfo userExtraInfo = new Gson().fromJson(responseData, UserExtraInfo.class);
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i("PostListAdapter", "获取用户额外数据成功");
+                                    int level = userExtraInfo.getLevel();
+                                    switch (level){
+                                        case 1:
+                                            Glide.with(context).load(R.mipmap.lv1).into(levelImage);
+                                            break;
+                                        case 2:
+                                            Glide.with(context).load(R.mipmap.lv2).into(levelImage);
+                                            break;
+                                        case 3:
+                                            Glide.with(context).load(R.mipmap.lv3).into(levelImage);
+                                            break;
+                                        case 4:
+                                            Glide.with(context).load(R.mipmap.lv4).into(levelImage);
+                                            break;
+                                        case 5:
+                                            Glide.with(context).load(R.mipmap.lv5).into(levelImage);
+                                            break;
+                                        default:
+                                            levelImage.setVisibility(View.GONE);
+                                            break;
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        Log.i("PostListAdapter", "获取用户额外数据失败");
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }).start();

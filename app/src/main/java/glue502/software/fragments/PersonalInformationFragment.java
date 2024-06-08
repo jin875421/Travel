@@ -49,6 +49,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -90,6 +91,7 @@ import glue502.software.activities.personal.MyFollowActivity;
 import glue502.software.activities.personal.SettingActivity;
 import glue502.software.activities.personal.UpdatePersonalInformationActivity;
 import glue502.software.activities.photoMeld.ShowPictureEdit;
+import glue502.software.activities.posts.PostDisplayActivity;
 import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.activities.travelRecord.TravelPicturesActivity;
 import glue502.software.adapters.PageAdapter;
@@ -115,9 +117,9 @@ public class PersonalInformationFragment extends Fragment {
     private TextView txtName,topTxtName;
     private TextView txtUserId;
     private LinearLayout linearSetting;
-    private LinearLayout linearTitle;
+    private RelativeLayout rlTitle;
 //    private LinearLayout linearCustomerService;
-    private ImageView imgAvatar,imgBackground;
+    private ImageView imgAvatar,imgBackground,levelImage;
     private String mCurrentPhotoPath;
     private LinearLayout follow,myAchievement,taskCenter,lrltPhotoEdit;
     private View view;
@@ -181,7 +183,7 @@ public class PersonalInformationFragment extends Fragment {
         topTxtName=view.findViewById(R.id.top_txt_name);
         txtUserId=view.findViewById(R.id.txt_userId);
         linearSetting=view.findViewById(R.id.linear_setting);
-        linearTitle=view.findViewById(R.id.linear_title);
+        rlTitle=view.findViewById(R.id.rl_title);
         lrltPhotoEdit=view.findViewById(R.id.lrlt_photo_edit);
         //头像及背景
         imgAvatar=view.findViewById(R.id.img_avatar);
@@ -199,6 +201,7 @@ public class PersonalInformationFragment extends Fragment {
         toolbar = view.findViewById(R.id.toolbar);
         appBarLayout=view.findViewById(R.id.appbar);
         //经验条
+        levelImage = view.findViewById(R.id.level_image);
         tvLevel = view.findViewById(R.id.tv_level);
         experienceBar = view.findViewById(R.id.experienceBar);
         setViewPager2ScrollSensitivity(9);
@@ -331,7 +334,7 @@ public class PersonalInformationFragment extends Fragment {
             }
         });
 
-        linearTitle.setOnClickListener(new View.OnClickListener() {
+        rlTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkLoginStatus();
@@ -434,6 +437,26 @@ public class PersonalInformationFragment extends Fragment {
                                     // 0->1 :(lv+1)*100 + lv*50=100   1->2 :250   2->3 :400   3->4 :600   4->5 :750
                                     experienceBar.setMax((level+1)*100 + level*50);
                                     experienceBar.setProgress(userExtraInfo.getExperience());
+                                    switch (level){
+                                        case 1:
+                                            Glide.with(getActivity()).load(R.mipmap.lv1).into(levelImage);
+                                            break;
+                                        case 2:
+                                            Glide.with(getActivity()).load(R.mipmap.lv2).into(levelImage);
+                                            break;
+                                        case 3:
+                                            Glide.with(getActivity()).load(R.mipmap.lv3).into(levelImage);
+                                            break;
+                                        case 4:
+                                            Glide.with(getActivity()).load(R.mipmap.lv4).into(levelImage);
+                                            break;
+                                        case 5:
+                                            Glide.with(getActivity()).load(R.mipmap.lv5).into(levelImage);
+                                            break;
+                                        default:
+                                            levelImage.setVisibility(View.GONE);
+                                            break;
+                                    }
                                 }
                             });
                         }

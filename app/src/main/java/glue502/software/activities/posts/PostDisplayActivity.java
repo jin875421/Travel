@@ -75,6 +75,7 @@ import glue502.software.models.Comment;
 import glue502.software.models.LikeAndStarStatus;
 
 import glue502.software.models.UploadComment;
+import glue502.software.models.UserExtraInfo;
 import glue502.software.utils.Carousel;
 import glue502.software.models.PostWithUserInfo;
 import glue502.software.utils.MyViewUtils;
@@ -102,7 +103,7 @@ public class PostDisplayActivity extends AppCompatActivity {
     private TextView content;
     private TextView title;
     private TextView text;
-    private ImageView avatar;
+    private ImageView avatar,levelImage;
     private TextView userName;
     private ListView listView;
     private EditText chatInputEt;
@@ -154,6 +155,68 @@ public class PostDisplayActivity extends AppCompatActivity {
         if(!postWithUserInfo.getUserInfo().getUserId().equals(userId)){
             addExp("浏览3个帖子");
         }
+        // 查询用户额外信息
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("userId", postWithUserInfo.getUserInfo().getUserId())
+                        .build();
+                Request request = new Request.Builder()
+                        .url(url+"/userExtraInfo/getUserExtraInfo")
+                        .post(requestBody)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    if(response.isSuccessful()){
+                        String responseData = response.body().string();
+                        if(responseData.equals("")){
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i("PostDisplayActivity", "无数据");
+                                }
+                            });
+                        } else {
+                            UserExtraInfo userExtraInfo = new Gson().fromJson(responseData, UserExtraInfo.class);
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i("PostListAdapter", "获取用户额外数据成功");
+                                    int level = userExtraInfo.getLevel();
+                                    switch (level){
+                                        case 1:
+                                            Glide.with(PostDisplayActivity.this).load(R.mipmap.lv1).into(levelImage);
+                                            break;
+                                        case 2:
+                                            Glide.with(PostDisplayActivity.this).load(R.mipmap.lv2).into(levelImage);
+                                            break;
+                                        case 3:
+                                            Glide.with(PostDisplayActivity.this).load(R.mipmap.lv3).into(levelImage);
+                                            break;
+                                        case 4:
+                                            Glide.with(PostDisplayActivity.this).load(R.mipmap.lv4).into(levelImage);
+                                            break;
+                                        case 5:
+                                            Glide.with(PostDisplayActivity.this).load(R.mipmap.lv5).into(levelImage);
+                                            break;
+                                        default:
+                                            levelImage.setVisibility(View.GONE);
+                                            break;
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        Log.i("PostListAdapter", "获取用户额外数据失败");
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
     }
 
     private void addExp(String tag) {
@@ -362,6 +425,7 @@ public class PostDisplayActivity extends AppCompatActivity {
         submit = findViewById(R.id.submit);
         chatInputEt = findViewById(R.id.chatInputEt);
         view = findViewById(R.id.view);
+        levelImage = findViewById(R.id.level_image);
     }
     public void setListener(){
         //点击头像跳转个人信息页

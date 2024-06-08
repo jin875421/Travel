@@ -44,7 +44,7 @@ public class UserDailyTaskAdapter extends RecyclerView.Adapter<UserDailyTaskAdap
                 .load(url +"/"+ userDailyTask.getTaskIcon())
                 .into(holder.taskImage);
         holder.taskName.setText(userDailyTask.getTaskName());
-        holder.taskReward.setText(userDailyTask.getReward() + "");
+        holder.taskReward.setText("+"+userDailyTask.getReward());
         holder.taskProgress.setText(userDailyTask.getProgress() + "");
         holder.taskMaxProgress.setText("/"+userDailyTask.getMaxProgress() + "");
         holder.taskProgressBar.setProgress(userDailyTask.getProgress());
