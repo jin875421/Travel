@@ -113,7 +113,7 @@ public class FunctionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //跳转
-                Intent intent = new Intent(FunctionActivity.this, MainWenXinActivity.class);
+                Intent intent = new Intent(FunctionActivity.this, ImageRecognitionActivityA.class);
 
                 int sign = 1;
                 intent.putExtra("sign",sign);

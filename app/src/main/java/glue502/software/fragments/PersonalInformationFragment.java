@@ -328,9 +328,14 @@ public class PersonalInformationFragment extends Fragment {
         imgBackground.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-               showPopupWindow();
+                if(!sharedPreferences.getString("status","").equals("" )){
+                    showPopupWindow();
                 // 返回 true 表示事件已被处理
-                return true;
+                    return true;
+                }else {
+                    showLoginAlertDialog();
+                    return false;
+                }
             }
         });
 
