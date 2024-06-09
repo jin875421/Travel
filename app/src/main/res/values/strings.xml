@@ -16,4 +16,7 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="wake_demo_hint">请点击“开始唤醒”后读出您在开放平台购买的唤醒词，当引擎计算得分大于您设置的门限值时，即可进行唤醒。</string>
+
 </resources>

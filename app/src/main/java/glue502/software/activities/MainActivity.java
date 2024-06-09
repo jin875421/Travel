@@ -36,6 +36,8 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int PERMISSION_REQUEST_CODE = 123; // 定义一个请求码，用于识别权限请求
     //换成自己电脑的ip地址，连接后端需要
     //192.168.43.123 192.168.142.92 10.7.89.245
-    public static final String ip = "172.29.146.72:8080";
+    public static final String ip = "172.29.24.119:8080";
     private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private List<Fragment> fragments;
@@ -395,6 +397,19 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    private void initializeIflytek()
+    {
+        System.out.println("初始化讯飞SDK");
+        StringBuffer param = new StringBuffer();
+        //IflytekAPP_id为我们申请的Appid
+        param.append("appid="+"16621d18");
+        param.append(",");
+        // 设置使用v5+
+        param.append(SpeechConstant.ENGINE_MODE+"="+ SpeechConstant.MODE_MSC);
+        SpeechUtility.createUtility(MainActivity.this, param.toString());
+    }
+
 
     // ... 其他代码
 }

@@ -14,7 +14,21 @@ public class UserInfo implements Serializable {
     private String userPhoneNumber;
     private float a;
 
-
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "password='" + password + '\'' +
+                ", sex='" + sex + '\'' +
+                ", userId='" + userId + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", email='" + email + '\'' +
+                ", code='" + code + '\'' +
+                ", userName='" + userName + '\'' +
+                ", status='" + status + '\'' +
+                ", userPhoneNumber='" + userPhoneNumber + '\'' +
+                ", a=" + a +
+                '}';
+    }
 
     public UserInfo() {}
 
