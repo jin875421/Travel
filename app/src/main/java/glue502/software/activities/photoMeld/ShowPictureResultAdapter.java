@@ -33,6 +33,7 @@ import glue502.software.R;
 import glue502.software.activities.OpenCVTest;
 import glue502.software.activities.travelRecord.TravelPicturesActivity;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -42,7 +43,7 @@ public class ShowPictureResultAdapter extends RecyclerView.Adapter<ShowPictureRe
 
     private Context context;
     private List<String> imageUrls;
-    private String loadUrl="http://"+ip+"/travel/pictureEdit/deletePicture";
+    private String loadUrl="http://"+ip+"/travel/pictureEdit/delete";
 
 
     public ShowPictureResultAdapter(Context context, List<String> imageUrls) {
@@ -75,23 +76,23 @@ public class ShowPictureResultAdapter extends RecyclerView.Adapter<ShowPictureRe
                     .setShowDownload()
                     .addPageTransformer(new ScaleInTransformer()) // 添加页面转换动画
                     .setImageUrl(imageUrl, com.flyjingfish.openimagelib.enums.MediaType.IMAGE) // 设置图片URL
-//                    .addMoreView(R.layout.showpicture_bigshow,
-//                            new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT),
-//                            MoreViewShowType.BOTH,
-//                            new OnLoadViewFinishListener() {
-//                                @Override
-//                                public void onLoadViewFinish(View moreView) {
-//                                    ImageView imgDelete=moreView.findViewById(R.id.img_delete);
-//                                    imgDelete.setOnClickListener(new View.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(View view) {
-//                                            deletePicture(imageUrl);
-//                                        }
-//                                    });
-//
-//
-//                                }
-//                            })
+                    .addMoreView(R.layout.showpicture_bigshow,
+                            new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT),
+                            MoreViewShowType.BOTH,
+                            new OnLoadViewFinishListener() {
+                                @Override
+                                public void onLoadViewFinish(View moreView) {
+                                    ImageView imgDelete=moreView.findViewById(R.id.img_delete);
+                                    imgDelete.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            deletePicture(imageUrl);
+                                        }
+                                    });
+
+
+                                }
+                            })
                     .show(); // 显示图片
         });
 
@@ -106,7 +107,10 @@ public class ShowPictureResultAdapter extends RecyclerView.Adapter<ShowPictureRe
                         public void run() {
                             try {
                                 OkHttpClient client = new OkHttpClient();
-                                RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), path);
+                                RequestBody requestBody = new MultipartBody.Builder()
+                                        .setType(MultipartBody.FORM)
+                                        .addFormDataPart("pictureUrl", path)
+                                        .build();
                                 Request request = new Request.Builder()
                                         .url(loadUrl) //***.***.**.***为本机IP，xxxx为端口，/  /  为访问的接口后缀
                                         .post(requestBody)
