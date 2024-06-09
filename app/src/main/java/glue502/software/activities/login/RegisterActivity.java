@@ -1,10 +1,13 @@
 package glue502.software.activities.login;
 
 import static glue502.software.activities.MainActivity.ip;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
+import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -20,6 +26,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 import glue502.software.R;
+import glue502.software.activities.IM.IMLoginActivity;
 import glue502.software.models.UserInfo;
 import glue502.software.models.LoginResult;
 import glue502.software.utils.MyViewUtils;
@@ -30,6 +37,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class RegisterActivity extends AppCompatActivity {
+    private ProgressDialog mDialog;
     private EditText edtAccount;
     private EditText edtPassword;
     private EditText edtAgainPassword;
@@ -138,19 +146,8 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if(againpassword.equals(password)==false){
                     Toast.makeText(RegisterActivity.this, "两次输入的密码不相同", Toast.LENGTH_LONG).show();
                 } else{
-                    //即时通信注册
-//                    try {
-//                        // 注册失败会抛出 HyphenateException。
-//                        // 同步方法，会阻塞当前线程。
-//                        EMClient.getInstance().createAccount(userId, password);
-//                        //成功
-//                        //callBack.onSuccess(createLiveData(userName));
-//                    } catch (HyphenateException e) {
-//                        //失败
-//                        //callBack.onError(e.getErrorCode(), e.getMessage());
-//                    }
-
-
+                    //即时通讯注册
+                    signUp();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -184,6 +181,93 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * 注册方法
+     */
+    private void signUp() {
+        // 注册是耗时过程，所以要显示一个dialog来提示下用户
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage("注册中，请稍后...");
+        mDialog.show();
+
+        new Thread(new Runnable() {
+            @Override public void run() {
+                try {
+                    String username = edtAccount.getText().toString().trim();
+                    String password = edtAccount.getText().toString().trim();
+                    //在这里实现向环信服务器发送请求实现注册手段
+                    EMClient.getInstance().createAccount(username, password);
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            if (!RegisterActivity.this.isFinishing()) {
+                                mDialog.dismiss();
+                            }
+                            Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } catch (final HyphenateException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            if (!RegisterActivity.this.isFinishing()) {
+                                mDialog.dismiss();
+                            }
+                            /**
+                             * 关于错误码可以参考官方api详细说明
+                             * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1_e_m_error.html
+                             */
+                            int errorCode = e.getErrorCode();
+                            String message = e.getMessage();
+                            Log.d("lzan13",
+                                    String.format("sign up - errorCode:%d, errorMsg:%s", errorCode,
+                                            e.getMessage()));
+                            switch (errorCode) {
+                                // 网络错误
+                                case EMError.NETWORK_ERROR:
+                                    Toast.makeText(RegisterActivity.this,
+                                            "网络错误 code: " + errorCode + ", message:" + message,
+                                            Toast.LENGTH_LONG).show();
+                                    break;
+                                // 用户已存在
+                                case EMError.USER_ALREADY_EXIST:
+                                    Toast.makeText(RegisterActivity.this,
+                                            "用户已存在 code: " + errorCode + ", message:" + message,
+                                            Toast.LENGTH_LONG).show();
+                                    break;
+                                // 参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册
+                                case EMError.USER_ILLEGAL_ARGUMENT:
+                                    Toast.makeText(RegisterActivity.this,
+                                            "参数不合法，一般情况是username 使用了uuid导致，不能使用uuid注册 code: "
+                                                    + errorCode
+                                                    + ", message:"
+                                                    + message, Toast.LENGTH_LONG).show();
+                                    break;
+                                // 服务器未知错误
+                                case EMError.SERVER_UNKNOWN_ERROR:
+                                    Toast.makeText(RegisterActivity.this,
+                                            "服务器未知错误 code: " + errorCode + ", message:" + message,
+                                            Toast.LENGTH_LONG).show();
+                                    break;
+                                case EMError.USER_REG_FAILED:
+                                    Toast.makeText(RegisterActivity.this,
+                                            "账户注册失败 code: " + errorCode + ", message:" + message,
+                                            Toast.LENGTH_LONG).show();
+                                    break;
+                                default:
+                                    Toast.makeText(RegisterActivity.this,
+                                            "ml_sign_up_failed code: " + errorCode + ", message:" + message,
+                                            Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
     private boolean isValidPhoneNumber(String phoneNumber) {
         // 进行手机号合法性判断的逻辑，可以使用正则表达式等方式
         // 此处简单示例，你可以根据实际需要扩展
@@ -200,4 +284,5 @@ public class RegisterActivity extends AppCompatActivity {
         // 设置随机选择的背景图片
         imgBackgroundLogin.setImageResource(backgroundImages[randomIndex]);
     }
+
 }

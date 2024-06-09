@@ -35,6 +35,8 @@ public class XunFeiUtil {
         System.out.println("==="+dialog.toString());
         dialog.setListener(new RecognizerDialogListener() {
             @Override
+
+
             public void onResult(RecognizerResult recognizerResult, boolean b) {
                 callbackListener.onFinish(recognizerResult);
                 Log.v("XunFeiUtil", "lzx ===");

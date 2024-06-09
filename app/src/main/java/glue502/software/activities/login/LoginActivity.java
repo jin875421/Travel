@@ -3,12 +3,14 @@ package glue502.software.activities.login;
 
 import static glue502.software.activities.MainActivity.ip;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -23,6 +25,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.google.gson.Gson;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -31,6 +37,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 import glue502.software.R;
+import glue502.software.activities.IM.IMLoginActivity;
+import glue502.software.activities.IM.MainIMActivity;
 import glue502.software.activities.MainActivity;
 import glue502.software.models.UserInfo;
 import glue502.software.models.LoginResult;
@@ -43,6 +51,7 @@ import okhttp3.Response;
 
 
 public class LoginActivity extends AppCompatActivity {
+    private ProgressDialog mDialog;
     private Button btnLogin;
     private TextView txtCode;
     private TextView txtRegister;
@@ -113,6 +122,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //初始化环信，在这里实现了类似于项目中的token判断，如果没有token则跳转到登录界面
+        EMOptions options = new EMOptions();
+        options.setAppKey("1117240606210709#travel");
+        // 其他 EMOptions 配置。
+        EMClient.getInstance().init(this, options);
+
         edtUserId =findViewById(R.id.edt_account);
         edtPassword =findViewById(R.id.edt_password);
         btnLogin =findViewById(R.id.btn_login);
@@ -180,27 +195,7 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (password.length() < 6 && password.length() > 1) {
                     Toast.makeText(LoginActivity.this, "输入的密码小于六位数", Toast.LENGTH_LONG).show();
                 } else {
-//                    //即时通信登录
-//                    EMClient.getInstance().login(userId, password, new EMCallBack() {
-//                        // 登录成功回调
-//                        @Override
-//                        public void onSuccess() {
-//
-//                        }
-//
-//                        // 登录失败回调，包含错误信息
-//                        @Override
-//                        public void onError(final int code, final String error) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onProgress(int i, String s) {
-//
-//                        }
-//
-//                    });
-
+                    signIn();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -262,5 +257,114 @@ public class LoginActivity extends AppCompatActivity {
 
         // 设置随机选择的背景图片
         imgBackgroundLogin.setImageResource(backgroundImages[randomIndex]);
+    }
+    //TODO 在实现了登入进入后，如果直接退出会导致帐户状态码未修改，直接导致下次登入失败，所以需要在登入成功后，修改帐户状态码
+    /**
+     * 登录方法
+     */
+    private void signIn() {
+        //登入方法是个异步方法，直接进行调用即可
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage("正在登陆，请稍后...");
+        mDialog.show();
+        String username = edtUserId.getText().toString().trim();
+        String password = edtUserId.getText().toString().trim();
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
+            Toast.makeText(LoginActivity.this, "用户名和密码不能为空", Toast.LENGTH_LONG).show();
+            return;
+        }
+        EMClient.getInstance().login(username, password, new EMCallBack() {
+            /**
+             * 登陆成功的回调
+             */
+            @Override public void onSuccess() {
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        mDialog.dismiss();
+                        // 加载所有会话到内存
+                        EMClient.getInstance().chatManager().loadAllConversations();
+                        // 加载所有群组到内存，如果使用了群组的话
+                        // EMClient.getInstance().groupManager().loadAllGroups();
+                        finish();
+                    }
+                });
+            }
+
+            /**
+             * 登陆错误的回调
+             * @param i
+             * @param s
+             */
+            @Override public void onError(final int i, final String s) {
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        mDialog.dismiss();
+                        Log.d("lzan13", "登录失败 Error code:" + i + ", message:" + s);
+                        /**
+                         * 关于错误码可以参考官方api详细说明
+                         * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1_e_m_error.html
+                         */
+                        switch (i) {
+                            // 网络异常 2
+                            case EMError.NETWORK_ERROR:
+                                Toast.makeText(LoginActivity.this,
+                                        "网络错误 code: " + i + ", message:" + s, Toast.LENGTH_LONG).show();
+                                break;
+                            // 无效的用户名 101
+                            case EMError.INVALID_USER_NAME:
+                                Toast.makeText(LoginActivity.this,
+                                        "无效的用户名 code: " + i + ", message:" + s, Toast.LENGTH_LONG).show();
+                                break;
+                            // 无效的密码 102
+                            case EMError.INVALID_PASSWORD:
+                                Toast.makeText(LoginActivity.this,
+                                        "无效的密码 code: " + i + ", message:" + s, Toast.LENGTH_LONG).show();
+                                break;
+                            // 用户认证失败，用户名或密码错误 202
+                            case EMError.USER_AUTHENTICATION_FAILED:
+                                Toast.makeText(LoginActivity.this,
+                                                "用户认证失败，用户名或密码错误 code: " + i + ", message:" + s, Toast.LENGTH_LONG)
+                                        .show();
+                                break;
+                            // 用户不存在 204
+                            case EMError.USER_NOT_FOUND:
+                                Toast.makeText(LoginActivity.this,
+                                        "用户不存在 code: " + i + ", message:" + s, Toast.LENGTH_LONG).show();
+                                break;
+                            // 无法访问到服务器 300
+                            case EMError.SERVER_NOT_REACHABLE:
+                                Toast.makeText(LoginActivity.this,
+                                        "无法访问到服务器 code: " + i + ", message:" + s, Toast.LENGTH_LONG).show();
+                                break;
+                            // 等待服务器响应超时 301
+                            case EMError.SERVER_TIMEOUT:
+                                Toast.makeText(LoginActivity.this,
+                                                "等待服务器响应超时 code: " + i + ", message:" + s, Toast.LENGTH_LONG)
+                                        .show();
+                                break;
+                            // 服务器繁忙 302
+                            case EMError.SERVER_BUSY:
+                                Toast.makeText(LoginActivity.this,
+                                        "服务器繁忙 code: " + i + ", message:" + s, Toast.LENGTH_LONG).show();
+                                break;
+                            // 未知 Server 异常 303 一般断网会出现这个错误
+                            case EMError.SERVER_UNKNOWN_ERROR:
+                                Toast.makeText(LoginActivity.this,
+                                        "未知的服务器异常 code: " + i + ", message:" + s, Toast.LENGTH_LONG).show();
+                                break;
+                            default:
+                                Toast.makeText(LoginActivity.this,
+                                        "ml_sign_in_failed code: " + i + ", message:" + s,
+                                        Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                    }
+                });
+            }
+
+            @Override public void onProgress(int i, String s) {
+
+            }
+        });
     }
 }

@@ -61,20 +61,10 @@
         android:theme="@style/Theme.Travel"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".activities.personal.FansActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.personal.FollowsActivity"
-            android:exported="false" />
 
-        <service
-            android:name=".activities.Widget.UpdateWorker"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <receiver
-            android:name=".activities.Widget.WidgetProvider"
-            android:exported="false">
+        <service android:name=".activities.Widget.UpdateWorker" android:permission="android.permission.BIND_JOB_SERVICE" />
+        <receiver android:name=".activities.Widget.WidgetProvider"
+        android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="glue502.software.UPDATE_WIDGET_ON_CLICK" />
@@ -84,26 +74,26 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
-        <activity
-            android:name=".activities.personal.DailyTaskActivity"
+        <activity android:name=".activities.IM.IMActivity"
             android:exported="false" />
-
-        <activity android:name=".activities.photoMeld.ShowPictureEdit"
+        <activity android:name=".activities.IM.IMChatActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+        <activity
+            android:name=".activities.photoMeld.ShowPictureEdit"
             android:exported="false" />
         <activity
             android:name=".activities.personal.AchievementActivity"
             android:exported="false" />
-        <activity
-            android:name=".activities.personal.UserInfoActivity"
+        <activity android:name=".activities.IM.MainIMActivity"
             android:exported="false" />
-        <activity
-            android:name=".activities.travelRecord.TranslateActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.travelRecord.CurrencyExchangeActivity"
+        <activity android:name=".activities.IM.IMLoginActivity"
             android:exported="false" />
         <activity
             android:name=".activities.photoMeld.PhotoMeld"
+            android:exported="false"/>
+        <activity
+            android:name=".activities.travelRecord.CurrencyExchangeActivity"
             android:exported="false" />
         <activity
             android:name=".activities.AI.MainWenXinActivity"
@@ -276,7 +266,24 @@
         <service
             android:name=".activities.AI.SpeechTest"
             android:enabled="true"
+            android:exported="true" /> <!-- 环信 -->
+        <service
+            android:name="com.hyphenate.chat.EMChatService"
             android:exported="true" />
+        <service
+            android:name="com.hyphenate.chat.EMJobService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <meta-data
+            android:name="EASEMOB_APPKEY"
+            android:value="1140231121210779#wxc" />
+        <meta-data
+            android:name="EASEMOB_APPKEY_IM"
+            android:value="YXA6md7y8tKPQUun4In5rsyg3w" />
+        <meta-data
+            android:name="EASEMOB_APPKEY_CHAT"
+            android:value="YXA6izz4gIj6msN8c8DFsG2Bh_dpNwM" />
     </application>
 
 </manifest>

@@ -255,8 +255,24 @@ public class FunctionFragment extends Fragment {
 
                     // 获取服务器响应的JSON字符串
                     String json = response.body().string();
+                    System.out.println("获取的文字覆盖物"+json);
                     // 然后使用Gson将JSON字符串转换为List<Speech>
                     List<Speech> speeches = parseJsonToList(json);
+                    //遍历列表并将文字覆盖物显示在地图上
+                    for (Speech speech : speeches) {
+                        System.out.println("speech="+speech.toString());
+                        String text = speech.getText();
+                        double latitude = speech.getLatitude();
+                        double longitude = speech.getLongitude();
+                        LatLng latLng = new LatLng(latitude, longitude);
+                        // 创建覆盖物
+                        OverlayOptions overlayOptions = new TextOptions()
+                                .text(text)
+                                .bgColor(0xffF5F5F5)
+                                .fontSize(25)
+                                .position(latLng)
+                                .fontColor(0xff000000);
+                            }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
