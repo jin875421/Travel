@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -69,24 +70,36 @@ public class IMChatActivity extends AppCompatActivity implements EMMessageListen
     //头像
     private String avatar;
     private String userName;
-
+    private ImageView back;
+    private TextView user_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_im_chat);
+        back = findViewById(R.id.back);
+        user_name = findViewById(R.id.title);
         // 获取当前会话的username(如果是群聊就是群id)
         mChatId = getIntent().getStringExtra("ec_chat_id");
+        userName = getIntent().getStringExtra("ec_chat_name");
         mMessageListener = (EMMessageListener) this;
         //初始化环信，在这里实现了类似于项目中的token判断，如果没有token则跳转到登录界面
         EMOptions options = new EMOptions();
         options.setAppKey("1117240606210709#travel");
         // 其他 EMOptions 配置。
         EMClient.getInstance().init(this, options);
-        //沉浸式状态栏
-        MyViewUtils.setISBarWithoutView(this,true);
+        //状态栏
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), true);
+
 
         initView();
         initConversation();
+        user_name.setText(userName);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
     /**
      * 初始化界面

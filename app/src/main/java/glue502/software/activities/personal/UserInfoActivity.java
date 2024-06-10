@@ -109,7 +109,6 @@ public class UserInfoActivity extends AppCompatActivity {
             intent.putExtra("authorId",authorId);
             startActivity(intent);
         });
-
         //为头像添加大图显示
         avatar.setOnClickListener(v->{
             OpenImage.with(UserInfoActivity.this).setClickImageView(avatar)

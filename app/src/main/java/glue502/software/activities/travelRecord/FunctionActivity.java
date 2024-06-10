@@ -39,7 +39,7 @@ import glue502.software.activities.posts.UploadPostActivity;
 import glue502.software.utils.MyViewUtils;
 
 public class FunctionActivity extends AppCompatActivity {
-    private RelativeLayout todolist,expenserecord, AI_1, AI_5, speechBtn, wenXinBtn,photoMeld;
+    private RelativeLayout todolist,expenserecord, AI_1, AI_5, wenXinBtn,photoMeld;
     private RelativeLayout translate,currancyexchange;
     private ImageView back;
     private RelativeLayout top;
@@ -64,7 +64,6 @@ public class FunctionActivity extends AppCompatActivity {
         AI_5 = findViewById(R.id.AI_5);
         currancyexchange = findViewById(R.id.currancy_exchange);
         translate = findViewById(R.id.translate);
-        speechBtn = findViewById(R.id.speechBtn);
         wenXinBtn = findViewById(R.id.wenxin);
         photoMeld = findViewById(R.id.rltl_photo_meld);
     }
@@ -133,13 +132,7 @@ public class FunctionActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        speechBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(FunctionActivity.this, SpeechTest.class);
-                startActivity(intent);
-            }
-        });
+
         wenXinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

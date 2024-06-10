@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,7 +41,6 @@ public class IMFollowAdapter extends RecyclerView.Adapter<IMFollowAdapter.IMFoll
 
     @Override
     public void onBindViewHolder(@NonNull IMFollowViewHolder holder, int position) {
-        Toast.makeText(context, userInfoList.get(position).toString(), Toast.LENGTH_SHORT).show();
         UserInfo userInfo = userInfoList.get(position);
         RequestOptions requestOptions = new RequestOptions()
                 .transform(new CircleCrop());

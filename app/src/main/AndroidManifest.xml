@@ -74,6 +74,16 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
+        <activity android:name=".activities.personal.FollowsActivity"
+            android:exported="false" />
+        <activity android:name=".activities.personal.FansActivity"
+            android:exported="false" />
+        <activity android:name=".activities.travelRecord.TranslateActivity"
+            android:exported="false" />
+        <activity android:name=".activities.personal.UserInfoActivity"
+            android:exported="false" />
+        <activity android:name=".activities.personal.DailyTaskActivity"
+            android:exported="false" />
         <activity android:name=".activities.IM.IMActivity"
             android:exported="false" />
         <activity android:name=".activities.IM.IMChatActivity"

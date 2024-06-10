@@ -69,7 +69,6 @@ public class DailyTaskActivity extends AppCompatActivity {
     private ImageView btnBack;
     private UserExtraInfo userExtraInfo;
     private List<UserDailyTask> userDailyTaskList;
-    //TODO 每日签到功能待办
     private TextView user_name,TvLevel,signInStatu;
     private ImageView signIn,avatar;
     private ProgressBar progressBar;

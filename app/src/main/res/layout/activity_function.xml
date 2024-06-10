@@ -118,7 +118,7 @@
             android:orientation="horizontal"
             android:weightSum="4">
             <RelativeLayout
-                android:id="@+id/speechBtn"
+                android:id="@+id/currancy_exchange"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="1">
@@ -126,15 +126,16 @@
                     android:layout_width="75dp"
                     android:layout_height="95dp"
                     android:paddingLeft="25dp"
-                    android:src="@drawable/ai_plant_recognition" />
+                    android:src="@drawable/exchange" />
                 <TextView
-                    android:text="语音识别"
+                    android:text="货币转换"
                     android:gravity="center"
                     android:textColor="@color/black"
                     android:layout_alignParentBottom="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/wenxin"
                 android:layout_width="0dp"
@@ -191,31 +192,14 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            android:weightSum="4">
-            <RelativeLayout
-                android:id="@+id/currancy_exchange"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1">
-                <ImageView
-                    android:layout_width="75dp"
-                    android:layout_height="95dp"
-                    android:paddingLeft="25dp"
-                    android:src="@drawable/exchange" />
-                <TextView
-                    android:text="货币转换"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:layout_alignParentBottom="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="100dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:weightSum="4">-->
+<!--            -->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
     </LinearLayout>
 </RelativeLayout>
