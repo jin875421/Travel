@@ -62,9 +62,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-        <service android:name=".activities.Widget.UpdateWorker" android:permission="android.permission.BIND_JOB_SERVICE" />
-        <receiver android:name=".activities.Widget.WidgetProvider"
-        android:exported="false">
+        <service
+            android:name=".activities.Widget.UpdateWorker"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver
+            android:name=".activities.Widget.WidgetProvider"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="glue502.software.UPDATE_WIDGET_ON_CLICK" />
@@ -74,24 +78,32 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
-        <activity android:name=".activities.IM.IMActivity"
+
+        <activity
+            android:name=".activities.personal.UnGetAchievementActivity"
             android:exported="false" />
-        <activity android:name=".activities.IM.IMChatActivity"
-            android:screenOrientation="portrait"
+        <activity
+            android:name=".activities.IM.IMActivity"
             android:exported="false" />
+        <activity
+            android:name=".activities.IM.IMChatActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.photoMeld.ShowPictureEdit"
             android:exported="false" />
         <activity
             android:name=".activities.personal.AchievementActivity"
             android:exported="false" />
-        <activity android:name=".activities.IM.MainIMActivity"
+        <activity
+            android:name=".activities.IM.MainIMActivity"
             android:exported="false" />
-        <activity android:name=".activities.IM.IMLoginActivity"
+        <activity
+            android:name=".activities.IM.IMLoginActivity"
             android:exported="false" />
         <activity
             android:name=".activities.photoMeld.PhotoMeld"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".activities.travelRecord.CurrencyExchangeActivity"
             android:exported="false" />

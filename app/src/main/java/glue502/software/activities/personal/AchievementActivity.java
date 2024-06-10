@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.scwang.smart.refresh.footer.ClassicsFooter;
@@ -46,6 +48,7 @@ public class AchievementActivity extends AppCompatActivity {
     private AchievementAdapter achievementAdapter;
     private List<Achievement> achievementList;
     private ImageView btnBack;
+    private TextView checkUnattained;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,13 @@ public class AchievementActivity extends AppCompatActivity {
             @Override
             public void onLoadMore(RefreshLayout refreshlayout) {
                 refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
+            }
+        });
+        checkUnattained.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AchievementActivity.this, UnGetAchievementActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -158,5 +168,6 @@ public class AchievementActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         btnBack = findViewById(R.id.back);
+        checkUnattained = findViewById(R.id.check_unattained);
     }
 }

@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -45,10 +46,12 @@ import glue502.software.activities.posts.PostDisplayActivity;
 import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
+import glue502.software.models.UserExtraInfo;
 import glue502.software.models.UserInfo;
 import glue502.software.utils.AudioRecorder;
 import glue502.software.utils.MyViewUtils;
 import okhttp3.FormBody;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -59,7 +62,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private String status;
     private String userId;
     private String authorId;
-    private ImageView backbtn,avatar;
+    private ImageView backbtn,avatar,levelImage;
     private Button follow;
     private TextView username,fansCount,followCount;
     private ListView postList;
@@ -234,7 +237,8 @@ public class UserInfoActivity extends AppCompatActivity {
          avatar = findViewById(R.id.avatar);
          follow = findViewById(R.id.follow);
          username = findViewById(R.id.user_name);
-         fansCount = findViewById(R.id.fans_count);
+        levelImage = findViewById(R.id.level_image);
+        fansCount = findViewById(R.id.fans_count);
          followCount = findViewById(R.id.follow_count);
          postList = findViewById(R.id.post_list);
          follows = findViewById(R.id.follows);
@@ -320,6 +324,62 @@ public class UserInfoActivity extends AppCompatActivity {
                                 fansCount.setText(String.valueOf(count));
                             }
                         });
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String getUserExtraInfoUrl = "http://"+ip+"/travel/" + "userExtraInfo/getUserExtraInfo";
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("userId", authorId)
+                        .build();
+                Request request4 = new Request.Builder()
+                        .url(getUserExtraInfoUrl)
+                        .post(requestBody)
+                        .build();
+                try {
+                    Response response = client.newCall(request4).execute();
+                    if(response.isSuccessful()){
+                        String responseData = response.body().string();
+                        if(responseData.equals("")){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i("UserInfoActivity", "无数据");
+                                }
+                            });
+                        } else {
+                            UserExtraInfo userExtraInfo = new Gson().fromJson(responseData, UserExtraInfo.class);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int level = userExtraInfo.getLevel();
+                                    // 设置等级
+                                    switch (level){
+                                        case 1:
+                                            Glide.with(UserInfoActivity.this).load(R.mipmap.lv1).into(levelImage);
+                                            break;
+                                        case 2:
+                                            Glide.with(UserInfoActivity.this).load(R.mipmap.lv2).into(levelImage);
+                                            break;
+                                        case 3:
+                                            Glide.with(UserInfoActivity.this).load(R.mipmap.lv3).into(levelImage);
+                                            break;
+                                        case 4:
+                                            Glide.with(UserInfoActivity.this).load(R.mipmap.lv4).into(levelImage);
+                                            break;
+                                        case 5:
+                                            Glide.with(UserInfoActivity.this).load(R.mipmap.lv5).into(levelImage);
+                                            break;
+                                        default:
+                                            levelImage.setVisibility(View.GONE);
+                                            break;
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        Log.i("UserInfoActivity", "获取用户额外数据失败");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
