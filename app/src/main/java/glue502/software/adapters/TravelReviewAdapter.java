@@ -39,12 +39,14 @@ public class TravelReviewAdapter extends BaseAdapter {
     private Context context;
     private int layoutId;
     private List<TravelReview> travelReview;
+    private String userStatus;
     private String url = "http://"+ip+"/travel/";
 
-    public TravelReviewAdapter(Context context,List<TravelReview> travelReview,int layoutId) {
+    public TravelReviewAdapter(Context context,List<TravelReview> travelReview,int layoutId,String userStatus) {
         this.context = context;
         this.travelReview = travelReview;
         this.layoutId = layoutId;
+        this.userStatus = userStatus;
     }
     @Override
     public int getCount() {
@@ -139,10 +141,20 @@ public class TravelReviewAdapter extends BaseAdapter {
         ivBackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 执行跳转至详情页面
-                Intent intent = new Intent(context, TravelDetailActivity.class);
-                intent.putExtra("travelId",travelReview.get(i).getTravelId());
-                context.startActivity(intent);
+
+
+                if(userStatus.equals("1")){
+                    // 执行跳转至详情页面
+                    Intent intent = new Intent(context, TravelDetailActivity.class);
+                    intent.putExtra("travelId",travelReview.get(i).getTravelId());
+                    intent.putExtra("userStatus1","1");
+                    context.startActivity(intent);
+                }else{
+                    Intent intent = new Intent(context, TravelDetailActivity.class);
+                    intent.putExtra("travelId",travelReview.get(i).getTravelId());
+                    intent.putExtra("userStatus1","2");
+                    context.startActivity(intent);
+                }
             }
         });
 

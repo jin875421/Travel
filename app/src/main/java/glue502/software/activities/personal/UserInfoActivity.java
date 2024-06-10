@@ -42,6 +42,7 @@ import java.util.concurrent.CountDownLatch;
 import glue502.software.R;
 import glue502.software.activities.login.LoginActivity;
 import glue502.software.activities.posts.PostDisplayActivity;
+import glue502.software.activities.travelRecord.TravelReviewActivity;
 import glue502.software.adapters.PostListAdapter;
 import glue502.software.models.Post;
 import glue502.software.models.PostWithUserInfo;
@@ -59,6 +60,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private String status;
     private String userId;
     private String authorId;
+    private String authorName;
     private ImageView backbtn,avatar;
     private Button follow;
     private TextView username,fansCount,followCount;
@@ -68,7 +70,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private List<UserInfo> userInfos = new ArrayList<>();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private boolean isFollow = false;
-    private RelativeLayout follows,fans;
+    private RelativeLayout follows,fans,rtltReview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +129,16 @@ public class UserInfoActivity extends AppCompatActivity {
                 PostWithUserInfo clickItem = (PostWithUserInfo) postListAdapter.getItem(i);
                 Intent intent = new Intent(UserInfoActivity.this, PostDisplayActivity.class);
                 intent.putExtra("postwithuserinfo", clickItem);
+                startActivity(intent);
+            }
+        });
+        rtltReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserInfoActivity.this, TravelReviewActivity.class);
+                intent.putExtra("userStatus", "2");
+                intent.putExtra("authorId",authorId);
+                intent.putExtra("authorName",authorName);
                 startActivity(intent);
             }
         });
@@ -239,6 +251,7 @@ public class UserInfoActivity extends AppCompatActivity {
          postList = findViewById(R.id.post_list);
          follows = findViewById(R.id.follows);
          fans = findViewById(R.id.fans);
+        rtltReview=findViewById(R.id.rtlt_review);;
     }
     public void initData() {
         //通过id查询个人数据
@@ -262,7 +275,7 @@ public class UserInfoActivity extends AppCompatActivity {
                             public void run() {
                                 //设置头像和用户名
                                 username.setText(userInfo.getUserName());
-
+                                authorName = userInfo.getUserName();
                                 if(userInfo.getAvatar()!=null){
                                     System.out.println(userInfo.getAvatar());
                                     RequestOptions requestOptions = new RequestOptions()
