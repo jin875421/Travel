@@ -154,6 +154,14 @@
                             android:singleLine="true"
                             android:textColorHint="#aaaaaa"
                             android:textSize="15sp" />
+                        <Button
+                            android:background="@drawable/background_blue2green"
+                            android:layout_marginTop="5dp"
+                            android:text="私信"
+                            android:textColor="@color/blue"
+                            android:layout_width="35dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/btn_IM"/>
                     </LinearLayout>
                 </androidx.appcompat.widget.Toolbar>
             </com.google.android.material.appbar.CollapsingToolbarLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/ec_edit_chat_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="对方的username"/>
+
+        <Button
+            android:id="@+id/ec_btn_start_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="发起聊天"/>
+
+        <Button
+            android:id="@+id/ec_btn_sign_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="退出登录"/>
+
+        <EditText
+            android:id="@+id/ec_create_chatRoom_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="创建的聊天室的ID"/>
+        <Button
+            android:id="@+id/ec_btn_create_chating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="创建聊天室"/>
+
+        <EditText
+            android:id="@+id/ec_edit_chatRoom_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="加入的聊天室的ID"/>
+        <Button
+            android:id="@+id/ec_btn_add_chating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="加入聊天室"/>
+    </LinearLayout>
+
+</RelativeLayout>

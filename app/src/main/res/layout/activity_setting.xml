@@ -78,6 +78,27 @@
             android:src="@drawable/play_store_512" />
 
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rltl_wakeup"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_frame_underline">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="IM"
+            android:textColor="#0c0c0c"
+            android:textSize="16dp"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/play_store_512"
+            />
+
+    </RelativeLayout>
     <Button
         android:id="@+id/btn_destroy"
         android:layout_width="match_parent"

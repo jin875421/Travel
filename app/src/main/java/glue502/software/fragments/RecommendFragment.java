@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -67,6 +68,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import glue502.software.R;
+import glue502.software.activities.IM.IMActivity;
 import glue502.software.activities.login.LoginActivity;
 import glue502.software.activities.posts.PostDisplayActivity;
 import glue502.software.activities.posts.PostSearchActivity;
@@ -106,6 +108,7 @@ public class RecommendFragment extends Fragment {
     private List<UserInfo> userInfos;
     private ListView listView;
     private SmartRefreshLayout refreshLayout;
+    private Button btnIM;
     private String searchUrl="http://"+ip+"/travel/posts/search";
     private String officialUrl="http://"+ip+"/travel/posts/getMypostlist?userId=wanlilu";
     public LocationClient mLocationClient = null;
@@ -139,6 +142,7 @@ public class RecommendFragment extends Fragment {
         attractionName = view.findViewById(R.id.attraction_name);
         refreshLayout = view.findViewById(R.id.refreshLayout);
         weather = view.findViewById(R.id.weather);
+        btnIM = view.findViewById(R.id.btn_IM);
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -426,6 +430,13 @@ public class RecommendFragment extends Fragment {
     //--------------------------------------------------------------------------
 
     public void setlistener(){
+        btnIM.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), IMActivity.class);
+                startActivity(intent);
+            }
+        });
         weather.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -169,6 +169,8 @@ public class travelRecordActivity extends Activity {
 
     //输入法是否打开
     private boolean wasOpened = false;
+    private int[] isFirstIn;
+    private List<SuggestionSearch> searchList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +198,12 @@ public class travelRecordActivity extends Activity {
         }
         // 如果之前有保存的控件数量，则重新创建控件
         if (numberOfControls > 0) {
+            // 判断是否首次进入页面的数组 全部置为1
+            isFirstIn = new int[numberOfControls];
+            Arrays.fill(isFirstIn, 1);
+            for (int i = 0; i < numberOfControls; i++) {
+                searchList.add(SuggestionSearch.newInstance());
+            }
             for (int i = numberOfControls - 1; i > 0; i--) {
                 addContentWithTag(i);
             }
@@ -996,7 +1004,7 @@ public class travelRecordActivity extends Activity {
         LinearLayout.LayoutParams etParams1 = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 dpToPx(25));
-        ListView view = PoiSugSearch(etContent1, listView);
+        ListView view = PoiSugSearch(i,etContent1, listView);
         etContent1.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
@@ -1013,10 +1021,14 @@ public class travelRecordActivity extends Activity {
                 if (cs.length() <= 0) {
                     return;
                 }
-                // 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
-                search.requestSuggestion((new SuggestionSearchOption())
-                        .keyword(cs.toString()) // 关键字
-                        .city(city)); // 城市
+                if(isFirstIn[i]==1){
+                    isFirstIn[i]=0;
+                } else {
+                    // 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
+                    searchList.get(i).requestSuggestion((new SuggestionSearchOption())
+                            .keyword(cs.toString()) // 关键字
+                            .city(city)); // 城市
+                }
             }
         });
         etContent1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -1374,7 +1386,52 @@ public class travelRecordActivity extends Activity {
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             etContent1.setBackgroundResource(R.drawable.edittext_underline);
 //            etContent1.setPaintFlags(etContent1.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
-            ListView view = PoiSugSearch(etContent1, listView);
+            // TODO 修bug
+//            ListView view = PoiSugSearch(etContent1, listView);
+            OnGetSuggestionResultListener listener = new OnGetSuggestionResultListener() {
+                @Override
+                public void onGetSuggestionResult(SuggestionResult suggestionResult) {
+                    if (suggestionResult == null || suggestionResult.getAllSuggestions() == null) {
+                        return;
+                    }
+                    List<HashMap<String, String>> suggest = new ArrayList<>();
+
+                    for (SuggestionResult.SuggestionInfo info : suggestionResult.getAllSuggestions()) {
+                        if (info.getKey() != null && info.getDistrict() != null && info.getCity() != null) {
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put("key", info.getKey());
+                            map.put("city", info.getCity());
+                            map.put("dis", info.getDistrict());
+                            suggest.add(map);
+                        }
+                    }
+
+                    SimpleAdapter simpleAdapter = new SimpleAdapter(getApplicationContext(),
+                            suggest,
+                            R.layout.item_layout,
+                            new String[]{"key", "city", "dis"},
+                            new int[]{R.id.sug_key, R.id.sug_city, R.id.sug_dis}
+                    );
+                    listView.setAdapter(simpleAdapter);
+                    listView.setVisibility(View.VISIBLE);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            // 获取点击的建议项的数据
+                            HashMap<String, String> selectedItem = suggest.get(position);
+                            selectedKey = selectedItem.get("key");
+                            selectedCity = selectedItem.get("city");
+                            selectedDistrict = selectedItem.get("dis");
+                            if (selectedKey != null) {
+                                etContent1.setText(selectedKey);
+                            }
+                        }
+                    });
+                    simpleAdapter.notifyDataSetChanged();
+                }
+            };
+            searchList.add(SuggestionSearch.newInstance());
+            searchList.get(newIndex-1).setOnGetSuggestionResultListener(listener);
 
             etContent1.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -1393,7 +1450,7 @@ public class travelRecordActivity extends Activity {
                         return;
                     }
                     // 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
-                    search.requestSuggestion((new SuggestionSearchOption())
+                    searchList.get(newIndex-1).requestSuggestion((new SuggestionSearchOption())
                             .keyword(cs.toString()) // 关键字
                             .city(city)); // 城市
                 }
@@ -1403,9 +1460,9 @@ public class travelRecordActivity extends Activity {
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (hasFocus && (!TextUtils.isEmpty(etContent1.getText()))) {
                         etContent1.setText(etContent1.getText());
-                        view.setVisibility(View.VISIBLE);
+                        listView.setVisibility(View.VISIBLE);
                     } else {
-                        view.setVisibility(View.GONE);
+                        listView.setVisibility(View.GONE);
                     }
                 }
             });
@@ -1430,11 +1487,11 @@ public class travelRecordActivity extends Activity {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     getResources().getDimensionPixelSize(R.dimen.list_height) // 这里的 R.dimen.list_height 是在 dimens.xml 文件中定义的高度，可以根据实际需求进行修改
             );
-            view.setLayoutParams(layoutParam);
-            view.setVisibility(View.GONE); // 设置初始可见性为 GONE
+            listView.setLayoutParams(layoutParam);
+            listView.setVisibility(View.GONE); // 设置初始可见性为 GONE
             // 给 ListView 设置 ID
-            view.setId(View.generateViewId()); // 为了确保唯一性，可以使用 generateViewId() 为 ListView 生成一个唯一的 ID
-            layout.addView(view);
+            listView.setId(View.generateViewId()); // 为了确保唯一性，可以使用 generateViewId() 为 ListView 生成一个唯一的 ID
+            layout.addView(listView);
 
             // 创建 EditText2
             EditText etContent2 = new EditText(this);
@@ -1873,7 +1930,7 @@ public class travelRecordActivity extends Activity {
      * @param listView
      * @return
      */
-    private ListView PoiSugSearch(final AutoCompleteTextView autoCompleteTextView, final ListView listView) {
+    private ListView PoiSugSearch(int i,final AutoCompleteTextView autoCompleteTextView, final ListView listView) {
         OnGetSuggestionResultListener listener = new OnGetSuggestionResultListener() {
             /**
              * 获取在线建议搜索结果，得到requestSuggestion返回的搜索结果
@@ -1977,8 +2034,8 @@ public class travelRecordActivity extends Activity {
 
         };
         // 初始化建议搜索模块，注册建议搜索事件监听
-        search = SuggestionSearch.newInstance();
-        search.setOnGetSuggestionResultListener(listener);
+//        search = SuggestionSearch.newInstance();
+        searchList.get(i).setOnGetSuggestionResultListener(listener);
         return listView;
     }
 

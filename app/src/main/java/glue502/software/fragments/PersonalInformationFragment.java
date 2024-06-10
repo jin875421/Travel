@@ -469,7 +469,7 @@ public class PersonalInformationFragment extends Fragment {
                         Log.i("PersonalInformationFragment", "获取用户额外数据失败");
                     }
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
     }).start();
