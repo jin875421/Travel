@@ -181,6 +181,7 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
 
     @SuppressLint("ClickableViewAccessibility")
     private void setClickListeners() {
+        llSeeMore.setOnClickListener(this);
         // 主界面
         behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -415,6 +416,10 @@ public class MyFollowActivity extends AppCompatActivity implements View.OnClickL
                 unFollowUsers(unfollowIdList);
                 followListAdapter.setIsFollow(isFollow);
                 followListAdapter.notifyDataSetChanged();
+            case R.id.ll_see_more:
+                Intent intent = new Intent(MyFollowActivity.this, UserInfoActivity.class);
+                intent.putExtra("AuthorId", selectUserInfo.getUserId());
+                startActivity(intent);
             default:
                 break;
         }

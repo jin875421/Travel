@@ -564,6 +564,7 @@ public class RecommendFragment extends Fragment {
 
                 }else{
                     Intent intent = new Intent(getActivity(), TravelReviewActivity.class);
+                    intent.putExtra("userStatus","1");
                     startActivity(intent);
                 }
             }

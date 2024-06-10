@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -42,6 +43,10 @@ public class TravelReviewActivity extends AppCompatActivity {
     private String url = "http://"+ip+"/travel/travel";
     private String userId;
     private boolean firstLoad = true;
+    private String userStatus;
+    private String authorId;
+    private String authorName;
+    private TextView txtReview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,11 +57,24 @@ public class TravelReviewActivity extends AppCompatActivity {
         initview();
         setlistener();
         userId = sharedPreferences.getString("userId","");
-        initData(userId);
+        //获取传递过来的参数
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            userStatus=extras.getString("userStatus");
+            authorId=extras.getString("authorId");
+            authorName=extras.getString("authorName");
+        }
+        if(userStatus.equals("1")){
+            initData(userId);
+        }else{
+            txtReview.setText(authorName+"的足迹");
+            initData(authorId);
+        }
 
     }
     private void initview(){
         travelReviewList = findViewById(R.id.travel_review);
+        txtReview = findViewById(R.id.txt_review);
         back = findViewById(R.id.back);
         back.setOnClickListener(v -> finish());
     }
@@ -80,7 +98,7 @@ public class TravelReviewActivity extends AppCompatActivity {
                             List<TravelReview> travelReview = new Gson().fromJson(responseData,new TypeToken<List<TravelReview>>(){}.getType());
                             //使用travelReviewAdapter适配器将travelReview数据显示到ListView中
                             runOnUiThread(()->{
-                                TravelReviewAdapter travelReviewAdapter = new TravelReviewAdapter(TravelReviewActivity.this,travelReview,R.layout.travel_review_item);
+                                TravelReviewAdapter travelReviewAdapter = new TravelReviewAdapter(TravelReviewActivity.this,travelReview,R.layout.travel_review_item,userStatus);
                                 travelReviewList.setAdapter(travelReviewAdapter);
                             });
                         }
@@ -96,15 +114,28 @@ public class TravelReviewActivity extends AppCompatActivity {
 
     }
     public void onClick(String travelId){
-        Intent intent = new Intent(this, TravelDetailActivity.class);
-        intent.putExtra("travelId",travelId);
-        startActivityForResult(intent,1);
+        if(userStatus.equals("1")){
+            Intent intent = new Intent(this, TravelDetailActivity.class);
+            intent.putExtra("travelId",travelId);
+            intent.putExtra("userStatus1","1");
+            startActivityForResult(intent,1);
+        }else{
+            Intent intent = new Intent(this, TravelDetailActivity.class);
+            intent.putExtra("travelId",travelId);
+            intent.putExtra("userStatus1","2");
+            startActivityForResult(intent,1);
+        }
     }
 
     @Override
     public void onResume() {
         if (!firstLoad) {
-            initData(userId);
+            if(userStatus.equals("1")){
+                initData(userId);
+            }else{
+                txtReview.setText(authorName+"的足迹");
+                initData(authorId);
+            }
         } else {
             firstLoad = false;
         }

@@ -26,6 +26,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.util.JsonUtils;
@@ -51,7 +53,7 @@ public class IMActivity extends AppCompatActivity {
     private List<UserInfo> followUserInfoList;
     private IMFollowAdapter imFollowAdapter;
 
-
+    private ImageView back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,9 +62,15 @@ public class IMActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences("userName_and_userId", MODE_PRIVATE);
         userId = sharedPreferences.getString("userId", "");
         Intent intent = getIntent();
-        //沉浸式状态栏
-        MyViewUtils.setISBarWithoutView(this,true);
-
+        //状态栏
+        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), true);
+        back = findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         initView();
         initData();
     }
@@ -221,11 +229,13 @@ public class IMActivity extends AppCompatActivity {
                                     public void onItemClick(UserInfo userInfo, int position) {
                                         //获取所点击的item的username
                                         String chatId = userInfo.getUserId();
+                                        String chatName = userInfo.getUserName();
                                         if(!TextUtils.isEmpty(chatId)) {
                                             //获取当前登录人的username
                                             if(!TextUtils.isEmpty(userId)){
                                                 Intent intent = new Intent(IMActivity.this, IMChatActivity.class);
                                                 intent.putExtra("ec_chat_id", chatId);
+                                                intent.putExtra("ec_chat_name", chatName);
                                                 startActivity(intent);
                                             }else {
                                                 Log.i("IMActivity","获取当前登录人id失败");

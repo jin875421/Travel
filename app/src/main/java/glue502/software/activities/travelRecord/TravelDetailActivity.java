@@ -42,6 +42,7 @@ import okhttp3.Response;
 
 public class TravelDetailActivity extends AppCompatActivity {
     private String travelId;
+    private String userStatus1;
     private TextView travelName;
     private List<travelRecord> travelRecords;
     private ListView travelRecordList;
@@ -56,11 +57,24 @@ public class TravelDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_travel_detail);
         //沉浸式状态栏
         MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.top),true);
-        //获取上页面传过来的travelId
-        travelId = getIntent().getStringExtra("travelId");
+
         initView();
+        //获取上页面传过来的travelId
+        Bundle extras1 = getIntent().getExtras();
+        if (extras1 != null) {
+            userStatus1=extras1.getString("userStatus1");
+            travelId = extras1.getString("travelId");
+
+        }else {
+            System.out.println("null---------------");
+        }
         setlistener();
         initData();
+        if(userStatus1.equals("2")){
+            menuBtn.setVisibility(View.GONE);
+        }else {
+            menuBtn.setVisibility(View.VISIBLE);
+        }
 
     }
     public void initView(){
