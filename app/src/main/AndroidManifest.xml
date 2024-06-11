@@ -74,6 +74,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
+        <activity
+            android:name=".activities.personal.UnGetAchievementActivity"
+            android:exported="false" />
         <activity android:name=".activities.personal.FollowsActivity"
             android:exported="false" />
         <activity android:name=".activities.personal.FansActivity"
@@ -95,13 +98,15 @@
         <activity
             android:name=".activities.personal.AchievementActivity"
             android:exported="false" />
-        <activity android:name=".activities.IM.MainIMActivity"
+        <activity
+            android:name=".activities.IM.MainIMActivity"
             android:exported="false" />
-        <activity android:name=".activities.IM.IMLoginActivity"
+        <activity
+            android:name=".activities.IM.IMLoginActivity"
             android:exported="false" />
         <activity
             android:name=".activities.photoMeld.PhotoMeld"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".activities.travelRecord.CurrencyExchangeActivity"
             android:exported="false" />

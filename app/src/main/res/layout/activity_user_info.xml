@@ -58,12 +58,20 @@
                     android:text="用户名"
                     android:textColor="#0c0c0c"
                     android:textSize="18sp"/>
+                <ImageView
+                    android:id="@+id/level_image"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/user_name"
+                    android:layout_centerVertical="true"
+                    />
                 <Button
                     android:id="@+id/follow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="75dp"
+                    android:layout_height="30dp"
                     android:text="关注"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textColor="@color/white"
                     android:background="@drawable/round_button_unfollowed_background"
                     android:layout_centerVertical="true"
