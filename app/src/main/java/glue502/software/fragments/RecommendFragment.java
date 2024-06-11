@@ -179,10 +179,11 @@ public class RecommendFragment extends Fragment {
                 if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
                     // 完全折叠，显示ImageView
 //                    lsda.setVisibility(View.VISIBLE);
-
+                    btnIM.setBackground(getResources().getDrawable(R.drawable.chat_black));
                 } else {
                     // 非完全折叠，隐藏ImageView
 //                    lsda.setVisibility(View.INVISIBLE);
+                    btnIM.setBackground(getResources().getDrawable(R.drawable.chat_white));
                 }
             }
         });

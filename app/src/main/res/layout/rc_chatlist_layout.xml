@@ -10,7 +10,7 @@
             android:layout_marginTop="5dp"
             android:layout_height="wrap_content">
         <ImageView
-            android:src="@drawable/user_defaultimage"
+            android:src="@drawable/headimg"
             android:id="@+id/rc_iv_portrait"
             android:layout_marginLeft="10dp"
             android:layout_width="40dp"
