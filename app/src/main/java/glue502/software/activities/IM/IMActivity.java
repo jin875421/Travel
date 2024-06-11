@@ -196,7 +196,7 @@ public class IMActivity extends AppCompatActivity {
                 //获取关注列表
                 OkHttpClient client = new OkHttpClient();
                 Request getFollowUserInfoList = new Request.Builder()
-                        .url(url + "/follow/getFollowAndFansUserInfoList?userId=" + userId)
+                        .url(url + "/follow/getFansAndFollowUserInfoList?userId=" + userId)
                         .build();
                 try{
                     //发起请求并获取响应
