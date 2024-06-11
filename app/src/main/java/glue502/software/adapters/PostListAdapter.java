@@ -245,7 +245,7 @@ public class PostListAdapter extends BaseAdapter {
                         Log.i("PostListAdapter", "获取用户额外数据失败");
                     }
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         }).start();

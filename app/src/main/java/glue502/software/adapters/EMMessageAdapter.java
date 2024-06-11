@@ -45,9 +45,7 @@ public class EMMessageAdapter extends RecyclerView.Adapter<EMMessageAdapter.EMMe
                 .load("http://"+ip+"/travel/"+myEMMessage.getAvatar())
                 .apply(requestOptions)
                 .into(holder.avatar);
-        holder.username.setText(myEMMessage.getUsername());
         holder.message.setText(myEMMessage.getMessage());
-        holder.time.setText(myEMMessage.getTime()+"");
     }
 
     @Override
@@ -57,16 +55,12 @@ public class EMMessageAdapter extends RecyclerView.Adapter<EMMessageAdapter.EMMe
 
     static class EMMessageViewHolder extends RecyclerView.ViewHolder {
         ImageView avatar;
-        TextView username;
         TextView message;
-        TextView time;
 
         public EMMessageViewHolder (View itemView){
             super(itemView);
             avatar = itemView.findViewById(R.id.avatar);
-            username = itemView.findViewById(R.id.username);
             message = itemView.findViewById(R.id.message);
-            time = itemView.findViewById(R.id.time);
         }
     }
 }

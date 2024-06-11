@@ -88,7 +88,7 @@ public class IMChatActivity extends AppCompatActivity implements EMMessageListen
         // 其他 EMOptions 配置。
         EMClient.getInstance().init(this, options);
         //状态栏
-        MyViewUtils.setImmersiveStatusBar(this, getWindow().getDecorView(), true);
+        MyViewUtils.setImmersiveStatusBar(this, findViewById(R.id.root), true);
 
 
         initView();

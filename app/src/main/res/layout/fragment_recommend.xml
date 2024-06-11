@@ -155,7 +155,7 @@
                             android:textColorHint="#aaaaaa"
                             android:textSize="15sp" />
                         <Button
-                            android:background="@drawable/envelope"
+                            android:background="@drawable/chat_white"
                             android:layout_marginTop="5dp"
                             android:textColor="@color/blue"
                             android:layout_width="35dp"
