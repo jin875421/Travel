@@ -269,6 +269,7 @@ public class LoginActivity extends AppCompatActivity {
         mDialog.show();
         String username = edtUserId.getText().toString().trim();
         String password = edtUserId.getText().toString().trim();
+        Log.i("aaa", "lzx 登录的IM账号"+username);
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
             Toast.makeText(LoginActivity.this, "用户名和密码不能为空", Toast.LENGTH_LONG).show();
             return;
@@ -280,7 +281,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override public void onSuccess() {
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
-                        mDialog.dismiss();
+//                        mDialog.dismiss();
                         // 加载所有会话到内存
                         EMClient.getInstance().chatManager().loadAllConversations();
                         // 加载所有群组到内存，如果使用了群组的话

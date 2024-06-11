@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
 import com.hyphenate.exceptions.HyphenateException;
 
 import java.io.IOException;
@@ -101,6 +102,11 @@ public class RegisterActivity extends AppCompatActivity {
         edtName=findViewById(R.id.edt_name);
         btnregister=findViewById(R.id.btn_register);
         edtPhoneNumber=findViewById(R.id.edt_phone_number);
+        //初始化环信，在这里实现了类似于项目中的token判断，如果没有token则跳转到登录界面
+        EMOptions options = new EMOptions();
+        options.setAppKey("1117240606210709#travel");
+        // 其他 EMOptions 配置。
+        EMClient.getInstance().init(this, options);
         //添加沉浸式导航栏
         MyViewUtils.setISBarWithoutView(this,true);
 //        setRandomBackground();
@@ -186,6 +192,7 @@ public class RegisterActivity extends AppCompatActivity {
      * 注册方法
      */
     private void signUp() {
+        Log.i("aaa", "lzx 注册启动");
         // 注册是耗时过程，所以要显示一个dialog来提示下用户
         mDialog = new ProgressDialog(this);
         mDialog.setMessage("注册中，请稍后...");
@@ -196,6 +203,7 @@ public class RegisterActivity extends AppCompatActivity {
                 try {
                     String username = edtAccount.getText().toString().trim();
                     String password = edtAccount.getText().toString().trim();
+                    Log.i("aaa", "lzx 注册的用户名为：" + username + "密码为：" + password);
                     //在这里实现向环信服务器发送请求实现注册手段
                     EMClient.getInstance().createAccount(username, password);
                     runOnUiThread(new Runnable() {
