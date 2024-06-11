@@ -12,7 +12,8 @@
         android:orientation="vertical">
 
         <!--返回主界面按钮-->
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/top"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:orientation="horizontal"
@@ -24,21 +25,21 @@
                 android:text="返 回"
                 android:textSize="50px"
                 android:textColor="@color/white"
-                android:background="@drawable/blue_round_button_chat"
+                android:background="@drawable/blue_round_button"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"/>
             <Button
                 android:layout_gravity="center"
                 android:id="@+id/btn_startsetting"
-                android:layout_marginLeft="180dp"
+                android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:text="设 置"
                 android:textSize="50px"
                 android:textColor="@color/white"
-                android:background="@drawable/blue_round_button_chat"
+                android:background="@drawable/blue_round_button"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"/>
-        </LinearLayout>
+        </RelativeLayout>
         <!--聊天信息界面-->
         <ScrollView
             android:layout_marginLeft="10dp"
@@ -76,7 +77,7 @@
                 android:textSize="50px"
                 android:textColor="@color/pearlwhite"
                 android:layout_gravity="center"
-                android:background="@drawable/blue_round_button_chat"
+                android:background="@drawable/blue_round_button"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"/>
         </LinearLayout>

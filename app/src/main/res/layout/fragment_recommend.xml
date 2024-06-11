@@ -155,9 +155,8 @@
                             android:textColorHint="#aaaaaa"
                             android:textSize="15sp" />
                         <Button
-                            android:background="@drawable/background_blue2green"
+                            android:background="@drawable/envelope"
                             android:layout_marginTop="5dp"
-                            android:text="私信"
                             android:textColor="@color/blue"
                             android:layout_width="35dp"
                             android:layout_height="30dp"

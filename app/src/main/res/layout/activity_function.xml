@@ -145,7 +145,7 @@
                     android:layout_width="75dp"
                     android:layout_height="95dp"
                     android:paddingLeft="25dp"
-                    android:src="@drawable/ai_plant_recognition" />
+                    android:src="@drawable/wenxin1" />
                 <TextView
                     android:text="文心一言"
                     android:gravity="center"
@@ -160,10 +160,11 @@
                 android:layout_height="100dp"
                 android:layout_weight="1">
                 <ImageView
-                    android:layout_width="80dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="70dp"
                     android:layout_height="95dp"
                     android:paddingLeft="17dp"
-                    android:src="@drawable/ai_iamge_recognition" />
+                    android:src="@drawable/imageedit" />
                 <TextView
                     android:text="图片融合"
                     android:gravity="center"

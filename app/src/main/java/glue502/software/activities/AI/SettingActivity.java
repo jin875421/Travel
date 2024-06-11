@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import glue502.software.R;
+import glue502.software.utils.MyViewUtils;
 
 
 public class SettingActivity extends Activity {
@@ -20,7 +21,7 @@ public class SettingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wenxin_setting);
         init();
-
+        MyViewUtils.setISBarWithoutView(this,true);
         //把原有设置填进去
         preferences= this.getSharedPreferences("usersetting",MODE_PRIVATE);
         et_APIKEY.setText(preferences.getString("API_Key","oQtUEMpGo1M9vsMfxmrwePzF"));

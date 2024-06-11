@@ -14,6 +14,7 @@ import glue502.software.R;
 import glue502.software.adapters.ChatlistAdapter;
 import glue502.software.models.Chatlist;
 import glue502.software.models.WenXin;
+import glue502.software.utils.MyViewUtils;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,7 +49,7 @@ public class ChatActivity extends Activity {
 
         //聊天信息
         mDatas = new ArrayList<Chatlist>();
-
+        MyViewUtils.setImmersiveStatusBar(this,findViewById(R.id.top),true);
         //读取用户设置里的文心一言的API_Key等信息
         preferences= this.getSharedPreferences("usersetting",MODE_PRIVATE);
         String apikey=preferences.getString("API_Key","oQtUEMpGo1M9vsMfxmrwePzF");
@@ -137,9 +138,7 @@ public class ChatActivity extends Activity {
         btn_chat_return.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(ChatActivity.this,MainWenXinActivity.class);
-                startActivity(intent);
-                ChatActivity.this.finish();
+                finish();
             }
         });
 
