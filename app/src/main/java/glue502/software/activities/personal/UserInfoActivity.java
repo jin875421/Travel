@@ -73,7 +73,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private List<UserInfo> userInfos = new ArrayList<>();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private boolean isFollow = false;
-    private RelativeLayout follows,fans,rtltReview;
+    private RelativeLayout follows,fans,rtltReview,achievement;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +102,12 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void setListener() {
+        //展示用户成就
+        achievement.setOnClickListener(v -> {
+            Intent intent = new Intent(UserInfoActivity.this, AchievementActivity.class);
+            intent.putExtra("userId",authorId);
+            startActivity(intent);
+        });
         //点击跳转至展示此用户关注的人
         follows.setOnClickListener(v->{
             Intent intent = new Intent(UserInfoActivity.this, FollowsActivity.class);
@@ -249,13 +255,14 @@ public class UserInfoActivity extends AppCompatActivity {
          avatar = findViewById(R.id.avatar);
          follow = findViewById(R.id.follow);
          username = findViewById(R.id.user_name);
-        levelImage = findViewById(R.id.level_image);
-        fansCount = findViewById(R.id.fans_count);
+         levelImage = findViewById(R.id.level_image);
+         fansCount = findViewById(R.id.fans_count);
          followCount = findViewById(R.id.follow_count);
          postList = findViewById(R.id.post_list);
          follows = findViewById(R.id.follows);
          fans = findViewById(R.id.fans);
-        rtltReview=findViewById(R.id.rtlt_review);;
+         rtltReview=findViewById(R.id.rtlt_review);;
+         achievement = findViewById(R.id.achievement);
     }
     public void initData() {
         //通过id查询个人数据
