@@ -210,48 +210,49 @@ public class IMActivity extends AppCompatActivity {
                             followUserInfoList = gson.fromJson(responseData, new TypeToken<List<UserInfo>>() {
                             }.getType());
                             Log.i("IMActivity","IM获取的关注列表"+followUserInfoList.size());
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (followUserInfoList.size() != 0) {
+                                        Log.i("IMActivity", "开始绑定");
+                                        //绑定adapter
+                                        imFollowAdapter = new IMFollowAdapter(
+                                                IMActivity.this,
+                                                followUserInfoList
+                                        );
+                                        Log.i("IMActivity", "绑定点击事件监听器");
+                                        imFollowAdapter.setOnItemClickListener(new IMFollowAdapter.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(UserInfo userInfo, int position) {
+                                                //获取所点击的item的username
+                                                String chatId = userInfo.getUserId();
+                                                String chatName = userInfo.getUserName();
+                                                if(!TextUtils.isEmpty(chatId)) {
+                                                    //获取当前登录人的username
+                                                    if(!TextUtils.isEmpty(userId)){
+                                                        Intent intent = new Intent(IMActivity.this, IMChatActivity.class);
+                                                        intent.putExtra("ec_chat_id", chatId);
+                                                        intent.putExtra("ec_chat_name", chatName);
+                                                        startActivity(intent);
+                                                    }else {
+                                                        Log.i("IMActivity","获取当前登录人id失败");
+                                                    }
+                                                }else {
+                                                    Log.i("IMActivity" ,"会话对象为空");
+                                                }
+                                            }
+                                        });
+                                        Log.i("IMActivity", "lzx 执行绑定");
+                                        recyclerView.setAdapter(imFollowAdapter);
+                                    } else {
+
+                                    }
+                                }
+                            });
+
                         }else {
                         }
                     }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (followUserInfoList.size() != 0) {
-                                Log.i("IMActivity", "开始绑定");
-                                //绑定adapter
-                                imFollowAdapter = new IMFollowAdapter(
-                                        IMActivity.this,
-                                        followUserInfoList
-                                );
-                                Log.i("IMActivity", "绑定点击事件监听器");
-                                imFollowAdapter.setOnItemClickListener(new IMFollowAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(UserInfo userInfo, int position) {
-                                        //获取所点击的item的username
-                                        String chatId = userInfo.getUserId();
-                                        String chatName = userInfo.getUserName();
-                                        if(!TextUtils.isEmpty(chatId)) {
-                                            //获取当前登录人的username
-                                            if(!TextUtils.isEmpty(userId)){
-                                                Intent intent = new Intent(IMActivity.this, IMChatActivity.class);
-                                                intent.putExtra("ec_chat_id", chatId);
-                                                intent.putExtra("ec_chat_name", chatName);
-                                                startActivity(intent);
-                                            }else {
-                                                Log.i("IMActivity","获取当前登录人id失败");
-                                            }
-                                        }else {
-                                            Log.i("IMActivity" ,"会话对象为空");
-                                        }
-                                    }
-                                });
-                                Log.i("IMActivity", "lzx 执行绑定");
-                                recyclerView.setAdapter(imFollowAdapter);
-                            } else {
-
-                            }
-                        }
-                    });
                 }catch (Exception e){
                     e.printStackTrace();
                 }
