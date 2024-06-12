@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="4">
                 <RelativeLayout
                     android:id="@+id/follows"
                     android:layout_width="0dp"
@@ -103,7 +103,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="45dp"
-                        android:text="111" />
+                        android:text="" />
                 </RelativeLayout>
                 <RelativeLayout
                     android:id="@+id/fans"
@@ -124,7 +124,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="45dp"
-                        android:text="111" />
+                        android:text="" />
                 </RelativeLayout>
                 <RelativeLayout
                     android:id="@+id/rtlt_review"
@@ -141,6 +141,22 @@
                         android:text="足迹" />
 
                 </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/achievement"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:text="成就" />
+
+                </RelativeLayout>
+
             </LinearLayout>
 
             <LinearLayout
