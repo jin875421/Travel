@@ -166,9 +166,10 @@ public class IMChatActivity extends AppCompatActivity implements EMMessageListen
         }
         // 打开聊天界面获取最后一条消息内容并显示
         if (mConversation.getAllMessages().size() > 0) {
-            EMMessage message = mConversation.getLastMessage();
-            EMTextMessageBody body = (EMTextMessageBody) message.getBody();
-            EMMessageToEMMessageAndAdd(message);
+            List<EMMessage> messages = mConversation.getAllMessages();
+            for(int i=0; i<messages.size(); i++){
+                EMMessageToEMMessageAndAdd(messages.get(i));
+            }
         }
     }
 

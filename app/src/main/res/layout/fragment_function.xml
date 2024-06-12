@@ -105,8 +105,8 @@
 
                 <Button
                     android:id="@+id/speechBtn"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:background="@xml/round_button"
                     android:text="随手记"
                     android:layout_marginBottom="5dp"
